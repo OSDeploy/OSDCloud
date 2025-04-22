@@ -1,4 +1,4 @@
-function Start-OSDCloudCore {
+function Start-OSDCloudWorkflow {
     [CmdletBinding()]
     param ()
     #=================================================

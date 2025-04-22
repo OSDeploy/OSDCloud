@@ -69,7 +69,7 @@ PowerShellVersion = '5.1'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Get-OSDCloud', 'Start-OSDCloudCore', 'Get-OSDCloudWorkflows','Invoke-WpeinitPSCommand','Invoke-WpeinitPSModuleUpdate',
+FunctionsToExport = 'Get-OSDCloud', 'Start-OSDCloudWorkflow', 'Get-OSDCloudWorkflows','Invoke-WpeinitPSCommand','Invoke-WpeinitPSModuleUpdate',
 'Show-WinpeStartOSK','Show-WinpeStartWindowDeviceInfo','Show-WinpeStartWindowHardware','Show-WinpeStartWindowHardwareErrors',
 'Show-WinpeStartWindowIPConfig','Show-WinpeStartWindowWiFi','Get-OSDCloudModulePath','Get-OSDCloudModuleVersion','Show-WinpeStartPSModuleUpdate'
 
