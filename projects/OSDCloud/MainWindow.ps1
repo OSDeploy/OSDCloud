@@ -564,8 +564,6 @@ $formMainWindowControlStartButton.add_Click(
             LocalImageName             = $LocalImageName
         }
 
-        $global:OSvDCloudTaskSequence = $OSDCloudWorkflowObject
-        
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][OSDCloud Frontend] Variable OSDCloudWorkflowFrontend"
         $global:OSDCloudWorkflowFrontend | Out-Host
         <#

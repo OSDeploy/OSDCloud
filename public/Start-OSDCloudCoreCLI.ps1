@@ -1,4 +1,4 @@
-function Start-OSDCloudCore {
+function Start-OSDCloudCoreCLI {
     [CmdletBinding()]
     param ()
     #=================================================
@@ -26,27 +26,6 @@ function Start-OSDCloudCore {
     # Display global workflow initialization details
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] InitializeOSDCloudWorkflow"
     $InitializeOSDCloudWorkflow
-    #=================================================
-    # Launch GUI frontend
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Launching frontend $ModuleVersion"
-    $global:InitializeOSDCloudWorkflow = $null
-    $FrontendPath = Join-Path -Path $ModuleBase -ChildPath "projects\OSDCloud\MainWindow.ps1"
-    if (-Not (Test-Path $FrontendPath)) {
-        Write-Error "Frontend script not found at $FrontendPath"
-        return
-    }
-    . $FrontendPath
-    #=================================================
-    # Ensure workflow frontend is initialized before invoking workflow
-    if ($null -ne $global:InitializeOSDCloudWorkflow.TimeStart) {
-        try {
-            Invoke-OSDCloudWorkflow
-        } catch {
-            Write-Error "Failed to invoke OSDCloud workflow: $_"
-        }
-    } else {
-        Write-Warning "Workflow frontend not initialized. Skipping workflow invocation."
-    }
     #=================================================
     # Invoke-OSDCloudWorkflow
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Invoke-OSDCloudWorkflow"

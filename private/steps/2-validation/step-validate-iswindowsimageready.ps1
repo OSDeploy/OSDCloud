@@ -65,11 +65,11 @@ function step-validate-iswindowsimageready {
         #$null = Install-Module -Name $global:InvokeOSDCloudWorkflow.LaunchMethod -Force -ErrorAction Ignore -WarningAction Ignore
     }
 
-    if ($global:OSDCloudWorkflowFrontend.LocalImageFileInfo) {
+    if ($global:InitializeOSDCloudWorkflow.LocalImageFileInfo) {
         # Test if the file is on USB (example: check if path starts with a removable drive letter)
-        if (!(Test-Path $global:OSDCloudWorkflowFrontend.LocalImageFileInfo)) {
+        if (!(Test-Path $global:InitializeOSDCloudWorkflow.LocalImageFileInfo)) {
             Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OSDCloud failed to find the Operating System Local ImageFile Item"
-            Write-Warning $($global:OSDCloudWorkflowFrontend.LocalImageFileInfo)
+            Write-Warning $($global:InitializeOSDCloudWorkflow.LocalImageFileInfo)
             Write-Warning "Press Ctrl+C to cancel OSDCloud"
             Start-Sleep -Seconds 86400
             Exit
