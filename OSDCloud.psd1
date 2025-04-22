@@ -69,9 +69,24 @@ PowerShellVersion = '5.1'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Get-OSDCloud', 'Start-OSDCloudWorkflow', 'Get-OSDCloudWorkflows','Invoke-WpeinitPSCommand','Invoke-WpeinitPSModuleUpdate',
-'Show-WinpeStartOSK','Show-WinpeStartWindowDeviceInfo','Show-WinpeStartWindowHardware','Show-WinpeStartWindowHardwareErrors',
-'Show-WinpeStartWindowIPConfig','Show-WinpeStartWindowWiFi','Get-OSDCloudModulePath','Get-OSDCloudModuleVersion','Show-WinpeStartPSModuleUpdate'
+FunctionsToExport =
+'Get-OSDCloudInfo',
+'Get-OSvDCloudModulePath',
+'Get-OSvDCloudModuleVersion',
+'Initialize-OSDCloudGather',
+'Initialize-OSDCloudFlows',
+'Initialize-OSDCloudWorkflow',
+'Invoke-OSDCloudWorkflow',
+'Invoke-WpeinitPSCommand',
+'Invoke-WpeinitPSModuleUpdate',
+'Show-WinpeStartOSK',
+'Show-WinpeStartPSModuleUpdate',
+'Show-WinpeStartWindowDeviceInfo',
+'Show-WinpeStartWindowHardware',
+'Show-WinpeStartWindowHardwareErrors',
+'Show-WinpeStartWindowIPConfig',
+'Show-WinpeStartWindowWiFi',
+'Start-OSDCloudCore'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

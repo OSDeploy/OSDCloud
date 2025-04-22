@@ -7,11 +7,11 @@ function step-install-bcdboot {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     # Check what architecture we are using
-    if ($global:OSDCloudWorkflowGather.Architecture -match 'arm64') {
+    if ($global:InitializeOSDCloudGather.Architecture -match 'arm64') {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] X:\Windows\System32\bcdboot.exe C:\Windows /c"
         X:\Windows\System32\bcdboot.exe C:\Windows /c
     }

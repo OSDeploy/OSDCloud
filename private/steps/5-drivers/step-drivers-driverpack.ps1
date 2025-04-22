@@ -2,12 +2,12 @@ function step-drivers-driverpack {
     [CmdletBinding()]
     param (
         [System.String]
-        $DriverPackName = $global:OSDCloudWorkflowInvoke.DriverPackName,
+        $DriverPackName = $global:InvokeOSDCloudWorkflow.DriverPackName,
 
         [System.String]
-        $DriverPackGuid = $global:OSDCloudWorkflowInvoke.DriverPackObject.Guid,
+        $DriverPackGuid = $global:InvokeOSDCloudWorkflow.DriverPackObject.Guid,
 
-        $DriverPackObject = $global:OSDCloudWorkflowInvoke.DriverPackObject
+        $DriverPackObject = $global:InvokeOSDCloudWorkflow.DriverPackObject
     )
     #=================================================
     # Start the step
@@ -15,7 +15,7 @@ function step-drivers-driverpack {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     # Is DriverPackName set to None?
     if ($DriverPackName -eq 'None') {
@@ -243,7 +243,7 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\UnattendSettings\P
         $Content | Out-File -FilePath $SetupSpecializeCmd -Append -Encoding ascii -Width 2000 -Force
 
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Adding Provisioning Package for SetupSpecialize"
-        $ProvisioningPackage = Join-Path $(Get-OSDCloudModulePath) "content\setup-specialize\setupspecialize.ppkg"
+        $ProvisioningPackage = Join-Path $(Get-OSvDCloudModulePath) "content\setup-specialize\setupspecialize.ppkg"
 
         if (Test-Path $ProvisioningPackage) {
             Write-Host -ForegroundColor DarkGray "dism.exe /Image=C:\ /Add-ProvisioningPackage /PackagePath:`"$ProvisioningPackage`""

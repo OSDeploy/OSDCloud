@@ -13,42 +13,20 @@ function Invoke-OSDCloudWorkflow {
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
     Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
-    # OSDCloudWorkflowGather
-    if (-not $global:OSDCloudWorkflowGather) {
-        Initialize-OSDCloudWorkflowGather
-    }
-    #=================================================
-    # OSDCloudWorkflowOS
-    if (-not $global:OSDCloudWorkflowOS) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Importing OS Defaults $ModuleVersion"
-        Initialize-OSDCloudWorkflowOS
-    }
-    #=================================================
-    # OSDCloudWorkflowUser
-    if (-not $global:OSDCloudWorkflowUser) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Importing User Settings $ModuleVersion"
-        Initialize-OSDCloudWorkflowUser
-    }
-    #=================================================
-    # OSDCloudWorkflowSteps
-    if (-not $global:OSDCloudWorkflowSteps) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Importing Workflow Steps $ModuleVersion"
-        Initialize-OSDCloudWorkflowSteps
-    }
-    #=================================================
-    [System.String]$global:Architecture = $OSDCloudWorkflowGather.Architecture
-    [System.Boolean]$global:IsOnBattery = $OSDCloudWorkflowGather.IsOnBattery
-    [System.Boolean]$global:IsVM = $OSDCloudWorkflowGather.IsVM
+    # Set global variables
+    [System.String]$global:Architecture = $InitializeOSDCloudGather.Architecture
+    [System.Boolean]$global:IsOnBattery = $InitializeOSDCloudGather.IsOnBattery
+    [System.Boolean]$global:IsVM = $InitializeOSDCloudGather.IsVM
     [System.Boolean]$global:IsWinPE = $($env:SystemDrive -eq 'X:')
     #=================================================
-    $global:OSDCloudWorkflowInvoke = $null
-    $global:OSDCloudWorkflowInvoke = [ordered]@{
+    $global:InvokeOSDCloudWorkflow = $null
+    $global:InvokeOSDCloudWorkflow = [ordered]@{
         Architecture          = $global:Architecture
-        ComputerChassisType   = $OSDCloudWorkflowGather.ChassisType
-        ComputerManufacturer  = $OSDCloudWorkflowGather.ComputerManufacturer
-        ComputerModel         = $OSDCloudWorkflowGather.ComputerModel
-        ComputerProduct       = $OSDCloudWorkflowGather.ComputerProduct
-        ComputerSerialNumber  = $OSDCloudWorkflowGather.SerialNumber
+        ComputerChassisType   = $InitializeOSDCloudGather.ChassisType
+        ComputerManufacturer  = $InitializeOSDCloudGather.ComputerManufacturer
+        ComputerModel         = $InitializeOSDCloudGather.ComputerModel
+        ComputerProduct       = $InitializeOSDCloudGather.ComputerProduct
+        ComputerSerialNumber  = $InitializeOSDCloudGather.SerialNumber
         ComputerUUID          = (Get-WmiObject -Class Win32_ComputerSystemProduct).UUID
         DriverPackName        = $OSDCloudWorkflowFrontend.DriverPackName
         DriverPackObject      = $OSDCloudWorkflowFrontend.DriverPackObject
@@ -63,12 +41,12 @@ function Invoke-OSDCloudWorkflow {
         TimeStart             = [datetime](Get-Date)
     }
     #=================================================
-    if ($null -ne $global:OSDCloudWorkflowSteps) {
+    if ($null -ne $global:InitializeOSDCloudWorkflow.WorkflowObject) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Starting OSDCloud Workflow"
         
-        foreach ($step in $global:OSDCloudWorkflowSteps.steps) {
+        foreach ($step in $global:InitializeOSDCloudWorkflow.WorkflowObject.steps) {
             # Set the current step in the global variable
-            $global:OSDCloudWorkflowCurrentStep = $step
+            $global:OSvDCloudWorkflowCurrentStep = $step
 
             # Skip the step if the skip condition is met
             if ($step.rules.skip -eq $true) {

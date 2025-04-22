@@ -5,11 +5,11 @@ function step-install-getwindowsimageindex {
         Second, determine the ImageIndex to expand, or to allow the user to select the ImageIndex.
 
         .INPUTS
-        $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage
+        $global:InvokeOSDCloudWorkflow.FileInfoWindowsImage
         Contains the FileInfo object of the WindowsImage to be expanded.
         This variable was created step-install-downloadwindowsimage
 
-        $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage.FullName
+        $global:InvokeOSDCloudWorkflow.FileInfoWindowsImage.FullName
         Contains the FullName of the WindowsImage to be expanded.
         This variable was created by step-install-downloadwindowsimage
 
@@ -22,14 +22,14 @@ function step-install-getwindowsimageindex {
         This property may not exist and is created by the Frontend.
 
         .OUTPUTS
-        $global:OSDCloudWorkflowInvoke.WindowsImageIndex
+        $global:InvokeOSDCloudWorkflow.WindowsImageIndex
         Contains the ImageIndex of the WindowsImage to be expanded.
     #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false)]
         [System.String]
-        $ImagePath = $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage.FullName,
+        $ImagePath = $global:InvokeOSDCloudWorkflow.FileInfoWindowsImage.FullName,
 
         [Parameter(Mandatory = $false)]
         [System.String]
@@ -45,7 +45,7 @@ function step-install-getwindowsimageindex {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     #region Do we have a WindowsImage to test?
     if ($null -eq $ImagePath) {
@@ -84,7 +84,7 @@ function step-install-getwindowsimageindex {
 
     if ($WindowsImageCount -eq 1) {
         # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OSDCloud only found a single ImageIndex to expand"
-        $global:OSDCloudWorkflowInvoke.WindowsImageIndex = 1
+        $global:InvokeOSDCloudWorkflow.WindowsImageIndex = 1
         return
     }
     #endregion
@@ -92,7 +92,7 @@ function step-install-getwindowsimageindex {
     #region Get the ImageIndex of the ImageName
     if ($ImageName) {
         $ImageIndex = ($WindowsImage | Where-Object { $_.ImageName -eq $ImageName }).ImageIndex
-        $global:OSDCloudWorkflowInvoke.WindowsImageIndex = $ImageIndex
+        $global:InvokeOSDCloudWorkflow.WindowsImageIndex = $ImageIndex
         return
     }
     #endregion
@@ -104,9 +104,9 @@ function step-install-getwindowsimageindex {
             Where-Object { $_.EditionId -eq $EditionId }
 
         if ($MatchingWindowsImage -and $MatchingWindowsImage.Count -eq 1) {
-            $global:OSDCloudWorkflowInvoke.WindowsImage = $MatchingWindowsImage
-            $global:OSDCloudWorkflowInvoke.WindowsImageIndex = $MatchingWindowsImage.ImageIndex
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] EditionId $EditionId found at ImageIndex $($global:OSDCloudWorkflowInvoke.WindowsImageIndex)"
+            $global:InvokeOSDCloudWorkflow.WindowsImage = $MatchingWindowsImage
+            $global:InvokeOSDCloudWorkflow.WindowsImageIndex = $MatchingWindowsImage.ImageIndex
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] EditionId $EditionId found at ImageIndex $($global:InvokeOSDCloudWorkflow.WindowsImageIndex)"
             return
         }
     }
@@ -124,7 +124,7 @@ function step-install-getwindowsimageindex {
         }
         until (((($SelectReadHost -ge 0) -and ($SelectReadHost -in $SelectWindowsImage.ImageIndex))))
     
-        $global:OSDCloudWorkflowInvoke.WindowsImageIndex = $SelectReadHost
+        $global:InvokeOSDCloudWorkflow.WindowsImageIndex = $SelectReadHost
         return
     }
     #endregion

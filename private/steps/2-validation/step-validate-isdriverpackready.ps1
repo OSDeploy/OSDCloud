@@ -2,12 +2,12 @@ function step-validate-isdriverpackready {
     [CmdletBinding()]
     param (
         [System.String]
-        $DriverPackName = $global:OSDCloudWorkflowInvoke.DriverPackName,
+        $DriverPackName = $global:InvokeOSDCloudWorkflow.DriverPackName,
 
         [System.String]
-        $DriverPackGuid = $global:OSDCloudWorkflowInvoke.DriverPackObject.Guid,
+        $DriverPackGuid = $global:InvokeOSDCloudWorkflow.DriverPackObject.Guid,
 
-        $DriverPackObject = $global:OSDCloudWorkflowInvoke.DriverPackObject
+        $DriverPackObject = $global:InvokeOSDCloudWorkflow.DriverPackObject
     )
     #=================================================
     # Start the step
@@ -15,7 +15,7 @@ function step-validate-isdriverpackready {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     # Is DriverPackName set to None?
     if ($DriverPackName -eq 'None') {

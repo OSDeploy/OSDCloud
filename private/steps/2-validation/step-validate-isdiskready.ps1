@@ -7,14 +7,14 @@ function step-validate-isdiskready {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)]"
 
-    $global:OSDCloudWorkflowInvoke.GetDiskFixed = Get-LocalDisk | Where-Object { $_.IsBoot -eq $false } | Sort-Object Number
+    $global:InvokeOSDCloudWorkflow.GetDiskFixed = Get-LocalDisk | Where-Object { $_.IsBoot -eq $false } | Sort-Object Number
 
-    if ($global:OSDCloudWorkflowInvoke.GetDiskFixed) {
+    if ($global:InvokeOSDCloudWorkflow.GetDiskFixed) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Fixed Disk is valid. OK."
     }
     else {

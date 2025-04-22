@@ -7,10 +7,10 @@ function step-drivers-msupdate {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     # Gather Variables
-    $ComputerManufacturer = $global:OSDCloudWorkflowGather.ComputerManufacturer
+    $ComputerManufacturer = $global:InitializeOSDCloudGather.ComputerManufacturer
     #=================================================
     # Step Variables
     $DriverPackName = $global:OSDCloudWorkflowFrontend.DriverPackName

@@ -1,4 +1,4 @@
-function Get-OSDCloudWorkflows {
+function Initialize-OSDCloudFlows {
     [CmdletBinding()]
     param (
         $Architecture = $Env:PROCESSOR_ARCHITECTURE,
@@ -16,27 +16,25 @@ function Get-OSDCloudWorkflows {
     #=================================================
     $WorkflowFiles = Get-ChildItem -Path $Path -Filter '*.json' -Recurse -ErrorAction SilentlyContinue
 
-    $OSDCloudWorkflows = foreach ($item in $WorkflowFiles) {
+    $InitializeOSDCloudFlows = foreach ($item in $WorkflowFiles) {
         Get-Content $item.FullName -Raw | ConvertFrom-Json
     }
 
     if ($Architecture -match 'amd64') {
         Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Filtering amd64 workflows"
-        $OSDCloudWorkflows = $OSDCloudWorkflows | Where-Object { $_.amd64 -eq $true }
+        $InitializeOSDCloudFlows = $InitializeOSDCloudFlows | Where-Object { $_.amd64 -eq $true }
     }
     elseif ($Architecture -match 'arm64') {
         Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Filtering arm64 workflows"
-        $OSDCloudWorkflows = $OSDCloudWorkflows | Where-Object { $_.arm64 -eq $true }
+        $InitializeOSDCloudFlows = $InitializeOSDCloudFlows | Where-Object { $_.arm64 -eq $true }
     }
 
-    if ($OSDCloudWorkflows.Count -eq 0) {
+    if ($InitializeOSDCloudFlows.Count -eq 0) {
         Write-Error "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] No workflows found for architecture: $Architecture"
         break
     }
 
-    $global:OSDCloudWorkflows = $OSDCloudWorkflows | Sort-Object -Property @{Expression='default';Descending=$true}, @{Expression='name';Descending=$false}
-
-    $global:OSDCloudWorkflows
+    $global:InitializeOSDCloudFlows = $InitializeOSDCloudFlows | Sort-Object -Property @{Expression='default';Descending=$true}, @{Expression='name';Descending=$false}
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"

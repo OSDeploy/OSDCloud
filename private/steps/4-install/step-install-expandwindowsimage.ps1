@@ -7,7 +7,7 @@ function step-install-expandwindowsimage {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] C:\"
@@ -38,13 +38,13 @@ function step-install-expandwindowsimage {
         $Params = @{
             ApplyPath        = 'C:\'
             ErrorAction      = 'Stop'
-            ImagePath        = $global:OSDCloudWorkflowInvoke.WindowsImagePath
-            Index            = $global:OSDCloudWorkflowInvoke.WindowsImageIndex
+            ImagePath        = $global:InvokeOSDCloudWorkflow.WindowsImagePath
+            Index            = $global:InvokeOSDCloudWorkflow.WindowsImageIndex
             ScratchDirectory = 'C:\OSDCloud\Temp'
         }
     }
 
-    $global:OSDCloudWorkflowInvoke.ParamsExpandWindowsImage = $Params
+    $global:InvokeOSDCloudWorkflow.ParamsExpandWindowsImage = $Params
     #=================================================
     # Expand WindowsImage
     if ($IsWinPE -eq $true) {
