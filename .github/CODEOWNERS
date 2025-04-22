@@ -1,0 +1,14 @@
+# CODEOWNERS - Define code ownership for this repository
+# See https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
+
+# Default owner for everything
+* @OSDeploy
+
+# Specific ownership for important directories (customize as needed)
+.github/ @OSDeploy
+scripts/ @OSDeploy
+src/ @OSDeploy
+# docs/ @DocumentationTeam
+
+# Example: assign a different owner for a specific file
+# README.md @OSDeploy @DocumentationTeam

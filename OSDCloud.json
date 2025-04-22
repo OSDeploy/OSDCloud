@@ -1,0 +1,20 @@
+{
+    "links": {
+        "david": "https://linkedin.com/in/davidsegura",
+        "discord": "https://discord.com/channels/618712310185197588/621205976351113216",
+        "gary": "https://www.linkedin.com/in/garyblok/",
+        "github": "https://github.com/OSDeploy/OSDCloud",
+        "michael": "https://linkedin.com/in/michael-a-escamilla",
+        "mmsmoa": "https://mmsmoa.com",
+        "nwscug": "https://nwscug.org",
+        "powershellgallery": "https://www.powershellgallery.com/packages/OSDCloud",
+        "wpninjasch": "https://wpninjas.ch",
+        "wpninjasuk": "https://wpninjas.uk"
+    },
+    "module": {
+        "Docs": "https://github.com/OSDeploy/OSDCloud/tree/main/docs",
+        "Info": "https://www.osdeploy.com/",
+        "Issues": "https://github.com/OSDeploy/OSDCloud/issues",
+        "Project": "https://github.com/OSDeploy/OSDCloud"
+    }
+}
