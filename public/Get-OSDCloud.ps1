@@ -23,14 +23,11 @@ function Get-OSDCloud {
     # Display OSDCloud team information
     Write-Host -ForegroundColor DarkCyan 'OSDCloud Team'
     Write-Host -ForegroundColor DarkGray "David Segura $($PSOSDCloud.links.david)"
-    Write-Host -ForegroundColor DarkGray "Gary Blok $($PSOSDCloud.links.gary)"
     Write-Host -ForegroundColor DarkGray "Michael Escamilla $($PSOSDCloud.links.michael)"
+    Write-Host -ForegroundColor DarkGray "Gary Blok $($PSOSDCloud.links.gary)"
     Write-Host
 
     # Display upcoming events
-    Write-Host -ForegroundColor DarkCyan 'NWSCUG: OSD 2025 Preview'
-    Write-Host -ForegroundColor DarkGray "March 28 2025 $($PSOSDCloud.links.nwscug)"
-    Write-Host
     Write-Host -ForegroundColor DarkCyan 'MMSMOA: OSDCloud and OSDWorkspace'
     Write-Host -ForegroundColor DarkGray "May 5-8 2025 $($PSOSDCloud.links.mmsmoa)"
     Write-Host
