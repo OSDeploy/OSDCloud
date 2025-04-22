@@ -1,0 +1,357 @@
+{
+    "id": "cd08ed8e-e5bb-4974-bfb8-7c732e906242",
+    "name": "OSDCloud MMSMOA amd64",
+    "description": "OSDCloud",
+    "author": "OSDeploy",
+    "version": "1.0.0",
+    "amd64": true,
+    "arm64": false,
+    "default": false,
+    "steps": [
+        {
+            "name": "StartWorkflow",
+            "description": "This should be allowed to run in FullOS",
+            "command": "step-initialize-startosdcloudworkflow",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "InitializeLogs",
+            "description": "Testing step without conditions",
+            "command": "step-initialize-startosdcloudlogs",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "TestWindowsImage",
+            "description": "Testing step without parameters",
+            "command": "step-validate-iswindowsimageready",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "TestDriverPack",
+            "description": "Tests the driver pack for compatibility",
+            "command": "step-validate-isdriverpackready",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": true
+            }
+        },
+        {
+            "name": "TestLocalDisk",
+            "description": "Tests the local disk for readiness",
+            "command": "step-validate-isdiskready",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Removeusbdriveletter",
+            "description": "Removes drive letters assigned to USB devices",
+            "command": "step-preinstall-removeusbdriveletter",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "ClearDisk",
+            "description": "Clears the disk for a fresh start",
+            "command": "step-preinstall-cleardisk",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "PartitionDisk",
+            "description": "Partitions the disk for installation",
+            "command": "step-preinstall-partitiondisk",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Addusbdriveletter",
+            "description": "Assigns drive letters to USB devices",
+            "command": "step-preinstall-restoreusbdriveletter",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "InvokePowercfgHighPerformance",
+            "description": "Sets the system to high performance mode",
+            "command": "step-preinstall-enablehighperformance",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "DownloadWindowsOS",
+            "description": "Downloads the Windows OS image",
+            "command": "step-install-downloadwindowsimage",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "GetWindowsImageIndex",
+            "description": "Retrieves the index of the Windows image",
+            "command": "step-install-getwindowsimageindex",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "ExpandWindowsImage",
+            "description": "Expands the Windows image for installation",
+            "command": "step-install-expandwindowsimage",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Check WindowsEdition",
+            "description": "Checks the Windows edition of the image",
+            "command": "step-install-getwindowsedition",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "BCDBoot",
+            "description": "Configures the bootloader using BCDBoot",
+            "command": "step-install-bcdboot",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "SetupDisplayedEula Hotfix",
+            "description": "Applies a hotfix for the displayed EULA",
+            "command": "step-update-setupdisplayedeula",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Save DriverPack",
+            "description": "Saves the driver pack to the system",
+            "command": "step-drivers-driverpack",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": true
+            }
+        },
+        {
+            "name": "Expand DriverPack",
+            "description": "Expands the driver pack for use",
+            "command": "step-drivers-expand-driverpack",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": true
+            }
+        },
+        {
+            "name": "Add WindowsDriver",
+            "description": "Adds Windows drivers to the system",
+            "command": "step-drivers-add-specialize-ppkg",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "Save DriverUpdate",
+            "description": "Downloads and saves driver updates",
+            "command": "step-drivers-msupdate-disk",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": true
+            }
+        },
+        {
+            "name": "Save FirmwareUpdate",
+            "description": "Downloads and saves firmware updates",
+            "command": "step-drivers-firmware",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": true
+            }
+        },
+        {
+            "name": "Export OSInformation",
+            "description": "Exports information about the operating system",
+            "command": "step-finalize-exportofflineosinfo",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Update PowerShell Modules",
+            "description": "Update existing PowerShell Modules offline",
+            "command": "step-powershell-updatemodule",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Save PowerShellGet",
+            "description": "Updates the PowerShellGet module",
+            "command": "step-powershell-savemodule",
+            "arguments": [],
+            "parameters": {
+                "name": "PowerShellGet"
+            },
+            "rules": {
+                "skip": false
+            }
+        },
+        {
+            "name": "Save PackageManagement",
+            "description": "Updates the PackageManagement module",
+            "command": "step-powershell-savemodule",
+            "arguments": [],
+            "parameters": {
+                "name": "PackageManagement"
+            },
+            "rules": {
+                "skip": false
+            }
+        },
+        {
+            "name": "Save PSModule",
+            "description": "Updates the OSD PowerShell module",
+            "command": "step-powershell-savemodule",
+            "arguments": [],
+            "parameters": {
+                "name": "OSD"
+            },
+            "rules": {
+                "skip": false
+            }
+        },
+        {
+            "name": "Save PSModule",
+            "description": "Updates the WindowsAutopilotIntune module",
+            "command": "step-powershell-savemodule",
+            "arguments": [],
+            "parameters": {
+                "name": "WindowsAutopilotIntune"
+            },
+            "rules": {
+                "skip": false
+            }
+        },
+        {
+            "name": "Stop Workflow",
+            "description": "Stops the current workflow",
+            "command": "step-finalize-stoposdcloudworkflow",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "Clean OSDCloud Files",
+            "description": "Cleans up OSDCloud files",
+            "command": "step-postaction-removeosdcloudlogs",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "Restart Computer",
+            "description": "Restarts the computer",
+            "command": "step-postaction-restartcomputer",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "Stop Computer",
+            "description": "Stops the computer",
+            "command": "step-postaction-stopcomputer",
+            "arguments": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\DATA\\GitHub\\MyModules\\OSD.CloudCore\\projects\\OSDCloudCore\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{78491010-EC60-4726-843B-16627447BD36}|OSDCloudCore.csproj|c:\\data\\github\\mymodules\\osd.cloudcore\\projects\\osdcloudcore\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{78491010-EC60-4726-843B-16627447BD36}|OSDCloudCore.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78491010-EC60-4726-843B-16627447BD36}|OSDCloudCore.csproj|c:\\data\\github\\mymodules\\osd.cloudcore\\projects\\osdcloudcore\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78491010-EC60-4726-843B-16627447BD36}|OSDCloudCore.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\DATA\\GitHub\\MyModules\\OSD.CloudCore\\projects\\OSDCloudCore\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "C:\\DATA\\GitHub\\MyModules\\OSD.CloudCore\\projects\\OSDCloudCore\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-02-17T00:47:51.413Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\DATA\\GitHub\\MyModules\\OSD.CloudCore\\projects\\OSDCloudCore\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MainWindow.xaml.cs",
+              "ToolTip": "C:\\DATA\\GitHub\\MyModules\\OSD.CloudCore\\projects\\OSDCloudCore\\MainWindow.xaml.cs",
+              "RelativeToolTip": "MainWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-19T19:55:30.519Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
