@@ -5,39 +5,39 @@ function step-install-getwindowsimageindex {
         Second, determine the ImageIndex to expand, or to allow the user to select the ImageIndex.
 
         .INPUTS
-        $global:InvokeOSDCloudWorkflow.FileInfoWindowsImage
+        $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage
         Contains the FileInfo object of the WindowsImage to be expanded.
         This variable was created step-install-downloadwindowsimage
 
-        $global:InvokeOSDCloudWorkflow.FileInfoWindowsImage.FullName
+        $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage.FullName
         Contains the FullName of the WindowsImage to be expanded.
         This variable was created by step-install-downloadwindowsimage
 
-        $global:InitializeOSDCloudWorkflow.OSEditionId
+        $global:OSDCloudWorkflowInit.OSEditionId
         Contains the EditionId of the WindowsImage to be expanded.
         This property may not exist and is created by the Frontend.
 
-        $global:InitializeOSDCloudWorkflow.LocalImageName
+        $global:OSDCloudWorkflowInit.LocalImageName
         Contains the ImageName of the WindowsImage to be expanded.
         This property may not exist and is created by the Frontend.
 
         .OUTPUTS
-        $global:InvokeOSDCloudWorkflow.WindowsImageIndex
+        $global:OSDCloudWorkflowInvoke.WindowsImageIndex
         Contains the ImageIndex of the WindowsImage to be expanded.
     #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false)]
         [System.String]
-        $ImagePath = $global:InvokeOSDCloudWorkflow.FileInfoWindowsImage.FullName,
+        $ImagePath = $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage.FullName,
 
         [Parameter(Mandatory = $false)]
         [System.String]
-        $EditionId = $global:InitializeOSDCloudWorkflow.OSEditionId,
+        $EditionId = $global:OSDCloudWorkflowInit.OSEditionId,
 
         [Parameter(Mandatory = $false)]
         [System.String]
-        $ImageName = $global:InitializeOSDCloudWorkflow.LocalImageName
+        $ImageName = $global:OSDCloudWorkflowInit.LocalImageName
     )
     #=================================================
     # Start the step
@@ -84,7 +84,7 @@ function step-install-getwindowsimageindex {
 
     if ($WindowsImageCount -eq 1) {
         # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OSDCloud only found a single ImageIndex to expand"
-        $global:InvokeOSDCloudWorkflow.WindowsImageIndex = 1
+        $global:OSDCloudWorkflowInvoke.WindowsImageIndex = 1
         return
     }
     #endregion
@@ -92,7 +92,7 @@ function step-install-getwindowsimageindex {
     #region Get the ImageIndex of the ImageName
     if ($ImageName) {
         $ImageIndex = ($WindowsImage | Where-Object { $_.ImageName -eq $ImageName }).ImageIndex
-        $global:InvokeOSDCloudWorkflow.WindowsImageIndex = $ImageIndex
+        $global:OSDCloudWorkflowInvoke.WindowsImageIndex = $ImageIndex
         return
     }
     #endregion
@@ -104,9 +104,9 @@ function step-install-getwindowsimageindex {
             Where-Object { $_.EditionId -eq $EditionId }
 
         if ($MatchingWindowsImage -and $MatchingWindowsImage.Count -eq 1) {
-            $global:InvokeOSDCloudWorkflow.WindowsImage = $MatchingWindowsImage
-            $global:InvokeOSDCloudWorkflow.WindowsImageIndex = $MatchingWindowsImage.ImageIndex
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] EditionId $EditionId found at ImageIndex $($global:InvokeOSDCloudWorkflow.WindowsImageIndex)"
+            $global:OSDCloudWorkflowInvoke.WindowsImage = $MatchingWindowsImage
+            $global:OSDCloudWorkflowInvoke.WindowsImageIndex = $MatchingWindowsImage.ImageIndex
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] EditionId $EditionId found at ImageIndex $($global:OSDCloudWorkflowInvoke.WindowsImageIndex)"
             return
         }
     }
@@ -124,7 +124,7 @@ function step-install-getwindowsimageindex {
         }
         until (((($SelectReadHost -ge 0) -and ($SelectReadHost -in $SelectWindowsImage.ImageIndex))))
     
-        $global:InvokeOSDCloudWorkflow.WindowsImageIndex = $SelectReadHost
+        $global:OSDCloudWorkflowInvoke.WindowsImageIndex = $SelectReadHost
         return
     }
     #endregion

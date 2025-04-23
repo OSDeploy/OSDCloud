@@ -15,8 +15,8 @@ function Start-OSvDTrashxGUICLIDemo {
     #=================================================
     #   Get-Culture
     #=================================================
-    $DefaultOSLanguage = $global:InitializeOSDCloudOSSettings."OSLanguageCode.default"
-    $DefaultOSLanguageValues = [array]$global:InitializeOSDCloudOSSettings."OSLanguageCode.values"
+    $DefaultOSLanguage = $global:OSDCloudWorkflowOSSettings."OSLanguageCode.default"
+    $DefaultOSLanguageValues = [array]$global:OSDCloudWorkflowOSSettings."OSLanguageCode.values"
     $DefaultPSCulture = $PSCulture.ToLower()
     if ($DefaultPSCulture -in $DefaultOSLanguageValues) {
         $OSLanguage = $DefaultPSCulture
@@ -27,35 +27,35 @@ function Start-OSvDTrashxGUICLIDemo {
     #=================================================
     #   Get-OSDCatalogDriverPacks
     #=================================================
-    $Architecture = $global:InitializeOSDCloudGather.Architecture
-    $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.Manufacturer -eq $global:InitializeOSDCloudGather.ComputerManufacturer }
-    # $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.Manufacturer -eq $global:InitializeOSDCloudGather.ComputerManufacturer } | Where-Object { $_.OSArchitecture -eq $Architecture }
+    $Architecture = $global:OSDCloudWorkflowGather.Architecture
+    $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.Manufacturer -eq $global:OSDCloudWorkflowGather.ComputerManufacturer }
+    # $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.Manufacturer -eq $global:OSDCloudWorkflowGather.ComputerManufacturer } | Where-Object { $_.OSArchitecture -eq $Architecture }
     #=================================================
     #   Main
     #=================================================
-    $global:InitializeOSDCloudWorkflow = $null
-    $global:InitializeOSDCloudWorkflow = [ordered]@{
-        ComputerManufacturer  = $global:InitializeOSDCloudGather.ComputerManufacturer
-        ComputerModel         = $global:InitializeOSDCloudGather.ComputerModel
-        ComputerProduct       = $global:InitializeOSDCloudGather.ComputerProduct
+    $global:OSDCloudWorkflowInit = $null
+    $global:OSDCloudWorkflowInit = [ordered]@{
+        ComputerManufacturer  = $global:OSDCloudWorkflowGather.ComputerManufacturer
+        ComputerModel         = $global:OSDCloudWorkflowGather.ComputerModel
+        ComputerProduct       = $global:OSDCloudWorkflowGather.ComputerProduct
         DriverPackObject      = $null
         DriverPackName        = $null
         DriverPackValues      = [array]$DriverPackValues
         Function              = $($MyInvocation.MyCommand.Name)
         LaunchMethod          = 'OSDCloudWorkflow'
         Module                = $($MyInvocation.MyCommand.Module.Name)
-        OSActivation          = $global:InitializeOSDCloudOSSettings."OSActivation.default"
-        OSActivationValues    = [array]$global:InitializeOSDCloudOSSettings."OSActivation.values"
+        OSActivation          = $global:OSDCloudWorkflowOSSettings."OSActivation.default"
+        OSActivationValues    = [array]$global:OSDCloudWorkflowOSSettings."OSActivation.values"
         OSArchitecture        = $Architecture
-        OSEdition             = $global:InitializeOSDCloudOSSettings."OSEdition.default"
-        OSEditionId           = $global:InitializeOSDCloudOSSettings."OSEditionId.default"
-        OSEditionValues       = [array]$global:InitializeOSDCloudOSSettings."OSEdition.values"
+        OSEdition             = $global:OSDCloudWorkflowOSSettings."OSEdition.default"
+        OSEditionId           = $global:OSDCloudWorkflowOSSettings."OSEditionId.default"
+        OSEditionValues       = [array]$global:OSDCloudWorkflowOSSettings."OSEdition.values"
         # OSImageIndex          = $null
-        OSLanguage            = $global:InitializeOSDCloudOSSettings."OSLanguageCode.default"
-        OSLanguageValues      = [array]$global:InitializeOSDCloudOSSettings."OSLanguageCode.values"
-        OSName                = $global:InitializeOSDCloudOSSettings."OSName.default"
-        OSNameValues          = [array]$global:InitializeOSDCloudOSSettings."OSName.values"
-        OSReleaseIDValues     = [array]$global:InitializeOSDCloudOSSettings."OSReleaseID.values"
+        OSLanguage            = $global:OSDCloudWorkflowOSSettings."OSLanguageCode.default"
+        OSLanguageValues      = [array]$global:OSDCloudWorkflowOSSettings."OSLanguageCode.values"
+        OSName                = $global:OSDCloudWorkflowOSSettings."OSName.default"
+        OSNameValues          = [array]$global:OSDCloudWorkflowOSSettings."OSName.values"
+        OSReleaseIDValues     = [array]$global:OSDCloudWorkflowOSSettings."OSReleaseID.values"
         TimeStart             = [datetime](Get-Date)
     }
     #=================================================
@@ -63,14 +63,14 @@ function Start-OSvDTrashxGUICLIDemo {
     #   New logic added to Get-OSDCatalogDriverPack
     #   This should match the proper OS Version ReleaseID
     #=================================================
-    $global:InitializeOSDCloudWorkflow.DriverPackObject = Get-OSDCatalogDriverPack -Product $global:InitializeOSDCloudWorkflow.ComputerProduct -OSVersion $global:InitializeOSDCloudWorkflow.OperatingSystem -OSReleaseID $global:InitializeOSDCloudOSSettings.OSReleaseID
+    $global:OSDCloudWorkflowInit.DriverPackObject = Get-OSDCatalogDriverPack -Product $global:OSDCloudWorkflowInit.ComputerProduct -OSVersion $global:OSDCloudWorkflowInit.OperatingSystem -OSReleaseID $global:OSDCloudWorkflowOSSettings.OSReleaseID
 
-    if ($global:InitializeOSDCloudWorkflow.DriverPackObject) {
-        $global:InitializeOSDCloudWorkflow.DriverPackName = $global:InitializeOSDCloudWorkflow.DriverPackObject.Name
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPackName: $($global:InitializeOSDCloudWorkflow.DriverPackName)"
+    if ($global:OSDCloudWorkflowInit.DriverPackObject) {
+        $global:OSDCloudWorkflowInit.DriverPackName = $global:OSDCloudWorkflowInit.DriverPackObject.Name
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPackName: $($global:OSDCloudWorkflowInit.DriverPackName)"
     }
     #=================================================
-    $global:InitializeOSDCloudWorkflow
+    $global:OSDCloudWorkflowInit
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"

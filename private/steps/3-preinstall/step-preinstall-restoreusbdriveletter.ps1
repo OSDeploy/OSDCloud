@@ -10,9 +10,9 @@ function step-preinstall-restoreusbdriveletter {
     $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     #region Main
-    if ($global:InvokeOSDCloudWorkflow.USBPartitions) {
+    if ($global:OSDCloudWorkflowInvoke.USBPartitions) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Restoring USB Drive Letters. OK."
-        foreach ($Item in $global:InvokeOSDCloudWorkflow.USBPartitions) {
+        foreach ($Item in $global:OSDCloudWorkflowInvoke.USBPartitions) {
             $Params = @{
                 AssignDriveLetter = $true
                 DiskNumber        = $Item.DiskNumber

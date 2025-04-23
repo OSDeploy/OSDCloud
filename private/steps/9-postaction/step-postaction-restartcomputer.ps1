@@ -10,7 +10,7 @@ function step-postaction-restartcomputer {
     $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     #region Main
-    if ($global:InvokeOSDCloudWorkflow.WinpeRestart) {
+    if ($global:OSDCloudWorkflowInvoke.WinpeRestart) {
         Write-Host -ForegroundColor Yellow "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Device will restart in 30 seconds"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Press CTRL + C to cancel"
         #TODO EJECT ISO

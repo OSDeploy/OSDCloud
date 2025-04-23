@@ -10,7 +10,7 @@ function step-drivers-expand-driverpack {
     $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     #region Main
-    if ($global:InvokeOSDCloudWorkflow.DriverPackExpand) {
+    if ($global:OSDCloudWorkflowInvoke.DriverPackExpand) {
         $DriverPacks = Get-ChildItem -Path 'C:\Drivers' -File
 
         foreach ($Item in $DriverPacks) {
@@ -45,7 +45,7 @@ function step-drivers-expand-driverpack {
             #=================================================
             #   Dell Update Package
             #=================================================
-            if ($Item.Extension -eq '.exe' -and $global:InvokeOSDCloudWorkflow.Manufacturer -eq 'Dell') {
+            if ($Item.Extension -eq '.exe' -and $global:OSDCloudWorkflowInvoke.Manufacturer -eq 'Dell') {
                 $DestinationPath = Join-Path $Item.Directory $Item.BaseName
                 if (-NOT (Test-Path "$DestinationPath")) {
                     Write-Host -ForegroundColor DarkGray "Dell Update Package is being expanded to $DestinationPath"
@@ -56,7 +56,7 @@ function step-drivers-expand-driverpack {
             #=================================================
             #   HP Softpaq
             #=================================================
-            if ($global:InvokeOSDCloudWorkflow.Manufacturer -eq 'HP') {
+            if ($global:OSDCloudWorkflowInvoke.Manufacturer -eq 'HP') {
                 #If HP
                 if ($Item.Extension -eq '.exe') {
                     #If found an EXE in c:\drivers
@@ -71,9 +71,9 @@ function step-drivers-expand-driverpack {
                             Write-Host "HP Driver Pack $ExpandFile is being expanded to $DestinationPath"
                             Start-Process -FilePath $env:windir\System32\7za.exe -ArgumentList "x $ExpandFile -o$DestinationPath -y" -Wait -NoNewWindow -PassThru
                             Write-Host "7zip has expanded the HP Driver Pack to $DestinationPath"
-                            #$global:InvokeOSDCloudWorkflow.OSDCloudUnattend = $true
+                            #$global:OSDCloudWorkflowInvoke.OSDCloudUnattend = $true
                             $DriverPPKGNeeded = $false #Disable PPKG for HP Driver Pack during Specialize
-                            $global:InvokeOSDCloudWorkflow.DriverPackName = 'None' #Skips adding MS Update Catalog drivers into Process
+                            $global:OSDCloudWorkflowInvoke.DriverPackName = 'None' #Skips adding MS Update Catalog drivers into Process
                         }
                         Continue
                     }

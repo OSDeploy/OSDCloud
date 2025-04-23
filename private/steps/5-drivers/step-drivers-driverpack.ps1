@@ -2,12 +2,12 @@ function step-drivers-driverpack {
     [CmdletBinding()]
     param (
         [System.String]
-        $DriverPackName = $global:InvokeOSDCloudWorkflow.DriverPackName,
+        $DriverPackName = $global:OSDCloudWorkflowInvoke.DriverPackName,
 
         [System.String]
-        $DriverPackGuid = $global:InvokeOSDCloudWorkflow.DriverPackObject.Guid,
+        $DriverPackGuid = $global:OSDCloudWorkflowInvoke.DriverPackObject.Guid,
 
-        $DriverPackObject = $global:InvokeOSDCloudWorkflow.DriverPackObject
+        $DriverPackObject = $global:OSDCloudWorkflowInvoke.DriverPackObject
     )
     #=================================================
     # Start the step

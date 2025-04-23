@@ -12,7 +12,7 @@ function step-install-getwindowsedition {
     try {
         $WindowsEdition = (Get-WindowsEdition -Path 'C:\' -ErrorAction Stop | Out-String).Trim()
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] $WindowsEdition"
-        $global:InvokeOSDCloudWorkflow.WindowsEdition = $WindowsEdition
+        $global:OSDCloudWorkflowInvoke.WindowsEdition = $WindowsEdition
     }
     catch {
         Write-Host -ForegroundColor Yellow "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to get Windows Edition. OK."

@@ -2,12 +2,12 @@ function step-validate-isdriverpackready {
     [CmdletBinding()]
     param (
         [System.String]
-        $DriverPackName = $global:InvokeOSDCloudWorkflow.DriverPackName,
+        $DriverPackName = $global:OSDCloudWorkflowInvoke.DriverPackName,
 
         [System.String]
-        $DriverPackGuid = $global:InvokeOSDCloudWorkflow.DriverPackObject.Guid,
+        $DriverPackGuid = $global:OSDCloudWorkflowInvoke.DriverPackObject.Guid,
 
-        $DriverPackObject = $global:InvokeOSDCloudWorkflow.DriverPackObject
+        $DriverPackObject = $global:OSDCloudWorkflowInvoke.DriverPackObject
     )
     #=================================================
     # Start the step
@@ -79,9 +79,9 @@ function step-validate-isdriverpackready {
     # DriverPack does not exist
     Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to validate if the OperatingSystem is reachable online or offline."
     Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OSDCloud will continue without a DriverPack. Clearing variables."
-    $global:InitializeOSDCloudWorkflow.DriverPackObject
-    $global:InitializeOSDCloudWorkflow.DriverPackObject = $null
-    $global:InitializeOSDCloudWorkflow.DriverPackName = 'None'
+    $global:OSDCloudWorkflowInit.DriverPackObject
+    $global:OSDCloudWorkflowInit.DriverPackObject = $null
+    $global:OSDCloudWorkflowInit.DriverPackName = 'None'
     Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Continue $WorkflowName in 5 seconds..."
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Press CTRL+C to cancel"
     Start-Sleep -Seconds 5

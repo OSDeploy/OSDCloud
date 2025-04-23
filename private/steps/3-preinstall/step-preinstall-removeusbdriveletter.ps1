@@ -17,12 +17,12 @@ function step-preinstall-removeusbdriveletter {
     #>
 
     # Store the USB Partitions
-    $global:InvokeOSDCloudWorkflow.USBPartitions = Get-USBPartition
+    $global:OSDCloudWorkflowInvoke.USBPartitions = Get-USBPartition
 
     # Remove USB Drive Letters
-    if ($global:InvokeOSDCloudWorkflow.USBPartitions) {
+    if ($global:OSDCloudWorkflowInvoke.USBPartitions) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Removing USB Drive Letters. OK."
-        foreach ($Item in $global:InvokeOSDCloudWorkflow.USBPartitions) {
+        foreach ($Item in $global:OSDCloudWorkflowInvoke.USBPartitions) {
             $Params = @{
                 AccessPath      = "$($Item.DriveLetter):"
                 DiskNumber      = $Item.DiskNumber

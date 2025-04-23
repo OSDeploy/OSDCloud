@@ -23,28 +23,28 @@ function step-install-expandwindowsimage {
     if (-NOT (Test-Path $Params.Path -ErrorAction SilentlyContinue)) { New-Item @Params | Out-Null }
     #=================================================
     # Build the Params
-    if ($global:InitializeOSDCloudWorkflow.LocalImageFileDestination.FullName -match '.swm') {
+    if ($global:OSDCloudWorkflowInit.LocalImageFileDestination.FullName -match '.swm') {
         #TODO - Add support for multiple SWM files
         $Params = @{
             ApplyPath             = 'C:\'
             ErrorAction           = 'Stop'
-            ImagePath             = $global:InitializeOSDCloudWorkflow.LocalImageFileDestination.FullName
-            Name                  = (Get-WindowsImage -ImagePath $global:InitializeOSDCloudWorkflow.LocalImageFileDestination.FullName).ImageName
+            ImagePath             = $global:OSDCloudWorkflowInit.LocalImageFileDestination.FullName
+            Name                  = (Get-WindowsImage -ImagePath $global:OSDCloudWorkflowInit.LocalImageFileDestination.FullName).ImageName
             ScratchDirectory      = 'C:\OSDCloud\Temp'
-            SplitImageFilePattern = ($global:InitializeOSDCloudWorkflow.LocalImageFileDestination.FullName).replace('install.swm', 'install*.swm')
+            SplitImageFilePattern = ($global:OSDCloudWorkflowInit.LocalImageFileDestination.FullName).replace('install.swm', 'install*.swm')
         }
     }
     else {
         $Params = @{
             ApplyPath        = 'C:\'
             ErrorAction      = 'Stop'
-            ImagePath        = $global:InvokeOSDCloudWorkflow.WindowsImagePath
-            Index            = $global:InvokeOSDCloudWorkflow.WindowsImageIndex
+            ImagePath        = $global:OSDCloudWorkflowInvoke.WindowsImagePath
+            Index            = $global:OSDCloudWorkflowInvoke.WindowsImageIndex
             ScratchDirectory = 'C:\OSDCloud\Temp'
         }
     }
 
-    $global:InvokeOSDCloudWorkflow.ParamsExpandWindowsImage = $Params
+    $global:OSDCloudWorkflowInvoke.ParamsExpandWindowsImage = $Params
     #=================================================
     # Expand WindowsImage
     if ($IsWinPE -eq $true) {

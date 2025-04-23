@@ -1,4 +1,4 @@
-function Initialize-OSDCloudUserSettings {
+function Initialize-OSDCloudWorkflowUserSettings {
     [CmdletBinding()]
     param (
         # Specifies a path to one or more locations.
@@ -55,8 +55,8 @@ function Initialize-OSDCloudUserSettings {
     $hashtable = [ordered]@{}
     (ConvertFrom-Json $JsonContent).psobject.properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
 
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialized InitializeOSDCloudUserSettings: $Path"
-    $global:InitializeOSDCloudUserSettings = $hashtable
+    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowUserSettings: $Path"
+    $global:OSDCloudWorkflowUserSettings = $hashtable
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"

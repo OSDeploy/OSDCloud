@@ -1,4 +1,4 @@
-function Initialize-OSDCloudGather {
+function Initialize-OSDCloudWorkflowGather {
     [CmdletBinding()]
     param ()
     #=================================================
@@ -161,7 +161,7 @@ function Initialize-OSDCloudGather {
                     }
                     $IsBDE = $true
                 }
-                # TODO - Add to InitializeOSDCloudGather
+                # TODO - Add to OSDCloudWorkflowGather
                 #$BitlockerEncryptionMethod
                 #$BitlockerEncryptionType
             }
@@ -225,10 +225,10 @@ function Initialize-OSDCloudGather {
     }
     catch {}
     #=================================================
-    #   Pass Variables to InitializeOSDCloudGather
+    #   Pass Variables to OSDCloudWorkflowGather
     #=================================================
-    $global:InitializeOSDCloudGather = $null
-    $global:InitializeOSDCloudGather = [ordered]@{
+    $global:OSDCloudWorkflowGather = $null
+    $global:OSDCloudWorkflowGather = [ordered]@{
         Architecture                = $Architecture
         BiosReleaseDate             = $Win32BIOS.ReleaseDate
         BiosVersion                 = $Win32BIOS.SMBIOSBIOSVersion
@@ -287,8 +287,8 @@ function Initialize-OSDCloudGather {
             Write-Host -ForegroundColor Yellow "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Autopilot is not supported on this device."
         }
         else {
-            $global:InitializeOSDCloudGather.IsAutopilotReady = $true
-            $global:InitializeOSDCloudGather.IsTpmReady = $true
+            $global:OSDCloudWorkflowGather.IsAutopilotReady = $true
+            $global:OSDCloudWorkflowGather.IsTpmReady = $true
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] TPM 2.0 is supported on this device."
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Autopilot is supported on this device."
         }

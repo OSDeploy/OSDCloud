@@ -2,7 +2,7 @@ function step-validate-iswindowsimageready {
     [CmdletBinding()]
     param (
         [System.String]
-        $LaunchMethod = $global:InvokeOSDCloudWorkflow.LaunchMethod
+        $LaunchMethod = $global:OSDCloudWorkflowInvoke.LaunchMethod
     )
     #=================================================
     # Start the step
@@ -13,7 +13,7 @@ function step-validate-iswindowsimageready {
     $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     # Is there an Opeating System ImageFile URL?
-    if (-not ($global:InvokeOSDCloudWorkflow.OperatingSystemObject.Url)) {
+    if (-not ($global:OSDCloudWorkflowInvoke.OperatingSystemObject.Url)) {
         Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OperatingSystemObject does not have a Url to validate."
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'
         Start-Sleep -Seconds 86400
@@ -22,7 +22,7 @@ function step-validate-iswindowsimageready {
     #=================================================
     # Is it reachable online?
     try {
-        $WebRequest = Invoke-WebRequest -Uri $global:InvokeOSDCloudWorkflow.OperatingSystemObject.Url -UseBasicParsing -Method Head
+        $WebRequest = Invoke-WebRequest -Uri $global:OSDCloudWorkflowInvoke.OperatingSystemObject.Url -UseBasicParsing -Method Head
         if ($WebRequest.StatusCode -eq 200) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OperatingSystem URL returned a 200 status code. OK."
             return
@@ -33,7 +33,7 @@ function step-validate-iswindowsimageready {
     }
     #=================================================
     # Does the file exist on a Drive?
-    $FileName = Split-Path $global:InvokeOSDCloudWorkflow.OperatingSystemObject.Url -Leaf
+    $FileName = Split-Path $global:OSDCloudWorkflowInvoke.OperatingSystemObject.Url -Leaf
     $MatchingFiles = @()
     $MatchingFiles = Get-PSDrive -PSProvider FileSystem | ForEach-Object {
         Get-ChildItem "$($_.Name):\OSDCloud\OS\" -Include "$FileName" -File -Recurse -Force -ErrorAction Ignore
@@ -62,24 +62,24 @@ function step-validate-iswindowsimageready {
 <#
     if ($LaunchMethod) {
         #TODO This is not working for Core
-        #$null = Install-Module -Name $global:InvokeOSDCloudWorkflow.LaunchMethod -Force -ErrorAction Ignore -WarningAction Ignore
+        #$null = Install-Module -Name $global:OSDCloudWorkflowInvoke.LaunchMethod -Force -ErrorAction Ignore -WarningAction Ignore
     }
 
-    if ($global:InitializeOSDCloudWorkflow.LocalImageFileInfo) {
+    if ($global:OSDCloudWorkflowInit.LocalImageFileInfo) {
         # Test if the file is on USB (example: check if path starts with a removable drive letter)
-        if (!(Test-Path $global:InitializeOSDCloudWorkflow.LocalImageFileInfo)) {
+        if (!(Test-Path $global:OSDCloudWorkflowInit.LocalImageFileInfo)) {
             Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OSDCloud failed to find the Operating System Local ImageFile Item"
-            Write-Warning $($global:InitializeOSDCloudWorkflow.LocalImageFileInfo)
+            Write-Warning $($global:OSDCloudWorkflowInit.LocalImageFileInfo)
             Write-Warning "Press Ctrl+C to cancel OSDCloud"
             Start-Sleep -Seconds 86400
             Exit
         }
     }
 
-    if ($global:InvokeOSDCloudWorkflow.LocalImageFileDestination) {
-        if (!(Test-Path $global:InvokeOSDCloudWorkflow.LocalImageFileDestination)) {
+    if ($global:OSDCloudWorkflowInvoke.LocalImageFileDestination) {
+        if (!(Test-Path $global:OSDCloudWorkflowInvoke.LocalImageFileDestination)) {
             Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OSDCloud failed to find the Operating System Local ImageFile Destination"
-            Write-Warning $($global:InvokeOSDCloudWorkflow.LocalImageFileDestination)
+            Write-Warning $($global:OSDCloudWorkflowInvoke.LocalImageFileDestination)
             Write-Warning 'Press Ctrl+C to cancel OSDCloud'
             Start-Sleep -Seconds 86400
             Exit

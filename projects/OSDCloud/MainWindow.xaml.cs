@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OSDCloudCore
+namespace OSDCloud
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,6 +24,5 @@ namespace OSDCloudCore
         {
             InitializeComponent();
         }
-
     }
 }

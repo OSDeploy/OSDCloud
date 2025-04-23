@@ -1,4 +1,4 @@
-function Initialize-OSDCloudOSSettings {
+function Initialize-OSDCloudWorkflowOSSettings {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false,
@@ -54,8 +54,8 @@ function Initialize-OSDCloudOSSettings {
     $hashtable = [ordered]@{}
     (ConvertFrom-Json $JsonContent).psobject.properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
 
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialized InitializeOSDCloudOSSettings: $Path"
-    $global:InitializeOSDCloudOSSettings = $hashtable
+    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowOSSettings: $Path"
+    $global:OSDCloudWorkflowOSSettings = $hashtable
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"

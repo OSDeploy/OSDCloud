@@ -2,13 +2,13 @@ function step-preinstall-partitiondisk {
     [CmdletBinding()]
     param (
         [System.String]
-        $RecoveryPartitionForce = $global:InvokeOSDCloudWorkflowSettings.RecoveryPartition.Force,
+        $RecoveryPartitionForce = $global:OSDCloudWorkflowInvokeSettings.RecoveryPartition.Force,
 
         [System.String]
-        $RecoveryPartitionSkip = $global:InvokeOSDCloudWorkflowSettings.RecoveryPartition.Skip,
+        $RecoveryPartitionSkip = $global:OSDCloudWorkflowInvokeSettings.RecoveryPartition.Skip,
 
         [Int32]
-        $DiskNumber = $global:InvokeOSDCloudWorkflowSettings.DiskPartition.DiskNumber
+        $DiskNumber = $global:OSDCloudWorkflowInvokeSettings.DiskPartition.DiskNumber
     )
     #=================================================
     # Start the step

@@ -1,7 +1,7 @@
 function step-install-downloadwindowsimage {
     [CmdletBinding()]
     param (
-        $OperatingSystemObject = $global:InvokeOSDCloudWorkflow.OperatingSystemObject
+        $OperatingSystemObject = $global:OSDCloudWorkflowInvoke.OperatingSystemObject
     )
     #=================================================
     # Start the step
@@ -66,9 +66,9 @@ function step-install-downloadwindowsimage {
 
     #=================================================
     # Store this as a FileInfo Object
-    $global:InvokeOSDCloudWorkflow.FileInfoWindowsImage = $FileInfo
-    $global:InvokeOSDCloudWorkflow.WindowsImagePath = $global:InvokeOSDCloudWorkflow.FileInfoWindowsImage.FullName
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] WindowsImagePath:  $($global:InvokeOSDCloudWorkflow.WindowsImagePath)"
+    $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage = $FileInfo
+    $global:OSDCloudWorkflowInvoke.WindowsImagePath = $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage.FullName
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] WindowsImagePath:  $($global:OSDCloudWorkflowInvoke.WindowsImagePath)"
     
     #=================================================
     # Check the File Hash

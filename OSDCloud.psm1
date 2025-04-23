@@ -19,6 +19,6 @@ if ($FoundErrors.Count -gt 0) {
     break
 }
 
-Set-Alias -Name OSDCloud -Value Start-OSDCloudCore -Scope Global
+Set-Alias -Name OSDCloud -Value Start-OSDCloudWorkflow -Scope Global
 Export-ModuleMember -Function '*' -Alias '*' -Cmdlet '*'
 Initialize-OSDCloudModule
