@@ -7,7 +7,7 @@ function Step-UpdatePSModule {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSvDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     Write-Host -ForegroundColor DarkGray "Saving PowerShell Modules and Scripts"

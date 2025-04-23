@@ -7,7 +7,7 @@ function step-validate-isdiskready {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSvDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)]"

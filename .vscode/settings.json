@@ -5,4 +5,5 @@
         }
     ],
     "dotnet.preferCSharpExtension": true,
+    "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
 }

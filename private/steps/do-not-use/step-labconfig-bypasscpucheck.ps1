@@ -10,7 +10,7 @@ function step-labconfig-bypasscpucheck {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSvDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     $OfflineRegistryPath = 'HKLM:\OfflineSystem\Setup\LabConfig'

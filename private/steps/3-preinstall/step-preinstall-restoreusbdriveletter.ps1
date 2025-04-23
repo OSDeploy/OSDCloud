@@ -7,7 +7,7 @@ function step-preinstall-restoreusbdriveletter {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSvDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     if ($global:OSDCloudWorkflowInvoke.USBPartitions) {

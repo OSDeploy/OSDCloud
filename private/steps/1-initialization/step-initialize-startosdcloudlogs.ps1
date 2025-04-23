@@ -7,7 +7,7 @@ function step-initialize-startosdcloudlogs {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSvDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     $LogsPath = "$env:TEMP\osdcloud-logs"

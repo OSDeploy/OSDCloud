@@ -46,7 +46,7 @@ function Invoke-OSDCloudWorkflow {
         
         foreach ($step in $global:OSDCloudWorkflowInit.WorkflowObject.steps) {
             # Set the current step in the global variable
-            $global:OSvDCloudWorkflowCurrentStep = $step
+            $global:OSDCloudWorkflowCurrentStep = $step
 
             # Skip the step if the skip condition is met
             if ($step.rules.skip -eq $true) {
