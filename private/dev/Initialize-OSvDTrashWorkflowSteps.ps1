@@ -1,4 +1,4 @@
-function Initialize-PSOSDCloud {
+function Initialize-OSvDTrashWorkflowSteps {
     [CmdletBinding()]
     param (
         # Specifies a path to one or more locations.
@@ -8,7 +8,7 @@ function Initialize-PSOSDCloud {
             ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
         [string[]]
-        $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\OSDCloud.json",
+        $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\library\workflows\amd64\27a0a74c-1cfb-4cd8-bc62-73a6d0491d43.json",
 
         [System.Management.Automation.SwitchParameter]
         $AsJson
@@ -36,7 +36,8 @@ function Initialize-PSOSDCloud {
     $hashtable = [ordered]@{}
     (ConvertFrom-Json $JsonContent).psobject.properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
 
-    $global:PSOSDCloud = $hashtable
+    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialized WorkflowSteps: $Path"
+    $global:OSvDCloudTaskSequence = $hashtable
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"

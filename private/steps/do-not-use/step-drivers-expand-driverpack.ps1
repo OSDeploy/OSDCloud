@@ -7,7 +7,7 @@ function step-drivers-expand-driverpack {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     if ($global:OSDCloudWorkflowInvoke.DriverPackExpand) {

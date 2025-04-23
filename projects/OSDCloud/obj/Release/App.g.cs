@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using OSDCloudCore;
+using OSDCloud;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -32,7 +32,7 @@ using System.Windows.Shapes;
 using System.Windows.Shell;
 
 
-namespace OSDCloudCore {
+namespace OSDCloud {
     
     
     /// <summary>
@@ -61,7 +61,7 @@ namespace OSDCloudCore {
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
         public static void Main() {
-            OSDCloudCore.App app = new OSDCloudCore.App();
+            OSDCloud.App app = new OSDCloud.App();
             app.InitializeComponent();
             app.Run();
         }

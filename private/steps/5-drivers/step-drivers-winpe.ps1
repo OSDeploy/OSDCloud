@@ -7,7 +7,7 @@ function step-drivers-winpe {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     # Output Path
     $OutputPath = "C:\Windows\Temp\osdcloud\drivers-winpe"

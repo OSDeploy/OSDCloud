@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OSDCloudCore.Properties
+namespace OSDCloud.Properties
 {
 
 

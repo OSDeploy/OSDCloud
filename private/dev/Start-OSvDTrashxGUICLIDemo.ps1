@@ -1,4 +1,4 @@
-function Start-OSDCloudWorkflowCLIDemo {
+function Start-OSvDTrashxGUICLIDemo {
     [CmdletBinding()]
     param ()
     #=================================================
@@ -11,12 +11,12 @@ function Start-OSDCloudWorkflowCLIDemo {
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
     Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
-    Initialize-OSDCloud
+    Initialize-OSDCloudWorkflow
     #=================================================
     #   Get-Culture
     #=================================================
-    $DefaultOSLanguage = $global:OSDCloudWorkflowOS."OSLanguageCode.default"
-    $DefaultOSLanguageValues = [array]$global:OSDCloudWorkflowOS."OSLanguageCode.values"
+    $DefaultOSLanguage = $global:OSDCloudWorkflowOSSettings."OSLanguageCode.default"
+    $DefaultOSLanguageValues = [array]$global:OSDCloudWorkflowOSSettings."OSLanguageCode.values"
     $DefaultPSCulture = $PSCulture.ToLower()
     if ($DefaultPSCulture -in $DefaultOSLanguageValues) {
         $OSLanguage = $DefaultPSCulture
@@ -44,18 +44,18 @@ function Start-OSDCloudWorkflowCLIDemo {
         Function              = $($MyInvocation.MyCommand.Name)
         LaunchMethod          = 'OSDCloudWorkflow'
         Module                = $($MyInvocation.MyCommand.Module.Name)
-        OSActivation          = $global:OSDCloudWorkflowOS."OSActivation.default"
-        OSActivationValues    = [array]$global:OSDCloudWorkflowOS."OSActivation.values"
+        OSActivation          = $global:OSDCloudWorkflowOSSettings."OSActivation.default"
+        OSActivationValues    = [array]$global:OSDCloudWorkflowOSSettings."OSActivation.values"
         OSArchitecture        = $Architecture
-        OSEdition             = $global:OSDCloudWorkflowOS."OSEdition.default"
-        OSEditionId           = $global:OSDCloudWorkflowOS."OSEditionId.default"
-        OSEditionValues       = [array]$global:OSDCloudWorkflowOS."OSEdition.values"
+        OSEdition             = $global:OSDCloudWorkflowOSSettings."OSEdition.default"
+        OSEditionId           = $global:OSDCloudWorkflowOSSettings."OSEditionId.default"
+        OSEditionValues       = [array]$global:OSDCloudWorkflowOSSettings."OSEdition.values"
         # OSImageIndex          = $null
-        OSLanguage            = $global:OSDCloudWorkflowOS."OSLanguageCode.default"
-        OSLanguageValues      = [array]$global:OSDCloudWorkflowOS."OSLanguageCode.values"
-        OSName                = $global:OSDCloudWorkflowOS."OSName.default"
-        OSNameValues          = [array]$global:OSDCloudWorkflowOS."OSName.values"
-        OSReleaseIDValues     = [array]$global:OSDCloudWorkflowOS."OSReleaseID.values"
+        OSLanguage            = $global:OSDCloudWorkflowOSSettings."OSLanguageCode.default"
+        OSLanguageValues      = [array]$global:OSDCloudWorkflowOSSettings."OSLanguageCode.values"
+        OSName                = $global:OSDCloudWorkflowOSSettings."OSName.default"
+        OSNameValues          = [array]$global:OSDCloudWorkflowOSSettings."OSName.values"
+        OSReleaseIDValues     = [array]$global:OSDCloudWorkflowOSSettings."OSReleaseID.values"
         TimeStart             = [datetime](Get-Date)
     }
     #=================================================
@@ -63,7 +63,7 @@ function Start-OSDCloudWorkflowCLIDemo {
     #   New logic added to Get-OSDCatalogDriverPack
     #   This should match the proper OS Version ReleaseID
     #=================================================
-    $global:OSDCloudWorkflowInit.DriverPackObject = Get-OSDCatalogDriverPack -Product $global:OSDCloudWorkflowInit.ComputerProduct -OSVersion $global:OSDCloudWorkflowInit.OperatingSystem -OSReleaseID $global:OSDCloudWorkflowOS.OSReleaseID
+    $global:OSDCloudWorkflowInit.DriverPackObject = Get-OSDCatalogDriverPack -Product $global:OSDCloudWorkflowInit.ComputerProduct -OSVersion $global:OSDCloudWorkflowInit.OperatingSystem -OSReleaseID $global:OSDCloudWorkflowOSSettings.OSReleaseID
 
     if ($global:OSDCloudWorkflowInit.DriverPackObject) {
         $global:OSDCloudWorkflowInit.DriverPackName = $global:OSDCloudWorkflowInit.DriverPackObject.Name

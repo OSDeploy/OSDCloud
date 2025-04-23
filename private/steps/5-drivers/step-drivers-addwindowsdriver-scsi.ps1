@@ -7,7 +7,7 @@ function step-drivers-addwindowsdriver-scsi {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 

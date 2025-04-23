@@ -248,53 +248,53 @@ function Show-PowershellWindow() {
 }
 #endregion
 #=================================================
-#region OSDCloudWorkflowUser
+#region OSDCloudWorkflowUserSettings
 # Disk Actions
-$formMainWindowControlSkipClearDisk.IsChecked = $global:OSDCloudWorkflowUser.SkipClearDisk
-$formMainWindowControlSkipClearDiskConfirm.IsChecked = $global:OSDCloudWorkflowUser.SkipClearDiskConfirm
-$formMainWindowControlSkipRecoveryPartition.IsChecked = $global:OSDCloudWorkflowUser.SkipRecoveryPartition
+$formMainWindowControlSkipClearDisk.IsChecked = $global:OSDCloudWorkflowUserSettings.SkipClearDisk
+$formMainWindowControlSkipClearDiskConfirm.IsChecked = $global:OSDCloudWorkflowUserSettings.SkipClearDiskConfirm
+$formMainWindowControlSkipRecoveryPartition.IsChecked = $global:OSDCloudWorkflowUserSettings.SkipRecoveryPartition
 
 # Updates
-$formMainWindowControlUpdateDiskDrivers.IsChecked = $global:OSDCloudWorkflowUser.UpdateDiskDrivers
-$formMainWindowControlUpdateNetworkDrivers.IsChecked = $global:OSDCloudWorkflowUser.UpdateNetworkDrivers
-$formMainWindowControlUpdateScsiDrivers.IsChecked = $global:OSDCloudWorkflowUser.UpdateScsiDrivers
-$formMainWindowControlUpdateSystemFirmware.IsChecked = $global:OSDCloudWorkflowUser.UpdateSystemFirmware
+$formMainWindowControlUpdateDiskDrivers.IsChecked = $global:OSDCloudWorkflowUserSettings.UpdateDiskDrivers
+$formMainWindowControlUpdateNetworkDrivers.IsChecked = $global:OSDCloudWorkflowUserSettings.UpdateNetworkDrivers
+$formMainWindowControlUpdateScsiDrivers.IsChecked = $global:OSDCloudWorkflowUserSettings.UpdateScsiDrivers
+$formMainWindowControlUpdateSystemFirmware.IsChecked = $global:OSDCloudWorkflowUserSettings.UpdateSystemFirmware
 
 # PowerShell
-$formMainWindowControlPSUpdateModulePowershellGet.IsChecked = $global:OSDCloudWorkflowUser.PSUpdateModulePowershellGet
-$formMainWindowControlPSUpdateModulePackageManagement.IsChecked = $global:OSDCloudWorkflowUser.PSUpdateModulePackageManagement
-$formMainWindowControlPSInstallModuleOSD.IsChecked = $global:OSDCloudWorkflowUser.PSInstallModuleOSD
-$formMainWindowControlPSInstallModuleWindowsAutopilotIntune.IsChecked = $global:OSDCloudWorkflowUser.PSInstallModuleWindowsAutopilotIntune
+$formMainWindowControlPSUpdateModulePowershellGet.IsChecked = $global:OSDCloudWorkflowUserSettings.PSUpdateModulePowershellGet
+$formMainWindowControlPSUpdateModulePackageManagement.IsChecked = $global:OSDCloudWorkflowUserSettings.PSUpdateModulePackageManagement
+$formMainWindowControlPSInstallModuleOSD.IsChecked = $global:OSDCloudWorkflowUserSettings.PSInstallModuleOSD
+$formMainWindowControlPSInstallModuleWindowsAutopilotIntune.IsChecked = $global:OSDCloudWorkflowUserSettings.PSInstallModuleWindowsAutopilotIntune
 
 # Cleanup
 
 # Finish Actions
-$formMainWindowControlWinpeRestart.IsChecked = $global:OSDCloudWorkflowUser.WinpeRestart
-$formMainWindowControlWinpeShutdown.IsChecked = $global:OSDCloudWorkflowUser.WinpeShutdown
+$formMainWindowControlWinpeRestart.IsChecked = $global:OSDCloudWorkflowUserSettings.WinpeRestart
+$formMainWindowControlWinpeShutdown.IsChecked = $global:OSDCloudWorkflowUserSettings.WinpeShutdown
 
 # Tpm
 if ($global:OSDCloudWorkflowGather.IsTpmReady -eq $true) {
     $formMainWindowControlIsTpmReady.Foreground = 'Green'
-    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowUser.IsTpmReady.Success
+    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowUserSettings.IsTpmReady.Success
 }
 else {
     $formMainWindowControlIsTpmReady.Foreground = 'Red'
-    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowUser.IsTpmReady.Error
+    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowUserSettings.IsTpmReady.Error
 }
 
 # Autopilot
 if ($global:OSDCloudWorkflowGather.IsAutopilotReady -eq $true) {
     $formMainWindowControlIsAutopilotReady.Foreground = 'Green'
-    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowUser.IsTpmReady.Success
+    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowUserSettings.IsTpmReady.Success
 }
 else {
     $formMainWindowControlIsAutopilotReady.Foreground = 'Red'
-    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowUser.IsTpmReady.Error
+    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowUserSettings.IsTpmReady.Error
 }
 #endregion
 #=================================================
 #region OSDCloud Workflow Library
-$(Get-OSDCloudWorkflows) | ForEach-Object {
+$global:OSDCloudWorkflowInit.Flows | ForEach-Object {
     $formMainWindowControlOSDProfileCombobox.Items.Add($_.Name) | Out-Null
 }
 $formMainWindowControlOSDProfileCombobox.SelectedIndex = 0
@@ -343,7 +343,7 @@ if ($global:OSDCloudWorkflowInit.DriverPackName) {
 function Set-FormConfigurationCloud {
     $formMainWindowControlOperatingSystemLabel.Content = 'Operating System'
 
-    $OperatingSystemEditions = $global:OSDCatalogOperatingSystems | `
+    $OperatingSystemEditions = $global:OSDCloudWorkflowOSCatalog | `
         Where-Object {$_.Name -eq "$($formMainWindowControlOSNameCombobox.SelectedValue)"} | `
         Where-Object {$_.LanguageCode -eq "$($formMainWindowControlOSLanguageCombobox.SelectedValue)"} | `
         Select-Object -ExpandProperty Edition -Unique
@@ -373,10 +373,10 @@ Set-FormConfigurationCloud
 #=================================================
 #region CustomImage
 <#
-[array]$OSDCloudOSIso = @()
-[array]$OSDCloudOSIso = Find-OSDCloudFile -Name '*.iso' -Path '\OSDCloud\OS\' | Where-Object { $_.Length -gt 3GB }
+[array]$OSDCloudWorkflowOSSettingsIso = @()
+[array]$OSDCloudWorkflowOSSettingsIso = Find-OSDCloudFile -Name '*.iso' -Path '\OSDCloud\OS\' | Where-Object { $_.Length -gt 3GB }
 
-foreach ($Item in $OSDCloudOSIso) {
+foreach ($Item in $OSDCloudWorkflowOSSettingsIso) {
     if ((Get-DiskImage -ImagePath $Item.FullName).Attached) {
         #ISO is already mounted
     }
@@ -503,10 +503,10 @@ $formMainWindowControlStartButton.add_Click(
             $OSReleaseID = $OSName.Split('-')[1]
             
             if ($OSName -match 'arm64') {
-                $OperatingSystemObject = $global:OSDCatalogOperatingSystems | Where-Object { $_.DisplayName -match $OSName } | Where-Object { $_.License -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
+                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.DisplayName -match $OSName } | Where-Object { $_.License -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
             }
             else {
-                $OperatingSystemObject = $global:OSDCatalogOperatingSystems | Where-Object { $_.DisplayName -match $OSName } | Where-Object { $_.License -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
+                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.DisplayName -match $OSName } | Where-Object { $_.License -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
             }
             
             $ImageFileUrl = $OperatingSystemObject.Url
@@ -530,7 +530,7 @@ $formMainWindowControlStartButton.add_Click(
         #   Workflow
         #================================================
         $OSDCloudWorkflowName = $formMainWindowControlOSDProfileCombobox.SelectedValue
-        $OSDCloudWorkflowObject = Get-OSDCloudWorkflows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
+        $OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
         #================================================
         #   DriverPack
         #================================================
@@ -541,47 +541,40 @@ $formMainWindowControlStartButton.add_Click(
         #================================================
         #   Global Variables
         #================================================
-        $global:OSDCloudWorkflowFrontend = $null
-        $global:OSDCloudWorkflowFrontend = [ordered]@{
-            TimeStart                  = (Get-Date)
-            WorkflowName               = $OSDCloudWorkflowName
-            WorkflowObject             = $OSDCloudWorkflowObject
-            OperatingSystem            = $OperatingSystem
-            OperatingSystemObject      = $OperatingSystemObject
-            OSActivation               = $OSActivation
-            OSBuild                    = $OSBuild
-            OSEdition                  = $OSEdition
-            OSEditionId                = $OSEditionId
-            OSLanguage                 = $OSLanguage
-            OSName                     = $OSName
-            OSReleaseID                = $OSReleaseID
-            DriverPackObject           = [System.Object]$DriverPackObject
-            DriverPackName             = $DriverPackName
-            ImageFileName              = $ImageFileName
-            ImageFileUrl               = $ImageFileUrl
-            LocalImageFileInfo         = $LocalImageFileInfo
-            LocalImageFilePath         = $LocalImageFilePath
-            LocalImageName             = $LocalImageName
-        }
+        $global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName
+        $global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
+        $global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystem
+        $global:OSDCloudWorkflowInit.OperatingSystemObject = $OperatingSystemObject
+        $global:OSDCloudWorkflowInit.OSActivation = $OSActivation
+        $global:OSDCloudWorkflowInit.OSBuild = $OSBuild
+        $global:OSDCloudWorkflowInit.OSEdition = $OSEdition
+        $global:OSDCloudWorkflowInit.OSEditionId = $OSEditionId
+        $global:OSDCloudWorkflowInit.OSLanguage = $OSLanguage
+        $global:OSDCloudWorkflowInit.OSName = $OSName
+        $global:OSDCloudWorkflowInit.OSReleaseID = $OSReleaseID
+        $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject
+        $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
+        $global:OSDCloudWorkflowInit.ImageFileName = $ImageFileName
+        $global:OSDCloudWorkflowInit.ImageFileUrl = $ImageFileUrl
+        $global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
+        $global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath
+        $global:OSDCloudWorkflowInit.LocalImageName = $LocalImageName
+        $global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
 
-        $global:OSDCloudWorkflowSteps = $OSDCloudWorkflowObject
-        
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][OSDCloud Frontend] Variable OSDCloudWorkflowFrontend"
-        $global:OSDCloudWorkflowFrontend | Out-Host
         <#
-        $global:OSDCloudWorkflowUser.SkipClearDisk = $formMainWindowControlSkipClearDisk.IsChecked
-        $global:OSDCloudWorkflowUser.SkipClearDiskConfirm = $formMainWindowControlSkipClearDiskConfirm.IsChecked
-        $global:OSDCloudWorkflowUser.SkipRecoveryPartition = $formMainWindowControlSkipRecoveryPartition.IsChecked
-        $global:OSDCloudWorkflowUser.UpdateDiskDrivers = $formMainWindowControlUpdateDiskDrivers.IsChecked
-        $global:OSDCloudWorkflowUser.UpdateNetworkDrivers = $formMainWindowControlUpdateNetworkDrivers.IsChecked
-        $global:OSDCloudWorkflowUser.UpdateScsiDrivers = $formMainWindowControlUpdateScsiDrivers.IsChecked
-        $global:OSDCloudWorkflowUser.UpdateSystemFirmware = $formMainWindowControlUpdateSystemFirmware.IsChecked
-        $global:OSDCloudWorkflowUser.PSUpdateModulePowershellGet = $formMainWindowControlPSUpdateModulePowershellGet.IsChecked
-        $global:OSDCloudWorkflowUser.PSUpdateModulePackageManagement = $formMainWindowControlPSUpdateModulePackageManagement.IsChecked
-        $global:OSDCloudWorkflowUser.PSInstallModuleOSD = $formMainWindowControlPSInstallModuleOSD.IsChecked
-        $global:OSDCloudWorkflowUser.PSInstallModuleWindowsAutopilotIntune = $formMainWindowControlPSInstallModuleWindowsAutopilotIntune.IsChecked
-        $global:OSDCloudWorkflowUser.WinpeRestart = $formMainWindowControlWinpeRestart.IsChecked
-        $global:OSDCloudWorkflowUser.WinpeShutdown = $formMainWindowControlWinpeShutdown.IsChecked
+        $global:OSDCloudWorkflowUserSettings.SkipClearDisk = $formMainWindowControlSkipClearDisk.IsChecked
+        $global:OSDCloudWorkflowUserSettings.SkipClearDiskConfirm = $formMainWindowControlSkipClearDiskConfirm.IsChecked
+        $global:OSDCloudWorkflowUserSettings.SkipRecoveryPartition = $formMainWindowControlSkipRecoveryPartition.IsChecked
+        $global:OSDCloudWorkflowUserSettings.UpdateDiskDrivers = $formMainWindowControlUpdateDiskDrivers.IsChecked
+        $global:OSDCloudWorkflowUserSettings.UpdateNetworkDrivers = $formMainWindowControlUpdateNetworkDrivers.IsChecked
+        $global:OSDCloudWorkflowUserSettings.UpdateScsiDrivers = $formMainWindowControlUpdateScsiDrivers.IsChecked
+        $global:OSDCloudWorkflowUserSettings.UpdateSystemFirmware = $formMainWindowControlUpdateSystemFirmware.IsChecked
+        $global:OSDCloudWorkflowUserSettings.PSUpdateModulePowershellGet = $formMainWindowControlPSUpdateModulePowershellGet.IsChecked
+        $global:OSDCloudWorkflowUserSettings.PSUpdateModulePackageManagement = $formMainWindowControlPSUpdateModulePackageManagement.IsChecked
+        $global:OSDCloudWorkflowUserSettings.PSInstallModuleOSD = $formMainWindowControlPSInstallModuleOSD.IsChecked
+        $global:OSDCloudWorkflowUserSettings.PSInstallModuleWindowsAutopilotIntune = $formMainWindowControlPSInstallModuleWindowsAutopilotIntune.IsChecked
+        $global:OSDCloudWorkflowUserSettings.WinpeRestart = $formMainWindowControlWinpeRestart.IsChecked
+        $global:OSDCloudWorkflowUserSettings.WinpeShutdown = $formMainWindowControlWinpeShutdown.IsChecked
         #>
         #=================================================
         #   Invoke-OSDCloudWorkflow.ps1
@@ -601,7 +594,7 @@ $formMainWindow.Title = "OSDCloud Preview on $($global:OSDCloudWorkflowInit.Comp
 #endregion
 #================================================
 #region Branding
-$formMainWindowControlBrandingTitleControl.Content = 'OSDCloud'
+$formMainWindowControlBrandingTitleControl.Content = 'OSDCloud Workflow'
 $formMainWindowControlBrandingTitleControl.Foreground = '#0067C0'
 #endregion
 #================================================

@@ -7,7 +7,7 @@ function step-drivers-firmware {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSvDCloudWorkflowCurrentStep
     #=================================================
     if ($PSVersionTable.PSVersion.Major -ne 5) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] PowerShell 5.1 is required to run this step. Skip."

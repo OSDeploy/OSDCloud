@@ -1,4 +1,4 @@
-function Get-OSDCloudModulePath {
+function Get-OSvDCloudModulePath {
     [CmdletBinding()]
     param ()
 

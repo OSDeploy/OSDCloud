@@ -1,4 +1,4 @@
-function Get-OSDCloudModuleVersion {
+function Get-OSvDCloudModuleVersion {
     [CmdletBinding()]
     param ()
 

@@ -13,29 +13,7 @@ function Invoke-OSDCloudWorkflow {
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
     Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
-    # OSDCloudWorkflowGather
-    if (-not $global:OSDCloudWorkflowGather) {
-        Initialize-OSDCloudWorkflowGather
-    }
-    #=================================================
-    # OSDCloudWorkflowOS
-    if (-not $global:OSDCloudWorkflowOS) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Importing OS Defaults $ModuleVersion"
-        Initialize-OSDCloudWorkflowOS
-    }
-    #=================================================
-    # OSDCloudWorkflowUser
-    if (-not $global:OSDCloudWorkflowUser) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Importing User Settings $ModuleVersion"
-        Initialize-OSDCloudWorkflowUser
-    }
-    #=================================================
-    # OSDCloudWorkflowSteps
-    if (-not $global:OSDCloudWorkflowSteps) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Importing Workflow Steps $ModuleVersion"
-        Initialize-OSDCloudWorkflowSteps
-    }
-    #=================================================
+    # Set global variables
     [System.String]$global:Architecture = $OSDCloudWorkflowGather.Architecture
     [System.Boolean]$global:IsOnBattery = $OSDCloudWorkflowGather.IsOnBattery
     [System.Boolean]$global:IsVM = $OSDCloudWorkflowGather.IsVM
@@ -50,25 +28,25 @@ function Invoke-OSDCloudWorkflow {
         ComputerProduct       = $OSDCloudWorkflowGather.ComputerProduct
         ComputerSerialNumber  = $OSDCloudWorkflowGather.SerialNumber
         ComputerUUID          = (Get-WmiObject -Class Win32_ComputerSystemProduct).UUID
-        DriverPackName        = $OSDCloudWorkflowFrontend.DriverPackName
-        DriverPackObject      = $OSDCloudWorkflowFrontend.DriverPackObject
+        DriverPackName        = $OSDCloudWorkflowInit.DriverPackName
+        DriverPackObject      = $OSDCloudWorkflowInit.DriverPackObject
         IsOnBattery           = $global:IsOnBattery
         IsVM                  = $global:IsVM
         IsWinPE               = $global:IsWinPE
         LogsPath              = "$env:TEMP\osdcloud-logs"
-        OperatingSystem       = $OSDCloudWorkflowFrontend.OperatingSystem
-        OperatingSystemObject = $OSDCloudWorkflowFrontend.OperatingSystemObject
+        OperatingSystem       = $OSDCloudWorkflowInit.OperatingSystem
+        OperatingSystemObject = $OSDCloudWorkflowInit.OperatingSystemObject
         TimeEnd               = $null
         TimeSpan              = $null
         TimeStart             = [datetime](Get-Date)
     }
     #=================================================
-    if ($null -ne $global:OSDCloudWorkflowSteps) {
+    if ($null -ne $global:OSDCloudWorkflowInit.WorkflowObject) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Starting OSDCloud Workflow"
         
-        foreach ($step in $global:OSDCloudWorkflowSteps.steps) {
+        foreach ($step in $global:OSDCloudWorkflowInit.WorkflowObject.steps) {
             # Set the current step in the global variable
-            $global:OSDCloudWorkflowCurrentStep = $step
+            $global:OSvDCloudWorkflowCurrentStep = $step
 
             # Skip the step if the skip condition is met
             if ($step.rules.skip -eq $true) {

@@ -1,15 +1,15 @@
-﻿<Window x:Class="OSDCloudCore.MainWindow"
+﻿<Window x:Class="OSDCloud.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OSDCloudCore"
+        xmlns:local="clr-namespace:OSDCloud"
         mc:Ignorable="d"
         BorderThickness="0"
         RenderTransformOrigin="0.5,0.5"
         ResizeMode="NoResize"
         WindowStartupLocation = "CenterScreen"
-        Title="OSDCloudCore version on Manufacturer Model Product" Height="300" Width="770">
+        Title="OSDCloud version on Manufacturer Model Product" Height="275" Width="770">
     <Window.Resources>
         <ResourceDictionary>
             <Style TargetType="{x:Type Button}">
@@ -404,7 +404,7 @@
                         VerticalAlignment="Top">
                     <Label Name="DriverPackLabel"
                        Content="Driver Pack"
-                       FontSize="15"
+                       FontSize="16"
                        FontWeight="Bold"
                        Foreground="#0067C0"
                        Margin="5"
@@ -412,7 +412,7 @@
                        Width="140"
                        FlowDirection="RightToLeft" />
                     <ComboBox Name="DriverPackCombobox"
-                          FontSize="15"
+                          FontSize="16"
                           Margin="5"
                           Padding="2"
                           SelectedIndex="1" >
@@ -440,7 +440,7 @@
             <!-- Start -->
             <Label Grid.Row="8"
                Name="BrandingTitleControl"
-               Content="OSDCloud"
+               Content="OSDCloud Workflow"
                FlowDirection="RightToLeft"
                FontSize="18"
                FontWeight="Bold"
