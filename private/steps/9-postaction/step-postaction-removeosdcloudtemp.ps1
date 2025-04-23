@@ -7,7 +7,7 @@ function step-postaction-removeosdcloudtemp {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSvDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     $Path = 'C:\Windows\Temp\osdcloud'
 

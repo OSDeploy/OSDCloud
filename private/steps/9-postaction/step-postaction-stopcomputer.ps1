@@ -7,7 +7,7 @@ function step-postaction-stopcomputer {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSvDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     #region Main
     if ($global:OSDCloudWorkflowInvoke.WinpeRestart) {

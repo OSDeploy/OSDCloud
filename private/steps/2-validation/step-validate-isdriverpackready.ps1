@@ -15,7 +15,7 @@ function step-validate-isdriverpackready {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSvDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     # Is DriverPackName set to None?
     if ($DriverPackName -eq 'None') {

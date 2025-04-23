@@ -12,7 +12,7 @@
 RootModule = 'OSDCloud.psm1'
 
 # Version number of this module.
-ModuleVersion = '25.4.22.1'
+ModuleVersion = '25.4.23.1'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop'
@@ -71,8 +71,8 @@ PowerShellVersion = '5.1'
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport =
 'Get-OSDCloudInfo',
-'Get-OSvDCloudModulePath',
-'Get-OSvDCloudModuleVersion',
+'Get-OSDCloudModulePath',
+'Get-OSDCloudModuleVersion',
 'Initialize-OSDCloudWorkflow',
 'Initialize-OSDCloudWorkflowFlows',
 'Initialize-OSDCloudWorkflowGather',

@@ -7,7 +7,7 @@ function step-drivers-addwindowsdriver-disk {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSvDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
