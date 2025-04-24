@@ -11,7 +11,7 @@ function step-install-bcdboot {
     #=================================================
     #region Main
     # Check what architecture we are using
-    if ($global:OSDCloudWorkflowInit.Architecture -match 'arm64') {
+    if ($global:OSDCloudWorkflowInit.OSArchitecture -match 'ARM64') {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] X:\Windows\System32\bcdboot.exe C:\Windows /c"
         X:\Windows\System32\bcdboot.exe C:\Windows /c
     }
