@@ -10,14 +10,18 @@ function step-install-bcdboot {
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     #region Main
+    $LogPath = "C:\Windows\Temp\osdcloud-logs"
+
     # Check what architecture we are using
     if ($global:OSDCloudWorkflowInit.OSArchitecture -match 'ARM64') {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] X:\Windows\System32\bcdboot.exe C:\Windows /c"
-        X:\Windows\System32\bcdboot.exe C:\Windows /c
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] X:\Windows\System32\bcdboot.exe C:\Windows /c /v"
+        $BCDBootOutput = & X:\Windows\System32\bcdboot.exe C:\Windows /c /v
+        $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
     }
     else {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] C:\Windows\System32\bcdboot.exe C:\Windows /c"
-        C:\Windows\System32\bcdboot.exe C:\Windows /c
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] C:\Windows\System32\bcdboot.exe C:\Windows /c /v"
+        $BCDBootOutput = & C:\Windows\System32\bcdboot.exe C:\Windows /c /v
+        $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
     }
 
     #TODO What is "Updated configuration that should clear existing UEFI Boot entires and fix the Dell issue"
