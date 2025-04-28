@@ -1,17 +1,18 @@
-function Initialize-OSDCloudModule {
+function Initialize-OSDCloudWorkflowUserSettings {
     [CmdletBinding()]
     param (
-        # Specifies a path to one or more locations.
         [Parameter(Mandatory = $false,
             Position = 0,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
-        [string[]]
-        $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\core\module.json",
+        [System.String]
+        $Name = 'default',
 
         [System.Management.Automation.SwitchParameter]
-        $AsJson
+        $AsJson,
+
+        $Architecture = $Env:PROCESSOR_ARCHITECTURE
     )
     #=================================================
     $Error.Clear()
@@ -23,7 +24,17 @@ function Initialize-OSDCloudModule {
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
     Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
+    $PathAmd64 = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow\$Name\user-amd64.json"
+    $PathArm64 = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow\$Name\user-arm64.json"
     # Import the RAW content of the JSON file
+    if ($Architecture -eq 'AMD64') {
+        $Path = $PathAmd64
+    } elseif ($Architecture -eq 'ARM64') {
+        $Path = $PathArm64
+    } else {
+        Write-Error "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
+        break
+    }
     $rawJsonContent = Get-Content -Path $Path -Raw
 
     if ($AsJson) {
@@ -36,7 +47,8 @@ function Initialize-OSDCloudModule {
     $hashtable = [ordered]@{}
     (ConvertFrom-Json $JsonContent).psobject.properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
 
-    $global:OSDCloudModule = $hashtable
+    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowUserSettings: $Path"
+    $global:OSDCloudWorkflowUserSettings = $hashtable
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"

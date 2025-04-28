@@ -12,7 +12,7 @@
 RootModule = 'OSDCloud.psm1'
 
 # Version number of this module.
-ModuleVersion = '25.4.23.1'
+ModuleVersion = '25.4.28.1'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop'
@@ -70,27 +70,20 @@ PowerShellVersion = '5.1'
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport =
-'Get-OSDCloudInfo',
-'Get-OSDCloudModulePath',
-'Get-OSDCloudModuleVersion',
-'Initialize-OSDCloudWorkflow',
-'Initialize-OSDCloudWorkflowFlows',
-'Initialize-OSDCloudWorkflowGather',
-'Initialize-OSDCloudWorkflowOSSettings',
-'Initialize-OSDCloudWorkflowUserSettings',
-'Invoke-OSDCloudWorkflow',
-'Invoke-OSDCloudWorkflowUx',
-'Invoke-WpeinitPSCommand',
-'Invoke-WpeinitPSModuleUpdate',
-'Show-WinpeStartOSK',
-'Show-WinpeStartPSModuleUpdate',
-'Show-WinpeStartWindowDeviceInfo',
-'Show-WinpeStartWindowHardware',
-'Show-WinpeStartWindowHardwareErrors',
-'Show-WinpeStartWindowIPConfig',
-'Show-WinpeStartWindowWiFi',
-'Start-OSDCloudWorkflow',
-'Start-OSDCloudWorkflowCLI'
+    'Get-OSDCloudInfo',
+    'Get-OSDCloudModulePath',
+    'Get-OSDCloudModuleVersion',
+    'Invoke-OSDCloudPEStartup',
+    'Start-OSDCloudPilot',
+    'Start-OSDCloudPilotCLI',
+    'Use-PEStartupOSK',
+    'Use-PEStartupUpdateModule',
+    'Use-PEStartupDeviceInfo',
+    'Use-PEStartupHardware',
+    'Use-PEStartupHardwareErrors',
+    'Use-PEStartupIpconfig',
+    'Use-PEStartupWiFi'
+
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
