@@ -6,4 +6,5 @@
     ],
     "dotnet.preferCSharpExtension": true,
     "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
+    "dotnet.defaultSolution": "disable",
 }

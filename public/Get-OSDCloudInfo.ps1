@@ -20,11 +20,10 @@ function Get-OSDCloudInfo {
         return
     }
 
-    # Display OSDCloud team information
-    Write-Host -ForegroundColor DarkCyan 'OSDCloud Team'
+    # Display OSDCloud Module Collaboration
+    Write-Host -ForegroundColor DarkCyan 'OSDCloud Module Collaboration'
     Write-Host -ForegroundColor DarkGray "David Segura $($OSDCloudModule.links.david)"
     Write-Host -ForegroundColor DarkGray "Michael Escamilla $($OSDCloudModule.links.michael)"
-    Write-Host -ForegroundColor DarkGray "Gary Blok $($OSDCloudModule.links.gary)"
     Write-Host
 
     # Display upcoming events
@@ -40,10 +39,10 @@ function Get-OSDCloudInfo {
 
     # Display additional resources
     Write-Host -ForegroundColor DarkCyan 'GitHub: OSDCloud'
-    Write-Host -ForegroundColor DarkGray $($OSDCloudModule.links.github)
+    Write-Host -ForegroundColor DarkGray $($OSDCloudModule.module.project)
     Write-Host
     Write-Host -ForegroundColor DarkCyan 'PowerShell Gallery: OSDCloud'
-    Write-Host -ForegroundColor DarkGray $($OSDCloudModule.links.powershellgallery)
+    Write-Host -ForegroundColor DarkGray $($OSDCloudModule.module.powershellgallery)
     Write-Host
     Write-Host -ForegroundColor DarkCyan 'Discord: WinAdmins os-deployment'
     Write-Host -ForegroundColor DarkGray $($OSDCloudModule.links.discord)
