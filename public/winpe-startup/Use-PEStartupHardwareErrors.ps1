@@ -9,8 +9,8 @@ function Use-PEStartupHardwareErrors {
     $Results = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object Status, DeviceID, Name, Manufacturer, PNPClass, Service | Where-Object Status -ne 'OK' | Sort-Object Status, DeviceID
 
     if ($Results) {
-        Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] Get-CimInstance Win32_PnPEntity Hardware Devices with Issues"
-        Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] This window will automatically close in 5 seconds"
+        Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Get-CimInstance Win32_PnPEntity Hardware Devices with Issues"
+        Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] This window will automatically close in 5 seconds"
         Write-Output $Results | Format-Table -AutoSize
         Start-Sleep -Seconds 5
     }

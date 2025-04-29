@@ -6,7 +6,7 @@ function Use-PEStartupIpconfig {
     $Error.Clear()
     $host.ui.RawUI.WindowTitle = '[OSDCloud] IPConfig - Network Configuration'
     #=================================================
-    Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] ipconfig /all"
+    Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] ipconfig /all"
     ipconfig /all
     #=================================================
     Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Done"

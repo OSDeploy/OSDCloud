@@ -90,7 +90,7 @@ $Unattend = @"
 	$Unattend | Out-File -FilePath "$env:Temp\UpdatePSModule$Name.xml" -Encoding utf8 -Force
 
 	if ($Wait -and $NoExit) {
-		Write-Host -ForegroundColor Yellow "[$((Get-Date).ToString('HH:mm:ss'))] This window may need to be closed to continue the WinPE startup process"
+		Write-Host -ForegroundColor Yellow "[$(Get-Date -format G)] This window may need to be closed to continue the WinPE startup process"
 	}
 	
 	if ($Wait) {

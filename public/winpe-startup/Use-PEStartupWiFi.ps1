@@ -9,24 +9,24 @@ function Use-PEStartupWiFi {
     if (Test-Path "$env:SystemRoot\System32\dmcmnutils.dll") {
         if ($WirelessConnect) {
             #TODO - Enable functionality for WirelessConnect.exe
-            Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] Starting WirelessConnect.exe"
+            Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Starting WirelessConnect.exe"
             Start-Process PowerShell -ArgumentList 'Start-WinREWiFi -WirelessConnect' -Wait
         }
         elseif ($WifiProfile) {
             #TODO - Enable functionality for WifiProfile
-            Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] Starting WiFi Profile"
+            Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Starting WiFi Profile"
             $Global:WifiProfile = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Name -ne 'C' } | ForEach-Object {
                 Get-ChildItem "$($_.Root)OSDCloud\Config\Scripts" -Include "WiFiProfile.xml" -File -Recurse -Force -ErrorAction Ignore
             }
             Start-Process PowerShell -ArgumentList "Start-WinREWiFi -WifiProfile `"$Global:WifiProfile`"" -Wait
         }
         else {
-            Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] Starting Wi-Fi"
+            Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Starting Wi-Fi"
             Start-Process PowerShell Start-WinREWiFi -Wait
         }
     }
 
-    Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] Initialize Network Connections"
+    Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Initialize Network Connections"
     $timeout = 0
     while ($timeout -lt 20) {
         Start-Sleep -Seconds $timeout
@@ -34,15 +34,15 @@ function Use-PEStartupWiFi {
 
         $IP = Test-Connection -ComputerName $(HOSTNAME) -Count 1 | Select-Object -ExpandProperty IPV4Address
         if ($null -eq $IP) {
-            Write-Host -ForegroundColor DarkGray "[$((Get-Date).ToString('HH:mm:ss'))] Network adapter error. This should not happen!"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Network adapter error. This should not happen!"
         }
         elseif ($IP.IPAddressToString.StartsWith('169.254') -or $IP.IPAddressToString.Equals('127.0.0.1')) {
-            Write-Host -ForegroundColor DarkGray "[$((Get-Date).ToString('HH:mm:ss'))] IP address not yet assigned by DHCP. Trying to get a new DHCP lease."
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] IP address not yet assigned by DHCP. Trying to get a new DHCP lease."
             ipconfig /release | Out-Null
             ipconfig /renew | Out-Null
         }
         else {
-            Write-Host -ForegroundColor DarkGray "[$((Get-Date).ToString('HH:mm:ss'))] Network configuration renewed with IP: $($IP.IPAddressToString)"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Network configuration renewed with IP: $($IP.IPAddressToString)"
             break
         }
     }
