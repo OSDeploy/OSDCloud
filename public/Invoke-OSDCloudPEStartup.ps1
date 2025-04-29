@@ -11,16 +11,16 @@ function Invoke-OSDCloudPEStartup {
             'WiFi'
         )]
         [System.String]
-        $Name,
+        $Id,
 
         [Parameter(Position = 1)]
         [System.String]
         $Value
     )
     Start-Transcript -Path "$($env:Temp)\OSDCloudPEStartup.log" -Append -Force -ErrorAction SilentlyContinue
-    Write-Host "Processing $Name with value $Value"
+    Write-Host "Processing $Id with value $Value"
 
-    switch ($Name) {
+    switch ($Id) {
         'OSK' {
             # Make sure osk.exe is available
             if (Get-Command -Name 'osk.exe' -ErrorAction SilentlyContinue) {
@@ -49,7 +49,7 @@ function Invoke-OSDCloudPEStartup {
             if ($Value) {
                 # Make sure we are online and can reach the PowerShell Gallery
                 try {
-                    $WebRequest = Invoke-WebRequest -Uri "https://www.powershellgallery.com/packages/$Name" -UseBasicParsing -Method Head
+                    $WebRequest = Invoke-WebRequest -Uri "https://www.powershellgallery.com/packages/$Value" -UseBasicParsing -Method Head
                 }
                 catch {
                     Write-Host "UpdateModule: Unable to reach the PowerShell Gallery. Please check your network connection."
