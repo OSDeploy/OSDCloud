@@ -12,7 +12,7 @@
 RootModule = 'OSDCloud.psm1'
 
 # Version number of this module.
-ModuleVersion = '25.4.28.1'
+ModuleVersion = '25.4.28.2'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop'
@@ -30,7 +30,7 @@ CompanyName = 'osdeploy.com'
 Copyright = '(c) 2025 @ osdeploy.com. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'The OSDCloud Engine'
+Description = 'OSDCloud Workflow'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'

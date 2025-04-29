@@ -5,10 +5,7 @@
 * @OSDeploy
 
 # Specific ownership for important directories (customize as needed)
-.github/ @OSDeploy
-scripts/ @OSDeploy
-src/ @OSDeploy
-# docs/ @DocumentationTeam
+# .github/ @OSDeploy
 
 # Example: assign a different owner for a specific file
-# README.md @OSDeploy @DocumentationTeam
+# README.md @OSDeploy
