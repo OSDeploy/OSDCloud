@@ -55,7 +55,7 @@ function Invoke-OSDCloudPEStartup {
                     Write-Host "UpdateModule: Unable to reach the PowerShell Gallery. Please check your network connection."
                     return
                 }
-                Use-PEStartupUpdateModule -Name $Value
+                Invoke-PEStartupUpdateModule -Name $Value -Wait
             }
         }
         'Info' {

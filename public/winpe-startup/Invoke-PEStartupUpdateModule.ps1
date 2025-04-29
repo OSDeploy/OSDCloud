@@ -25,6 +25,18 @@ function Invoke-PEStartupUpdateModule {
     $Error.Clear()
     Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
     #=================================================
+	# Are we on the last version of the module?
+    $InstalledModule = Get-Module -Name $Name -ListAvailable -ErrorAction Ignore | Sort-Object Version -Descending | Select-Object -First 1
+    $GalleryPSModule = Find-Module -Name $Name -ErrorAction Ignore -WarningAction Ignore
+    #=================================================
+    # Install the OSD module if it is not installed or if the version is older than the gallery version
+    if ($GalleryPSModule) {
+        if (($GalleryPSModule.Version -as [version]) -le ($InstalledModule.Version -as [version])) {
+			return
+        }
+    }
+    #=================================================
+	<#
 	# Make sure we are online and can reach the PowerShell Gallery
 	try {
 		$WebRequest = Invoke-WebRequest -Uri "https://www.powershellgallery.com/packages/$Name" -UseBasicParsing -Method Head
@@ -32,6 +44,7 @@ function Invoke-PEStartupUpdateModule {
 	catch {
 		return
     }
+	#>
     #=================================================
 	# https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-runasynchronous
 	# https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-runsynchronous
