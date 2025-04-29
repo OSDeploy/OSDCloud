@@ -6,7 +6,7 @@ function Use-PEStartupDeviceInfo {
     $Error.Clear()
     $host.ui.RawUI.WindowTitle = '[OSDCloud] Device Information'
     #=================================================
-    Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] Gathering Device Information"
+    Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Gathering Device Information"
 
     # Create the log path if it does not already exist
     $LogsPath = "$env:TEMP\osdcloud-logs"
@@ -32,7 +32,7 @@ function Use-PEStartupDeviceInfo {
 
     # OSD Ready
     $OSDVersion = (Get-Module -Name OSD -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version
-    Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] OSD PowerShell Module $OSDVersion Ready"
+    Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] OSD PowerShell Module $OSDVersion Ready"
 
     # Device Details
     Write-Host ''
@@ -52,7 +52,7 @@ function Use-PEStartupDeviceInfo {
     $TotalMemory = $([math]::Round($Win32ComputerSystem.TotalPhysicalMemory / 1024 / 1024 / 1024))
     Write-Host -ForegroundColor DarkGray 'Memory:' $TotalMemory 'GB'
     if ($TotalMemory -lt 6) {
-        Write-Warning "[$((Get-Date).ToString('HH:mm:ss'))] OSDCloud WinPE requires at least 6 GB of memory to function properly. Errors are expected."
+        Write-Warning "[$(Get-Date -format G)] OSDCloud WinPE requires at least 6 GB of memory to function properly. Errors are expected."
     }
 
     # Win32_DiskDrive

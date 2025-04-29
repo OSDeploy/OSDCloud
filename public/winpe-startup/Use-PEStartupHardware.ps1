@@ -9,7 +9,7 @@ function Use-PEStartupHardware {
     $Results = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object Status, DeviceID, Name, Manufacturer, PNPClass, Service | Sort-Object DeviceID
 
     if ($Results) {
-        Write-Host -ForegroundColor DarkCyan "[$((Get-Date).ToString('HH:mm:ss'))] Get-CimInstance Win32_PnPEntity Hardware Devices"
+        Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Get-CimInstance Win32_PnPEntity Hardware Devices"
         Write-Output $Results | Format-Table -AutoSize
     }
     else {
