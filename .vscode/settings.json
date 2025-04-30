@@ -1,8 +1,0 @@
-{
-    "github.copilot.chat.commitMessageGeneration.instructions": [
-        {
-            "text": "Be extremely detailed with the file changes and the reason for the change. Add a reference to the issue or pull request that this commit is related to. Add emojis to make the commit message more readable. If you are fixing a bug, add the bug number. If you are adding a new feature, add the feature number. If you are updating a feature, add the feature number. If you are removing a feature, add the feature number. If you are updating the documentation, add the documentation number. If you are updating the tests, add the test number. If you are updating the configuration, add the configuration number. If you are updating the build process, add the build number. If you are updating the deployment process, add the deployment number. If you are updating the code review process, add the code review number. If you are updating the code quality process, add the code quality number. If you are updating the code coverage process, add the code coverage number.",
-        }
-    ],
-    "git.branchProtectionPrompt": "alwaysCommitToNewBranch"
-}

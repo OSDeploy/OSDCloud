@@ -24,13 +24,13 @@ function Invoke-OSDCloudPEStartup {
         'OSK' {
             # Make sure osk.exe is available
             if (Get-Command -Name 'osk.exe' -ErrorAction SilentlyContinue) {
-                # Invoke-PEStartupPSCommand Use-PEStartupOSK -WindowStyle Hidden
+                # Invoke-OSDCloudPEStartupCommand Use-PEStartupOSK -WindowStyle Hidden
                 Start-Process -FilePath 'osk.exe' -WindowStyle Minimized
             }
         }
         'DeviceHardware' {
-            Invoke-PEStartupPSCommand Use-PEStartupHardware -WindowStyle Minimized -NoExit
-            Invoke-PEStartupPSCommand Use-PEStartupHardwareErrors -WindowStyle Maximized -NoExit -Wait
+            Invoke-OSDCloudPEStartupCommand Use-PEStartupHardware -WindowStyle Minimized -NoExit
+            Invoke-OSDCloudPEStartupCommand Use-PEStartupHardwareErrors -WindowStyle Maximized -NoExit -Wait
         }
         'WiFi' {
             # If we can reach the PowerShell Gallery, we can assume we have a network connection
@@ -38,11 +38,11 @@ function Invoke-OSDCloudPEStartup {
                 $WebRequest = Invoke-WebRequest -Uri "https://www.powershellgallery.com" -UseBasicParsing -Method Head
             }
             catch {
-                Invoke-PEStartupPSCommand Use-PEStartupWiFi -Wait
+                Invoke-OSDCloudPEStartupCommand Use-PEStartupWiFi -Wait
             }
         }
         'IPConfig' {
-            Invoke-PEStartupPSCommand Use-PEStartupIpconfig -Run Asynchronous -WindowStyle Minimized -NoExit
+            Invoke-OSDCloudPEStartupCommand Use-PEStartupIpconfig -Run Asynchronous -WindowStyle Minimized -NoExit
         }
         'UpdateModule' {
             # Value must be specified for this function to work
@@ -55,11 +55,11 @@ function Invoke-OSDCloudPEStartup {
                     Write-Host "UpdateModule: Unable to reach the PowerShell Gallery. Please check your network connection."
                     return
                 }
-                Invoke-PEStartupUpdateModule -Name $Value -Wait
+                Invoke-OSDCloudPEStartupUpdateModule -Name $Value -Wait
             }
         }
         'Info' {
-            Invoke-PEStartupPSCommand Use-PEStartupDeviceInfo -NoExit -Wait
+            Invoke-OSDCloudPEStartupCommand Use-PEStartupDeviceInfo -NoExit -Wait
         }
     }
 }

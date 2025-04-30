@@ -1,4 +1,4 @@
-function Invoke-PEStartupPSCommand {
+function Invoke-OSDCloudPEStartupCommand {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, Position = 0)]

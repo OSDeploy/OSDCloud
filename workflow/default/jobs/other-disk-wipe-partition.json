@@ -11,7 +11,7 @@
             "name": "Validate Local Disk",
             "description": "Tests the local disk for readiness",
             "command": "step-validate-isdiskready",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -22,7 +22,7 @@
             "name": "Remove usbdriveletter",
             "description": "Removes drive letters assigned to USB devices",
             "command": "step-preinstall-removeusbdriveletter",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -33,7 +33,7 @@
             "name": "Clear-Disk",
             "description": "Clears the disk for a fresh start",
             "command": "step-preinstall-cleardisk",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -44,7 +44,7 @@
             "name": "PartitionDisk",
             "description": "Partitions the disk for installation",
             "command": "step-preinstall-partitiondisk",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -55,7 +55,7 @@
             "name": "Addusbdriveletter",
             "description": "Assigns drive letters to USB devices",
             "command": "step-preinstall-restoreusbdriveletter",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,

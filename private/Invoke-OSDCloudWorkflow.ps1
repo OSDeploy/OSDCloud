@@ -74,8 +74,8 @@ function Invoke-OSDCloudWorkflow {
             }
 
             # Arguments
-            if ($step.arguments) {
-                [array]$arguments = @($step.arguments)
+            if ($step.args) {
+                [array]$arguments = @($step.args)
                 $arguments = $arguments | ForEach-Object { $_.Trim() } # Trim whitespace from arguments
                 $arguments = $arguments | Where-Object { $_ -ne "" } # Remove empty arguments
             }
