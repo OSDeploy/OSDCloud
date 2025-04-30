@@ -1,4 +1,4 @@
-function Invoke-PEStartupUpdateModule {
+function Invoke-OSDCloudPEStartupUpdateModule {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, Position = 0)]

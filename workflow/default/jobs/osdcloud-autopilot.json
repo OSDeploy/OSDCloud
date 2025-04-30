@@ -12,7 +12,7 @@
             "name": "Start Workflow",
             "description": "Start the OSDCloud Workflow",
             "command": "step-initialize-startosdcloudworkflow",
-            "arguments": [],
+            "args": [],
             "parameters": {
                 "WorkflowName": "OSDCloud Core"
             },
@@ -25,7 +25,7 @@
             "name": "Start Logs",
             "description": "Creates the log directory and initializes logging",
             "command": "step-initialize-startosdcloudlogs",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -36,7 +36,7 @@
             "name": "Validate WindowsImage Availability",
             "description": "Test if the image exists and is reachable",
             "command": "step-validate-iswindowsimageready",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -47,7 +47,7 @@
             "name": "Validate DriverPack Availability",
             "description": "Tests if the driver pack is reachable",
             "command": "step-validate-isdriverpackready",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -58,7 +58,7 @@
             "name": "Validate Local Disk",
             "description": "Tests the local disk for readiness",
             "command": "step-validate-isdiskready",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -69,7 +69,7 @@
             "name": "Remove usbdriveletter",
             "description": "Removes drive letters assigned to USB devices",
             "command": "step-preinstall-removeusbdriveletter",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -80,7 +80,7 @@
             "name": "Clear-Disk",
             "description": "Clears the disk for a fresh start",
             "command": "step-preinstall-cleardisk",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -91,7 +91,7 @@
             "name": "PartitionDisk",
             "description": "Partitions the disk for installation",
             "command": "step-preinstall-partitiondisk",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -102,7 +102,7 @@
             "name": "Addusbdriveletter",
             "description": "Assigns drive letters to USB devices",
             "command": "step-preinstall-restoreusbdriveletter",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -113,7 +113,7 @@
             "name": "InvokePowercfgHighPerformance",
             "description": "Sets the system to high performance mode",
             "command": "step-preinstall-enablehighperformance",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -124,7 +124,7 @@
             "name": "DownloadWindowsOS",
             "description": "Downloads the Windows OS image",
             "command": "step-install-downloadwindowsimage",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -135,7 +135,7 @@
             "name": "GetWindowsImageIndex",
             "description": "Retrieves the index of the Windows image",
             "command": "step-install-getwindowsimageindex",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -147,7 +147,7 @@
             "status": "Ready",
             "description": "Expands the Windows image for installation",
             "command": "step-install-expandwindowsimage",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -159,7 +159,7 @@
             "status": "Ready",
             "description": "Restarts the OSDCloud logs",
             "command": "step-install-restartosdcloudlogs",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -170,7 +170,7 @@
             "name": "Check WindowsEdition",
             "description": "Checks the Windows edition of the image",
             "command": "step-install-getwindowsedition",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -181,7 +181,7 @@
             "name": "Move WindowsImage",
             "description": "Moves the Windows Image to C:\\Windows\\Temp\\osdcloud\\os",
             "command": "step-install-removewindowsimage",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -193,7 +193,7 @@
             "status": "Ready",
             "description": "Configures the bootloader using BCDBoot",
             "command": "step-install-bcdboot",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -206,7 +206,7 @@
             "category": "drivers",
             "description": "Export the in-use WinPE drivers to the osdisk",
             "command": "step-drivers-winpe",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -219,7 +219,7 @@
             "category": "drivers",
             "description": "Add the exported WinPE drivers to the offline os",
             "command": "step-drivers-addwindowsdriver-winpe",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -230,7 +230,7 @@
             "name": "Save DriverPack",
             "description": "Downloads the Manufacturer DriverPack",
             "command": "step-drivers-driverpack",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -241,7 +241,7 @@
             "name": "Microsoft Update Catalog Drivers",
             "description": "Downloads drivers from Microsoft Update Catalog",
             "command": "step-drivers-msupdate",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -252,7 +252,7 @@
             "name": "Add WindowsDriver - DriverPack",
             "description": "Adds WindowsDriver to the offline OS",
             "command": "step-drivers-addwindowsdriver-driverpack",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -263,7 +263,7 @@
             "name": "Add WindowsDriver - Microsoft Update Catalog",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-msupdate",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -274,7 +274,7 @@
             "name": "Add WindowsDriver - Microsoft Update Catalog - Disk",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-disk",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -285,7 +285,7 @@
             "name": "Add WindowsDriver - Microsoft Update Catalog - Net",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-net",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -296,7 +296,7 @@
             "name": "Add WindowsDriver - Microsoft Update Catalog - Scsi",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-scsi",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -307,7 +307,7 @@
             "name": "Add WindowsDriver - Microsoft Update Catalog - Firmware",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-firmware",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -318,7 +318,7 @@
             "name": "SetupDisplayedEula Hotfix",
             "description": "Applies a hotfix for the displayed EULA",
             "command": "step-update-setupdisplayedeula",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -329,7 +329,7 @@
             "name": "Update PowerShell Modules",
             "description": "Update existing PowerShell Modules offline",
             "command": "step-powershell-updatemodule",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -340,7 +340,7 @@
             "name": "Save PowerShell Module OSD to WinPE",
             "description": "Saves a PowerShell Module to WinPE",
             "command": "step-powershell-savemodule",
-            "arguments": [],
+            "args": [],
             "parameters": {
                 "name": "OSD"
             },
@@ -352,7 +352,7 @@
             "name": "Save PowerShell Module WindowsAutopilotIntune to WinPE",
             "description": "Saves a PowerShell Module to WinPE",
             "command": "step-powershell-savemodule",
-            "arguments": [],
+            "args": [],
             "parameters": {
                 "name": "WindowsAutopilotIntune"
             },
@@ -365,7 +365,7 @@
             "status": "Ready",
             "description": "Exports information about the operating system",
             "command": "step-finalize-exportofflineosinfo",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -377,7 +377,7 @@
             "status": "Ready",
             "description": "Stops logging and copys to the log directory",
             "command": "step-osdcloud-logs-stop",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -389,7 +389,7 @@
             "status": "Ready",
             "description": "Stops the OSDCloud workflow",
             "command": "step-finalize-stoposdcloudworkflow",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": true,
@@ -400,7 +400,7 @@
             "name": "Remove OSDCloud Temp",
             "description": "Removes the OSDCloud Temp",
             "command": "step-postaction-removeosdcloudtemp",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -411,7 +411,7 @@
             "name": "Remove OSDCloud Logs",
             "description": "Removes the OSDCloud Logs",
             "command": "step-postaction-removeosdcloudlogs",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -422,7 +422,7 @@
             "name": "Restart Computer",
             "description": "Restarts the computer",
             "command": "step-postaction-restartcomputer",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
@@ -433,7 +433,7 @@
             "name": "Stop Computer",
             "description": "Stops the computer",
             "command": "step-postaction-stopcomputer",
-            "arguments": [],
+            "args": [],
             "parameters": {},
             "rules": {
                 "runinfullos": false,
