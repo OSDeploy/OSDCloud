@@ -17,11 +17,11 @@ function Invoke-OSDCloudWorkflowUx {
     if (-not ($global:OSDCloudWorkflowInit)) {
         Initialize-OSDCloudWorkflow
     }
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Launching OSDCloud $ModuleVersion"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Launching OSDCloud $ModuleVersion"
     $OSDCloudUxPath = Join-Path -Path $ModuleBase -ChildPath "workflow\$Name\ux\MainWindow.ps1"
 
     if (-not (Test-Path $OSDCloudUxPath)) {
-        Write-Error "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to locate $OSDCloudUxPath"
+        Write-Error "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Unable to locate $OSDCloudUxPath"
         return
     }
     . $OSDCloudUxPath

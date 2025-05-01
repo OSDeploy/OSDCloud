@@ -41,7 +41,7 @@ function step-install-getwindowsimageindex {
     )
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -49,7 +49,7 @@ function step-install-getwindowsimageindex {
     #=================================================
     #region Do we have a WindowsImage to test?
     if ($null -eq $ImagePath) {
-        Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] WindowsImage does not have an ImagePath."
+        Write-Warning "[$(Get-Date -format G)] WindowsImage does not have an ImagePath."
         Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
         exit
@@ -58,7 +58,7 @@ function step-install-getwindowsimageindex {
     #=================================================
     #region Does the Path exist?
     if (!(Test-Path $ImagePath)) {
-        Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] WindowsImage does not exist at the ImagePath."
+        Write-Warning "[$(Get-Date -format G)] WindowsImage does not exist at the ImagePath."
         Write-Warning $ImagePath
         Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
@@ -71,8 +71,8 @@ function step-install-getwindowsimageindex {
         $WindowsImage = Get-WindowsImage -ImagePath $ImagePath -ErrorAction Stop
     }
     catch {
-        Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to verify the Windows Image using Get-WindowsImage."
-        Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] $_"
+        Write-Warning "[$(Get-Date -format G)] Unable to verify the Windows Image using Get-WindowsImage."
+        Write-Warning "[$(Get-Date -format G)] $_"
         Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
         exit
@@ -83,7 +83,7 @@ function step-install-getwindowsimageindex {
     $WindowsImageCount = ($WindowsImage).Count
 
     if ($WindowsImageCount -eq 1) {
-        # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OSDCloud only found a single ImageIndex to expand"
+        # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] OSDCloud only found a single ImageIndex to expand"
         $global:OSDCloudWorkflowInvoke.WindowsImageIndex = 1
         return
     }
@@ -106,14 +106,14 @@ function step-install-getwindowsimageindex {
         if ($MatchingWindowsImage -and $MatchingWindowsImage.Count -eq 1) {
             $global:OSDCloudWorkflowInvoke.WindowsImage = $MatchingWindowsImage
             $global:OSDCloudWorkflowInvoke.WindowsImageIndex = $MatchingWindowsImage.ImageIndex
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] EditionId $EditionId found at ImageIndex $($global:OSDCloudWorkflowInvoke.WindowsImageIndex)"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] EditionId $EditionId found at ImageIndex $($global:OSDCloudWorkflowInvoke.WindowsImageIndex)"
             return
         }
     }
     #endregion
     #=================================================
     #region Unable to determine which ImageIndex to apply, so prompt the user to select the ImageIndex
-    Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Select the WindowsImage to expand"
+    Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Select the WindowsImage to expand"
     $SelectWindowsImage = $WindowsImage | Where-Object { $_.ImageSize -gt 3000000000 }
 
     if ($SelectWindowsImage) {
@@ -130,13 +130,13 @@ function step-install-getwindowsimageindex {
     #endregion
     #=================================================
     #region Everything we tried failed, so exit OSDCloud
-    Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to determine the ImageIndex to apply."
+    Write-Warning "[$(Get-Date -format G)] Unable to determine the ImageIndex to apply."
     Write-Warning 'Press Ctrl+C to exit OSDCloud'
     Start-Sleep -Seconds 86400
     exit
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

@@ -2,7 +2,7 @@ function Use-PEStartupHardwareErrors {
     [CmdletBinding()]
     param ()
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     $Error.Clear()
     $host.ui.RawUI.WindowTitle = '[OSDCloud] Device Hardware with Issues (automatically close in 5 seconds)'
     #=================================================
@@ -16,6 +16,6 @@ function Use-PEStartupHardwareErrors {
     }
     exit 0
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Done"
     #=================================================
 }

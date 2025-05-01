@@ -5,7 +5,7 @@ function step-install-downloadwindowsimage {
     )
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -13,7 +13,7 @@ function step-install-downloadwindowsimage {
     #=================================================
     # Do we have a URL to download the Windows Image from?
     if (-not ($OperatingSystemObject.Url)) {
-        Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] OSDCloud failed to download the WindowsImage from the Internet"
+        Write-Warning "[$(Get-Date -format G)] OSDCloud failed to download the WindowsImage from the Internet"
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'
         Start-Sleep -Seconds 86400
         exit
@@ -37,15 +37,15 @@ function step-install-downloadwindowsimage {
         $DownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\OS\$($OperatingSystemObject.OperatingSystem) $($OperatingSystemObject.ReleaseID)"
         $FileName = Split-Path $OperatingSystemObject.Url -Leaf
 
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Url: $($OperatingSystemObject.Url)"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DownloadPath: $DownloadPath"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] FileName: $FileName"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Url: $($OperatingSystemObject.Url)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DownloadPath: $DownloadPath"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] FileName: $FileName"
 
         # Download the file
         $SaveWebFile = Save-WebFile -SourceUrl $OperatingSystemObject.Url -DestinationDirectory "$DownloadPath" -DestinationName $FileName
 
         if ($SaveWebFile) {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Copy Offline OS to C:\OSDCloud\OS\$($SaveWebFile.Name)"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Copy Offline OS to C:\OSDCloud\OS\$($SaveWebFile.Name)"
             $null = Copy-Item -Path $SaveWebFile.FullName -Destination 'C:\OSDCloud\OS' -Force
             $FileInfo = Get-Item "C:\OSDCloud\OS\$($SaveWebFile.Name)"
         }
@@ -58,7 +58,7 @@ function step-install-downloadwindowsimage {
     #=================================================
     # Do we have FileInfo for the downloaded file?
     if (-not ($FileInfo)) {
-        Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to download the WindowsImage from the Internet."
+        Write-Warning "[$(Get-Date -format G)] Unable to download the WindowsImage from the Internet."
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'
         Start-Sleep -Seconds 86400
         exit
@@ -68,29 +68,29 @@ function step-install-downloadwindowsimage {
     # Store this as a FileInfo Object
     $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage = $FileInfo
     $global:OSDCloudWorkflowInvoke.WindowsImagePath = $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage.FullName
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] WindowsImagePath:  $($global:OSDCloudWorkflowInvoke.WindowsImagePath)"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] WindowsImagePath:  $($global:OSDCloudWorkflowInvoke.WindowsImagePath)"
     
     #=================================================
     # Check the File Hash
     if ($OperatingSystemObject.Sha1) {
         $FileHash = (Get-FileHash -Path $FileInfo.FullName -Algorithm SHA1).Hash
 
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Microsoft Verified ESD SHA1: $($OperatingSystemObject.Sha1)"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Downloaded ESD SHA1: $FileHash"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Microsoft Verified ESD SHA1: $($OperatingSystemObject.Sha1)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Downloaded ESD SHA1: $FileHash"
 
         if ($OperatingSystemObject.Sha1 -ne $FileHash) {
-            Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to deploy this Operating System."
-            Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Downloaded ESD SHA1 does not match the verified Microsoft ESD SHA1."
+            Write-Warning "[$(Get-Date -format G)] Unable to deploy this Operating System."
+            Write-Warning "[$(Get-Date -format G)] Downloaded ESD SHA1 does not match the verified Microsoft ESD SHA1."
             Write-Warning 'Press Ctrl+C to cancel OSDCloud'
             Start-Sleep -Seconds 86400
         }
         else {
-            Write-Host -ForegroundColor Green "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Downloaded ESD SHA1 matches the verified Microsoft ESD SHA1. OK."
+            Write-Host -ForegroundColor Green "[$(Get-Date -format G)] Downloaded ESD SHA1 matches the verified Microsoft ESD SHA1. OK."
         }
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

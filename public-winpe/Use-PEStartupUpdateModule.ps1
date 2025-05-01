@@ -7,7 +7,7 @@ function Use-PEStartupUpdateModule {
     )
     #=================================================
     $Error.Clear()
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     $host.ui.RawUI.WindowTitle = "[OSDCloud] Update PowerShell Module: $Name (close this window to cancel)"
     #=================================================
     Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Update PowerShell Module: $Name"
@@ -17,6 +17,6 @@ function Use-PEStartupUpdateModule {
     Install-Module $Name -Scope AllUsers -Force -SkipPublisherCheck
     Import-Module $Name -Force
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Done"
     #=================================================
 }

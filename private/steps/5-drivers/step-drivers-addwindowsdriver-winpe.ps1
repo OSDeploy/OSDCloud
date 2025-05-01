@@ -3,7 +3,7 @@ function step-drivers-addwindowsdriver-winpe {
     param ()
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -21,7 +21,7 @@ function step-drivers-addwindowsdriver-winpe {
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

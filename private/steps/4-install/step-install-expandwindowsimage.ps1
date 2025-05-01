@@ -3,14 +3,14 @@ function step-install-expandwindowsimage {
     param ()
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     #region Main
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] C:\"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] C:\"
     #=================================================
     #   Create ScratchDirectory
     #=================================================
@@ -52,8 +52,8 @@ function step-install-expandwindowsimage {
             Expand-WindowsImage @Params
         }
         catch {
-            Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Expand-WindowsImage failed."
-            Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] $_"
+            Write-Warning "[$(Get-Date -format G)] Expand-WindowsImage failed."
+            Write-Warning "[$(Get-Date -format G)] $_"
             Write-Warning 'Press Ctrl+C to cancel OSDCloud'
             Start-Sleep -Seconds 86400
             exit
@@ -71,7 +71,7 @@ function step-install-expandwindowsimage {
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

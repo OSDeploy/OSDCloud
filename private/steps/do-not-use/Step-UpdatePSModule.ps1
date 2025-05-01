@@ -3,7 +3,7 @@ function Step-UpdatePSModule {
     param ()
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -30,14 +30,14 @@ function Step-UpdatePSModule {
                 Save-Script -Name Get-WindowsAutopilotInfo -Path "$PowerShellSavePath\Scripts" -ErrorAction Stop
             }
             catch {
-                Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to Save-Script Get-WindowsAutopilotInfo to $PowerShellSavePath\Scripts"
+                Write-Warning "[$(Get-Date -format G)] Unable to Save-Script Get-WindowsAutopilotInfo to $PowerShellSavePath\Scripts"
             }
             if ($HPFeaturesEnabled) {
                 try {
                     Save-Module -Name HPCMSL -AcceptLicense -Path "$PowerShellSavePath\Modules" -Force -ErrorAction Stop
                 }
                 catch {
-                    Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to Save-Module HPCMSL to $PowerShellSavePath\Modules"
+                    Write-Warning "[$(Get-Date -format G)] Unable to Save-Module HPCMSL to $PowerShellSavePath\Modules"
                 }
             }
         }
@@ -63,7 +63,7 @@ function Step-UpdatePSModule {
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

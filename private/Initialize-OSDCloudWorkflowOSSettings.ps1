@@ -17,13 +17,13 @@ function Initialize-OSDCloudWorkflowOSSettings {
     )
     #=================================================
     $Error.Clear()
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     $ModuleName = $($MyInvocation.MyCommand.Module.Name)
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleName: $ModuleName"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleName: $ModuleName"
     $ModuleBase = $($MyInvocation.MyCommand.Module.ModuleBase)
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleBase: $ModuleBase"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleBase: $ModuleBase"
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
     $PathAmd64 = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow\$Name\os-amd64.json"
     $PathArm64 = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow\$Name\os-arm64.json"
@@ -33,7 +33,7 @@ function Initialize-OSDCloudWorkflowOSSettings {
     } elseif ($Architecture -eq 'ARM64') {
         $Path = $PathArm64
     } else {
-        Write-Error "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
+        Write-Error "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
         break
     }
     $rawJsonContent = Get-Content -Path $Path -Raw
@@ -48,11 +48,11 @@ function Initialize-OSDCloudWorkflowOSSettings {
     $hashtable = [ordered]@{}
     (ConvertFrom-Json $JsonContent).psobject.properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
 
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowOSSettings: $Path"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowOSSettings: $Path"
     $global:OSDCloudWorkflowOSSettings = $hashtable
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }
