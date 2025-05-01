@@ -6,13 +6,13 @@ function Invoke-OSDCloudWorkflow {
     )
     #=================================================
     $Error.Clear()
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     $ModuleName = $($MyInvocation.MyCommand.Module.Name)
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleName: $ModuleName"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleName: $ModuleName"
     $ModuleBase = $($MyInvocation.MyCommand.Module.ModuleBase)
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleBase: $ModuleBase"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleBase: $ModuleBase"
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
     # Set global variables
     [System.String]$global:Architecture = $OSDCloudWorkflowGather.Architecture
@@ -43,7 +43,7 @@ function Invoke-OSDCloudWorkflow {
     }
     #=================================================
     if ($null -ne $global:OSDCloudWorkflowInit.WorkflowObject) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Starting OSDCloud Workflow"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Starting OSDCloud Workflow"
         
         foreach ($step in $global:OSDCloudWorkflowInit.WorkflowObject.steps) {
             # Set the current step in the global variable
@@ -51,13 +51,13 @@ function Invoke-OSDCloudWorkflow {
 
             # Skip the step if the skip condition is met
             if ($step.rules.skip -eq $true) {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($step.command)][Skip:True]"
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($step.command)][Skip:True]"
                 continue
             }       
 
             # Steps should only run in WinPE, but some steps can be configured to run in full OS
             if (($global:IsWinPE -ne $true) -and ($step.rules.runinfullos -ne $true)) {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($step.command)][Skip:FullOS]"
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($step.command)][Skip:FullOS]"
                 continue
             }
             
@@ -65,11 +65,11 @@ function Invoke-OSDCloudWorkflow {
             if ($step.command) {
                 $command = $step.command
                 if (-not (Get-Command $command -ErrorAction SilentlyContinue)) {
-                    Write-Host -ForegroundColor DarkRed "[$(Get-Date -format G)][Step command does not exist]"
+                    Write-Host -ForegroundColor DarkRed "[$(Get-Date -format G)] [Step command does not exist]"
                     continue
                 }
             } else {
-                Write-Host -ForegroundColor DarkRed "[$(Get-Date -format G)][Step does not contain a command]"
+                Write-Host -ForegroundColor DarkRed "[$(Get-Date -format G)] [Step does not contain a command]"
                 continue
             }
 
@@ -93,21 +93,21 @@ function Invoke-OSDCloudWorkflow {
             # Execute
             
             if ($command -and ($arguments.Count -ge 1) -and ($parameters.Count -ge 1)) {
-                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)][$($step.command)][Arguments:$arguments]"
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] [$($step.command)][Arguments:$arguments]"
                 ($parameters | Out-String).Trim()
                 if ($Test) { continue }
                 & $command @parameters @arguments
             } elseif ($command -and ($arguments.Count -ge 1)) {
-                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)][$($step.command)][Arguments:$arguments]"
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] [$($step.command)][Arguments:$arguments]"
                 if ($Test) { continue }
                 & $command @arguments
             } elseif ($command -and ($parameters.Count -ge 1)) {
-                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)][$($step.command)]"
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] [$($step.command)]"
                 ($parameters | Out-String).Trim()
                 if ($Test) { continue }
                 & $command @parameters
             } elseif ($command) {
-                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)][$($step.command)]"
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] [$($step.command)]"
                 if ($Test) { continue }
                 & $command
             } else {
@@ -123,10 +123,10 @@ function Invoke-OSDCloudWorkflow {
             #>
         }
         # End of workflow steps
-        Write-Host "Workflow execution completed."
+        Write-Host -ForegroundColor Green "[$(Get-Date -format G)] Workflow execution done."
         #=================================================
         # End the function
-        $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"
+        $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
         Write-Verbose -Message $Message; Write-Debug -Message $Message
         #=================================================
     }

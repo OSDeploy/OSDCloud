@@ -11,7 +11,7 @@ function step-drivers-driverpack {
     )
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -19,31 +19,31 @@ function step-drivers-driverpack {
     #=================================================
     # Is DriverPackName set to None?
     if ($DriverPackName -eq 'None') {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPackName is set to None. OK."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPackName is set to None. OK."
         return
     }
     #=================================================
     # Is DriverPackName set to Microsoft Update Catalog?
     if ($DriverPackName -eq 'Microsoft Update Catalog') {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPackName is set to Microsoft Update Catalog. OK."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPackName is set to Microsoft Update Catalog. OK."
         return
     }
     #=================================================
     # Is there a DriverPack Object?
     if (-not ($DriverPackObject)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPackObject is not set. OK."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPackObject is not set. OK."
         return
     }
     #=================================================
     # Is there a DriverPack Guid?
     if (-not ($DriverPackGuid)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPackObject.GUID is not set. OK."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPackObject.GUID is not set. OK."
         return
     }
     #=================================================
     # Is there a URL?
     if (-not $($DriverPackObject.Url)) {
-        Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPackObject does not have a Url to validate."
+        Write-Warning "[$(Get-Date -format G)] DriverPackObject does not have a Url to validate."
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'
         Start-Sleep -Seconds 86400
         exit
@@ -54,12 +54,12 @@ function step-drivers-driverpack {
     try {
         $WebRequest = Invoke-WebRequest -Uri $DriverPackObject.Url -UseBasicParsing -Method Head
         if ($WebRequest.StatusCode -eq 200) {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPack URL returned a 200 status code. OK."
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPack URL returned a 200 status code. OK."
             $IsOnline = $true
         }
     }
     catch {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPack URL is not reachable."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPack URL is not reachable."
     }
     #=================================================
     # Does the file exist on a Drive?
@@ -71,16 +71,16 @@ function step-drivers-driverpack {
     }
     
     if ($MatchingFiles) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPack is available offline. OK."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPack is available offline. OK."
         $IsOffline = $true
     }
     else {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPack is not available offline."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPack is not available offline."
     }
     #=================================================
     # Nothing to do if it is unavailable online and offline
     if ($IsOnline -eq $false -and $IsOffline -eq $false) {
-        Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPack is not available online or offline. Continue."
+        Write-Warning "[$(Get-Date -format G)] DriverPack is not available online or offline. Continue."
         return
     }
     #=================================================
@@ -132,9 +132,9 @@ function step-drivers-driverpack {
         $USBDownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\DriverPacks\$Manufacturer"
         $FileName = Split-Path $DriverPackObject.Url -Leaf
 
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Url: $($DriverPackObject.Url)"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] USBDownloadPath: $USBDownloadPath"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] FileName: $FileName"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Url: $($DriverPackObject.Url)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] USBDownloadPath: $USBDownloadPath"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] FileName: $FileName"
 
         # Download the file
         if (-not (Test-Path $USBDownloadPath)) {
@@ -143,7 +143,7 @@ function step-drivers-driverpack {
         $SaveWebFile = Save-WebFile -SourceUrl $DriverPackObject.Url -DestinationDirectory "$USBDownloadPath" -DestinationName $FileName
 
         if ($SaveWebFile) {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Copying Offline DriverPack to $DownloadPath"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Copying Offline DriverPack to $DownloadPath"
             $null = Copy-Item -Path $SaveWebFile.FullName -Destination $DownloadPath -Force
             $FileInfo = Get-Item "$DownloadPath\$($SaveWebFile.Name)"
         }
@@ -161,7 +161,7 @@ function step-drivers-driverpack {
     $OutFileObject = Get-Item $FileInfo.FullName
 
     if (! (Test-Path $OutFileObject)) {
-        Write-Warning "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Unable to download $Url"
+        Write-Warning "[$(Get-Date -format G)] Unable to download $Url"
         return
     }
 
@@ -177,7 +177,7 @@ function step-drivers-driverpack {
     #   Cab
     #=================================================
     if ($OutFileObject.Extension -eq '.cab') {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Expanding CAB DriverPack to $ExpandPath"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expanding CAB DriverPack to $ExpandPath"
         Expand -R "$DownloadedFile" -F:* "$ExpandPath" | Out-Null
         return
     }
@@ -185,7 +185,7 @@ function step-drivers-driverpack {
     #   Zip
     #=================================================
     if ($OutFileObject.Extension -eq '.zip') {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Expanding ZIP DriverPack to $ExpandPath"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expanding ZIP DriverPack to $ExpandPath"
         Expand-Archive -Path $DownloadedFile -DestinationPath $ExpandPath -Force
         return
     }
@@ -194,7 +194,7 @@ function step-drivers-driverpack {
     #=================================================
     if ($OutFileObject.Extension -eq '.exe') {
         if ($OutFileObject.VersionInfo.FileDescription -match 'Dell') {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Expanding Dell DriverPack to $ExpandPath"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expanding Dell DriverPack to $ExpandPath"
             Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
             Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
             $null = New-Item -Path $ExpandPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
@@ -211,7 +211,7 @@ function step-drivers-driverpack {
             Write-Host -ForegroundColor DarkGray "InternalName: $($OutFileObject.VersionInfo.InternalName)"
             Write-Host -ForegroundColor DarkGray "OriginalFilename: $($OutFileObject.VersionInfo.OriginalFilename)"
             Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Expanding HP DriverPack to $ExpandPath"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expanding HP DriverPack to $ExpandPath"
             # Start-Process -FilePath $DownloadedFile -ArgumentList "/s /e /f `"$ExpandPath`"" -Wait
             & 7za x "$($OutFileObject.FullName)" -o"C:\Windows\Temp\osdcloud\drivers-driverpack"
             return
@@ -226,7 +226,7 @@ function step-drivers-driverpack {
         }
         Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
         Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Adding Lenovo DriverPack to $SetupCompleteCmd"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Lenovo DriverPack to $SetupCompleteCmd"
 
 $Content = @"
 :: ========================================================
@@ -242,7 +242,7 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\UnattendSettings\P
 "@
         $Content | Out-File -FilePath $SetupSpecializeCmd -Append -Encoding ascii -Width 2000 -Force
 
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Adding Provisioning Package for SetupSpecialize"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Provisioning Package for SetupSpecialize"
         $ProvisioningPackage = Join-Path $(Get-OSDCloudModulePath) "core\setup-specialize\setupspecialize.ppkg"
 
         if (Test-Path $ProvisioningPackage) {
@@ -261,7 +261,7 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\UnattendSettings\P
         }
         Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
         Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Adding Surface DriverPack to $SetupCompleteCmd"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Surface DriverPack to $SetupCompleteCmd"
 
 $Content = @"
 :: ========================================================
@@ -274,7 +274,7 @@ msiexec /i $DownloadedFile /qn /norestart /l*v C:\Windows\Temp\osdcloud-logs\dri
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

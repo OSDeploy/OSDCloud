@@ -14,7 +14,7 @@ function Initialize-OSDCloudWorkflow {
     #=================================================
     # OSDCloudWorkflowGather
     if (-not ($global:OSDCloudWorkflowGather)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Gather $ModuleVersion"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Gather $ModuleVersion"
         Initialize-OSDCloudWorkflowGather
     }
     $Architecture          = $global:OSDCloudWorkflowGather.Architecture
@@ -24,7 +24,7 @@ function Initialize-OSDCloudWorkflow {
     #=================================================
     # OSDCloudWorkflowJobs
     if (-not ($global:OSDCloudWorkflowJobs)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Flows $ModuleVersion"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Flows $ModuleVersion"
         Initialize-OSDCloudWorkflowJobs -Name $Name
     }
     $WorkflowObject        = $global:OSDCloudWorkflowJobs | Select-Object -First 1
@@ -32,7 +32,7 @@ function Initialize-OSDCloudWorkflow {
     #=================================================
     # OSDCloudWorkflowOSCatalog
     if (-not ($global:OSDCloudWorkflowOSCatalog)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Catalog $ModuleVersion"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Catalog $ModuleVersion"
         $global:OSDCloudWorkflowOSCatalog = Get-OSDCatalogOperatingSystems
         $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.Architecture -match "$Architecture"}
         # $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.OperatingSystem -match "Windows 11"}
@@ -40,13 +40,13 @@ function Initialize-OSDCloudWorkflow {
     #=================================================
     # OSDCloudWorkflowUserSettings
     if (-not ($global:OSDCloudWorkflowUserSettings)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialize OSDCloud User Settings $ModuleVersion"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud User Settings $ModuleVersion"
         Initialize-OSDCloudWorkflowUserSettings -Name $Name
     }
     #=================================================
     # OSDCloudWorkflowOSSettings
     if (-not ($global:OSDCloudWorkflowOSSettings)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Settings $ModuleVersion"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Settings $ModuleVersion"
         Initialize-OSDCloudWorkflowOSSettings -Name $Name
     }
     if ($global:OSDCloudWorkflowOSSettings."OSName.default" -match 'Win11') {
@@ -95,7 +95,7 @@ function Initialize-OSDCloudWorkflow {
     $DriverPackObject = Get-OSDCatalogDriverPack -Product $ComputerProduct -OSVersion $OperatingSystem -OSReleaseID $OSReleaseID
     if ($DriverPackObject) {
         $DriverPackName = $DriverPackObject.Name
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
 
         # Remove the Windows 10 DriverPacks if Windows 11 is selected
         if ($DriverPackObject.OS -match 'Windows 11') {

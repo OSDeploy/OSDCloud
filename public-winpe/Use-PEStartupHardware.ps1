@@ -2,7 +2,7 @@ function Use-PEStartupHardware {
     [CmdletBinding()]
     param ()
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     $Error.Clear()
     $host.ui.RawUI.WindowTitle = '[OSDCloud] Device Hardware'
     #=================================================
@@ -16,6 +16,6 @@ function Use-PEStartupHardware {
         exit 0
     }
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Done"
     #=================================================
 }

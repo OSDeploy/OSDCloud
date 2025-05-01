@@ -2,7 +2,7 @@ function Use-PEStartupWiFi {
     [CmdletBinding()]
     param ()
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
     $Error.Clear()
     $host.ui.RawUI.WindowTitle = '[OSDCloud] Wireless Connectivity'
     #=================================================
@@ -47,6 +47,6 @@ function Use-PEStartupWiFi {
         }
     }
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)][$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Done"
     #=================================================
 }
