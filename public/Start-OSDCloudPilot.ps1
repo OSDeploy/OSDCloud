@@ -9,9 +9,7 @@ function Start-OSDCloudPilot {
     )
     #=================================================
     # Initialize OSDCloudWorkflow
-    if (-not ($global:OSDCloudWorkflowInit)) {
-        Initialize-OSDCloudWorkflow -Name $Name
-    }
+    Initialize-OSDCloudWorkflow -Name $Name
     #=================================================
     # Prevents the workflow from starting unless the Start button is clicked in the Ux
     $global:OSDCloudWorkflowInit.TimeStart = $null
