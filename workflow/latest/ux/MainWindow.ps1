@@ -249,29 +249,6 @@ function Show-PowershellWindow() {
 #endregion
 #=================================================
 #region OSDCloudWorkflowUserSettings
-# Disk Actions
-$formMainWindowControlSkipClearDisk.IsChecked = $global:OSDCloudWorkflowUserSettings.SkipClearDisk
-$formMainWindowControlSkipClearDiskConfirm.IsChecked = $global:OSDCloudWorkflowUserSettings.SkipClearDiskConfirm
-$formMainWindowControlSkipRecoveryPartition.IsChecked = $global:OSDCloudWorkflowUserSettings.SkipRecoveryPartition
-
-# Updates
-$formMainWindowControlUpdateDiskDrivers.IsChecked = $global:OSDCloudWorkflowUserSettings.UpdateDiskDrivers
-$formMainWindowControlUpdateNetworkDrivers.IsChecked = $global:OSDCloudWorkflowUserSettings.UpdateNetworkDrivers
-$formMainWindowControlUpdateScsiDrivers.IsChecked = $global:OSDCloudWorkflowUserSettings.UpdateScsiDrivers
-$formMainWindowControlUpdateSystemFirmware.IsChecked = $global:OSDCloudWorkflowUserSettings.UpdateSystemFirmware
-
-# PowerShell
-$formMainWindowControlPSUpdateModulePowershellGet.IsChecked = $global:OSDCloudWorkflowUserSettings.PSUpdateModulePowershellGet
-$formMainWindowControlPSUpdateModulePackageManagement.IsChecked = $global:OSDCloudWorkflowUserSettings.PSUpdateModulePackageManagement
-$formMainWindowControlPSInstallModuleOSD.IsChecked = $global:OSDCloudWorkflowUserSettings.PSInstallModuleOSD
-$formMainWindowControlPSInstallModuleWindowsAutopilotIntune.IsChecked = $global:OSDCloudWorkflowUserSettings.PSInstallModuleWindowsAutopilotIntune
-
-# Cleanup
-
-# Finish Actions
-$formMainWindowControlWinpeRestart.IsChecked = $global:OSDCloudWorkflowUserSettings.WinpeRestart
-$formMainWindowControlWinpeShutdown.IsChecked = $global:OSDCloudWorkflowUserSettings.WinpeShutdown
-
 # Tpm
 if ($global:OSDCloudWorkflowGather.IsTpmReady -eq $true) {
     $formMainWindowControlIsTpmReady.Foreground = 'Green'

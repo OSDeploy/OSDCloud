@@ -124,106 +124,14 @@
     </Window.Background>
     <DockPanel>
         <Menu x:Name="MenuBar" DockPanel.Dock="Top" Background="#FFFFFFFF">
-            <MenuItem x:Name="StepsMenu" Header="Steps" Height="40" Foreground="Black" FontWeight="Bold">
-                <MenuItem Header="Disk Actions">
-                    <MenuItem Name="SkipClearDiskConfirm"
-                              Header="Skip Clear-Disk Confirmation"
-                              ToolTip="Do not prompt to confirm the Clear-Disk step.&#x0a;This option allows for a Zero-Touch experience once OSDCloud starts."
-                              IsCheckable="True" />
-                    <MenuItem Name="SkipClearDisk"
-                              Header="Skip Clear-Disk and New-OSDisk"
-                              ToolTip="Do not clear or partition the OSDisk.&#x0a;This option should only be used if you already have existing partitioning."
-                              IsCheckable="True" />
-                    <MenuItem Name="SkipRecoveryPartition"
-                              Header="Skip Recovery Paritition"
-                              ToolTip="Do not create a Recovery Partition.&#x0a;This option is enabled by default when imaging a Virtual Machine."
-                              IsCheckable="True" />
-                </MenuItem>
-                <MenuItem Header="Updates">
-                    <MenuItem Name="UpdateSystemFirmware"
-                          Header="System Firmware"
-                          ToolTip="Updates are downloaded from Microsoft Update.&#x0a;It is recommended that this device has AC power and is not docked during the update which happens after WinPE is restarted."
-                          IsCheckable="True"/>
-                    <MenuItem Name="UpdateDiskDrivers"
-                          Header="Disk Drivers"
-                          IsCheckable="True" />
-                    <MenuItem Name="UpdateNetworkDrivers"
-                          Header="Network Drivers"
-                          IsCheckable="True" />
-                    <MenuItem Name="UpdateScsiDrivers"
-                          Header="SCSI Adapter Drivers"
-                          IsCheckable="True" />
-                </MenuItem>
-                <MenuItem Header="PowerShell">
-                    <MenuItem Name="PSUpdateModulePackageManagement"
-                          Header="Update PackageManagement"
-                          IsCheckable="True" />
-                    <MenuItem Name="PSUpdateModulePowershellGet"
-                          Header="Update PowerShellGet"
-                          IsCheckable="True" />
-                    <MenuItem Name="PSInstallModuleOSD"
-                          Header="Install OSD"
-                          IsCheckable="True" />
-                    <MenuItem Name="PSInstallModuleWindowsAutopilotIntune"
-                          Header="Install WindowsAutopilotIntune"
-                          IsCheckable="True" />
-                </MenuItem>
-                <MenuItem Header="Cleanup">
-                    <MenuItem Name="OSDCleanup"
-                          Header="Remove C:\OSDCloud"
-                          IsCheckable="False" />
-                </MenuItem>
-                <MenuItem Header="Finish Actions">
-                    <MenuItem Name="WinpeRestart"
-                          Header="WinPE Restart"
-                          IsCheckable="True" />
-                    <MenuItem Name="WinpeShutdown"
-                          Header="WinPE Shutdown"
-                          IsCheckable="True" />
-                </MenuItem>
-                <MenuItem Header="LabConfig">
-                    <MenuItem Name="BypassCPUCheck"
-                              Header="BypassCPUCheck"
-                              IsCheckable="True"/>
-                    <MenuItem Name="BypassRAMCheck"
-                              Header="BypassRAMCheck"
-                              IsCheckable="True"/>
-                    <MenuItem Name="BypassSecureBootCheck"
-                              Header="BypassSecureBootCheck"
-                              IsCheckable="True"/>
-                    <MenuItem Name="BypassStorageCheck"
-                              Header="BypassStorageCheck"
-                              IsCheckable="True"/>
-                    <MenuItem Name="BypassTPMCheck"
-                              Header="BypassTPMCheck"
-                              IsCheckable="True"/>
-                </MenuItem>
-                <Separator />
-                <MenuItem Header="Step Pause">
-                    <MenuItem Name="PauseClearDisk"
-                          Header="Clear-Disk"
-                          IsCheckable="True" />
-                    <MenuItem Name="PauseNewOSDisk"
-                          Header="New-OSDisk"
-                          IsCheckable="True" />
-                </MenuItem>
-                <MenuItem Header="Step Debug">
-                    <MenuItem Name="DebugClearDisk"
-                          Header="Clear-Disk"
-                          IsCheckable="True" />
-                    <MenuItem Name="DebugNewOSDisk"
-                          Header="New-OSDisk"
-                          IsCheckable="True" />
-                </MenuItem>
-            </MenuItem>
-            <MenuItem Name="IsAutopilotReady"
-                              Header="Autopilot"
-                              Foreground="Black"
-                              FontWeight="Bold" IsTabStop="False" Focusable="False" IsCheckable="False" />
             <MenuItem Name="IsTpmReady"
                               Header="TPM"
                               Foreground="Black" FontWeight="Bold" IsTabStop="False" Focusable="False"
                               IsCheckable="False" />
+            <MenuItem Name="IsAutopilotReady"
+                              Header="Autopilot"
+                              Foreground="Black"
+                              FontWeight="Bold" IsTabStop="False" Focusable="False" IsCheckable="False" />
             <MenuItem x:Name="ToolsMenu" Header="Tools" Foreground="Black" FontWeight="Bold">
                 <MenuItem Name="StartMSInfo"
                               Header="MSInfo32"
