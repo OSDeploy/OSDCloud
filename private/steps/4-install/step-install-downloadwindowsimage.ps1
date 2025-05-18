@@ -42,6 +42,7 @@ function step-install-downloadwindowsimage {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] FileName: $FileName"
 
         # Download the file
+        Write-Host -ForegroundColor Cyan "Downloading OS Image from $($OperatingSystemObject.Url)"
         $SaveWebFile = Save-WebFile -SourceUrl $OperatingSystemObject.Url -DestinationDirectory "$DownloadPath" -DestinationName $FileName
 
         if ($SaveWebFile) {
@@ -52,6 +53,7 @@ function step-install-downloadwindowsimage {
     }
     else {
         # $SaveWebFile is a FileInfo Object, not a path
+        Write-Host -ForegroundColor Cyan "Downloading OS Image from $($OperatingSystemObject.Url)"
         $SaveWebFile = Save-WebFile -SourceUrl $OperatingSystemObject.Url -DestinationDirectory 'C:\OSDCloud\OS' -ErrorAction Stop
         $FileInfo = $SaveWebFile
     }

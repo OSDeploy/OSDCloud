@@ -140,6 +140,7 @@ function step-drivers-driverpack {
         if (-not (Test-Path $USBDownloadPath)) {
             $null = New-Item -Path $USBDownloadPath -ItemType Directory -Force
         }
+        Write-Host -ForegroundColor Cyan "Downloading DriverPack from $($DriverPackObject.Url)"
         $SaveWebFile = Save-WebFile -SourceUrl $DriverPackObject.Url -DestinationDirectory "$USBDownloadPath" -DestinationName $FileName
 
         if ($SaveWebFile) {
@@ -153,6 +154,7 @@ function step-drivers-driverpack {
         if (-not (Test-Path $DownloadPath)) {
             $null = New-Item -Path $DownloadPath -ItemType Directory -Force
         }
+        Write-Host -ForegroundColor Cyan "Downloading DriverPack from $($DriverPackObject.Url)"
         $SaveWebFile = Save-WebFile -SourceUrl $DriverPackObject.Url -DestinationDirectory $DownloadPath -ErrorAction Stop
         $FileInfo = $SaveWebFile
     }
