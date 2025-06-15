@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Start-OSDCloudPilot
+# Start-OSDCloudDemo
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Start-OSDCloudPilot [[-Name] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Start-OSDCloudDemo [[-Name] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

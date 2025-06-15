@@ -1,11 +1,11 @@
-function Start-OSDCloudPilot {
+function Start-OSDCloudDemo {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false,
             Position = 0,
             ValueFromPipelineByPropertyName = $true)]
         [System.String]
-        $Name = 'osdcloud-pilot'
+        $Name = 'osdcloud-demo'
     )
     #=================================================
     # Initialize OSDCloudWorkflow

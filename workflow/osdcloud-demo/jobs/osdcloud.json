@@ -1,9 +1,9 @@
 {
     "id": "2bc42a9c-3ce1-44a6-847d-593c47d362c5",
-    "name": "OSDCloud Core",
+    "name": "Demo OSDCloud Core",
     "description": "OSDCloud",
     "author": "OSDeploy",
-    "version": "2025.4.21.1",
+    "version": "2025.5.6.1",
     "amd64": true,
     "arm64": true,
     "default": true,
@@ -26,7 +26,10 @@
             "description": "Creates the log directory and initializes logging",
             "command": "step-initialize-startosdcloudlogs",
             "args": [],
-            "parameters": {},
+            "parameters": {
+                "verbose": true,
+                "debug": true
+            },
             "rules": {
                 "runinfullos": true,
                 "skip": false
