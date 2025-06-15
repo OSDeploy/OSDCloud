@@ -30,7 +30,7 @@ CompanyName = 'osdeploy.com'
 Copyright = '(c) 2025 @ osdeploy.com. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'OSDCloud Workflow'
+Description = 'OSDCloud NUKE - Workplace Ninjas UK Edition'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
