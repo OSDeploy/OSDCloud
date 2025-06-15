@@ -25,6 +25,13 @@ function Initialize-OSDCloudWorkflowJobs {
     #=================================================
     $WorkflowJobFiles = Get-ChildItem -Path "$Path\$Name\Jobs" -Filter '*.json' -Recurse -ErrorAction SilentlyContinue
 
+    if (-not ($WorkflowJobFiles)) {
+        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] OSDCloud Workflows do not exist in the specified Path"
+        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] $Path\$Name\Jobs"
+        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] The Name `"$Name`" may not be valid"
+        break
+    }
+
     $OSDCloudWorkflowJobs = foreach ($item in $WorkflowJobFiles) {
         Get-Content $item.FullName -Raw | ConvertFrom-Json
     }

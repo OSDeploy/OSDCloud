@@ -1,12 +1,12 @@
 {
-    "id": "2bc42a9c-3ce1-44a6-847d-593c47d362c5",
-    "name": "OSDCloud Core",
+    "id": "0933316e-ce99-4fb1-b0d6-3a86c0d1fd00",
+    "name": "WinPE Deploy OS",
     "description": "OSDCloud",
     "author": "OSDeploy",
-    "version": "2025.5.6.1",
+    "version": "2025.5.30.1",
     "amd64": true,
     "arm64": true,
-    "default": true,
+    "default": false,
     "steps": [
         {
             "name": "Start Workflow",
@@ -14,7 +14,7 @@
             "command": "step-initialize-startosdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud Core"
+                "WorkflowName": "WinPE Deploy OS"
             },
             "rules": {
                 "runinfullos": true,
@@ -26,10 +26,7 @@
             "description": "Creates the log directory and initializes logging",
             "command": "step-initialize-startosdcloudlogs",
             "args": [],
-            "parameters": {
-                "verbose": true,
-                "debug": true
-            },
+            "parameters": {},
             "rules": {
                 "runinfullos": true,
                 "skip": false
@@ -39,17 +36,6 @@
             "name": "Validate WindowsImage Availability",
             "description": "Test if the image exists and is reachable",
             "command": "step-validate-iswindowsimageready",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
-        },
-        {
-            "name": "Validate DriverPack Availability",
-            "description": "Tests if the driver pack is reachable",
-            "command": "step-validate-isdriverpackready",
             "args": [],
             "parameters": {},
             "rules": {
@@ -201,120 +187,6 @@
             "rules": {
                 "runinfullos": false,
                 "skip": false
-            }
-        },
-        {
-            "name": "Export WinPE Drivers",
-            "status": "Ready",
-            "category": "drivers",
-            "description": "Export the in-use WinPE drivers to the osdisk",
-            "command": "step-drivers-winpe",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
-        },
-        {
-            "name": "Add WinPE Drivers",
-            "status": "Ready",
-            "category": "drivers",
-            "description": "Add the exported WinPE drivers to the offline os",
-            "command": "step-drivers-addwindowsdriver-winpe",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
-        },
-        {
-            "name": "Save DriverPack",
-            "description": "Downloads the Manufacturer DriverPack",
-            "command": "step-drivers-driverpack",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
-        },
-        {
-            "name": "Microsoft Update Catalog Drivers",
-            "description": "Downloads drivers from Microsoft Update Catalog",
-            "command": "step-drivers-msupdate",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
-        },
-        {
-            "name": "Add WindowsDriver - DriverPack",
-            "description": "Adds WindowsDriver to the offline OS",
-            "command": "step-drivers-addwindowsdriver-driverpack",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
-        },
-        {
-            "name": "Add WindowsDriver - Microsoft Update Catalog",
-            "description": "Adds Windows Drivers to the offline OS",
-            "command": "step-drivers-addwindowsdriver-msupdate",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
-        },
-        {
-            "name": "Add WindowsDriver - Microsoft Update Catalog - Disk",
-            "description": "Adds Windows Drivers to the offline OS",
-            "command": "step-drivers-addwindowsdriver-disk",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
-        },
-        {
-            "name": "Add WindowsDriver - Microsoft Update Catalog - Net",
-            "description": "Adds Windows Drivers to the offline OS",
-            "command": "step-drivers-addwindowsdriver-net",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
-        },
-        {
-            "name": "Add WindowsDriver - Microsoft Update Catalog - Scsi",
-            "description": "Adds Windows Drivers to the offline OS",
-            "command": "step-drivers-addwindowsdriver-scsi",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
-        },
-        {
-            "name": "Add WindowsDriver - Microsoft Update Catalog - Firmware",
-            "description": "Adds Windows Drivers to the offline OS",
-            "command": "step-drivers-addwindowsdriver-firmware",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
             }
         },
         {
