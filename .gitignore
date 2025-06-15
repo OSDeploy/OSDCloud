@@ -31,3 +31,6 @@ $RECYCLE.BIN/
 
 # OSDCloud specific
 OSDCloud.log
+
+# Custom
+workflow-backup

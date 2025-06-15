@@ -63,13 +63,11 @@ function step-install-downloadwindowsimage {
         Start-Sleep -Seconds 86400
         exit
     }
-
     #=================================================
     # Store this as a FileInfo Object
     $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage = $FileInfo
     $global:OSDCloudWorkflowInvoke.WindowsImagePath = $global:OSDCloudWorkflowInvoke.FileInfoWindowsImage.FullName
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] WindowsImagePath:  $($global:OSDCloudWorkflowInvoke.WindowsImagePath)"
-    
     #=================================================
     # Check the File Hash
     if ($OperatingSystemObject.Sha1) {

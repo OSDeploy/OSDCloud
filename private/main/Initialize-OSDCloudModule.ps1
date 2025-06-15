@@ -8,7 +8,7 @@ function Initialize-OSDCloudModule {
             ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
         [string[]]
-        $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\core\module.json",
+        $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\module.json",
 
         [System.Management.Automation.SwitchParameter]
         $AsJson

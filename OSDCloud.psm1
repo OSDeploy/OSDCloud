@@ -29,6 +29,5 @@ if ($FoundErrors.Count -gt 0) {
     break
 }
 
-# Set-Alias -Name OSDCloud -Value Start-OSDCloudPilot -Scope Global
 Export-ModuleMember -Function '*' -Alias '*' -Cmdlet '*'
 Initialize-OSDCloudModule
