@@ -2,7 +2,7 @@
 <WindowsCustomizations>
   <PackageConfig xmlns="urn:schemas-Microsoft-com:Windows-ICD-Package-Config.v1.0">
     <ID>{97a4c0e8-fa6e-4120-8e48-53e2bf5a29ac}</ID>
-    <Name>setup-specialize</Name>
+    <Name>setupspecialize</Name>
     <Version>1.1</Version>
     <OwnerType>OEM</OwnerType>
     <Rank>0</Rank>

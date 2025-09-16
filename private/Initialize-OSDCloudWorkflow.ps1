@@ -22,10 +22,10 @@ function Initialize-OSDCloudWorkflow {
     $ComputerModel         = $global:OSDCloudWorkflowGather.ComputerModel
     $ComputerProduct       = $global:OSDCloudWorkflowGather.ComputerProduct
     #=================================================
-    # OSDCloudWorkflowJobs
+    # OSDCloudWorkflowTasks
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Flows $ModuleVersion"
-    Initialize-OSDCloudWorkflowJobs -Name $Name
-    $WorkflowObject        = $global:OSDCloudWorkflowJobs | Select-Object -First 1
+    Initialize-OSDCloudWorkflowTasks -Name $Name
+    $WorkflowObject        = $global:OSDCloudWorkflowTasks | Select-Object -First 1
     $WorkflowName          = $WorkflowObject.name
     #=================================================
     # OSDCloudWorkflowOSCatalog
@@ -106,7 +106,7 @@ function Initialize-OSDCloudWorkflow {
         DriverPackName        = $DriverPackName
         DriverPackObject      = $DriverPackObject
         DriverPackValues      = [array]$DriverPackValues
-        Flows                 = [array]$global:OSDCloudWorkflowJobs
+        Flows                 = [array]$global:OSDCloudWorkflowTasks
         Function              = $($MyInvocation.MyCommand.Name)
         ImageFileName         = $ImageFileName
         ImageFileUrl          = $ImageFileUrl

@@ -13,14 +13,15 @@ function step-install-expandwindowsimage {
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] C:\"
     #=================================================
     #   Create ScratchDirectory
-    #=================================================
     $Params = @{
         ErrorAction = 'SilentlyContinue'
         Force       = $true
         ItemType    = 'Directory'
         Path        = 'C:\OSDCloud\Temp'
     }
-    if (-NOT (Test-Path $Params.Path -ErrorAction SilentlyContinue)) { New-Item @Params | Out-Null }
+    if (-NOT (Test-Path $Params.Path -ErrorAction SilentlyContinue)) {
+        New-Item @Params | Out-Null
+    }
     #=================================================
     # Build the Params
     if ($global:OSDCloudWorkflowInit.LocalImageFileDestination.FullName -match '.swm') {

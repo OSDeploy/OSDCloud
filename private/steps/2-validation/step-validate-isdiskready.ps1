@@ -20,7 +20,7 @@ function step-validate-isdiskready {
         Write-Warning "[$(Get-Date -format G)] WinPE may need additional Disk, SCSI or Raid Drivers."
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'
         Start-Sleep -Seconds 86400
-        Exit
+        exit
     }
     #endregion
     #=================================================

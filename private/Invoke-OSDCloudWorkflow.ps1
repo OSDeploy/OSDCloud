@@ -53,12 +53,18 @@ function Invoke-OSDCloudWorkflow {
             if ($step.rules.skip -eq $true) {
                 Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($step.command)][Skip:True]"
                 continue
-            }       
+            }
 
             # Steps should only run in WinPE, but some steps can be configured to run in full OS
             if (($global:IsWinPE -ne $true) -and ($step.rules.runinfullos -ne $true)) {
                 Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($step.command)][Skip:FullOS]"
                 continue
+            }
+
+            # Delay
+            if ($step.rules.delay -eq $true) {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($step.command)][Delay:True]"
+                Start-Sleep -Seconds 10
             }
             
             # Test the command

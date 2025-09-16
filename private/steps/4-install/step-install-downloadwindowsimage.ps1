@@ -72,7 +72,6 @@ function step-install-downloadwindowsimage {
     # Check the File Hash
     if ($OperatingSystemObject.Sha1) {
         $FileHash = (Get-FileHash -Path $FileInfo.FullName -Algorithm SHA1).Hash
-
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Microsoft Verified ESD SHA1: $($OperatingSystemObject.Sha1)"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Downloaded ESD SHA1: $FileHash"
 

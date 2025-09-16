@@ -1,4 +1,4 @@
-function Initialize-OSDCloudWorkflowJobs {
+function Initialize-OSDCloudWorkflowTasks {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false,
@@ -23,34 +23,34 @@ function Initialize-OSDCloudWorkflowJobs {
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
     Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
-    $WorkflowJobFiles = Get-ChildItem -Path "$Path\$Name\Jobs" -Filter '*.json' -Recurse -ErrorAction SilentlyContinue
+    $WorkflowJobFiles = Get-ChildItem -Path "$Path\$Name\tasks" -Filter '*.json' -Recurse -ErrorAction SilentlyContinue
 
     if (-not ($WorkflowJobFiles)) {
         Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] OSDCloud Workflows do not exist in the specified Path"
-        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] $Path\$Name\Jobs"
+        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] $Path\$Name\tasks"
         Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] The Name `"$Name`" may not be valid"
         break
     }
 
-    $OSDCloudWorkflowJobs = foreach ($item in $WorkflowJobFiles) {
+    $OSDCloudWorkflowTasks = foreach ($item in $WorkflowJobFiles) {
         Get-Content $item.FullName -Raw | ConvertFrom-Json
     }
 
     if ($Architecture -match 'amd64') {
         Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Filtering amd64 workflows"
-        $OSDCloudWorkflowJobs = $OSDCloudWorkflowJobs | Where-Object { $_.amd64 -eq $true }
+        $OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Where-Object { $_.amd64 -eq $true }
     }
     elseif ($Architecture -match 'arm64') {
         Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Filtering arm64 workflows"
-        $OSDCloudWorkflowJobs = $OSDCloudWorkflowJobs | Where-Object { $_.arm64 -eq $true }
+        $OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Where-Object { $_.arm64 -eq $true }
     }
 
-    if ($OSDCloudWorkflowJobs.Count -eq 0) {
+    if ($OSDCloudWorkflowTasks.Count -eq 0) {
         Write-Error "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] No workflows found for architecture: $Architecture"
         break
     }
 
-    $global:OSDCloudWorkflowJobs = $OSDCloudWorkflowJobs | Sort-Object -Property @{Expression='default';Descending=$true}, @{Expression='name';Descending=$false}
+    $global:OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Sort-Object -Property @{Expression='default';Descending=$true}, @{Expression='name';Descending=$false}
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"

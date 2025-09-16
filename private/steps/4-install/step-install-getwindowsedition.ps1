@@ -16,7 +16,7 @@ function step-install-getwindowsedition {
     }
     catch {
         Write-Warning "[$(Get-Date -format G)] Unable to get Windows Edition. OK."
-        Write-Warning -ForegroundColor Yellow "[$(Get-Date -format G)] $_"
+        Write-Warning "[$(Get-Date -format G)] $_"
     }
     finally {
         $Error.Clear()
