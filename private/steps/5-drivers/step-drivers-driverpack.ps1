@@ -11,7 +11,7 @@ function step-drivers-driverpack {
     )
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format G)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -106,15 +106,16 @@ function step-drivers-driverpack {
     #>
     #=================================================
     # Variables
+    $FileName = $DriverPackObject.FileName
+    $LogPath = "C:\Windows\Temp\osdcloud-logs"
+    $Manufacturer = $DriverPackObject.Manufacturer
     $ScriptsPath = "C:\Windows\Setup\Scripts"
     $SetupCompleteCmd = "$ScriptsPath\SetupComplete.cmd"
     $SetupSpecializeCmd = "C:\Windows\Temp\osdcloud\SetupSpecialize.cmd"
-    $Manufacturer = $DriverPackObject.Manufacturer
-    $FileName = $DriverPackObject.FileName
     $Url = $DriverPackObject.Url
     #=================================================
     # Create DownloadPath Directory
-    $DownloadPath = "C:\Windows\Temp\osdcloud\drivers-driverpack-$Manufacturer"
+    $DownloadPath = "C:\Windows\Temp\osdcloud-driverpack-download"
     $Params = @{
         ErrorAction = 'SilentlyContinue'
         Force       = $true
@@ -168,8 +169,8 @@ function step-drivers-driverpack {
     $DriverPackObject | ConvertTo-Json | Out-File "$($OutFileObject.FullName).json" -Encoding ascii -Width 2000 -Force
     
     $DownloadedFile = $OutFileObject.FullName
-    $ExpandPath = 'C:\Windows\Temp\osdcloud\drivers-driverpack'
-    if (-NOT (Test-Path "$ExpandPath")) {
+    $ExpandPath = 'C:\Windows\Temp\osdcloud-driverpack-expand'
+    if (-not (Test-Path "$ExpandPath")) {
         New-Item $ExpandPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
     }
     Write-Host -ForegroundColor DarkGray "DriverPack: $DownloadedFile"
@@ -177,90 +178,142 @@ function step-drivers-driverpack {
     #   Cab
     #=================================================
     if ($OutFileObject.Extension -eq '.cab') {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expanding CAB DriverPack to $ExpandPath"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expand CAB DriverPack to $ExpandPath"
         Expand -R "$DownloadedFile" -F:* "$ExpandPath" | Out-Null
+
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Applying drivers in $ExpandPath"
+        Add-WindowsDriver -Path "C:\" -Driver $ExpandPath -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-driverpack.log" -ErrorAction SilentlyContinue | Out-Null
+
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing C:\Windows\Temp\osdcloud-driverpack-download"
+        Remove-Item -Path "C:\Windows\Temp\osdcloud-driverpack-download" -Recurse -Force -ErrorAction SilentlyContinue
+        
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing $ExpandPath"
+        Remove-Item -Path $ExpandPath -Recurse -Force -ErrorAction SilentlyContinue
+        
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing C:\Drivers"
+        Remove-Item -Path "C:\Drivers" -Recurse -Force -ErrorAction SilentlyContinue
         return
     }
     #=================================================
     #   Zip
     #=================================================
     if ($OutFileObject.Extension -eq '.zip') {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expanding ZIP DriverPack to $ExpandPath"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expand ZIP DriverPack to $ExpandPath"
         Expand-Archive -Path $DownloadedFile -DestinationPath $ExpandPath -Force
+
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Applying drivers in $ExpandPath"
+        Add-WindowsDriver -Path "C:\" -Driver $ExpandPath -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-driverpack.log" -ErrorAction SilentlyContinue | Out-Null
+
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing C:\Windows\Temp\osdcloud-driverpack-download"
+        Remove-Item -Path "C:\Windows\Temp\osdcloud-driverpack-download" -Recurse -Force -ErrorAction SilentlyContinue
+
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing $ExpandPath"
+        Remove-Item -Path $ExpandPath -Recurse -Force -ErrorAction SilentlyContinue
+        
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing C:\Drivers"
+        Remove-Item -Path "C:\Drivers" -Recurse -Force -ErrorAction SilentlyContinue
         return
     }
     #=================================================
     #   Dell
     #=================================================
-    if ($OutFileObject.Extension -eq '.exe') {
-        if ($OutFileObject.VersionInfo.FileDescription -match 'Dell') {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expanding Dell DriverPack to $ExpandPath"
-            Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
-            Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
-            $null = New-Item -Path $ExpandPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
-            Start-Process -FilePath $DownloadedFile -ArgumentList "/s /e=`"$ExpandPath`"" -Wait
-            return
-        }
+    if (($OutFileObject.Extension -eq '.exe') -and ($OutFileObject.VersionInfo.FileDescription -match 'Dell')) {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
+
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expand Dell DriverPack to $ExpandPath"
+        $null = New-Item -Path $ExpandPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
+        Start-Process -FilePath $DownloadedFile -ArgumentList "/s /e=`"$ExpandPath`"" -Wait
+
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Applying drivers in $ExpandPath"
+        Add-WindowsDriver -Path "C:\" -Driver $ExpandPath -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-driverpack.log" -ErrorAction SilentlyContinue | Out-Null
+
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing C:\Windows\Temp\osdcloud-driverpack-download"
+        Remove-Item -Path "C:\Windows\Temp\osdcloud-driverpack-download" -Recurse -Force -ErrorAction SilentlyContinue
+        
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing $ExpandPath"
+        Remove-Item -Path $ExpandPath -Recurse -Force -ErrorAction SilentlyContinue
+        
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing C:\Drivers"
+        Remove-Item -Path "C:\Drivers" -Recurse -Force -ErrorAction SilentlyContinue
+        return
     }
     #=================================================
     #   HP
     #=================================================
-    if ($OutFileObject.Extension -eq '.exe') {
-        if ($OutFileObject.VersionInfo.InternalName -match 'hpsoftpaqwrapper') {
-            Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
-            Write-Host -ForegroundColor DarkGray "InternalName: $($OutFileObject.VersionInfo.InternalName)"
-            Write-Host -ForegroundColor DarkGray "OriginalFilename: $($OutFileObject.VersionInfo.OriginalFilename)"
-            Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expanding HP DriverPack to $ExpandPath"
+    if (($OutFileObject.Extension -eq '.exe') -and ($OutFileObject.VersionInfo.InternalName -match 'hpsoftpaqwrapper')) {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] InternalName: $($OutFileObject.VersionInfo.InternalName)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
+
+        if (Test-Path -Path $env:windir\System32\7za.exe) {
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Expand HP DriverPack to $ExpandPath"
             # Start-Process -FilePath $DownloadedFile -ArgumentList "/s /e /f `"$ExpandPath`"" -Wait
-            & 7za x "$($OutFileObject.FullName)" -o"C:\Windows\Temp\osdcloud\drivers-driverpack"
-            return
+            & 7za x "$DownloadedFile" -o"C:\Windows\Temp\osdcloud-driverpack-expand"
+
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Applying drivers in $ExpandPath"
+            Add-WindowsDriver -Path "C:\" -Driver $ExpandPath -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-driverpack.log" -ErrorAction SilentlyContinue | Out-Null
+
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing C:\Windows\Temp\osdcloud-driverpack-download"
+            Remove-Item -Path "C:\Windows\Temp\osdcloud-driverpack-download" -Recurse -Force -ErrorAction SilentlyContinue
+            
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing $ExpandPath"
+            Remove-Item -Path $ExpandPath -Recurse -Force -ErrorAction SilentlyContinue
+
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing C:\Drivers"
+            Remove-Item -Path "C:\Drivers" -Recurse -Force -ErrorAction SilentlyContinue
         }
+        else {
+            Write-Warning "[$(Get-Date -format G)] 7zip 7za.exe needs to be added to WinPE to expand HP DriverPacks"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] HP DriverPack is saved at $DownloadedFile"
+
+            Remove-Item -Path $ExpandPath -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path "C:\Drivers" -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        return
     }
     #=================================================
     #   Lenovo
     #=================================================
-    if (($Manufacturer -eq 'Lenovo') -and (Test-Path $DownloadPath)) {
-        if (-not (Test-Path $ScriptsPath)) {
-            New-Item -Path $ScriptsPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
-        }
+    if (($OutFileObject.Extension -eq '.exe') -and ($OutFileObject.VersionInfo.FileDescription -match 'Lenovo')) {
         Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
         Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Lenovo DriverPack to $SetupCompleteCmd"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Lenovo DriverPack to $SetupSpecializeCmd"
 
 $Content = @"
 :: ========================================================
 :: OSDCloud DriverPack Installation for Lenovo
 :: ========================================================
 $DownloadedFile /SILENT /SUPPRESSMSGBOXES
-robocopy C:\Drivers $ExpandPath *.* /e /move /ndl /nfl /r:0 /w:0
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\UnattendSettings\PnPUnattend\DriverPaths\1" /v Path /t REG_SZ /d "$ExpandPath" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\UnattendSettings\PnPUnattend\DriverPaths\1" /v Path /t REG_SZ /d "C:\Drivers" /f
 pnpunattend.exe AuditSystem /L
-rd /s /q C:\Drivers
 reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\UnattendSettings\PnPUnattend\DriverPaths\1" /v Path /f
+rd /s /q C:\Drivers
+rd /s /q C:\Windows\Temp\osdcloud-driverpack-download
 :: ========================================================
 "@
+
         $Content | Out-File -FilePath $SetupSpecializeCmd -Append -Encoding ascii -Width 2000 -Force
 
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Provisioning Package for SetupSpecialize"
-        $ProvisioningPackage = Join-Path $(Get-OSDCloudModulePath) "core\setup-specialize\setupspecialize.ppkg"
+        $ProvisioningPackage = Join-Path $(Get-OSDCloudModulePath) "core\setupspecialize\setupspecialize.ppkg"
 
         if (Test-Path $ProvisioningPackage) {
-            Write-Host -ForegroundColor DarkGray "dism.exe /Image=C:\ /Add-ProvisioningPackage /PackagePath:`"$ProvisioningPackage`""
-            $Dism = "dism.exe"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Provisioning Package for SetupSpecialize"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] dism.exe /Image=C:\ /Add-ProvisioningPackage /PackagePath:`"$ProvisioningPackage`""
             $ArgumentList = "/Image=C:\ /Add-ProvisioningPackage /PackagePath:`"$ProvisioningPackage`""
             $null = Start-Process -FilePath 'dism.exe' -ArgumentList $ArgumentList -Wait -NoNewWindow
         }
+
+        Remove-Item -Path $ExpandPath -Recurse -Force -ErrorAction SilentlyContinue
+        return
     }
     #=================================================
     #   Surface
     #=================================================
-    if (($Manufacturer -eq 'Microsoft') -and (Test-Path $DownloadedFile)) {
+    if (($OutFileObject.Extension -eq '.msi') -and ($OutFileObject.Name -match 'surface')) {
         if (-not (Test-Path $ScriptsPath)) {
             New-Item -Path $ScriptsPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
         }
-        Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
-        Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Surface DriverPack to $SetupCompleteCmd"
 
 $Content = @"
@@ -268,13 +321,17 @@ $Content = @"
 :: OSDCloud DriverPack Installation for Microsoft Surface
 :: ========================================================
 msiexec /i $DownloadedFile /qn /norestart /l*v C:\Windows\Temp\osdcloud-logs\drivers-driverpack-microsoft.log
+rd /s /q C:\Windows\Temp\osdcloud-driverpack-download
 :: ========================================================
 "@
         $Content | Out-File -FilePath $SetupCompleteCmd -Append -Encoding ascii -Width 2000 -Force
+        Remove-Item -Path $ExpandPath -Recurse -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path "C:\Drivers" -Recurse -Force -ErrorAction SilentlyContinue
+        return
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format G)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

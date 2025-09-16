@@ -23,42 +23,42 @@ function Initialize-OSDCloudWorkflow {
     $ComputerProduct       = $global:OSDCloudWorkflowGather.ComputerProduct
     #=================================================
     # OSDCloudWorkflowTasks
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Flows $ModuleVersion"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Tasks"
     Initialize-OSDCloudWorkflowTasks -Name $Name
     $WorkflowObject        = $global:OSDCloudWorkflowTasks | Select-Object -First 1
     $WorkflowName          = $WorkflowObject.name
     #=================================================
     # OSDCloudWorkflowOSCatalog
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Catalog $ModuleVersion"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Catalog"
     $global:OSDCloudWorkflowOSCatalog = Get-OSDCatalogOperatingSystems
     $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.Architecture -match "$Architecture"}
     # $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.OperatingSystem -match "Windows 11"}
     #=================================================
-    # OSDCloudWorkflowUserSettings
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud User Settings $ModuleVersion"
-    Initialize-OSDCloudWorkflowUserSettings -Name $Name
+    # OSDCloudWorkflowSettingsUser
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings User"
+    Initialize-OSDCloudWorkflowSettingsUser -Name $Name
     #=================================================
-    # OSDCloudWorkflowOSSettings
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Settings $ModuleVersion"
-    Initialize-OSDCloudWorkflowOSSettings -Name $Name
-    if ($global:OSDCloudWorkflowOSSettings."OSName.default" -match 'Win11') {
+    # OSDCloudWorkflowSettingsOS
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings OS"
+    Initialize-OSDCloudWorkflowSettingsOS -Name $Name
+    if ($global:OSDCloudWorkflowSettingsOS."OSName.default" -match 'Win11') {
         $OperatingSystem = 'Windows 11'
-    } elseif ($global:OSDCloudWorkflowOSSettings."OperatingSystem.default" -match 'Win10') {
+    } elseif ($global:OSDCloudWorkflowSettingsOS."OperatingSystem.default" -match 'Win10') {
         $OperatingSystem = 'Windows 10'
     } else {
         $OperatingSystem = 'Windows 11'
     }
-    $OSActivation          = $global:OSDCloudWorkflowOSSettings."OSActivation.default"
-    $OSActivationValues    = [array]$global:OSDCloudWorkflowOSSettings."OSActivation.values"
+    $OSActivation          = $global:OSDCloudWorkflowSettingsOS."OSActivation.default"
+    $OSActivationValues    = [array]$global:OSDCloudWorkflowSettingsOS."OSActivation.values"
     $OSArchitecture        = $Architecture
-    $OSEdition             = $global:OSDCloudWorkflowOSSettings."OSEdition.default"
-    $OSEditionId           = $global:OSDCloudWorkflowOSSettings."OSEditionId.default"
-    $OSEditionValues       = [array]$global:OSDCloudWorkflowOSSettings."OSEdition.values"
-    $OSLanguage            = $global:OSDCloudWorkflowOSSettings."OSLanguageCode.default"
-    $OSLanguageValues      = [array]$global:OSDCloudWorkflowOSSettings."OSLanguageCode.values"
-    $OSName                = $global:OSDCloudWorkflowOSSettings."OSName.default"
-    $OSNameValues          = [array]$global:OSDCloudWorkflowOSSettings."OSName.values"
-    $OSReleaseID           = ($global:OSDCloudWorkflowOSSettings."OSName.default" -split '-')[1]
+    $OSEdition             = $global:OSDCloudWorkflowSettingsOS."OSEdition.default"
+    $OSEditionId           = $global:OSDCloudWorkflowSettingsOS."OSEditionId.default"
+    $OSEditionValues       = [array]$global:OSDCloudWorkflowSettingsOS."OSEdition.values"
+    $OSLanguage            = $global:OSDCloudWorkflowSettingsOS."OSLanguageCode.default"
+    $OSLanguageValues      = [array]$global:OSDCloudWorkflowSettingsOS."OSLanguageCode.values"
+    $OSName                = $global:OSDCloudWorkflowSettingsOS."OSName.default"
+    $OSNameValues          = [array]$global:OSDCloudWorkflowSettingsOS."OSName.values"
+    $OSReleaseID           = ($global:OSDCloudWorkflowSettingsOS."OSName.default" -split '-')[1]
     $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.DisplayName -match $OSName } | Where-Object { $_.License -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
     $OSBuild               = $OperatingSystemObject.Build
     $ImageFileUrl          = $OperatingSystemObject.Url

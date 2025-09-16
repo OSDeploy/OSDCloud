@@ -19,7 +19,7 @@ function step-install-expandwindowsimage {
         ItemType    = 'Directory'
         Path        = 'C:\OSDCloud\Temp'
     }
-    if (-NOT (Test-Path $Params.Path -ErrorAction SilentlyContinue)) {
+    if (-not (Test-Path $Params.Path -ErrorAction SilentlyContinue)) {
         New-Item @Params | Out-Null
     }
     #=================================================

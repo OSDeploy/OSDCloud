@@ -7,7 +7,9 @@ function Invoke-OSDCloudWorkflowUx {
             ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
         [System.String]
-        $Name = 'default'
+        $Name = 'default',
+
+        $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow"
     )
     #=================================================
     # Get module details
@@ -17,13 +19,23 @@ function Invoke-OSDCloudWorkflowUx {
     if (-not ($global:OSDCloudWorkflowInit)) {
         Initialize-OSDCloudWorkflow
     }
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Launching OSDCloud $ModuleVersion"
-    $OSDCloudUxPath = Join-Path -Path $ModuleBase -ChildPath "workflow\$Name\ux\MainWindow.ps1"
+
+    $WorkflowSettingsUxPath = Join-Path $Path (Join-Path $Name 'ux')
+    $WorkflowSettingsUxDefaultPath = Join-Path $Path (Join-Path 'default' 'ux')
+
+    $OSDCloudUxPath = Join-Path -Path $WorkflowSettingsUxPath -ChildPath "MainWindow.ps1"
+    if (-not (Test-Path $OSDCloudUxPath)) {
+        $OSDCloudUxPath = Join-Path -Path $WorkflowSettingsUxDefaultPath -ChildPath "MainWindow.ps1"
+    }
 
     if (-not (Test-Path $OSDCloudUxPath)) {
-        Write-Error "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Unable to locate $OSDCloudUxPath"
-        return
+        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Unable to locate $OSDCloudUxPath"
+        break
     }
+
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] $OSDCloudUxPath"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Launching OSDCloud $ModuleVersion"
+
     . $OSDCloudUxPath
     #=================================================
 }

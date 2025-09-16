@@ -14,7 +14,7 @@ function Use-PEStartupDeviceInfo {
     #=================================================
     # Create the log path if it does not already exist
     $LogsPath = "$env:TEMP\osdcloud-logs"
-    if (-NOT (Test-Path -Path $LogsPath)) {
+    if (-not (Test-Path -Path $LogsPath)) {
         New-Item -Path $LogsPath -ItemType Directory -Force | Out-Null
     }
     #=================================================

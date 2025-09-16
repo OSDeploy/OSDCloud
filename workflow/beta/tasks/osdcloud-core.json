@@ -2,7 +2,7 @@
     "id": "2bc42a9c-3ce1-44a6-847d-593c47d362c5",
     "name": "OSDCloud",
     "description": "OSDCloud",
-    "author": "OSDCloud Workflow",
+    "author": "OSDeploy",
     "version": "2025.9.15.1",
     "amd64": true,
     "arm64": true,
@@ -234,7 +234,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -245,7 +245,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -256,7 +256,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -267,7 +267,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -289,7 +289,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -333,7 +333,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -369,7 +369,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {

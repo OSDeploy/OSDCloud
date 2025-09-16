@@ -11,7 +11,7 @@ function step-drivers-addwindowsdriver-msupdate {
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
-    $DriverPath = "C:\Windows\Temp\osdcloud\drivers-msupdate"
+    $DriverPath = "C:\Windows\Temp\osdcloud-drivers-msupdate"
 
     if (Test-Path -Path $DriverPath) {
         if (-not (Test-Path -Path $LogPath)) {

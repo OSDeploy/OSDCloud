@@ -11,7 +11,7 @@ function step-drivers-addwindowsdriver-winpe {
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
-    $DriverPath = "C:\Windows\Temp\osdcloud\drivers-winpe"
+    $DriverPath = "C:\Windows\Temp\osdcloud-drivers-winpe"
 
     if (Test-Path -Path $DriverPath) {
         if (-not (Test-Path -Path $LogPath)) {

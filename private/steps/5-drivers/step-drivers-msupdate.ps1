@@ -44,20 +44,20 @@ function step-drivers-msupdate {
     #=================================================
     # Microsoft Update Catalog
     if ($DriverPackName -eq 'Microsoft Update Catalog') {
-        $DestinationDirectory = "C:\Windows\Temp\osdcloud\drivers-msupdate"
+        $DestinationDirectory = "C:\Windows\Temp\osdcloud-drivers-msupdate"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Microsoft Update Drivers is enabled for all devices. OK."
         Save-MsUpCatDriver -DestinationDirectory $DestinationDirectory
         return
     }
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Microsoft Update Drivers is enabled for critical devices. OK."
 
-    $DestinationDirectory = "C:\Windows\Temp\osdcloud\drivers-disk"
+    $DestinationDirectory = "C:\Windows\Temp\osdcloud-drivers-disk"
     Save-MsUpCatDriver -DestinationDirectory $DestinationDirectory -PNPClass 'DiskDrive'
     
-    $DestinationDirectory = "C:\Windows\Temp\osdcloud\drivers-net"
+    $DestinationDirectory = "C:\Windows\Temp\osdcloud-drivers-net"
     Save-MsUpCatDriver -DestinationDirectory $DestinationDirectory -PNPClass 'Net'
     
-    $DestinationDirectory = "C:\Windows\Temp\osdcloud\drivers-scsi"
+    $DestinationDirectory = "C:\Windows\Temp\osdcloud-drivers-scsi"
     Save-MsUpCatDriver -DestinationDirectory $DestinationDirectory -PNPClass 'SCSIAdapter'
     #=================================================
     # End the function

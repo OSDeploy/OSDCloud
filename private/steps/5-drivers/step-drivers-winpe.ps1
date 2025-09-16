@@ -10,7 +10,7 @@ function step-drivers-winpe {
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     # Output Path
-    $OutputPath = "C:\Windows\Temp\osdcloud\drivers-winpe"
+    $OutputPath = "C:\Windows\Temp\osdcloud-drivers-winpe"
     if (-not (Test-Path -Path $OutputPath)) {
         New-Item -ItemType Directory -Path $OutputPath -Force | Out-Null
     }
@@ -26,7 +26,13 @@ function step-drivers-winpe {
         Where-Object { $_.DriverName -like "oem*.inf" } | `
         Sort-Object DriverName -Unique | `
         Select-Object -Property DriverName, Status, ClassGuid, ClassName, DeviceDescription, ManufacturerName, InstanceId
-    $PnputilDevices | Export-Clixml -Path "$LogPath\drivers-winpe.xml" -Force
+    
+    if ($PnputilDevices) {
+        $PnputilDevices | Export-Clixml -Path "$LogPath\drivers-winpe.xml" -Force
+    }
+    else {
+        return
+    }
     #=================================================
     # Export Drivers to Disk
     Write-Verbose "[$(Get-Date -format G)] Exporting drivers to: $OutputPath"
@@ -45,6 +51,23 @@ function step-drivers-winpe {
             $null = & pnputil.exe /export-driver $Device.DriverName $destinationPath
         }
     }
+    #=================================================
+    # Registry OOBEInProgressDriverUpdatesPostponed
+    <#
+$Content = @"
+:: ========================================================
+:: OSDCloud Nano
+:: ========================================================
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\Setup" /v OOBEInProgressDriverUpdatesPostponed /t REG_DWORD /d 0 /f
+:: ========================================================
+"@
+    $ScriptsPath = "C:\Windows\Setup\Scripts"
+    $SetupCompleteCmd = "$ScriptsPath\SetupComplete.cmd"
+    if (-not (Test-Path $ScriptsPath)) {
+        New-Item -Path $ScriptsPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
+    }
+    $Content | Out-File -FilePath $SetupCompleteCmd -Append -Encoding ascii -Width 2000 -Force
+    #>
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"

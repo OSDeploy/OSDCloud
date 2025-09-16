@@ -1,12 +1,12 @@
 {
-    "id": "2bc42a9c-3ce1-44a6-847d-593c47d362c5",
-    "name": "OSDCloud",
-    "description": "OSDCloud",
+    "id": "3d99cfe4-a3ae-485f-bd63-6f6a0627f62e",
+    "name": "OSDCloud Autopilot",
+    "description": "OSDCloud Autopilot",
     "author": "OSDCloud Workflow",
     "version": "2025.9.15.1",
     "amd64": true,
     "arm64": true,
-    "default": true,
+    "default": false,
     "steps": [
         {
             "name": "Start Workflow",
@@ -14,7 +14,7 @@
             "command": "step-initialize-startosdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud"
+                "WorkflowName": "OSDCloud Autopilot"
             },
             "rules": {
                 "runinfullos": true,
@@ -345,7 +345,7 @@
                 "name": "OSD"
             },
             "rules": {
-                "skip": true
+                "skip": false
             }
         },
         {
@@ -357,7 +357,7 @@
                 "name": "WindowsAutopilotIntune"
             },
             "rules": {
-                "skip": true
+                "skip": false
             }
         },
         {

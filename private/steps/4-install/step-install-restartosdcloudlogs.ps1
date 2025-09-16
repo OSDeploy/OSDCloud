@@ -23,13 +23,11 @@ function step-install-restartosdcloudlogs {
         New-Item @Params | Out-Null
     }
 
-    $TranscriptFullName = Join-Path $LogsPath "transcript.log"
+    $null = robocopy "X:\Windows\Temp\osdcloud-logs" "$LogsPath" transcript.log /e /move /ndl /nfl /r:0 /w:0
+    $TranscriptFullName = Join-Path $LogsPath "transcript-$((Get-Date).ToString('yyyy-MM-dd-HHmmss')).log"
 
-    if (Test-Path "X:\Windows\Temp\osdcloud-logs\transcript.log") {
-        Stop-Transcript -ErrorAction SilentlyContinue
-        $null = robocopy "X:\Windows\Temp\osdcloud-logs" "C:\Windows\Temp\osdcloud-logs" transcript.log /e /move /ndl /nfl /r:0 /w:0
-        Start-Transcript -Path $TranscriptFullName -Append -ErrorAction SilentlyContinue
-    }
+    $null = Start-Transcript -Path $TranscriptFullName -ErrorAction SilentlyContinue
+    # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] $TranscriptFullName"
     #endregion
     #=================================================
     # End the function

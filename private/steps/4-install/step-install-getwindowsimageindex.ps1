@@ -57,7 +57,7 @@ function step-install-getwindowsimageindex {
     #endregion
     #=================================================
     #region Does the Path exist?
-    if (-NOT (Test-Path $ImagePath)) {
+    if (-not (Test-Path $ImagePath)) {
         Write-Warning "[$(Get-Date -format G)] WindowsImage does not exist at the ImagePath."
         Write-Warning $ImagePath
         Write-Warning 'Press Ctrl+C to exit OSDCloud'

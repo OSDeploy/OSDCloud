@@ -11,7 +11,7 @@ function step-drivers-addwindowsdriver-firmware {
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
-    $DriverPath = "C:\Windows\Temp\osdcloud\drivers-firmware"
+    $DriverPath = "C:\Windows\Temp\osdcloud-drivers-firmware"
     
     if (Test-Path -Path $DriverPath) {
         if (-not (Test-Path -Path $LogPath)) {

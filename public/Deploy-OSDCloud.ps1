@@ -1,4 +1,4 @@
-function Start-OSDCloudWorkflow {
+function Deploy-OSDCloud {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false,
@@ -37,7 +37,8 @@ function Start-OSDCloudWorkflow {
             $OSDCloudWorkflowInit | Out-Host
             try {
                 Invoke-OSDCloudWorkflow
-            } catch {
+            }
+            catch {
                 Write-Warning "Failed to invoke OSDCloud Workflow $Name $_"
                 break
             }

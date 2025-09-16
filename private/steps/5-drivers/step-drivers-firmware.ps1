@@ -35,7 +35,7 @@ function step-drivers-firmware {
         return
     }
 
-    $FirmwarePath = "C:\Windows\Temp\osdcloud\drivers-firmware"
+    $FirmwarePath = "C:\Windows\Temp\osdcloud-drivers-firmware"
 
     $Params = @{
         Path        = $FirmwarePath

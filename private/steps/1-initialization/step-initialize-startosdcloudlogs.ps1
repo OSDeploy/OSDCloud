@@ -23,10 +23,10 @@ function step-initialize-startosdcloudlogs {
         New-Item @Params | Out-Null
     }
 
-    $TranscriptFullName = Join-Path $LogsPath "transcript.log"
+    $TranscriptFullName = Join-Path $LogsPath "transcript-$((Get-Date).ToString('yyyy-MM-dd-HHmmss')).log"
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] $TranscriptFullName"
     
-    Start-Transcript -Path $TranscriptFullName 
+    $null = Start-Transcript -Path $TranscriptFullName -ErrorAction SilentlyContinue
     #endregion
     #=================================================
     # End the function

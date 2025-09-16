@@ -1,11 +1,11 @@
-function Start-OSDCloudWorkflow {
+function Deploy-OSDCloudLegacy {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false,
             Position = 0,
             ValueFromPipelineByPropertyName = $true)]
         [System.String]
-        $Name = 'default',
+        $Name = 'legacy',
         [switch]
         $CLI
     )
@@ -37,7 +37,8 @@ function Start-OSDCloudWorkflow {
             $OSDCloudWorkflowInit | Out-Host
             try {
                 Invoke-OSDCloudWorkflow
-            } catch {
+            }
+            catch {
                 Write-Warning "Failed to invoke OSDCloud Workflow $Name $_"
                 break
             }

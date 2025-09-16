@@ -74,15 +74,17 @@ FunctionsToExport =
     'Get-OSDCloudModulePath',
     'Get-OSDCloudModuleVersion',
     'Invoke-OSDCloudPEStartup',
-    'Start-OSDCloudDemo',
-    'Start-OSDCloudDemoCLI',
     'Start-OSDCloudWorkflow',
     'Use-PEStartupDeviceInfo',
     'Use-PEStartupHardware',
     'Use-PEStartupHardwareErrors',
     'Use-PEStartupIpconfig',
     'Use-PEStartupUpdateModule',
-    'Use-PEStartupWiFi'
+    'Use-PEStartupWiFi',
+    'Deploy-OSDCloud',
+    'Deploy-OSDCloudCLI',
+    'Deploy-OSDCloudGUI',
+    'Deploy-OSDCloudLegacy'
 
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

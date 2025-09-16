@@ -11,7 +11,7 @@ function step-drivers-addwindowsdriver-scsi {
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
-    $DriverPath = "C:\Windows\Temp\osdcloud\drivers-scsi"
+    $DriverPath = "C:\Windows\Temp\osdcloud-drivers-scsi"
 
     if (Test-Path -Path $DriverPath) {
         if (-not (Test-Path -Path $LogPath)) {
