@@ -1,0 +1,400 @@
+{
+    "id": "3d99cfe4-a3ae-485f-bd63-6f6a0627f62e",
+    "name": "OSDCloud Core Autopilot",
+    "description": "OSDCloud Autopilot without DriverPacks",
+    "author": "OSDeploy",
+    "version": "2025.9.16.1",
+    "amd64": true,
+    "arm64": true,
+    "default": false,
+    "steps": [
+        {
+            "name": "Start Workflow",
+            "description": "Start the OSDCloud Workflow",
+            "command": "step-initialize-startosdcloudworkflow",
+            "args": [],
+            "parameters": {
+                "WorkflowName": "OSDCloud Core"
+            },
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "Start Logs",
+            "description": "Creates the log directory and initializes logging",
+            "command": "step-initialize-startosdcloudlogs",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "Validate WindowsImage Availability",
+            "description": "Test if the image exists and is reachable",
+            "command": "step-validate-iswindowsimageready",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "Validate DriverPack Availability",
+            "description": "Tests if the driver pack is reachable",
+            "command": "step-validate-isdriverpackready",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": true
+            }
+        },
+        {
+            "name": "Validate Local Disk",
+            "description": "Tests the local disk for readiness",
+            "command": "step-validate-isdiskready",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Remove usbdriveletter",
+            "description": "Removes drive letters assigned to USB devices",
+            "command": "step-preinstall-removeusbdriveletter",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Clear-Disk",
+            "description": "Clears the disk for a fresh start",
+            "command": "step-preinstall-cleardisk",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "PartitionDisk",
+            "description": "Partitions the disk for installation",
+            "command": "step-preinstall-partitiondisk",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Addusbdriveletter",
+            "description": "Assigns drive letters to USB devices",
+            "command": "step-preinstall-restoreusbdriveletter",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "InvokePowercfgHighPerformance",
+            "description": "Sets the system to high performance mode",
+            "command": "step-preinstall-enablehighperformance",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "DownloadWindowsOS",
+            "description": "Downloads the Windows OS image",
+            "command": "step-install-downloadwindowsimage",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "GetWindowsImageIndex",
+            "description": "Retrieves the index of the Windows image",
+            "command": "step-install-getwindowsimageindex",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "ExpandWindowsImage",
+            "status": "Ready",
+            "description": "Expands the Windows image for installation",
+            "command": "step-install-expandwindowsimage",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Restart Logs",
+            "status": "Ready",
+            "description": "Restarts the OSDCloud logs",
+            "command": "step-install-restartosdcloudlogs",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "Check WindowsEdition",
+            "description": "Checks the Windows edition of the image",
+            "command": "step-install-getwindowsedition",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Move WindowsImage",
+            "description": "Moves the Windows Image to C:\\Windows\\Temp\\osdcloud\\os",
+            "command": "step-install-removewindowsimage",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "BCDBoot",
+            "status": "Ready",
+            "description": "Configures the bootloader using BCDBoot",
+            "command": "step-install-bcdboot",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Export WinPE Drivers",
+            "status": "Ready",
+            "category": "drivers",
+            "description": "Export the in-use WinPE drivers to the osdisk",
+            "command": "step-drivers-winpe",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "Add WinPE Drivers",
+            "status": "Ready",
+            "category": "drivers",
+            "description": "Add the exported WinPE drivers to the offline os",
+            "command": "step-drivers-addwindowsdriver-winpe",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Save DriverPack",
+            "description": "Downloads the Manufacturer DriverPack",
+            "command": "step-drivers-driverpack",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": true
+            }
+        },
+        {
+            "name": "Microsoft Update Catalog Drivers",
+            "description": "Downloads drivers from Microsoft Update Catalog",
+            "command": "step-drivers-msupdate",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": true
+            }
+        },
+        {
+            "name": "Add WindowsDriver - DriverPack",
+            "description": "Adds WindowsDriver to the offline OS",
+            "command": "step-drivers-addwindowsdriver-driverpack",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "Add WindowsDriver - Microsoft Update Catalog",
+            "description": "Adds Windows Drivers to the offline OS",
+            "command": "step-drivers-addwindowsdriver-msupdate",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "Add WindowsDriver - Microsoft Update Catalog - Disk",
+            "description": "Adds Windows Drivers to the offline OS",
+            "command": "step-drivers-addwindowsdriver-disk",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "Add WindowsDriver - Microsoft Update Catalog - Net",
+            "description": "Adds Windows Drivers to the offline OS",
+            "command": "step-drivers-addwindowsdriver-net",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "Add WindowsDriver - Microsoft Update Catalog - Scsi",
+            "description": "Adds Windows Drivers to the offline OS",
+            "command": "step-drivers-addwindowsdriver-scsi",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "Add WindowsDriver - Microsoft Update Catalog - Firmware",
+            "description": "Adds Windows Drivers to the offline OS",
+            "command": "step-drivers-addwindowsdriver-firmware",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "SetupDisplayedEula Hotfix",
+            "description": "Applies a hotfix for the displayed EULA",
+            "command": "step-update-setupdisplayedeula",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Update PowerShell Modules",
+            "description": "Update existing PowerShell Modules in offline Windows",
+            "command": "step-powershell-updatemodule",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Save PowerShell Module OSD to offline Windows",
+            "description": "Saves a PS Module by name parameter to offline Windows",
+            "command": "step-powershell-savemodule",
+            "args": [],
+            "parameters": {
+                "name": "OSD"
+            },
+            "rules": {
+                "skip": false
+            }
+        },
+        {
+            "name": "Save PowerShell Module WindowsAutopilotIntune to offline Windows",
+            "description": "Saves a PS Module by name parameter to offline Windows",
+            "command": "step-powershell-savemodule",
+            "args": [],
+            "parameters": {
+                "name": "WindowsAutopilotIntune"
+            },
+            "rules": {
+                "skip": false
+            }
+        },
+        {
+            "name": "Export OSInformation",
+            "status": "Ready",
+            "description": "Exports information about the operating system",
+            "command": "step-finalize-exportofflineosinfo",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Stop Logs",
+            "status": "Ready",
+            "description": "Stops logging and copys to the log directory",
+            "command": "step-osdcloud-logs-stop",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        },
+        {
+            "name": "Stop Workflow",
+            "status": "Ready",
+            "description": "Stops the OSDCloud workflow",
+            "command": "step-finalize-stoposdcloudworkflow",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": true,
+                "skip": false
+            }
+        }
+    ]
+}

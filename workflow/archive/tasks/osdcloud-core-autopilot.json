@@ -1,7 +1,7 @@
 {
-    "id": "42daa70d-ef6e-4d59-b263-4b15e46524d5",
-    "name": "OSDCloud for Autopilot Devices",
-    "description": "Includes Autopilot PowerShell Modules",
+    "id": "3d99cfe4-a3ae-485f-bd63-6f6a0627f62e",
+    "name": "OSDCloud Core Autopilot",
+    "description": "OSDCloud Autopilot without DriverPacks",
     "author": "OSDeploy",
     "version": "2025.9.16.1",
     "amd64": true,
@@ -14,7 +14,7 @@
             "command": "step-initialize-startosdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud Autopilot"
+                "WorkflowName": "OSDCloud Core"
             },
             "rules": {
                 "runinfullos": true,
@@ -51,7 +51,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -234,7 +234,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -245,7 +245,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -256,7 +256,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -267,7 +267,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -289,7 +289,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
