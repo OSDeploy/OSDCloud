@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-OSDCloudModuleVersion
+# Deploy-OSDCloud
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Get-OSDCloudModuleVersion [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Deploy-OSDCloud [[-Name] <String>] [-CLI] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -22,13 +22,43 @@ Get-OSDCloudModuleVersion [-ProgressAction <ActionPreference>] [<CommonParameter
 ## EXAMPLES
 
 ### Example 1
-```
+```powershell
 PS C:\> {{ Add example code here }}
 ```
 
 {{ Add example description here }}
 
 ## PARAMETERS
+
+### -CLI
+{{ Fill CLI Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Name
+{{ Fill Name Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 0
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
 
 ### -ProgressAction
 {{ Fill ProgressAction Description }}
@@ -50,7 +80,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+### System.String
+
 ## OUTPUTS
 
 ### System.Object

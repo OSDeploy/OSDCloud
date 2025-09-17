@@ -6,7 +6,8 @@ function Start-OSDCloudWorkflow {
             ValueFromPipelineByPropertyName = $true)]
         [System.String]
         $Name = 'default',
-        [switch]
+
+        [System.Management.Automation.SwitchParameter]
         $CLI
     )
     #=================================================
@@ -37,7 +38,8 @@ function Start-OSDCloudWorkflow {
             $OSDCloudWorkflowInit | Out-Host
             try {
                 Invoke-OSDCloudWorkflow
-            } catch {
+            }
+            catch {
                 Write-Warning "Failed to invoke OSDCloud Workflow $Name $_"
                 break
             }

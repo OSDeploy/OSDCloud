@@ -6,7 +6,8 @@ function Deploy-OSDCloud {
             ValueFromPipelineByPropertyName = $true)]
         [System.String]
         $Name = 'default',
-        [switch]
+
+        [System.Management.Automation.SwitchParameter]
         $CLI
     )
     #=================================================

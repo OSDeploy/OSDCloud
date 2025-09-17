@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Start-OSDCloudDemoCLI
+# Deploy-OSDCloudGUI
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Start-OSDCloudDemoCLI [[-Name] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Deploy-OSDCloudGUI [[-Name] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
