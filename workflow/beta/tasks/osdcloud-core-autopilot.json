@@ -1,9 +1,9 @@
 {
     "id": "3d99cfe4-a3ae-485f-bd63-6f6a0627f62e",
-    "name": "OSDCloud Core Autopilot",
-    "description": "OSDCloud",
+    "name": "OSDCloud Autopilot Core",
+    "description": "OSDCloud Autopilot without DriverPacks",
     "author": "OSDeploy",
-    "version": "2025.4.21.1",
+    "version": "2025.9.16.1",
     "amd64": true,
     "arm64": true,
     "default": false,
@@ -51,7 +51,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -234,7 +234,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -245,7 +245,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -256,7 +256,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -267,7 +267,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -289,7 +289,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -327,7 +327,7 @@
         },
         {
             "name": "Update PowerShell Modules",
-            "description": "Update existing PowerShell Modules offline",
+            "description": "Update existing PowerShell Modules in offline Windows",
             "command": "step-powershell-updatemodule",
             "args": [],
             "parameters": {},
@@ -337,8 +337,8 @@
             }
         },
         {
-            "name": "Save PowerShell Module OSD to WinPE",
-            "description": "Saves a PowerShell Module to WinPE",
+            "name": "Save PowerShell Module OSD to offline Windows",
+            "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
             "parameters": {
@@ -349,8 +349,8 @@
             }
         },
         {
-            "name": "Save PowerShell Module WindowsAutopilotIntune to WinPE",
-            "description": "Saves a PowerShell Module to WinPE",
+            "name": "Save PowerShell Module WindowsAutopilotIntune to offline Windows",
+            "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
             "parameters": {
@@ -394,50 +394,6 @@
             "rules": {
                 "runinfullos": true,
                 "skip": false
-            }
-        },
-        {
-            "name": "Remove OSDCloud Temp",
-            "description": "Removes the OSDCloud Temp",
-            "command": "step-postaction-removeosdcloudtemp",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
-        },
-        {
-            "name": "Remove OSDCloud Logs",
-            "description": "Removes the OSDCloud Logs",
-            "command": "step-postaction-removeosdcloudlogs",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
-        },
-        {
-            "name": "Restart Computer",
-            "description": "Restarts the computer",
-            "command": "step-postaction-restartcomputer",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
-        },
-        {
-            "name": "Stop Computer",
-            "description": "Stops the computer",
-            "command": "step-postaction-stopcomputer",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
             }
         }
     ]

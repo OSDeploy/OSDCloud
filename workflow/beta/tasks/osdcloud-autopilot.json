@@ -1,9 +1,9 @@
 {
-    "id": "3d99cfe4-a3ae-485f-bd63-6f6a0627f62e",
-    "name": "OSDCloud Autopilot",
-    "description": "OSDCloud Autopilot",
+    "id": "42daa70d-ef6e-4d59-b263-4b15e46524d5",
+    "name": "OSDCloud for Autopilot Devices",
+    "description": "Includes Autopilot PowerShell Modules",
     "author": "OSDeploy",
-    "version": "2025.9.15.1",
+    "version": "2025.9.16.1",
     "amd64": true,
     "arm64": true,
     "default": false,
@@ -327,7 +327,7 @@
         },
         {
             "name": "Update PowerShell Modules",
-            "description": "Update existing PowerShell Modules offline",
+            "description": "Update existing PowerShell Modules in offline Windows",
             "command": "step-powershell-updatemodule",
             "args": [],
             "parameters": {},
@@ -337,8 +337,8 @@
             }
         },
         {
-            "name": "Save PowerShell Module OSD to WinPE",
-            "description": "Saves a PowerShell Module to WinPE",
+            "name": "Save PowerShell Module OSD to offline Windows",
+            "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
             "parameters": {
@@ -349,8 +349,8 @@
             }
         },
         {
-            "name": "Save PowerShell Module WindowsAutopilotIntune to WinPE",
-            "description": "Saves a PowerShell Module to WinPE",
+            "name": "Save PowerShell Module WindowsAutopilotIntune to offline Windows",
+            "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
             "parameters": {

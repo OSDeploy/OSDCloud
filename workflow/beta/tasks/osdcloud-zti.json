@@ -1,9 +1,9 @@
 {
-    "id": "3d99cfe4-a3ae-485f-bd63-6f6a0627f62e",
-    "name": "OSDCloud Autopilot",
-    "description": "OSDCloud Autopilot",
-    "author": "OSDCloud Workflow",
-    "version": "2025.9.15.1",
+    "id": "9ac1d865-c81c-4032-9fdd-fba3fa7c8292",
+    "name": "OSDCloud ZTI",
+    "description": "OSDCloud without Clear-Disk confirmation",
+    "author": "OSDeploy",
+    "version": "2025.9.16.1",
     "amd64": true,
     "arm64": true,
     "default": false,
@@ -14,7 +14,7 @@
             "command": "step-initialize-startosdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud Autopilot"
+                "WorkflowName": "OSDCloud"
             },
             "rules": {
                 "runinfullos": true,
@@ -81,7 +81,9 @@
             "description": "Clears the disk for a fresh start",
             "command": "step-preinstall-cleardisk",
             "args": [],
-            "parameters": {},
+            "parameters": {
+                "confirm": false
+            },
             "rules": {
                 "runinfullos": false,
                 "skip": false
@@ -327,7 +329,7 @@
         },
         {
             "name": "Update PowerShell Modules",
-            "description": "Update existing PowerShell Modules offline",
+            "description": "Update existing PowerShell Modules in offline Windows",
             "command": "step-powershell-updatemodule",
             "args": [],
             "parameters": {},
@@ -337,27 +339,27 @@
             }
         },
         {
-            "name": "Save PowerShell Module OSD to WinPE",
-            "description": "Saves a PowerShell Module to WinPE",
+            "name": "Save PowerShell Module OSD to offline Windows",
+            "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
             "parameters": {
                 "name": "OSD"
             },
             "rules": {
-                "skip": false
+                "skip": true
             }
         },
         {
-            "name": "Save PowerShell Module WindowsAutopilotIntune to WinPE",
-            "description": "Saves a PowerShell Module to WinPE",
+            "name": "Save PowerShell Module WindowsAutopilotIntune to offline Windows",
+            "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
             "parameters": {
                 "name": "WindowsAutopilotIntune"
             },
             "rules": {
-                "skip": false
+                "skip": true
             }
         },
         {
