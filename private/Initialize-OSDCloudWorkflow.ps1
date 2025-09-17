@@ -90,9 +90,9 @@ function Initialize-OSDCloudWorkflow {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
 
         # Remove the Windows 10 DriverPacks if Windows 11 is selected
-        if ($DriverPackObject.OS -match 'Windows 11') {
+        # if ($DriverPackObject.OS -match 'Windows 11') {
             $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
-        }
+        # }
     }
     #=================================================
     # Main

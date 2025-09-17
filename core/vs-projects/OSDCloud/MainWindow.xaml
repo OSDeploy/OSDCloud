@@ -261,8 +261,8 @@
                 <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top">
-                    <Label Name="WorkflowLabel"
-                       Content="Workflow"
+                    <Label Name="TaskLabel"
+                       Content="Task"
                        FontSize="16"
                        FontWeight="Bold"
                        Foreground="#0067C0"
@@ -270,7 +270,7 @@
                        Padding="2"
                        Width="140"
                        FlowDirection="RightToLeft" />
-                    <ComboBox Name="OSDProfileCombobox"
+                    <ComboBox Name="TaskComboBox"
                           FontSize="16"
                           Margin="5"
                           Padding="2" >
@@ -440,7 +440,7 @@
             <!-- Start -->
             <Label Grid.Row="8"
                Name="BrandingTitleControl"
-               Content="OSDCloud Workflow"
+               Content="OSDCloud"
                FlowDirection="RightToLeft"
                FontSize="18"
                FontWeight="Bold"

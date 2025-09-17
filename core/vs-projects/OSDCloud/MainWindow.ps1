@@ -295,9 +295,9 @@ else {
 #=================================================
 #region OSDCloud Workflow Library
 $global:OSDCloudWorkflowInit.Flows | ForEach-Object {
-    $formMainWindowControlOSDProfileCombobox.Items.Add($_.Name) | Out-Null
+    $formMainWindowControlTaskComboBox.Items.Add($_.Name) | Out-Null
 }
-$formMainWindowControlOSDProfileCombobox.SelectedIndex = 0
+$formMainWindowControlTaskComboBox.SelectedIndex = 0
 #endregion
 #=================================================
 #region OSName
@@ -529,7 +529,7 @@ $formMainWindowControlStartButton.add_Click(
         #================================================
         #   Workflow
         #================================================
-        $OSDCloudWorkflowName = $formMainWindowControlOSDProfileCombobox.SelectedValue
+        $OSDCloudWorkflowName = $formMainWindowControlTaskComboBox.SelectedValue
         $OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
         #================================================
         #   DriverPack
@@ -594,7 +594,7 @@ $formMainWindow.Title = "OSDCloud Preview on $($global:OSDCloudWorkflowInit.Comp
 #endregion
 #================================================
 #region Branding
-$formMainWindowControlBrandingTitleControl.Content = 'OSDCloud Workflow'
+$formMainWindowControlBrandingTitleControl.Content = 'OSDCloud'
 $formMainWindowControlBrandingTitleControl.Foreground = '#0067C0'
 #endregion
 #================================================
