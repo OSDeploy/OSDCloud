@@ -12,10 +12,17 @@ function step-postaction-removeosdcloudlogs {
     # Stop Transcript at this point as this file is locked and will cause issues with cleanup
     $null = Stop-Transcript -ErrorAction SilentlyContinue
 
-    $Path = 'C:\Windows\Temp\osdcloud-logs'
+    $LogsPath = "C:\Windows\Temp\osdcloud-logs"
 
-    if (Test-Path $Path) {
-        Remove-Item -Path $Path -Recurse -Force -ErrorAction SilentlyContinue
+    $Params = @{
+        ErrorAction = 'SilentlyContinue'
+        Force       = $true
+        Path        = $LogsPath
+        Recurse     = $true
+    }
+
+    if (Test-Path $LogsPath) {
+        Remove-Item @Params | Out-Null
     }
     #=================================================
     # End the function

@@ -15,13 +15,13 @@ function step-powershell-savemodule {
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)]"
     $PowerShellSavePath = 'C:\Program Files\WindowsPowerShell'
 
-    if (-NOT (Test-Path "$PowerShellSavePath\Configuration")) {
+    if (-not (Test-Path "$PowerShellSavePath\Configuration")) {
         New-Item -Path "$PowerShellSavePath\Configuration" -ItemType Directory -Force | Out-Null
     }
-    if (-NOT (Test-Path "$PowerShellSavePath\Modules")) {
+    if (-not (Test-Path "$PowerShellSavePath\Modules")) {
         New-Item -Path "$PowerShellSavePath\Modules" -ItemType Directory -Force | Out-Null
     }
-    if (-NOT (Test-Path "$PowerShellSavePath\Scripts")) {
+    if (-not (Test-Path "$PowerShellSavePath\Scripts")) {
         New-Item -Path "$PowerShellSavePath\Scripts" -ItemType Directory -Force | Out-Null
     }
 

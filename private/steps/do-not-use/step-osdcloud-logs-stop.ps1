@@ -28,7 +28,7 @@ function step-osdcloud-logs-stop {
         Copy-Item -Path "$env:SystemRoot\logs\dism\dism.log" -Destination 'C:\Windows\Temp\osdcloud-logs\dism.log' -Force | Out-Null
     }
 
-    Stop-Transcript -ErrorAction SilentlyContinue
+    $null = Stop-Transcript -ErrorAction SilentlyContinue
 
     # Copy existing WinPE Logs to C:\Windows\Temp\osdcloud-logs
     if ($env:SystemDrive -eq 'X:') {

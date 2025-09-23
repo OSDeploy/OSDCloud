@@ -248,33 +248,33 @@ function Show-PowershellWindow() {
 }
 #endregion
 #=================================================
-#region OSDCloudWorkflowUserSettings
+#region OSDCloudWorkflowSettingsUser
 # Tpm
 if ($global:OSDCloudWorkflowGather.IsTpmReady -eq $true) {
     $formMainWindowControlIsTpmReady.Foreground = 'Green'
-    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowUserSettings.IsTpmReady.Success
+    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Success
 }
 else {
     $formMainWindowControlIsTpmReady.Foreground = 'Red'
-    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowUserSettings.IsTpmReady.Error
+    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Error
 }
 
 # Autopilot
 if ($global:OSDCloudWorkflowGather.IsAutopilotReady -eq $true) {
     $formMainWindowControlIsAutopilotReady.Foreground = 'Green'
-    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowUserSettings.IsTpmReady.Success
+    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Success
 }
 else {
     $formMainWindowControlIsAutopilotReady.Foreground = 'Red'
-    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowUserSettings.IsTpmReady.Error
+    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Error
 }
 #endregion
 #=================================================
 #region OSDCloud Workflow Library
 $global:OSDCloudWorkflowInit.Flows | ForEach-Object {
-    $formMainWindowControlOSDProfileCombobox.Items.Add($_.Name) | Out-Null
+    $formMainWindowControlTaskComboBox.Items.Add($_.Name) | Out-Null
 }
-$formMainWindowControlOSDProfileCombobox.SelectedIndex = 0
+$formMainWindowControlTaskComboBox.SelectedIndex = 0
 #endregion
 #=================================================
 #region OSName
@@ -350,10 +350,10 @@ Set-FormConfigurationCloud
 #=================================================
 #region CustomImage
 <#
-[array]$OSDCloudWorkflowOSSettingsIso = @()
-[array]$OSDCloudWorkflowOSSettingsIso = Find-OSDCloudFile -Name '*.iso' -Path '\OSDCloud\OS\' | Where-Object { $_.Length -gt 3GB }
+[array]$OSDCloudWorkflowSettingsOSIso = @()
+[array]$OSDCloudWorkflowSettingsOSIso = Find-OSDCloudFile -Name '*.iso' -Path '\OSDCloud\OS\' | Where-Object { $_.Length -gt 3GB }
 
-foreach ($Item in $OSDCloudWorkflowOSSettingsIso) {
+foreach ($Item in $OSDCloudWorkflowSettingsOSIso) {
     if ((Get-DiskImage -ImagePath $Item.FullName).Attached) {
         #ISO is already mounted
     }
@@ -506,7 +506,7 @@ $formMainWindowControlStartButton.add_Click(
         #================================================
         #   Workflow
         #================================================
-        $OSDCloudWorkflowName = $formMainWindowControlOSDProfileCombobox.SelectedValue
+        $OSDCloudWorkflowName = $formMainWindowControlTaskComboBox.SelectedValue
         $OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
         #================================================
         #   DriverPack
@@ -539,19 +539,19 @@ $formMainWindowControlStartButton.add_Click(
         $global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
 
         <#
-        $global:OSDCloudWorkflowUserSettings.SkipClearDisk = $formMainWindowControlSkipClearDisk.IsChecked
-        $global:OSDCloudWorkflowUserSettings.SkipClearDiskConfirm = $formMainWindowControlSkipClearDiskConfirm.IsChecked
-        $global:OSDCloudWorkflowUserSettings.SkipRecoveryPartition = $formMainWindowControlSkipRecoveryPartition.IsChecked
-        $global:OSDCloudWorkflowUserSettings.UpdateDiskDrivers = $formMainWindowControlUpdateDiskDrivers.IsChecked
-        $global:OSDCloudWorkflowUserSettings.UpdateNetworkDrivers = $formMainWindowControlUpdateNetworkDrivers.IsChecked
-        $global:OSDCloudWorkflowUserSettings.UpdateScsiDrivers = $formMainWindowControlUpdateScsiDrivers.IsChecked
-        $global:OSDCloudWorkflowUserSettings.UpdateSystemFirmware = $formMainWindowControlUpdateSystemFirmware.IsChecked
-        $global:OSDCloudWorkflowUserSettings.PSUpdateModulePowershellGet = $formMainWindowControlPSUpdateModulePowershellGet.IsChecked
-        $global:OSDCloudWorkflowUserSettings.PSUpdateModulePackageManagement = $formMainWindowControlPSUpdateModulePackageManagement.IsChecked
-        $global:OSDCloudWorkflowUserSettings.PSInstallModuleOSD = $formMainWindowControlPSInstallModuleOSD.IsChecked
-        $global:OSDCloudWorkflowUserSettings.PSInstallModuleWindowsAutopilotIntune = $formMainWindowControlPSInstallModuleWindowsAutopilotIntune.IsChecked
-        $global:OSDCloudWorkflowUserSettings.WinpeRestart = $formMainWindowControlWinpeRestart.IsChecked
-        $global:OSDCloudWorkflowUserSettings.WinpeShutdown = $formMainWindowControlWinpeShutdown.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.SkipClearDisk = $formMainWindowControlSkipClearDisk.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.SkipClearDiskConfirm = $formMainWindowControlSkipClearDiskConfirm.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.SkipRecoveryPartition = $formMainWindowControlSkipRecoveryPartition.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.UpdateDiskDrivers = $formMainWindowControlUpdateDiskDrivers.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.UpdateNetworkDrivers = $formMainWindowControlUpdateNetworkDrivers.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.UpdateScsiDrivers = $formMainWindowControlUpdateScsiDrivers.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.UpdateSystemFirmware = $formMainWindowControlUpdateSystemFirmware.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.PSUpdateModulePowershellGet = $formMainWindowControlPSUpdateModulePowershellGet.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.PSUpdateModulePackageManagement = $formMainWindowControlPSUpdateModulePackageManagement.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.PSInstallModuleOSD = $formMainWindowControlPSInstallModuleOSD.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.PSInstallModuleWindowsAutopilotIntune = $formMainWindowControlPSInstallModuleWindowsAutopilotIntune.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.WinpeRestart = $formMainWindowControlWinpeRestart.IsChecked
+        $global:OSDCloudWorkflowSettingsUser.WinpeShutdown = $formMainWindowControlWinpeShutdown.IsChecked
         #>
         #=================================================
         #   Invoke-OSDCloudWorkflow.ps1
@@ -567,11 +567,11 @@ $formMainWindowControlStartButton.add_Click(
 #region Customizations
 #TODO fix the Version since this is not a Module function it doesn't give a version
 $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
-$formMainWindow.Title = "OSDCloud Preview on $($global:OSDCloudWorkflowInit.ComputerManufacturer) $($global:OSDCloudWorkflowInit.ComputerModel)"
+$formMainWindow.Title = "OSDCloud on $($global:OSDCloudWorkflowInit.ComputerManufacturer) $($global:OSDCloudWorkflowInit.ComputerModel)"
 #endregion
 #================================================
 #region Branding
-$formMainWindowControlBrandingTitleControl.Content = 'OSDCloud Workflow'
+$formMainWindowControlBrandingTitleControl.Content = 'OSDCloud'
 $formMainWindowControlBrandingTitleControl.Foreground = '#0067C0'
 #endregion
 #================================================

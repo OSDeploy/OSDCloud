@@ -11,7 +11,7 @@ function step-drivers-addwindowsdriver-net {
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
-    $DriverPath = "C:\Windows\Temp\osdcloud\drivers-net"
+    $DriverPath = "C:\Windows\Temp\osdcloud-drivers-net"
 
     if (Test-Path -Path $DriverPath) {
         if (-not (Test-Path -Path $LogPath)) {

@@ -12,7 +12,7 @@
 RootModule = 'OSDCloud.psm1'
 
 # Version number of this module.
-ModuleVersion = '25.6.15.1'
+ModuleVersion = '25.9.23.1'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop'
@@ -24,13 +24,13 @@ GUID = '2fbd5c65-79c7-4561-9a2e-c4a4eebc89c7'
 Author = 'David Segura, Michael Escamilla'
 
 # Company or vendor of this module
-CompanyName = 'osdeploy.com'
+CompanyName = 'OSDeploy'
 
 # Copyright statement for this module
 Copyright = '(c) 2025 @ osdeploy.com. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'OSDCloud NUKE - Workplace Ninjas UK Edition'
+Description = 'OSDCloud - Workplace Ninja Summit 2025'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
@@ -70,12 +70,13 @@ PowerShellVersion = '5.1'
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport =
+    'Deploy-OSDCloud',
+    'Deploy-OSDCloudCLI',
+    'Deploy-OSDCloudGUI',
     'Get-OSDCloudInfo',
     'Get-OSDCloudModulePath',
     'Get-OSDCloudModuleVersion',
     'Invoke-OSDCloudPEStartup',
-    'Start-OSDCloudDemo',
-    'Start-OSDCloudDemoCLI',
     'Start-OSDCloudWorkflow',
     'Use-PEStartupDeviceInfo',
     'Use-PEStartupHardware',

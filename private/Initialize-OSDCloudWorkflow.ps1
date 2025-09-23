@@ -22,43 +22,43 @@ function Initialize-OSDCloudWorkflow {
     $ComputerModel         = $global:OSDCloudWorkflowGather.ComputerModel
     $ComputerProduct       = $global:OSDCloudWorkflowGather.ComputerProduct
     #=================================================
-    # OSDCloudWorkflowJobs
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Flows $ModuleVersion"
-    Initialize-OSDCloudWorkflowJobs -Name $Name
-    $WorkflowObject        = $global:OSDCloudWorkflowJobs | Select-Object -First 1
+    # OSDCloudWorkflowTasks
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Tasks"
+    Initialize-OSDCloudWorkflowTasks -Name $Name
+    $WorkflowObject        = $global:OSDCloudWorkflowTasks | Select-Object -First 1
     $WorkflowName          = $WorkflowObject.name
     #=================================================
     # OSDCloudWorkflowOSCatalog
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Catalog $ModuleVersion"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Catalog"
     $global:OSDCloudWorkflowOSCatalog = Get-OSDCatalogOperatingSystems
     $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.Architecture -match "$Architecture"}
     # $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.OperatingSystem -match "Windows 11"}
     #=================================================
-    # OSDCloudWorkflowUserSettings
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud User Settings $ModuleVersion"
-    Initialize-OSDCloudWorkflowUserSettings -Name $Name
+    # OSDCloudWorkflowSettingsUser
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings User"
+    Initialize-OSDCloudWorkflowSettingsUser -Name $Name
     #=================================================
-    # OSDCloudWorkflowOSSettings
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Settings $ModuleVersion"
-    Initialize-OSDCloudWorkflowOSSettings -Name $Name
-    if ($global:OSDCloudWorkflowOSSettings."OSName.default" -match 'Win11') {
+    # OSDCloudWorkflowSettingsOS
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings OS"
+    Initialize-OSDCloudWorkflowSettingsOS -Name $Name
+    if ($global:OSDCloudWorkflowSettingsOS."OSName.default" -match 'Win11') {
         $OperatingSystem = 'Windows 11'
-    } elseif ($global:OSDCloudWorkflowOSSettings."OperatingSystem.default" -match 'Win10') {
+    } elseif ($global:OSDCloudWorkflowSettingsOS."OperatingSystem.default" -match 'Win10') {
         $OperatingSystem = 'Windows 10'
     } else {
         $OperatingSystem = 'Windows 11'
     }
-    $OSActivation          = $global:OSDCloudWorkflowOSSettings."OSActivation.default"
-    $OSActivationValues    = [array]$global:OSDCloudWorkflowOSSettings."OSActivation.values"
+    $OSActivation          = $global:OSDCloudWorkflowSettingsOS."OSActivation.default"
+    $OSActivationValues    = [array]$global:OSDCloudWorkflowSettingsOS."OSActivation.values"
     $OSArchitecture        = $Architecture
-    $OSEdition             = $global:OSDCloudWorkflowOSSettings."OSEdition.default"
-    $OSEditionId           = $global:OSDCloudWorkflowOSSettings."OSEditionId.default"
-    $OSEditionValues       = [array]$global:OSDCloudWorkflowOSSettings."OSEdition.values"
-    $OSLanguage            = $global:OSDCloudWorkflowOSSettings."OSLanguageCode.default"
-    $OSLanguageValues      = [array]$global:OSDCloudWorkflowOSSettings."OSLanguageCode.values"
-    $OSName                = $global:OSDCloudWorkflowOSSettings."OSName.default"
-    $OSNameValues          = [array]$global:OSDCloudWorkflowOSSettings."OSName.values"
-    $OSReleaseID           = ($global:OSDCloudWorkflowOSSettings."OSName.default" -split '-')[1]
+    $OSEdition             = $global:OSDCloudWorkflowSettingsOS."OSEdition.default"
+    $OSEditionId           = $global:OSDCloudWorkflowSettingsOS."OSEditionId.default"
+    $OSEditionValues       = [array]$global:OSDCloudWorkflowSettingsOS."OSEdition.values"
+    $OSLanguage            = $global:OSDCloudWorkflowSettingsOS."OSLanguageCode.default"
+    $OSLanguageValues      = [array]$global:OSDCloudWorkflowSettingsOS."OSLanguageCode.values"
+    $OSName                = $global:OSDCloudWorkflowSettingsOS."OSName.default"
+    $OSNameValues          = [array]$global:OSDCloudWorkflowSettingsOS."OSName.values"
+    $OSReleaseID           = ($global:OSDCloudWorkflowSettingsOS."OSName.default" -split '-')[1]
     $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.DisplayName -match $OSName } | Where-Object { $_.License -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
     $OSBuild               = $OperatingSystemObject.Build
     $ImageFileUrl          = $OperatingSystemObject.Url
@@ -90,9 +90,9 @@ function Initialize-OSDCloudWorkflow {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
 
         # Remove the Windows 10 DriverPacks if Windows 11 is selected
-        if ($DriverPackObject.OS -match 'Windows 11') {
+        # if ($DriverPackObject.OS -match 'Windows 11') {
             $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
-        }
+        # }
     }
     #=================================================
     # Main
@@ -106,7 +106,7 @@ function Initialize-OSDCloudWorkflow {
         DriverPackName        = $DriverPackName
         DriverPackObject      = $DriverPackObject
         DriverPackValues      = [array]$DriverPackValues
-        Flows                 = [array]$global:OSDCloudWorkflowJobs
+        Flows                 = [array]$global:OSDCloudWorkflowTasks
         Function              = $($MyInvocation.MyCommand.Name)
         ImageFileName         = $ImageFileName
         ImageFileUrl          = $ImageFileUrl

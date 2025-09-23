@@ -23,7 +23,7 @@ function step-drivers-expand-driverpack {
             if ($Item.Extension -eq '.cab') {
                 $DestinationPath = Join-Path $Item.Directory $Item.BaseName
         
-                if (-NOT (Test-Path "$DestinationPath")) {
+                if (-not (Test-Path "$DestinationPath")) {
                     New-Item $DestinationPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
                     Write-Host -ForegroundColor DarkGray "DriverPack CAB is being expanded to $DestinationPath"
                     Expand -R "$ExpandFile" -F:* "$DestinationPath" | Out-Null
@@ -36,7 +36,7 @@ function step-drivers-expand-driverpack {
             if ($Item.Extension -eq '.zip') {
                 $DestinationPath = Join-Path $Item.Directory $Item.BaseName
     
-                if (-NOT (Test-Path "$DestinationPath")) {
+                if (-not (Test-Path "$DestinationPath")) {
                     Write-Host -ForegroundColor DarkGray "DriverPack ZIP is being expanded to $DestinationPath"
                     Expand-Archive -Path $ExpandFile -DestinationPath $DestinationPath -Force
                 }
@@ -47,7 +47,7 @@ function step-drivers-expand-driverpack {
             #=================================================
             if ($Item.Extension -eq '.exe' -and $global:OSDCloudWorkflowInvoke.Manufacturer -eq 'Dell') {
                 $DestinationPath = Join-Path $Item.Directory $Item.BaseName
-                if (-NOT (Test-Path "$DestinationPath")) {
+                if (-not (Test-Path "$DestinationPath")) {
                     Write-Host -ForegroundColor DarkGray "Dell Update Package is being expanded to $DestinationPath"
                     Start-Process -FilePath $ExpandFile -ArgumentList "/s /e=$DestinationPath" -Wait
                 }
@@ -66,7 +66,7 @@ function step-drivers-expand-driverpack {
                         Write-Host "SaveMyDriverPack: $SaveMyDriverPack"
                         Write-Host "SaveMyDriverPack.FullName: $($SaveMyDriverPack.FullName)"
                         $DestinationPath = Join-Path $Item.Directory $Item.BaseName
-                        if (-NOT (Test-Path "$DestinationPath")) {
+                        if (-not (Test-Path "$DestinationPath")) {
                             #If DestinationPath does not exist already
                             Write-Host "HP Driver Pack $ExpandFile is being expanded to $DestinationPath"
                             Start-Process -FilePath $env:windir\System32\7za.exe -ArgumentList "x $ExpandFile -o$DestinationPath -y" -Wait -NoNewWindow -PassThru

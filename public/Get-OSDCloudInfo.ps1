@@ -16,7 +16,7 @@ function Get-OSDCloudInfo {
 
     # Validate global variable dependencies
     if (-not $OSDCloudModule -or -not $OSDCloudModule.links) {
-        Write-Error "The global variable '$OSDCloudModule' or its 'links' property is not defined. Please ensure it is initialized before running this function."
+        Write-Warning "The global variable '$OSDCloudModule' or its 'links' property is not defined. Please ensure it is initialized before running this function."
         return
     }
 

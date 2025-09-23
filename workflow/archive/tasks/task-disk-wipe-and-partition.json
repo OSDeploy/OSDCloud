@@ -1,0 +1,66 @@
+{
+    "id": "d9a3ee71-7b9c-456e-a12c-f424afb8327d",
+    "name": "Disk Wipe and Partition",
+    "description": "OSDCloud",
+    "author": "OSDeploy",
+    "version": "2025.9.23.1",
+    "amd64": true,
+    "arm64": true,
+    "steps": [
+        {
+            "name": "Validate Local Disk",
+            "description": "Tests the local disk for readiness",
+            "command": "step-validate-isdiskready",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Remove usbdriveletter",
+            "description": "Removes drive letters assigned to USB devices",
+            "command": "step-preinstall-removeusbdriveletter",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Clear-Disk",
+            "description": "Clears the disk for a fresh start",
+            "command": "step-preinstall-cleardisk",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "PartitionDisk",
+            "description": "Partitions the disk for installation",
+            "command": "step-preinstall-partitiondisk",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Addusbdriveletter",
+            "description": "Assigns drive letters to USB devices",
+            "command": "step-preinstall-restoreusbdriveletter",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        }
+    ]
+}
