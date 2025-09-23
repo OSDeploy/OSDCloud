@@ -1,0 +1,78 @@
+{
+    "OSActivation.default": "Retail",
+    "OSActivation.values": [
+        "Retail",
+        "Volume"
+    ],
+    "OSEdition.default": "Pro",
+    "OSEditionId.default": "Professional",
+    "OSEdition.values": [
+        {
+            "Edition": "Home",
+            "EditionId": "Core"
+        },
+        {
+            "Edition": "Home N",
+            "EditionId": "CoreN"
+        },
+        {
+            "Edition": "Education",
+            "EditionId": "Education"
+        },
+        {
+            "Edition": "Education N",
+            "EditionId": "EducationN"
+        },
+        {
+            "Edition": "Pro",
+            "EditionId": "Professional"
+        },
+        {
+            "Edition": "Pro N",
+            "EditionId": "ProfessionalN"
+        },
+        {
+            "Edition": "Enterprise",
+            "EditionId": "Enterprise"
+        },
+        {
+            "Edition": "Enterprise N",
+            "EditionId": "EnterpriseN"
+        }
+    ],
+    "OSLanguageCode.default": "en-us",
+    "OSLanguageCode.values": [
+        "ar-sa",
+        "bg-bg",
+        "cs-cz",
+        "da-dk",
+        "de-de",
+        "el-gr",
+        "en-gb",
+        "en-us",
+        "es-es",
+        "es-mx",
+        "et-ee",
+        "fi-fi",
+        "fr-ca",
+        "fr-fr",
+        "he-il",
+        "hr-hr",
+        "hu-hu",
+        "it-it",
+        "ja-jp",
+        "ko-kr",
+        "lt-lt",
+        "lv-lv",
+        "nb-no",
+        "nl-nl",
+        "pl-pl",
+        "pt-br",
+        "pt-pt",
+        "zh-tw"
+    ],
+    "OSName.default": "Win11-24H2-amd64",
+    "OSName.values": [
+        "Win11-24H2-amd64"
+    ]
+}

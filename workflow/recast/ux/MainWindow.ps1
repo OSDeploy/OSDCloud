@@ -571,7 +571,7 @@ $formMainWindow.Title = "OSDCloud on $($global:OSDCloudWorkflowInit.ComputerManu
 #endregion
 #================================================
 #region Branding
-$formMainWindowControlBrandingTitleControl.Content = 'Recast OSDCloud'
+$formMainWindowControlBrandingTitleControl.Content = 'Recast Software'
 $formMainWindowControlBrandingTitleControl.Foreground = '#29ABE2'
 #endregion
 #================================================

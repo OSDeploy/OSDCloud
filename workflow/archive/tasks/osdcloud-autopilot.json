@@ -3,7 +3,7 @@
     "name": "OSDCloud Autopilot",
     "description": "Includes Autopilot PowerShell Modules",
     "author": "OSDeploy",
-    "version": "2025.9.16.1",
+    "version": "2025.9.23.1",
     "amd64": true,
     "arm64": true,
     "default": false,
@@ -178,8 +178,8 @@
             }
         },
         {
-            "name": "Move WindowsImage",
-            "description": "Moves the Windows Image to C:\\Windows\\Temp\\osdcloud\\os",
+            "name": "Remove the Windows Image",
+            "description": "Remove the Windows Image",
             "command": "step-install-removewindowsimage",
             "args": [],
             "parameters": {},
@@ -201,24 +201,35 @@
             }
         },
         {
-            "name": "Export WinPE Drivers",
+            "name": "Driver Recast - Export from WinPE",
             "status": "Ready",
             "category": "drivers",
-            "description": "Export the in-use WinPE drivers to the osdisk",
-            "command": "step-drivers-winpe",
+            "description": "Export in-use WinPE drivers to offline Windows Temp",
+            "command": "step-drivers-recast-winpe",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "runinfullos": false,
                 "skip": false
             }
         },
         {
-            "name": "Add WinPE Drivers",
+            "name": "Driver Recast - Add to Windows offline",
             "status": "Ready",
             "category": "drivers",
-            "description": "Add the exported WinPE drivers to the offline os",
-            "command": "step-drivers-addwindowsdriver-winpe",
+            "description": "Add WinPE drivers to Windows offline",
+            "command": "step-drivers-recast-winos",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Driver Recast - Add to WinRE offline",
+            "description": "Add WinPE drivers to the winre.wim offline",
+            "command": "step-drivers-recast-winre",
             "args": [],
             "parameters": {},
             "rules": {
@@ -345,7 +356,8 @@
                 "name": "OSD"
             },
             "rules": {
-                "skip": false
+                "runinfullos": false,
+                "skip": true
             }
         },
         {
@@ -357,7 +369,8 @@
                 "name": "WindowsAutopilotIntune"
             },
             "rules": {
-                "skip": false
+                "runinfullos": false,
+                "skip": true
             }
         },
         {

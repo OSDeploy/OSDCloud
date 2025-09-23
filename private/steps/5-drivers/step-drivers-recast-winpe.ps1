@@ -1,4 +1,4 @@
-function step-drivers-winpe {
+function step-drivers-recast-winpe {
     [CmdletBinding()]
     param ()
     #=================================================
@@ -10,7 +10,7 @@ function step-drivers-winpe {
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     # Output Path
-    $OutputPath = "C:\Windows\Temp\osdcloud-drivers-winpe"
+    $OutputPath = "C:\Windows\Temp\osdcloud-drivers-recast"
     if (-not (Test-Path -Path $OutputPath)) {
         New-Item -ItemType Directory -Path $OutputPath -Force | Out-Null
     }
@@ -28,35 +28,32 @@ function step-drivers-winpe {
         Select-Object -Property DriverName, Status, ClassGuid, ClassName, DeviceDescription, ManufacturerName, InstanceId
     
     if ($PnputilDevices) {
-        $PnputilDevices | Export-Clixml -Path "$LogPath\drivers-winpe.xml" -Force
-    }
-    else {
-        return
-    }
-    #=================================================
-    # Export Drivers to Disk
-    Write-Verbose "[$(Get-Date -format G)] Exporting drivers to: $OutputPath"
-    foreach ($Device in $PnputilDevices) {
-        # Check that the Device has a DriverName
-        if ($Device.Drivername) {
-            $FolderName = $Device.DriverName -replace '.inf', ''
-            $destinationPath = $OutputPath + "\$($Device.ClassName)\" + $FolderName
-            # Ensure the output directory exists
-            if (-not (Test-Path -Path $destinationPath)) {
-                New-Item -ItemType Directory -Path $destinationPath -Force | Out-Null
+        $PnputilDevices | Export-Clixml -Path "$LogPath\drivers-recast-winpe.xml" -Force
+        # Export Drivers to Disk
+        Write-Verbose "[$(Get-Date -format G)] Exporting drivers to: $OutputPath"
+        foreach ($Device in $PnputilDevices) {
+            # Check that the Device has a DriverName
+            if ($Device.Drivername) {
+                $FolderName = $Device.DriverName -replace '.inf', ''
+                $destinationPath = $OutputPath + "\$($Device.ClassName)\" + $FolderName
+                # Ensure the output directory exists
+                if (-not (Test-Path -Path $destinationPath)) {
+                    New-Item -ItemType Directory -Path $destinationPath -Force | Out-Null
+                }
+                
+                # Export the driver using pnputil
+                Write-Verbose "[$(Get-Date -format G)] Exporting $($Device.DriverName) to: $destinationPath"
+                $null = & pnputil.exe /export-driver $Device.DriverName $destinationPath
             }
-            
-            # Export the driver using pnputil
-            Write-Verbose "[$(Get-Date -format G)] Exporting $($Device.DriverName) to: $destinationPath"
-            $null = & pnputil.exe /export-driver $Device.DriverName $destinationPath
         }
     }
+    #=================================================
     #=================================================
     # Registry OOBEInProgressDriverUpdatesPostponed
     <#
 $Content = @"
 :: ========================================================
-:: OSDCloud Nano
+:: OOBEInProgressDriverUpdatesPostponed
 :: ========================================================
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\Setup" /v OOBEInProgressDriverUpdatesPostponed /t REG_DWORD /d 0 /f
 :: ========================================================

@@ -3,7 +3,7 @@
     "name": "OSDCloud Core",
     "description": "OSDCloud without DriverPacks",
     "author": "OSDeploy",
-    "version": "2025.9.16.1",
+    "version": "2025.9.23.1",
     "amd64": true,
     "arm64": true,
     "default": false,
@@ -205,7 +205,7 @@
             "status": "Ready",
             "category": "drivers",
             "description": "Export the in-use WinPE drivers to the osdisk",
-            "command": "step-drivers-winpe",
+            "command": "step-drivers-recast-winpe",
             "args": [],
             "parameters": {},
             "rules": {
@@ -218,7 +218,7 @@
             "status": "Ready",
             "category": "drivers",
             "description": "Add the exported WinPE drivers to the offline os",
-            "command": "step-drivers-addwindowsdriver-winpe",
+            "command": "step-drivers-recast-winos",
             "args": [],
             "parameters": {},
             "rules": {
@@ -307,6 +307,17 @@
             "name": "Add WindowsDriver - Microsoft Update Catalog - Firmware",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-firmware",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": true
+            }
+        },
+        {
+            "name": "Add WindowsDriver - Recast to WinRE",
+            "description": "Adds Windows Drivers to the offline winre.wim",
+            "command": "step-drivers-recast-winre",
             "args": [],
             "parameters": {},
             "rules": {

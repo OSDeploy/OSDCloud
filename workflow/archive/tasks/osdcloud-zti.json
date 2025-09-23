@@ -3,7 +3,7 @@
     "name": "OSDCloud ZTI",
     "description": "OSDCloud without Clear-Disk confirmation",
     "author": "OSDeploy",
-    "version": "2025.9.16.1",
+    "version": "2025.9.23.1",
     "amd64": true,
     "arm64": true,
     "default": false,
@@ -207,7 +207,7 @@
             "status": "Ready",
             "category": "drivers",
             "description": "Export the in-use WinPE drivers to the osdisk",
-            "command": "step-drivers-winpe",
+            "command": "step-drivers-recast-winpe",
             "args": [],
             "parameters": {},
             "rules": {
@@ -220,7 +220,7 @@
             "status": "Ready",
             "category": "drivers",
             "description": "Add the exported WinPE drivers to the offline os",
-            "command": "step-drivers-addwindowsdriver-winpe",
+            "command": "step-drivers-recast-winos",
             "args": [],
             "parameters": {},
             "rules": {
