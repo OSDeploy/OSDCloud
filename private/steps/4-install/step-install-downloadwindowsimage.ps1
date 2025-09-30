@@ -85,6 +85,21 @@ function step-install-downloadwindowsimage {
             Write-Host -ForegroundColor Green "[$(Get-Date -format G)] Downloaded ESD SHA1 matches the verified Microsoft ESD SHA1. OK."
         }
     }
+    if ($OperatingSystemObject.Sha256) {
+        $FileHash = (Get-FileHash -Path $FileInfo.FullName -Algorithm SHA256).Hash
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Microsoft Verified ESD SHA256: $($OperatingSystemObject.Sha256)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Downloaded ESD SHA256: $FileHash"
+
+        if ($OperatingSystemObject.V -ne $FileHash) {
+            Write-Warning "[$(Get-Date -format G)] Unable to deploy this Operating System."
+            Write-Warning "[$(Get-Date -format G)] Downloaded ESD SHA256 does not match the verified Microsoft ESD SHA256."
+            Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+            Start-Sleep -Seconds 86400
+        }
+        else {
+            Write-Host -ForegroundColor Green "[$(Get-Date -format G)] Downloaded ESD SHA256 matches the verified Microsoft ESD SHA256. OK."
+        }
+    }
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
