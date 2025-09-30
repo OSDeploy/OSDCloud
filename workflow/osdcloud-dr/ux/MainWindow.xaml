@@ -310,23 +310,6 @@
                 <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top">
-                    <Label Name="DriverPackLabel"
-                       Content="Driver Pack"
-                       FontSize="16"
-                       FontWeight="Bold"
-                       Foreground="#0067C0"
-                       Margin="5"
-                       Padding="2"
-                       Width="140"
-                       FlowDirection="RightToLeft" />
-                    <ComboBox Name="DriverPackCombobox"
-                          FontSize="16"
-                          Margin="5"
-                          Padding="2"
-                          SelectedIndex="1" >
-                        <ComboBoxItem Content="None"/>
-                        <ComboBoxItem Content="Microsoft Update"/>
-                    </ComboBox>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Left"
