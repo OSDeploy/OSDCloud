@@ -308,12 +308,14 @@ $global:OSDCloudWorkflowInit.OSActivationValues | ForEach-Object {
 #endregion
 #=================================================
 #region DriverPack
+<#
 $global:OSDCloudWorkflowInit.DriverPackValues | ForEach-Object {
     $formMainWindowControlDriverPackCombobox.Items.Add($_.Name) | Out-Null
 }
 if ($global:OSDCloudWorkflowInit.DriverPackName) {
     $formMainWindowControlDriverPackCombobox.SelectedValue = $global:OSDCloudWorkflowInit.DriverPackName
 }
+#>
 #endregion
 #=================================================
 #region Set-FormConfigurationCloud
@@ -511,10 +513,12 @@ $formMainWindowControlStartButton.add_Click(
         #================================================
         #   DriverPack
         #================================================
+        <#
         if ($formMainWindowControlDriverPackCombobox.Text) {
             $DriverPackName = $formMainWindowControlDriverPackCombobox.Text
             $DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
         }
+        #>
         #================================================
         #   Global Variables
         #================================================
@@ -529,8 +533,8 @@ $formMainWindowControlStartButton.add_Click(
         $global:OSDCloudWorkflowInit.OSLanguage = $OSLanguage
         $global:OSDCloudWorkflowInit.OSName = $OSName
         $global:OSDCloudWorkflowInit.OSReleaseID = $OSReleaseID
-        $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject
-        $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
+        $global:OSDCloudWorkflowInit.DriverPackObject = $null
+        $global:OSDCloudWorkflowInit.DriverPackName = 'None'
         $global:OSDCloudWorkflowInit.ImageFileName = $ImageFileName
         $global:OSDCloudWorkflowInit.ImageFileUrl = $ImageFileUrl
         $global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
@@ -571,7 +575,7 @@ $formMainWindow.Title = "OSDCloud on $($global:OSDCloudWorkflowInit.ComputerManu
 #endregion
 #================================================
 #region Branding
-$formMainWindowControlBrandingTitleControl.Content = 'Recast Software'
+$formMainWindowControlBrandingTitleControl.Content = 'OSDCloud Disaster Recovery'
 $formMainWindowControlBrandingTitleControl.Foreground = '#29ABE2'
 #endregion
 #================================================

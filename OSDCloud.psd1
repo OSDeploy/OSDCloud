@@ -12,7 +12,7 @@
 RootModule = 'OSDCloud.psm1'
 
 # Version number of this module.
-ModuleVersion = '25.9.23.1'
+ModuleVersion = '25.9.30.1'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop'
@@ -30,7 +30,7 @@ CompanyName = 'OSDeploy'
 Copyright = '(c) 2025 @ osdeploy.com. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'OSDCloud - Workplace Ninja Summit 2025'
+Description = 'OSDCloud with Windows 11 25H2'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
