@@ -2,13 +2,13 @@ function step-preinstall-partitiondisk {
     [CmdletBinding()]
     param (
         [System.String]
-        $RecoveryPartitionForce = $global:OSDCloudWorkflowInvokeSettings.RecoveryPartition.Force,
+        $RecoveryPartitionForce = $global:OSDCloudWorkflowInvoke.RecoveryPartition.Force,
 
         [System.String]
-        $RecoveryPartitionSkip = $global:OSDCloudWorkflowInvokeSettings.RecoveryPartition.Skip,
+        $RecoveryPartitionSkip = $global:OSDCloudWorkflowInvoke.RecoveryPartition.Skip,
 
         [Int32]
-        $DiskNumber = $global:OSDCloudWorkflowInvokeSettings.DiskPartition.DiskNumber
+        $DiskNumber = $global:OSDCloudWorkflowInvoke.DiskPartition.DiskNumber
     )
     #=================================================
     # Start the step
@@ -35,10 +35,10 @@ function step-preinstall-partitiondisk {
     else {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] 2GB Recovery Partition will be created. OK."
         if ($DiskNumber) {
-            New-OSDisk -PartitionStyle GPT -DiskNumber $DiskNumber -SizeRecovery 2000 -Force -ErrorAction Stop
+            New-OSDisk -PartitionStyle GPT -DiskNumber $DiskNumber -SizeRecovery 2000MB -Force -ErrorAction Stop
         }
         else {
-            New-OSDisk -PartitionStyle GPT -Force -ErrorAction Stop
+            New-OSDisk -PartitionStyle GPT -SizeRecovery 2000MB -Force -ErrorAction Stop
         }
         Write-Host "=========================================================================" -ForegroundColor Cyan
         Write-Host "| SYSTEM | MSR |                    WINDOWS                  | RECOVERY |" -ForegroundColor Cyan
