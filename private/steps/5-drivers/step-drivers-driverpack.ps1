@@ -276,6 +276,9 @@ function step-drivers-driverpack {
     #   Lenovo
     #=================================================
     if (($OutFileObject.Extension -eq '.exe') -and ($OutFileObject.VersionInfo.FileDescription -match 'Lenovo')) {
+        if (-not (Test-Path $SetupSpecializeCmd)) {
+            New-Item -Path $SetupSpecializeCmd -ItemType File -Force -ErrorAction Ignore | Out-Null
+        }
         Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
         Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Lenovo DriverPack to $SetupSpecializeCmd"
