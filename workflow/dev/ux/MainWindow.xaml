@@ -14,8 +14,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="28"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -40,46 +42,70 @@
                 Stretch="Uniform"
                 Margin="0,0,0,0"/>
 
-        <Border Grid.Row="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" CornerRadius="10" Padding="8" Margin="0,4,0,4">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="32"/>
-                    <RowDefinition Height="32"/>
-                    <RowDefinition Height="32"/>
-                    <RowDefinition Height="32"/>
-                    <RowDefinition Height="32"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="70"/>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+        <TabControl Grid.Row="2" Grid.RowSpan="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Margin="4" Padding="0">
+            <TabItem Header="OS Deployment">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Margin="0" Padding="8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Task Sequence" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
-                <ComboBox x:Name="TaskSequenceCombo" Grid.Row="0" Grid.Column="1" Margin="4" Height="24" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Task Sequence" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
+                        <ComboBox x:Name="TaskSequenceCombo" Grid.Row="0" Grid.Column="1" Margin="4" Height="24" FontWeight="SemiBold"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Group" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
-                <ComboBox  Grid.Row="1" Grid.Column="1" x:Name="OSGroupCombo" Margin="4" Height="24" FontWeight="SemiBold"/>
-                <TextBlock Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" x:Name="SelectedIdText" Text="Windows 11 25H2 en-us Retail amd64 26200.7462" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap" Margin="4"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Group" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
+                        <ComboBox  Grid.Row="1" Grid.Column="1" x:Name="OSGroupCombo" Margin="4" Height="24" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" x:Name="SelectedIdText" Text="Windows 11 25H2 en-us Retail amd64 26200.7462" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap" Margin="4"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Language" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
-                <ComboBox  Grid.Row="2" Grid.Column="1" x:Name="LanguageCodeCombo" Margin="4" Height="24" FontWeight="SemiBold"/>
-                <TextBlock Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" x:Name="SelectedLanguageText" Text="English (United States)" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap" Margin="4"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Language" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
+                        <ComboBox  Grid.Row="2" Grid.Column="1" x:Name="LanguageCodeCombo" Margin="4" Height="24" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" x:Name="SelectedLanguageText" Text="English (United States)" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap" Margin="4"/>
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Edition" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
-                <ComboBox x:Name="OSEditionCombo" Grid.Row="3" Grid.Column="1" Margin="4" Height="24" FontWeight="SemiBold"/>
-                <TextBlock Grid.Row="3" Grid.Column="3" Text="Activation" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
-                <ComboBox x:Name="OSActivationCombo" Grid.Row="3" Grid.Column="4" Margin="4" Height="24" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Edition" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
+                        <ComboBox x:Name="OSEditionCombo" Grid.Row="3" Grid.Column="1" Margin="4" Height="24" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Row="3" Grid.Column="3" Text="Activation" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
+                        <ComboBox x:Name="OSActivationCombo" Grid.Row="3" Grid.Column="4" Margin="4" Height="24" FontWeight="SemiBold"/>
 
-                <TextBlock Grid.Row="4" Grid.Column="0" Text="FileName" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
-                <TextBlock Grid.Row="4" Grid.Column="1" x:Name="SelectedFileNameText" Grid.ColumnSpan="5" Text="26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-us.esd" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap"/>
-            </Grid>
-        </Border>
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="FileName" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4"/>
+                        <TextBlock Grid.Row="4" Grid.Column="1" x:Name="SelectedFileNameText" Grid.ColumnSpan="5" Text="26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-us.esd" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap"/>
+                    </Grid>
+                </Border>
+            </TabItem>
+            <TabItem Header="Device Information">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
+                    <TextBlock Text="Device information will appear here." FontWeight="SemiBold" Foreground="#3b455a" TextWrapping="Wrap"/>
+                </Border>
+            </TabItem>
+            <TabItem Header="Azure Container">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
+                    <TextBlock Text="Device information will appear here." FontWeight="SemiBold" Foreground="#3b455a" TextWrapping="Wrap"/>
+                </Border>
+            </TabItem>
+            <TabItem Header="GitHub Repository">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
+                    <TextBlock Text="Device information will appear here." FontWeight="SemiBold" Foreground="#3b455a" TextWrapping="Wrap"/>
+                </Border>
+            </TabItem>
+            <TabItem Header="Application Workspace">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
+                    <TextBlock Text="Application Workspace information will appear here." FontWeight="SemiBold" Foreground="#3b455a" TextWrapping="Wrap"/>
+                </Border>
+            </TabItem>
+        </TabControl>
 
-        <Border Grid.Row="3" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" CornerRadius="10" Padding="8" Margin="0,4,0,4">
+        <Border Grid.Row="4" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="8" Margin="4">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32"/>
@@ -113,7 +139,7 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="4" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" CornerRadius="10" Padding="8" Margin="0,4,0,4">
+        <Border Grid.Row="6" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="8" Margin="4">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32"/>
@@ -138,7 +164,7 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="6" Margin="0,12,0,0">
+        <Grid Grid.Row="8" Margin="4">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="Auto"/>
@@ -150,7 +176,7 @@
 			</StackPanel>
 
 			<StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
-				<TextBlock Text="Community Edition" FontSize="20" FontWeight="Bold" Foreground="#0063b1" Margin="0,0,18,0" VerticalAlignment="Center"/>
+				<TextBlock Text="Pro Edition" FontSize="20" FontWeight="Bold" Foreground="#0063b1" Margin="0,0,18,0" VerticalAlignment="Center"/>
 				<Button x:Name="StartButton" Content="Start" Width="110" Height="36" Background="#0063b1" Foreground="White" FontWeight="SemiBold" BorderBrush="#0063b1" Padding="8,0" IsDefault="True"/>
 			</StackPanel>
 		</Grid>
