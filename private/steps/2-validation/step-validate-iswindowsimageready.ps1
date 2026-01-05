@@ -13,7 +13,7 @@ function step-validate-iswindowsimageready {
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     # Is there an Opeating System ImageFile URL?
-    if (-not ($global:OSDCloudWorkflowInvoke.OperatingSystemObject.Url)) {
+    if (-not ($global:OSDCloudWorkflowInvoke.OperatingSystemObject.FilePath)) {
         Write-Warning "[$(Get-Date -format G)] OperatingSystemObject does not have a Url to validate."
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'
         Start-Sleep -Seconds 86400
@@ -22,7 +22,7 @@ function step-validate-iswindowsimageready {
     #=================================================
     # Is it reachable online?
     try {
-        $WebRequest = Invoke-WebRequest -Uri $global:OSDCloudWorkflowInvoke.OperatingSystemObject.Url -UseBasicParsing -Method Head
+        $WebRequest = Invoke-WebRequest -Uri $global:OSDCloudWorkflowInvoke.OperatingSystemObject.FilePath -UseBasicParsing -Method Head
         if ($WebRequest.StatusCode -eq 200) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] OperatingSystem URL returned a 200 status code. OK."
             return
@@ -33,7 +33,7 @@ function step-validate-iswindowsimageready {
     }
     #=================================================
     # Does the file exist on a Drive?
-    $FileName = Split-Path $global:OSDCloudWorkflowInvoke.OperatingSystemObject.Url -Leaf
+    $FileName = Split-Path $global:OSDCloudWorkflowInvoke.OperatingSystemObject.FilePath -Leaf
     $MatchingFiles = @()
     $MatchingFiles = Get-PSDrive -PSProvider FileSystem | ForEach-Object {
         Get-ChildItem "$($_.Name):\OSDCloud\OS\" -Include "$FileName" -File -Recurse -Force -ErrorAction Ignore

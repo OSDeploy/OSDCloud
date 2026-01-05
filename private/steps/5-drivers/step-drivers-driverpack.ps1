@@ -275,9 +275,31 @@ function step-drivers-driverpack {
     #=================================================
     #   Lenovo
     #=================================================
-    if (($OutFileObject.Extension -eq '.exe') -and ($OutFileObject.VersionInfo.FileDescription -match 'Lenovo')) {
-        Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
-        Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
+    if (($OutFileObject.Extension -eq '.exe') -and ($DriverPackObject.Manufacturer -match 'Lenovo')) {
+        if (-not (Test-Path $ScriptsPath)) {
+            New-Item -Path $ScriptsPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
+        }
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Lenovo DriverPack to $SetupCompleteCmd"
+
+$Content = @"
+:: ========================================================
+:: OSDCloud DriverPack Installation for Lenovo
+:: ========================================================
+$DownloadedFile /SILENT /SUPPRESSMSGBOXES
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\UnattendSettings\PnPUnattend\DriverPaths\1" /v Path /t REG_SZ /d "C:\Drivers" /f
+pnpunattend.exe AuditSystem /L
+reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\UnattendSettings\PnPUnattend\DriverPaths\1" /v Path /f
+rd /s /q C:\Drivers
+rd /s /q C:\Windows\Temp\osdcloud-driverpack-download
+:: ========================================================
+"@
+        $Content | Out-File -FilePath $SetupCompleteCmd -Append -Encoding ascii -Width 2000 -Force
+        Remove-Item -Path $ExpandPath -Recurse -Force -ErrorAction SilentlyContinue
+        return
+
+        <#
+        # Write-Host -ForegroundColor DarkGray "FileDescription: $($OutFileObject.VersionInfo.FileDescription)"
+        # Write-Host -ForegroundColor DarkGray "ProductVersion: $($OutFileObject.VersionInfo.ProductVersion)"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Adding Lenovo DriverPack to $SetupSpecializeCmd"
 
 $Content = @"
@@ -293,6 +315,17 @@ rd /s /q C:\Windows\Temp\osdcloud-driverpack-download
 :: ========================================================
 "@
 
+        $SetupSpecializePath = "C:\Windows\Temp\osdcloud"
+        $Params = @{
+            ErrorAction = 'SilentlyContinue'
+            Force       = $true
+            ItemType    = 'Directory'
+            Path        = $SetupSpecializePath
+        }
+        if (!(Test-Path $Params.Path -ErrorAction SilentlyContinue)) {
+            New-Item @Params | Out-Null
+        }
+
         $Content | Out-File -FilePath $SetupSpecializeCmd -Append -Encoding ascii -Width 2000 -Force
 
         $ProvisioningPackage = Join-Path $(Get-OSDCloudModulePath) "core\setupspecialize\setupspecialize.ppkg"
@@ -306,6 +339,7 @@ rd /s /q C:\Windows\Temp\osdcloud-driverpack-download
 
         Remove-Item -Path $ExpandPath -Recurse -Force -ErrorAction SilentlyContinue
         return
+        #>
     }
     #=================================================
     #   Surface

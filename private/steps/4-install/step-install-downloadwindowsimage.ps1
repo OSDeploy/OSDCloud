@@ -12,7 +12,7 @@ function step-install-downloadwindowsimage {
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     # Do we have a URL to download the Windows Image from?
-    if (-not ($OperatingSystemObject.Url)) {
+    if (-not ($OperatingSystemObject.FilePath)) {
         Write-Warning "[$(Get-Date -format G)] OSDCloud failed to download the WindowsImage from the Internet"
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'
         Start-Sleep -Seconds 86400
@@ -34,15 +34,15 @@ function step-install-downloadwindowsimage {
     $USBDrive = Get-USBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
 
     if ($USBDrive) {
-        $DownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\OS\$($OperatingSystemObject.OperatingSystem) $($OperatingSystemObject.ReleaseID)"
-        $FileName = Split-Path $OperatingSystemObject.Url -Leaf
+        $DownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\OS\$($OperatingSystemObject.OperatingSystem) $($OperatingSystemObject.OSVersion)"
+        $FileName = Split-Path $OperatingSystemObject.FilePath -Leaf
 
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Url: $($OperatingSystemObject.Url)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Url: $($OperatingSystemObject.FilePath)"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DownloadPath: $DownloadPath"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] FileName: $FileName"
 
         # Download the file
-        $SaveWebFile = Save-WebFile -SourceUrl $OperatingSystemObject.Url -DestinationDirectory "$DownloadPath" -DestinationName $FileName
+        $SaveWebFile = Save-WebFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory "$DownloadPath" -DestinationName $FileName
 
         if ($SaveWebFile) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Copy Offline OS to C:\OSDCloud\OS\$($SaveWebFile.Name)"
@@ -52,7 +52,7 @@ function step-install-downloadwindowsimage {
     }
     else {
         # $SaveWebFile is a FileInfo Object, not a path
-        $SaveWebFile = Save-WebFile -SourceUrl $OperatingSystemObject.Url -DestinationDirectory 'C:\OSDCloud\OS' -ErrorAction Stop
+        $SaveWebFile = Save-WebFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory 'C:\OSDCloud\OS' -ErrorAction Stop
         $FileInfo = $SaveWebFile
     }
     #=================================================

@@ -7,6 +7,7 @@ function Initialize-OSDCloudWorkflow {
         [System.String]
         $Name = 'default'
     )
+    $ErrorActionPreference = 'Stop'
     #=================================================
     # Get module details
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
@@ -30,9 +31,14 @@ function Initialize-OSDCloudWorkflow {
     #=================================================
     # OSDCloudWorkflowOSCatalog
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Catalog"
-    $global:OSDCloudWorkflowOSCatalog = Get-OSDCatalogOperatingSystems
-    $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.Architecture -match "$Architecture"}
-    # $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.OperatingSystem -match "Windows 11"}
+    if (Get-Command -Name 'Get-PSOSDCloudOperatingSystems' -ErrorAction SilentlyContinue) {
+        $global:OSDCloudWorkflowOSCatalog = Get-PSOSDCloudOperatingSystems
+    } elseif (Get-Command -Name 'Get-OSDCatalogOperatingSystems' -ErrorAction SilentlyContinue) {
+        $global:OSDCloudWorkflowOSCatalog = Get-OSDCatalogOperatingSystems
+    } else {
+        throw "Neither 'Get-PSOSDCloudOperatingSystems' nor 'Get-OSDCatalogOperatingSystems' is available. Cannot initialize OSDCloud OS Catalog."
+    }
+    $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.OSArchitecture -match "$Architecture"}
     #=================================================
     # OSDCloudWorkflowSettingsUser
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings User"
@@ -41,13 +47,15 @@ function Initialize-OSDCloudWorkflow {
     # OSDCloudWorkflowSettingsOS
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings OS"
     Initialize-OSDCloudWorkflowSettingsOS -Name $Name
-    if ($global:OSDCloudWorkflowSettingsOS."OSName.default" -match 'Win11') {
+    if ($global:OSDCloudWorkflowSettingsOS."OSGroup.default" -match 'Win11') {
         $OperatingSystem = 'Windows 11'
     } elseif ($global:OSDCloudWorkflowSettingsOS."OperatingSystem.default" -match 'Win10') {
         $OperatingSystem = 'Windows 10'
     } else {
         $OperatingSystem = 'Windows 11'
     }
+    #=================================================
+    # Configuration
     $OSActivation          = $global:OSDCloudWorkflowSettingsOS."OSActivation.default"
     $OSActivationValues    = [array]$global:OSDCloudWorkflowSettingsOS."OSActivation.values"
     $OSArchitecture        = $Architecture
@@ -56,13 +64,17 @@ function Initialize-OSDCloudWorkflow {
     $OSEditionValues       = [array]$global:OSDCloudWorkflowSettingsOS."OSEdition.values"
     $OSLanguage            = $global:OSDCloudWorkflowSettingsOS."OSLanguageCode.default"
     $OSLanguageValues      = [array]$global:OSDCloudWorkflowSettingsOS."OSLanguageCode.values"
-    $OSName                = $global:OSDCloudWorkflowSettingsOS."OSName.default"
-    $OSNameValues          = [array]$global:OSDCloudWorkflowSettingsOS."OSName.values"
-    $OSReleaseID           = ($global:OSDCloudWorkflowSettingsOS."OSName.default" -split '-')[1]
-    $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.DisplayName -match $OSName } | Where-Object { $_.License -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
-    $OSBuild               = $OperatingSystemObject.Build
-    $ImageFileUrl          = $OperatingSystemObject.Url
-    $ImageFileName         = Split-Path $ImageFileUrl -Leaf
+    $OSGroup                = $global:OSDCloudWorkflowSettingsOS."OSGroup.default"
+    $OSGroupValues          = [array]$global:OSDCloudWorkflowSettingsOS."OSGroup.values"
+    $OSVersion             = ($global:OSDCloudWorkflowSettingsOS."OSGroup.default" -split '-')[1]
+    #=================================================
+    # OperatingSystemObject
+    $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
+
+    $OSBuild            = $OperatingSystemObject.OSBuild
+    $OSBuildVersion     = $OperatingSystemObject.OSBuildVersion
+    $ImageFileUrl       = $OperatingSystemObject.FilePath
+    $ImageFileName      = Split-Path $ImageFileUrl -Leaf
     #=================================================
     # DriverPack
     switch ($ComputerManufacturer) {
@@ -84,7 +96,7 @@ function Initialize-OSDCloudWorkflow {
         $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
     }
 
-    $DriverPackObject = Get-OSDCatalogDriverPack -Product $ComputerProduct -OSVersion $OperatingSystem -OSReleaseID $OSReleaseID
+    $DriverPackObject = Get-OSDCatalogDriverPack -Product $ComputerProduct -OSVersion $OperatingSystem -OSReleaseID $OSVersion
     if ($DriverPackObject) {
         $DriverPackName = $DriverPackObject.Name
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
@@ -118,14 +130,15 @@ function Initialize-OSDCloudWorkflow {
         OSActivationValues    = $OSActivationValues
         OSArchitecture        = $OSArchitecture
         OSBuild               = $OSBuild
+        OSBuildVersion        = $OSBuildVersion
         OSEdition             = $OSEdition
         OSEditionId           = $OSEditionId
         OSEditionValues       = $OSEditionValues
         OSLanguage            = $OSLanguage
         OSLanguageValues      = $OSLanguageValues
-        OSName                = $OSName
-        OSNameValues          = $OSNameValues
-        OSReleaseID           = $OSReleaseID
+        OSGroup               = $OSGroup
+        OSGroupValues         = $OSGroupValues
+        OSVersion             = $OSVersion
         TimeStart             = $null
     }
     #=================================================
