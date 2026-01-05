@@ -1,7 +1,7 @@
 {
-    "id": "d857ca06-9c62-43e5-845a-b948f8dfd8db",
-    "name": "OSDCloud WPNinjas",
-    "description": "OSDCloud Workplace Ninja Summit",
+    "id": "2bc42a9c-3ce1-44a6-847d-593c47d362c5",
+    "name": "OSDCloud",
+    "description": "OSDCloud default Task Sequence",
     "author": "OSDeploy",
     "version": "2025.9.23.1",
     "amd64": true,
@@ -14,7 +14,7 @@
             "command": "step-initialize-startosdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud Workplace Ninja Summit 2025"
+                "WorkflowName": "OSDCloud"
             },
             "rules": {
                 "runinfullos": true,
@@ -81,9 +81,7 @@
             "description": "Clears the disk for a fresh start",
             "command": "step-preinstall-cleardisk",
             "args": [],
-            "parameters": {
-                "confirm": false
-            },
+            "parameters": {},
             "rules": {
                 "runinfullos": false,
                 "skip": false
@@ -127,9 +125,7 @@
             "description": "Downloads the Windows OS image",
             "command": "step-install-downloadwindowsimage",
             "args": [],
-            "parameters": {
-                "debug": true
-            },
+            "parameters": {},
             "rules": {
                 "runinfullos": true,
                 "skip": false
@@ -211,9 +207,7 @@
             "description": "Export in-use WinPE drivers to offline Windows Temp",
             "command": "step-drivers-recast-winpe",
             "args": [],
-            "parameters": {
-                "debug": true
-            },
+            "parameters": {},
             "rules": {
                 "runinfullos": false,
                 "skip": false
@@ -226,9 +220,7 @@
             "description": "Add WinPE drivers to Windows offline",
             "command": "step-drivers-recast-winos",
             "args": [],
-            "parameters": {
-                "debug": true
-            },
+            "parameters": {},
             "rules": {
                 "runinfullos": false,
                 "skip": false
@@ -239,9 +231,7 @@
             "description": "Add WinPE drivers to the winre.wim offline",
             "command": "step-drivers-recast-winre",
             "args": [],
-            "parameters": {
-                "debug": true
-            },
+            "parameters": {},
             "rules": {
                 "runinfullos": false,
                 "skip": false

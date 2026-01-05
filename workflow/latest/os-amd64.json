@@ -71,8 +71,8 @@
         "pt-pt",
         "zh-tw"
     ],
-    "OSName.default": "Win11-25H2-amd64",
-    "OSName.values": [
+    "OSGroup.default": "Win11-25H2-amd64",
+    "OSGroup.values": [
         "Win11-25H2-amd64"
     ]
 }

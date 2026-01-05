@@ -300,11 +300,11 @@ $global:OSDCloudWorkflowInit.Flows | ForEach-Object {
 $formMainWindowControlTaskComboBox.SelectedIndex = 0
 #endregion
 #=================================================
-#region OSName
-$global:OSDCloudWorkflowInit.OSNameValues | ForEach-Object {
-    $formMainWindowControlOSNameCombobox.Items.Add($_) | Out-Null
+#region OSGroup
+$global:OSDCloudWorkflowInit.OSGroupValues | ForEach-Object {
+    $formMainWindowControlOSGroupCombobox.Items.Add($_) | Out-Null
 }
-$formMainWindowControlOSNameCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSName
+$formMainWindowControlOSGroupCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSGroup
 #endregion
 #=================================================
 #region OSLanguage
@@ -344,7 +344,7 @@ function Set-FormConfigurationCloud {
     $formMainWindowControlOperatingSystemLabel.Content = 'Operating System'
 
     $OperatingSystemEditions = $global:OSDCloudWorkflowOSCatalog | `
-        Where-Object {$_.Name -eq "$($formMainWindowControlOSNameCombobox.SelectedValue)"} | `
+        Where-Object {$_.Name -eq "$($formMainWindowControlOSGroupCombobox.SelectedValue)"} | `
         Where-Object {$_.LanguageCode -eq "$($formMainWindowControlOSLanguageCombobox.SelectedValue)"} | `
         Select-Object -ExpandProperty Edition -Unique
 
@@ -398,7 +398,7 @@ if ($CustomImageChildItem) {
     $OSDCloudOperatingSystem = Get-OSDCatalogOperatingSystems
     $CustomImageChildItem = $CustomImageChildItem | Where-Object { $_.Name -notin $OSDCloudOperatingSystem.FileName }
     $CustomImageChildItem | ForEach-Object {
-        $formMainWindowControlOSNameCombobox.Items.Add($_) | Out-Null
+        $formMainWindowControlOSGroupCombobox.Items.Add($_) | Out-Null
     }
 }
 #>
@@ -447,7 +447,7 @@ function Set-FormConfigurationLocal {
     $formMainWindowControlImageNameCombobox.Visibility = 'Visible'
     $formMainWindowControlImageNameCombobox.Items.Clear()
     $formMainWindowControlImageNameCombobox.IsEnabled = $true
-    $GetWindowsImageOptions = Get-WindowsImage -ImagePath $formMainWindowControlOSNameCombobox.SelectedValue
+    $GetWindowsImageOptions = Get-WindowsImage -ImagePath $formMainWindowControlOSGroupCombobox.SelectedValue
     $GetWindowsImageOptions | ForEach-Object {
         $formMainWindowControlImageNameCombobox.Items.Add($_.ImageName) | Out-Null
     }
@@ -456,9 +456,9 @@ function Set-FormConfigurationLocal {
     $formMainWindowControlOSEditionLabel.Content = 'Image Name'
 }
 
-$formMainWindowControlOSNameCombobox.add_SelectionChanged(
+$formMainWindowControlOSGroupCombobox.add_SelectionChanged(
     {
-        if ($formMainWindowControlOSNameCombobox.SelectedValue -like 'Windows 1*64') {
+        if ($formMainWindowControlOSGroupCombobox.SelectedValue -like 'Windows 1*64') {
             Set-FormConfigurationCloud
         }
         else {
@@ -484,13 +484,13 @@ $formMainWindowControlStartButton.add_Click(
         #================================================
         #   ImageFile
         #================================================
-        $OSName = $formMainWindowControlOSNameCombobox.SelectedValue
+        $OSGroup = $formMainWindowControlOSGroupCombobox.SelectedValue
 
         # Determine OperatingSystem
-        if ($OSName -in $global:OSDCloudWorkflowInit.OSNameValues) {
-            if ($OSName -match 'Win11') {
+        if ($OSGroup -in $global:OSDCloudWorkflowInit.OSGroupValues) {
+            if ($OSGroup -match 'Win11') {
                 $OperatingSystem = 'Windows 11'
-            } elseif ($OSName -match 'Win10') {
+            } elseif ($OSGroup -match 'Win10') {
                 $OperatingSystem = 'Windows 10'
             } else {
                 $OperatingSystem = 'Windows 11'
@@ -500,26 +500,26 @@ $formMainWindowControlStartButton.add_Click(
             $OSLanguage = $formMainWindowControlOSLanguageCombobox.SelectedValue
             $OSEdition = $formMainWindowControlOSEditionCombobox.SelectedValue
             $OSEditionId = $formMainWindowControlOSEditionIdCombobox.SelectedValue
-            $OSReleaseID = $OSName.Split('-')[1]
+            $OSVersion = $OSGroup.Split('-')[1]
             
-            if ($OSName -match 'arm64') {
-                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.DisplayName -match $OSName } | Where-Object { $_.License -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
+            if ($OSGroup -match 'arm64') {
+                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
             }
             else {
-                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.DisplayName -match $OSName } | Where-Object { $_.License -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
+                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
             }
             
-            $ImageFileUrl = $OperatingSystemObject.Url
+            $ImageFileUrl = $OperatingSystemObject.FilePath
             $ImageFileName = Split-Path $ImageFileUrl -Leaf
-            $OSBuild = $OperatingSystemObject.Build
+            $OSBuild = $OperatingSystemObject.OSBuild
 
             $LocalImageFileInfo = Find-OSDCloudFile -Name $OperatingSystemObject.FileName -Path '\OSDCloud\OS\' | Sort-Object FullName | Where-Object { $_.Length -gt 3GB }
             $LocalImageFileInfo = $LocalImageFileInfo | Where-Object { $_.FullName -notlike 'C*' } | Where-Object { $_.FullName -notlike 'X*' } | Select-Object -First 1
         }
         else {
             $OperatingSystem = $null
-            $OSName = $null
-            $LocalImageFilePath = $formMainWindowControlOSNameCombobox.SelectedValue
+            $OSGroup = $null
+            $LocalImageFilePath = $formMainWindowControlOSGroupCombobox.SelectedValue
             if ($LocalImageFilePath) {
                 $LocalImageFileInfo = $CustomImageChildItem | Where-Object { $_.FullName -eq "$LocalImageFilePath" }
                 $ImageFileName = Split-Path -Path $LocalImageFileInfo.FullName -Leaf
@@ -550,8 +550,8 @@ $formMainWindowControlStartButton.add_Click(
         $global:OSDCloudWorkflowInit.OSEdition = $OSEdition
         $global:OSDCloudWorkflowInit.OSEditionId = $OSEditionId
         $global:OSDCloudWorkflowInit.OSLanguage = $OSLanguage
-        $global:OSDCloudWorkflowInit.OSName = $OSName
-        $global:OSDCloudWorkflowInit.OSReleaseID = $OSReleaseID
+        $global:OSDCloudWorkflowInit.OSGroup = $OSGroup
+        $global:OSDCloudWorkflowInit.OSVersion = $OSVersion
         $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject
         $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
         $global:OSDCloudWorkflowInit.ImageFileName = $ImageFileName

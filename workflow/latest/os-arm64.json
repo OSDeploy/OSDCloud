@@ -49,8 +49,8 @@
         "zh-cn",
         "zh-tw"
     ],
-    "OSName.default": "Win11-25H2-arm64",
-    "OSName.values": [
+    "OSGroup.default": "Win11-25H2-arm64",
+    "OSGroup.values": [
         "Win11-25H2-arm64"
     ]
 }
