@@ -53,6 +53,12 @@ $stringReader = [System.IO.StringReader]::new($xaml)
 $xmlReader = [System.Xml.XmlReader]::Create($stringReader)
 $window = [Windows.Markup.XamlReader]::Load($xmlReader)
 #================================================
+# Logo
+$logoImage = $window.FindName('LogoImage')
+if ($logoImage) {
+	$logoImage.Source = "$PSScriptRoot\logo.png"
+}
+#================================================
 # Menu Items
 $OpenCmdMenuItem = $window.FindName("OpenCmdMenuItem")
 $OpenPowerShellMenuItem = $window.FindName("OpenPowerShellMenuItem")
