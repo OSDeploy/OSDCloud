@@ -28,14 +28,14 @@
                 <MenuItem x:Name="OpenCmdMenuItem" Header="CMD Prompt"/>
                 <MenuItem x:Name="OpenPowerShellMenuItem" Header="Windows PowerShell"/>
             </MenuItem>
-            <MenuItem Header="GitHub" Padding="4,0,4,0" />
             <MenuItem Header="Network" Padding="4,0,4,0" />
             <MenuItem Header="Help" Padding="4,0,4,0" />
             <MenuItem x:Name="AboutMenuItem" Header="About" Padding="4,0,4,0" />
         </Menu>
 
         <Image Grid.Row="1"
-                Source="C:\GitHub\Modules\OSDCloud\workflow\dev\ux\logo-dark.png"
+            x:Name="LogoImage"
+            Source=""
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Height="80"
