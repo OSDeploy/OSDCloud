@@ -257,6 +257,20 @@ $ComputerProductText.Text = $ComputerProduct
 $ComputerSystemSKUNumberText = $window.FindName("ComputerSystemSKUNumberText")
 $ComputerSystemSKUNumberText.Text = $ComputerSystemSKUNumber
 
+$Win32TpmTextBox = $window.FindName("Win32TpmTextBox")
+$Win32TpmTextBox.Text = if ($global:OSDCloudWorkflowGather.Win32Tpm) {
+	$global:OSDCloudWorkflowGather.Win32Tpm | Out-String
+} else {
+	'Win32Tpm data is not available.'
+}
+
+$NetworkInformationTextBox = $window.FindName("NetworkInformationTextBox")
+$NetworkInformationTextBox.Text = if ($global:OSDCloudWorkflowGather.NetworkAdapter) {
+	ipconfig | Out-String
+} else {
+	'Network information is not available.'
+}
+
 $SelectedLanguageText = $window.FindName("SelectedLanguageText")
 $SelectedIdText = $window.FindName("SelectedIdText")
 $SelectedFileNameText = $window.FindName("SelectedFileNameText")
