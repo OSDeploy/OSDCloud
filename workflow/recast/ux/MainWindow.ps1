@@ -1,606 +1,561 @@
-#region PoSHPF - Version 1.2
-# Grab all resources (MahApps, etc), all XAML files, and any potential static resources
-$global:resources = Get-ChildItem -Path "$PSScriptRoot\Resources\*.dll" -ErrorAction SilentlyContinue
-$global:XAML = Get-ChildItem -Path "$PSScriptRoot\*.xaml" | Where-Object { $_.Name -ne 'App.xaml' } -ErrorAction SilentlyContinue #Changed path and exclude App.xaml
-$global:MediaResources = Get-ChildItem -Path "$PSScriptRoot\Media" -ErrorAction SilentlyContinue
+<#!
+.SYNOPSIS
+	Interactive picker for OSDCloud operating system catalog entries.
+#>
+[CmdletBinding()]
+param(
+	[Parameter()]
+	[ValidateNotNullOrEmpty()]
+	[System.String]$OSCatalogPath
+)
+#================================================
+Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
+#================================================
+# Import the OS Catalog
+$OSCatalog = $global:OSDCloudWorkflowOSCatalog
 
-# This class allows the synchronized hashtable to be available across threads,
-# but also passes a couple of methods along with it to do GUI things via the
-# object's dispatcher.
-class SyncClass {
-    #Hashtable containing all forms/windows and controls - automatically created when newing up
-    [hashtable]$SyncHash = [hashtable]::Synchronized(@{}) 
-    
-    # method to close the window - pass window name
-    [void]CloseWindow($windowName) { 
-        $this.SyncHash.$windowName.Dispatcher.Invoke([action] { $this.SyncHash.$windowName.Close() }, 'Normal') 
-    }
-    
-    # method to update GUI - pass object name, property and value   
-    [void]UpdateElement($object, $property, $value) { 
-        $this.SyncHash.$object.Dispatcher.Invoke([action] { $this.SyncHash.$object.$property = $value }, 'Normal') 
-    } 
-}
-$global:SyncClass = [SyncClass]::new() # create a new instance of this SyncClass to use.
+# Import the Custom OS Catalog
+if ($OSCatalogPath) {
+	$resolvedCatalogPath = [System.IO.Path]::GetFullPath($OSCatalogPath)
+	if (-not (Test-Path -LiteralPath $resolvedCatalogPath)) {
+		throw "Catalog file not found at '$resolvedCatalogPath'."
+	}
 
-###################
-## Import Resources
-###################
-# Load WPF Assembly
-Add-Type -assemblyName PresentationFramework
+	try {
+		$OSCatalog = Get-Content -LiteralPath $resolvedCatalogPath -Raw | ConvertFrom-Json -ErrorAction Stop
+	} catch {
+		throw "Unable to load '$resolvedCatalogPath'. $($_.Exception.Message)"
+	}
 
-# Load Resources
-foreach ($dll in $resources) { [System.Reflection.Assembly]::LoadFrom("$($dll.FullName)") | out-null }
-
-##############
-## Import XAML
-##############
-$xp = '[^a-zA-Z_0-9]' # All characters that are not a-Z, 0-9, or _
-$vx = @()             # An array of XAML files loaded
-
-foreach ($x in $XAML) { 
-    # Items from XAML that are known to cause issues
-    # when PowerShell parses them.
-    $xamlToRemove = @(
-        'mc:Ignorable="d"',
-        "x:Class=`"(.*?)`"",
-        "xmlns:local=`"(.*?)`""
-    )
-
-    $xaml = Get-Content $x.FullName # Load XAML
-    $xaml = $xaml -replace 'x:N', 'N' # Rename x:Name to just Name (for consumption in variables later)
-    foreach ($xtr in $xamlToRemove) { $xaml = $xaml -replace $xtr } # Remove items from $xamlToRemove
-    
-    # Create a new variable to store the XAML as XML
-    New-Variable -Name "xaml$(($x.BaseName) -replace $xp, '_')" -Value ($xaml -as [xml]) -Force
-    
-    # Add XAML to list of XAML documents processed
-    $vx += "$(($x.BaseName) -replace $xp, '_')"
-}
-#######################
-## Add Media Resources
-#######################
-$imageFileTypes = @('.jpg', '.bmp', '.gif', '.tif', '.png') # Supported image filetypes
-$avFileTypes = @('.mp3', '.wav', '.wmv') # Supported audio/visual filetypes
-$xp = '[^a-zA-Z_0-9]' # All characters that are not a-Z, 0-9, or _
-if ($MediaResources.Count -gt 0) {
-    ## Okay... the following code is just silly. I know
-    ## but hear me out. Adding the nodes to the elements
-    ## directly caused big issues - mainly surrounding the
-    ## "x:" namespace identifiers. This is a hacky fix but
-    ## it does the trick.
-    foreach ($v in $vx) {
-        $xml = ((Get-Variable -Name "xaml$($v)").Value) # Load the XML
-
-        # add the resources needed for strings
-        $xml.DocumentElement.SetAttribute('xmlns:sys', 'clr-namespace:System;assembly=System')
-
-        # if the document doesn't already have a "Window.Resources" create it
-        if ($null -eq ($xml.DocumentElement.'Window.Resources')) { 
-            $fragment = '<Window.Resources>' 
-            $fragment += '<ResourceDictionary>'
-        }
-        
-        # Add each StaticResource with the key of the base name and source to the full name
-        foreach ($sr in $MediaResources) {
-            $srname = "$($sr.BaseName -replace $xp, '_')$($sr.Extension.Substring(1).ToUpper())" #convert name to basename + Uppercase Extension
-            if ($sr.Extension -in $imageFileTypes) { $fragment += "<BitmapImage x:Key=`"$srname`" UriSource=`"$($sr.FullName)`" />" }
-            if ($sr.Extension -in $avFileTypes) { 
-                $uri = [System.Uri]::new($sr.FullName)
-                $fragment += "<sys:Uri x:Key=`"$srname`">$uri</sys:Uri>" 
-            }    
-        }
-
-        # if the document doesn't already have a "Window.Resources" close it
-        if ($null -eq ($xml.DocumentElement.'Window.Resources')) {
-            $fragment += '</ResourceDictionary>'
-            $fragment += '</Window.Resources>'
-            $xml.DocumentElement.InnerXml = $fragment + $xml.DocumentElement.InnerXml
-        }
-        # otherwise just add the fragment to the existing resource dictionary
-        else {
-            $xml.DocumentElement.'Window.Resources'.ResourceDictionary.InnerXml += $fragment
-        }
-
-        # Reset the value of the variable
-        (Get-Variable -Name "xaml$($v)").Value = $xml
-    }
-}
-#################
-## Create "Forms"
-#################
-$forms = @()
-foreach ($x in $vx) {
-    $Reader = (New-Object System.Xml.XmlNodeReader ((Get-Variable -Name "xaml$($x)").Value)) #load the xaml we created earlier into XmlNodeReader
-    New-Variable -Name "form$($x)" -Value ([Windows.Markup.XamlReader]::Load($Reader)) -Force #load the xaml into XamlReader
-    $forms += "form$($x)" #add the form name to our array
-    $SyncClass.SyncHash.Add("form$($x)", (Get-Variable -Name "form$($x)").Value) #add the form object to our synched hashtable
-}
-#################################
-## Create Controls (Buttons, etc)
-#################################
-$controls = @()
-$xp = '[^a-zA-Z_0-9]' # All characters that are not a-Z, 0-9, or _
-foreach ($x in $vx) {
-    $xaml = (Get-Variable -Name "xaml$($x)").Value #load the xaml we created earlier
-    $xaml.SelectNodes('//*[@Name]') | ForEach-Object { #find all nodes with a "Name" attribute
-        $cname = "form$($x)Control$(($_.Name -replace $xp, '_'))"
-        Set-Variable -Name "$cname" -Value $SyncClass.SyncHash."form$($x)".FindName($_.Name) #create a variale to hold the control/object
-        $controls += (Get-Variable -Name "form$($x)Control$($_.Name)").Name #add the control name to our array
-        $SyncClass.SyncHash.Add($cname, $SyncClass.SyncHash."form$($x)".FindName($_.Name)) #add the control directly to the hashtable
-    }
-}
-############################
-## FORMS AND CONTROLS OUTPUT
-############################
-<# Write-Host -ForegroundColor Cyan "The following forms were created:"
-$forms | %{ Write-Host -ForegroundColor Yellow "  `$$_"} #output all forms to screen
-if($controls.Count -gt 0){
-    Write-Host ""
-    Write-Host -ForegroundColor Cyan "The following controls were created:"
-    $controls | %{ Write-Host -ForegroundColor Yellow "  `$$_"} #output all named controls to screen
-} #>
-#######################
-## DISABLE A/V AUTOPLAY
-#######################
-foreach ($x in $vx) {
-    $carray = @()
-    $fts = $syncClass.SyncHash."form$($x)"
-    foreach ($c in $fts.Content.Children) {
-        if ($c.GetType().Name -eq 'MediaElement') { #find all controls with the type MediaElement
-            $c.LoadedBehavior = 'Manual' #Don't autoplay
-            $c.UnloadedBehavior = 'Stop' #When the window closes, stop the music
-            $carray += $c #add the control to an array
-        }
-    }
-    if ($carray.Count -gt 0) {
-        New-Variable -Name "form$($x)PoSHPFCleanupAudio" -Value $carray -Force # Store the controls in an array to be accessed later
-        $syncClass.SyncHash."form$($x)".Add_Closed({
-                foreach ($c in (Get-Variable "form$($x)PoSHPFCleanupAudio").Value) {
-                    $c.Source = $null #stops any currently playing media
-                }
-            })
-    }
-}
-
-#####################
-## RUNSPACE FUNCTIONS
-#####################
-## Yo dawg... Runspace to clean up Runspaces
-## Thank you Boe Prox / Stephen Owen
-#region RSCleanup
-$Script:JobCleanup = [hashtable]::Synchronized(@{}) 
-$Script:Jobs = [system.collections.arraylist]::Synchronized((New-Object System.Collections.ArrayList)) #hashtable to store all these runspaces
-$jobCleanup.Flag = $True #cleanup jobs
-$newRunspace = [runspacefactory]::CreateRunspace() #create a new runspace for this job to cleanup jobs to live
-$newRunspace.ApartmentState = 'STA'
-$newRunspace.ThreadOptions = 'ReuseThread'
-$newRunspace.Open()
-$newRunspace.SessionStateProxy.SetVariable('jobCleanup', $jobCleanup) #pass the jobCleanup variable to the runspace
-$newRunspace.SessionStateProxy.SetVariable('jobs', $jobs) #pass the jobs variable to the runspace
-$jobCleanup.PowerShell = [PowerShell]::Create().AddScript({
-        #Routine to handle completed runspaces
-        Do {    
-            Foreach ($runspace in $jobs) {            
-                If ($runspace.Runspace.isCompleted) {
-                    #if runspace is complete
-                    [void]$runspace.powershell.EndInvoke($runspace.Runspace)  #then end the script
-                    $runspace.powershell.dispose()                            #dispose of the memory
-                    $runspace.Runspace = $null                                #additional garbage collection
-                    $runspace.powershell = $null                              #additional garbage collection
-                } 
-            }
-            #Clean out unused runspace jobs
-            $temphash = $jobs.clone()
-            $temphash | Where-Object {
-                $_.runspace -eq $Null
-            } | ForEach-Object {
-                $jobs.remove($_)
-            }        
-            Start-Sleep -Seconds 1 #lets not kill the processor here 
-        } while ($jobCleanup.Flag)
-    })
-$jobCleanup.PowerShell.Runspace = $newRunspace
-$jobCleanup.Thread = $jobCleanup.PowerShell.BeginInvoke() 
-#endregion RSCleanup
-
-#This function creates a new runspace for a script block to execute
-#so that you can do your long running tasks not in the UI thread.
-#Also the SyncClass is passed to this runspace so you can do UI
-#updates from this thread as well.
-function Start-BackgroundScriptBlock($scriptBlock) {
-    $newRunspace = [runspacefactory]::CreateRunspace()
-    $newRunspace.ApartmentState = 'STA'
-    $newRunspace.ThreadOptions = 'ReuseThread'          
-    $newRunspace.Open()
-    $newRunspace.SessionStateProxy.SetVariable('SyncClass', $SyncClass) 
-    $PowerShell = [PowerShell]::Create().AddScript($scriptBlock)
-    $PowerShell.Runspace = $newRunspace
-    $PowerShell.BeginInvoke()
-
-    #Add it to the job list so that we can make sure it is cleaned up
-    <#     [void]$Jobs.Add(
-        [pscustomobject]@{
-            PowerShell = $PowerShell
-            Runspace = $PowerShell.BeginInvoke()
-        }
-    ) #>
+	if (-not $OSCatalog) {
+		throw "Catalog '$resolvedCatalogPath' did not return any items."
+	}
 }
 #================================================
-#   Window Functions
-#   Minimize Command and PowerShell Windows
+# Variables
+$Architecture = $global:OSDCloudWorkflowGather.IsAutopilotReady
+$BiosReleaseDate = $global:OSDCloudWorkflowGather.BiosReleaseDate
+$BiosVersion = $global:OSDCloudWorkflowGather.BiosVersion
+$ChassisTypeChassisType = $global:OSDCloudWorkflowGather.ChassisTypeChassisType
+$ComputerManufacturer = $global:OSDCloudWorkflowInit.ComputerManufacturer
+$ComputerModel = $global:OSDCloudWorkflowInit.ComputerModel
+$ComputerProduct = $global:OSDCloudWorkflowInit.ComputerProduct
+$ComputerSystemSKUNumber = $global:OSDCloudWorkflowGather.ComputerSystemSKUNumber
+$IsAutopilotReady = $global:OSDCloudWorkflowGather.IsAutopilotReady
+$IsTpmReady = $global:OSDCloudWorkflowGather.IsTpmReady
+$SerialNumber = $global:OSDCloudWorkflowGather.SerialNumber
 #================================================
-$Script:showWindowAsync = Add-Type -MemberDefinition @'
-[DllImport("user32.dll")]
-public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
-'@ -Name 'Win32ShowWindowAsync' -Namespace Win32Functions -PassThru
-function Hide-CmdWindow() {
-    $CMDProcess = Get-Process -Name cmd -ErrorAction Ignore
-    foreach ($Item in $CMDProcess) {
-        $null = $showWindowAsync::ShowWindowAsync((Get-Process -Id $Item.id).MainWindowHandle, 2)
-    }
+# XAML
+$xamlfile = Get-Item -Path "$PSScriptRoot\MainWindow.xaml"
+$xaml = Get-Content $xamlfile.FullName 
+
+$stringReader = [System.IO.StringReader]::new($xaml)
+$xmlReader = [System.Xml.XmlReader]::Create($stringReader)
+$window = [Windows.Markup.XamlReader]::Load($xmlReader)
+$deviceTitleParts = @()
+$manufacturerText = [string]$ComputerManufacturer
+$modelText = [string]$ComputerModel
+$serialText = [string]$SerialNumber
+
+if (-not [string]::IsNullOrWhiteSpace($manufacturerText)) {
+	$deviceTitleParts += $manufacturerText
 }
-function Hide-PowershellWindow() {
-    $null = $showWindowAsync::ShowWindowAsync((Get-Process -Id $pid).MainWindowHandle, 2)
+if (-not [string]::IsNullOrWhiteSpace($modelText)) {
+	$deviceTitleParts += $modelText
 }
-function Show-PowershellWindow() {
-    $null = $showWindowAsync::ShowWindowAsync((Get-Process -Id $pid).MainWindowHandle, 10)
+if (-not [string]::IsNullOrWhiteSpace($serialText)) {
+	$deviceTitleParts += "$serialText"
 }
-#endregion
-#=================================================
-#region OSDCloudWorkflowSettingsUser
-# Tpm
-if ($global:OSDCloudWorkflowGather.IsTpmReady -eq $true) {
-    $formMainWindowControlIsTpmReady.Foreground = 'Green'
-    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Success
+
+if ($deviceTitleParts.Count -gt 0) {
+	$window.Title = "OSDCloud on $($deviceTitleParts -join ' - ')"
+}
+#================================================
+# Logo
+$logoImage = $window.FindName('LogoImage')
+if ($logoImage) {
+	$logoImage.Source = "$PSScriptRoot\logo.png"
+}
+#================================================
+# Menu Items
+$RunCmdPrompt = $window.FindName("RunCmdPrompt")
+$RunPowerShell = $window.FindName("RunPowerShell")
+$RunPwsh = $window.FindName("RunPwsh")
+$AboutMenuItem = $window.FindName("AboutMenuItem")
+$LogsMenuItem = $window.FindName("LogsMenuItem")
+
+$RunCmdPrompt.Add_Click({
+	try {
+		Start-Process -FilePath "cmd.exe"
+	} catch {
+		[System.Windows.MessageBox]::Show("Failed to open CMD Prompt: $($_.Exception.Message)", "Error", "OK", "Error") | Out-Null
+	}
+})
+
+$RunPowerShell.Add_Click({
+	try {
+		Start-Process -FilePath "powershell.exe"
+	} catch {
+		[System.Windows.MessageBox]::Show("Failed to open PowerShell: $($_.Exception.Message)", "Error", "OK", "Error") | Out-Null
+	}
+})
+
+if ($RunPwsh) {
+	$pwshCommand = Get-Command -Name 'pwsh.exe' -ErrorAction SilentlyContinue
+	if ($pwshCommand) {
+		$script:PwshPath = $pwshCommand.Source
+		$RunPwsh.Visibility = [System.Windows.Visibility]::Visible
+		$RunPwsh.Add_Click({
+			try {
+				Start-Process -FilePath $script:PwshPath
+			} catch {
+				[System.Windows.MessageBox]::Show("Failed to open PowerShell 7: $($_.Exception.Message)", "Error", "OK", "Error") | Out-Null
+			}
+		})
+	} else {
+		$RunPwsh.Visibility = [System.Windows.Visibility]::Collapsed
+	}
+}
+
+$AboutMenuItem.Add_Click({
+	$aboutMessage = @"
+OSDCloud - Community Edition
+Placeholder help content will go here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in turpis nec leo fermentum interdum.
+"@
+	[System.Windows.MessageBox]::Show($aboutMessage, "About OSDCloud", "OK", "Information") | Out-Null
+})
+
+function Add-NoLogsMenuEntry {
+	param(
+		[Parameter(Mandatory)]
+		[System.Windows.Controls.MenuItem]$MenuItem
+	)
+
+	$noLogsItem = [System.Windows.Controls.MenuItem]::new()
+	$noLogsItem.Header = 'No logs found'
+	$noLogsItem.IsEnabled = $false
+	$MenuItem.Items.Add($noLogsItem) | Out-Null
+}
+
+function Set-LogsMenuItems {
+	$LogsMenuItem.Items.Clear()
+
+	$logsRoot = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'osdcloud-logs'
+	if (-not (Test-Path -LiteralPath $logsRoot)) {
+		Add-NoLogsMenuEntry -MenuItem $LogsMenuItem
+		return
+	}
+
+	$logFiles = Get-ChildItem -LiteralPath $logsRoot -File -ErrorAction SilentlyContinue | Sort-Object -Property Name
+	if (-not $logFiles) {
+		Add-NoLogsMenuEntry -MenuItem $LogsMenuItem
+		return
+	}
+
+	foreach ($logFile in $logFiles) {
+		$logMenuItem = [System.Windows.Controls.MenuItem]::new()
+		# Double underscores so WPF renders underscores literally instead of mnemonics
+		$logMenuItem.Header = $logFile.Name -replace '_', '__'
+		$logMenuItem.Tag = $logFile.FullName
+
+		$logMenuItem.Add_Click({
+			param($sender, $args)
+			$logPath = [string]$sender.Tag
+			if (-not (Test-Path -LiteralPath $logPath)) {
+				[System.Windows.MessageBox]::Show('Log file not found.', 'Open Log', 'OK', 'Warning') | Out-Null
+				return
+			}
+
+			try {
+				Start-Process -FilePath 'notepad.exe' -ArgumentList @("`"$logPath`"") -ErrorAction Stop
+			} catch {
+				[System.Windows.MessageBox]::Show("Failed to open log: $($_.Exception.Message)", 'Open Log', 'OK', 'Error') | Out-Null
+			}
+		})
+
+		$LogsMenuItem.Items.Add($logMenuItem) | Out-Null
+	}
+}
+
+Set-LogsMenuItems
+#================================================
+# TaskSequence
+$TaskSequenceCombo = $window.FindName("TaskSequenceCombo")
+$TaskSequenceCombo.ItemsSource = $global:OSDCloudWorkflowInit.Flows.Name
+$TaskSequenceCombo.SelectedIndex = 0
+#================================================
+# OSGroupValues
+# GlobalVariable Configuration
+# Environment Configuration
+# Workflow Configuration
+if ($global:OSDCloudWorkflowInit.OSGroupValues) {
+	$OSGroupValues = $global:OSDCloudWorkflowInit.OSGroupValues
+	Write-Verbose "Workflow OSGroupValues = $OSGroupValues"
+}
+# Catalog Configuration
+else {
+	$OSGroupValues = $OSCatalog.OSGroup | Sort-Object -Unique | Sort-Object -Descending
+	Write-Verbose "Catalog OSGroupValues = $OSGroupValues"
+}
+$OSGroupCombo = $window.FindName("OSGroupCombo")
+$OSGroupCombo.ItemsSource = $OSGroupValues
+#================================================
+# OSGroupDefault
+if ($global:OSDCloudWorkflowInit.OSGroup) {
+	$OSGroupDefault = $global:OSDCloudWorkflowInit.OSGroup
+	Write-Verbose "Workflow OSGroup = $OSGroupDefault"
+}
+if ($OSGroupDefault -and ($OSGroupValues -contains $OSGroupDefault)) {
+	$OSGroupCombo.SelectedItem = $OSGroupDefault
+} elseif ($OSGroupValues) {
+	$OSGroupCombo.SelectedIndex = 0
+} else {
+	$OSGroupCombo.SelectedIndex = -1
+}
+#================================================
+# OSEditionValues
+# GlobalVariable Configuration
+# Environment Configuration
+# Workflow Configuration
+if ($global:OSDCloudWorkflowInit.OSEditionValues.Edition) {
+	$OSEditionValues = $global:OSDCloudWorkflowInit.OSEditionValues.Edition
+	Write-Verbose "Workflow OSEditionValues = $OSEditionValues"
 }
 else {
-    $formMainWindowControlIsTpmReady.Foreground = 'Red'
-    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Error
+	@()
 }
-
-# Autopilot
-if ($global:OSDCloudWorkflowGather.IsAutopilotReady -eq $true) {
-    $formMainWindowControlIsAutopilotReady.Foreground = 'Green'
-    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Success
+$OSEditionCombo = $window.FindName("OSEditionCombo")
+$OSEditionCombo.ItemsSource = $OSEditionValues
+#================================================
+# OSEditionDefault
+if ($global:OSDCloudWorkflowInit.OSEdition) {
+	$OSEditionDefault = $global:OSDCloudWorkflowInit.OSEdition
+	Write-Verbose "Workflow OSEdition = $OSEditionDefault"
+}
+if ($OSEditionDefault) {
+	$OSEditionCombo.SelectedItem = $OSEditionDefault
+} elseif ($OSGroupValues) {
+	$OSEditionCombo.SelectedIndex = 0
+} else {
+	$OSEditionCombo.SelectedIndex = -1
+}
+#================================================
+# OSActivationValues
+# GlobalVariable Configuration
+# Environment Configuration
+# Workflow Configuration
+if ($global:OSDCloudWorkflowInit.OSActivationValues) {
+	$OSActivationValues = $global:OSDCloudWorkflowInit.OSActivationValues
+	Write-Verbose "Workflow OSActivationValues = $OSActivationValues"
 }
 else {
-    $formMainWindowControlIsAutopilotReady.Foreground = 'Red'
-    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Error
+	@()
 }
-#endregion
-#=================================================
-#region OSDCloud Workflow Library
-$global:OSDCloudWorkflowInit.Flows | ForEach-Object {
-    $formMainWindowControlTaskComboBox.Items.Add($_.Name) | Out-Null
+$OSActivationCombo = $window.FindName("OSActivationCombo")
+$OSActivationCombo.ItemsSource = $OSActivationValues
+#================================================
+# OSActivationDefault
+if ($global:OSDCloudWorkflowInit.OSActivation) {
+	$OSActivationDefault = $global:OSDCloudWorkflowInit.OSActivation
+	Write-Verbose "Workflow OSActivation = $OSActivationDefault"
 }
-$formMainWindowControlTaskComboBox.SelectedIndex = 0
-#endregion
-#=================================================
-#region OSGroup
-$global:OSDCloudWorkflowInit.OSGroupValues | ForEach-Object {
-    $formMainWindowControlOSGroupCombobox.Items.Add($_) | Out-Null
+if ($OSActivationDefault -and ($OSActivationValues -contains $OSActivationDefault)) {
+	$OSActivationCombo.SelectedItem = $OSActivationDefault
+} elseif ($OSActivationValues) {
+	$OSActivationCombo.SelectedIndex = 0
+} else {
+	$OSActivationCombo.SelectedIndex = -1
 }
-$formMainWindowControlOSGroupCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSGroup
-#endregion
-#=================================================
-#region OSLanguage
-$global:OSDCloudWorkflowInit.OSLanguageValues | ForEach-Object {
-    $formMainWindowControlOSLanguageCombobox.Items.Add($_) | Out-Null
+#================================================
+# OSLanguageValues
+# GlobalVariable Configuration
+# Environment Configuration
+# Workflow Configuration
+if ($global:OSDCloudWorkflowInit.OSLanguageValues) {
+	$OSLanguageValues = $global:OSDCloudWorkflowInit.OSLanguageValues
+	Write-Verbose "Workflow OSLanguageValues = $OSLanguageValues"
 }
-$formMainWindowControlOSLanguageCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSLanguage
-#endregion
-#=================================================
-#region OSEdition
-$global:OSDCloudWorkflowInit.OSEditionValues | ForEach-Object {
-    $formMainWindowControlOSEditionCombobox.Items.Add($_.Edition) | Out-Null
+# Catalog Configuration
+else {
+	$OSLanguageValues = $OSCatalog.OSGroup | Sort-Object -Unique | Sort-Object -Descending
+	Write-Verbose "Catalog OSLanguageValues = $OSLanguageValues"
+}
+$LanguageCodeCombo = $window.FindName("LanguageCodeCombo")
+$LanguageCodeCombo.ItemsSource = $OSLanguageValues
+#================================================
+# OSLanguageDefault
+if ($global:OSDCloudWorkflowInit.OSLanguage) {
+	$OSLanguageDefault = $global:OSDCloudWorkflowInit.OSLanguage
+	Write-Verbose "Workflow OSLanguage = $OSLanguageDefault"
+}
+if ($OSLanguageDefault -and ($OSLanguageValues -contains $OSLanguageDefault)) {
+	$LanguageCodeCombo.SelectedItem = $OSLanguageDefault
+} elseif ($LanguageCodeValues) {
+	$LanguageCodeCombo.SelectedIndex = 0
+} else {
+	$LanguageCodeCombo.SelectedIndex = -1
+}
+#================================================
+# DriverPackCombo
+# GlobalVariable Configuration
+# Environment Configuration
+# Workflow Configuration
+#================================================
+# Import the DriverPack Catalog
+$DriverPackCatalog = @('None','Microsoft Catalog')
+if ($global:OSDCloudWorkflowInit.DriverPackValues) {
+	$DriverPackCatalog += $global:OSDCloudWorkflowInit.DriverPackValues | ForEach-Object { $_.Name }
+}
+$DriverPackCombo = $window.FindName("DriverPackCombo")
+$DriverPackCombo.ItemsSource = $DriverPackCatalog
+$DriverPackCombo.SelectedValue = $global:OSDCloudWorkflowInit.DriverPackName
+#================================================
+# Optional Settings
+$RestartActionCombo = $window.FindName("RestartActionCombo")
+$WorkspaceUrlTextBox = $window.FindName("WorkspaceUrlTextBox")
+
+$RestartActionOptions = @('Restart','Shutdown','Exit')
+$RestartActionCombo.ItemsSource = $RestartActionOptions
+
+$RestartActionDefault = if ($global:OSDCloudWorkflowInit.RestartAction) {
+	$global:OSDCloudWorkflowInit.RestartAction
+} else {
+	'Restart'
 }
 
-$global:OSDCloudWorkflowInit.OSEditionValues | ForEach-Object {
-    $formMainWindowControlOSEditionIdCombobox.Items.Add($_.EditionId) | Out-Null
-}
-#endregion
-#=================================================
-#region OSActivation
-$global:OSDCloudWorkflowInit.OSActivationValues | ForEach-Object {
-    $formMainWindowControlOSActivationCombobox.Items.Add($_) | Out-Null
-}
-#endregion
-#=================================================
-#region DriverPack
-$global:OSDCloudWorkflowInit.DriverPackValues | ForEach-Object {
-    $formMainWindowControlDriverPackCombobox.Items.Add($_.Name) | Out-Null
-}
-if ($global:OSDCloudWorkflowInit.DriverPackName) {
-    $formMainWindowControlDriverPackCombobox.SelectedValue = $global:OSDCloudWorkflowInit.DriverPackName
-}
-#endregion
-#=================================================
-#region Set-FormConfigurationCloud
-function Set-FormConfigurationCloud {
-    $formMainWindowControlOperatingSystemLabel.Content = 'Operating System'
-
-    $OperatingSystemEditions = $global:OSDCloudWorkflowOSCatalog | `
-        Where-Object {$_.Name -eq "$($formMainWindowControlOSGroupCombobox.SelectedValue)"} | `
-        Where-Object {$_.LanguageCode -eq "$($formMainWindowControlOSLanguageCombobox.SelectedValue)"} | `
-        Select-Object -ExpandProperty Edition -Unique
-
-    $formMainWindowControlOSLanguageCombobox.IsEnabled = $true
-    $formMainWindowControlOSLanguageCombobox.Visibility = 'Visible'
-    $formMainWindowControlOSLanguageCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSLanguage
-
-    $formMainWindowControlOSEditionLabel.Content = 'Edition'
-    $formMainWindowControlOSEditionCombobox.IsEnabled = $true
-    $formMainWindowControlOSEditionCombobox.Visibility = 'Visible'
-    $formMainWindowControlOSEditionCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSEdition
-
-    $formMainWindowControlOSActivationCombobox.IsEnabled = $true
-    $formMainWindowControlOSActivationCombobox.Visibility = 'Visible'
-    $formMainWindowControlOSActivationCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSActivation
-
-    $formMainWindowControlOSEditionIdCombobox.IsEnabled = $false
-    $formMainWindowControlOSEditionIdCombobox.Visibility = 'Visible'
-    $formMainWindowControlOSEditionIdCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSEditionId
-
-    $formMainWindowControlImageNameCombobox.Items.Clear()
-    $formMainWindowControlImageNameCombobox.Visibility = 'Collapsed'
-}
-Set-FormConfigurationCloud
-#endregion
-#=================================================
-#region CustomImage
 <#
-[array]$OSDCloudWorkflowSettingsOSIso = @()
-[array]$OSDCloudWorkflowSettingsOSIso = Find-OSDCloudFile -Name '*.iso' -Path '\OSDCloud\OS\' | Where-Object { $_.Length -gt 3GB }
-
-foreach ($Item in $OSDCloudWorkflowSettingsOSIso) {
-    if ((Get-DiskImage -ImagePath $Item.FullName).Attached) {
-        #ISO is already mounted
-    }
-    else {
-        Write-Host "Mounting OSDCloud OS ISO $($Item.FullName)" -ForegroundColor Cyan
-        $Results = Mount-DiskImage -ImagePath $Item.FullName
-        $Results | Select-Object -Property Attached, DevicePath, ImagePath, Number, Size | Format-List
-    }
+if ($RestartActionDefault -and ($RestartActionOptions -contains $RestartActionDefault)) {
+	$RestartActionCombo.SelectedItem = $RestartActionDefault
+} else {
+	$RestartActionCombo.SelectedIndex = 0
 }
 
-$CustomImageChildItem = @()
-[array]$CustomImageChildItem = Find-OSDCloudFile -Name '*.wim' -Path '\OSDCloud\OS\'
-[array]$CustomImageChildItem += Find-OSDCloudFile -Name 'install.wim' -Path '\Sources\'
-[array]$CustomImageChildItem += Find-OSDCloudFile -Name '*.esd' -Path '\OSDCloud\OS\'
-[array]$CustomImageChildItem += Find-OSDCloudFile -Name '*install.swm' -Path '\OSDCloud\OS\'
-$CustomImageChildItem = $CustomImageChildItem | Sort-Object -Property Length -Unique | Sort-Object FullName | Where-Object { $_.Length -gt 2GB }
-        
-if ($CustomImageChildItem) {
-    $OSDCloudOperatingSystem = Get-OSDCatalogOperatingSystems
-    $CustomImageChildItem = $CustomImageChildItem | Where-Object { $_.Name -notin $OSDCloudOperatingSystem.FileName }
-    $CustomImageChildItem | ForEach-Object {
-        $formMainWindowControlOSGroupCombobox.Items.Add($_) | Out-Null
-    }
+$WorkspaceUrlTextBox.Text = if ($global:OSDCloudWorkflowInit.ApplicationWorkspaceUrl) {
+	[string]$global:OSDCloudWorkflowInit.ApplicationWorkspaceUrl
+} else {
+	[string]::Empty
 }
+
 #>
-#endregion
 #================================================
-#region OSEdition
-$formMainWindowControlOSEditionCombobox.add_SelectionChanged(
-    {
-        # Home
-        if ($formMainWindowControlOSEditionCombobox.SelectedValue -match 'Home') {
-            $formMainWindowControlOSActivationCombobox.SelectedValue = 'Retail'
-            $formMainWindowControlOSActivationCombobox.IsEnabled = $false
-        }
-
-        # Education
-        if ($formMainWindowControlOSEditionCombobox.SelectedValue -match 'Education') {
-            $formMainWindowControlOSActivationCombobox.IsEnabled = $true
-        }
-
-        # Enterprise
-        if ($formMainWindowControlOSEditionCombobox.SelectedValue -match 'Enterprise') {
-            $formMainWindowControlOSActivationCombobox.SelectedValue = 'Volume'
-            $formMainWindowControlOSActivationCombobox.IsEnabled = $false
-        }
-
-        # Pro
-        if ($formMainWindowControlOSEditionCombobox.SelectedValue -match 'Pro') {
-            $formMainWindowControlOSActivationCombobox.IsEnabled = $true
-        }
-
-        $formMainWindowControlOSEditionIdCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $formMainWindowControlOSEditionCombobox.SelectedValue } | Select-Object -ExpandProperty EditionId
-    }
-)
-#endregion
-#================================================
-#region Operating System
-<#
-function Set-FormConfigurationLocal {
-    $formMainWindowControlOSLanguageCombobox.Visibility = 'Collapsed'
-    $formMainWindowControlOSEditionLabel.Content = 'ImageName'
-    $formMainWindowControlOSEditionCombobox.Visibility = 'Collapsed'
-    $formMainWindowControlOSEditionIdLabel.Visibility = 'Collapsed'
-    $formMainWindowControlOSEditionIdCombobox.Visibility = 'Collapsed'
-    $formMainWindowControlOSActivationLabel.Visibility = 'Collapsed'
-    $formMainWindowControlOSActivationCombobox.Visibility = 'Collapsed'
-    $formMainWindowControlImageNameCombobox.Visibility = 'Visible'
-    $formMainWindowControlImageNameCombobox.Items.Clear()
-    $formMainWindowControlImageNameCombobox.IsEnabled = $true
-    $GetWindowsImageOptions = Get-WindowsImage -ImagePath $formMainWindowControlOSGroupCombobox.SelectedValue
-    $GetWindowsImageOptions | ForEach-Object {
-        $formMainWindowControlImageNameCombobox.Items.Add($_.ImageName) | Out-Null
-    }
-    $formMainWindowControlImageNameCombobox.SelectedIndex = 0
-    $formMainWindowControlOperatingSystemLabel.Content = 'Windows Image'
-    $formMainWindowControlOSEditionLabel.Content = 'Image Name'
+# Other Settings
+$ComputerManufacturerText = $window.FindName("ComputerManufacturerText")
+$ComputerManufacturerText.Text = $ComputerManufacturer
+$ComputerModelText = $window.FindName("ComputerModelText")
+$ComputerModelText.Text = $ComputerModel
+$ComputerProductText = $window.FindName("ComputerProductText")
+$ComputerProductText.Text = $ComputerProduct
+$ComputerSystemSKUNumberText = $window.FindName("ComputerSystemSKUNumberText")
+$ComputerSystemSKUNumberText.Text = $ComputerSystemSKUNumber
+$SerialNumberText = $window.FindName("SerialNumberText")
+$SerialNumberText.Text = $SerialNumber
+$TotalMemoryText = $window.FindName("TotalMemoryText")
+$TotalMemoryText.Text = if ($global:OSDCloudWorkflowGather.TotalPhysicalMemoryGB) {
+	"$($global:OSDCloudWorkflowGather.TotalPhysicalMemoryGB) GB"
+} else {
+	'Unknown'
 }
 
-$formMainWindowControlOSGroupCombobox.add_SelectionChanged(
-    {
-        if ($formMainWindowControlOSGroupCombobox.SelectedValue -like 'Windows 1*64') {
-            Set-FormConfigurationCloud
-        }
-        else {
-            Set-FormConfigurationLocal
-        }
-    }
-)
-#>
-#endregion
-#================================================
-#region Menu Controls
-$formMainWindowControlStartMSInfo.add_Click({ Start-Process msinfo32.exe })
-$formMainWindowControlStartOSK.add_Click({ Start-Process osk.exe })
-$formMainWindowControlStartCmdPrompt.add_Click({ Start-Process cmd })
-$formMainWindowControlStartPowerShell.add_Click({ Start-Process PowerShell.exe })
-#endregion
-#================================================
-#region StartButton
-$formMainWindowControlStartButton.add_Click(
-    {
-        $formMainWindow.Close()
-        Show-PowershellWindow
-        #================================================
-        #   ImageFile
-        #================================================
-        $OSGroup = $formMainWindowControlOSGroupCombobox.SelectedValue
+$Win32TpmTextBox = $window.FindName("Win32TpmTextBox")
+$Win32TpmTextBox.Text = if ($global:OSDCloudWorkflowGather.Win32Tpm) {
+	$global:OSDCloudWorkflowGather.Win32Tpm | Out-String
+} else {
+	'Win32Tpm data is not available.'
+}
 
-        # Determine OperatingSystem
-        if ($OSGroup -in $global:OSDCloudWorkflowInit.OSGroupValues) {
-            if ($OSGroup -match 'Win11') {
-                $OperatingSystem = 'Windows 11'
-            } elseif ($OSGroup -match 'Win10') {
-                $OperatingSystem = 'Windows 10'
-            } else {
-                $OperatingSystem = 'Windows 11'
-            }
+$NetworkInformationTextBox = $window.FindName("NetworkInformationTextBox")
+$NetworkInformationTextBox.Text = if ($global:OSDCloudWorkflowGather.NetworkAdapter) {
+	ipconfig | Out-String
+} else {
+	'Network information is not available.'
+}
 
-            $OSActivation = $formMainWindowControlOSActivationCombobox.SelectedValue
-            $OSLanguage = $formMainWindowControlOSLanguageCombobox.SelectedValue
-            $OSEdition = $formMainWindowControlOSEditionCombobox.SelectedValue
-            $OSEditionId = $formMainWindowControlOSEditionIdCombobox.SelectedValue
-            $OSVersion = $OSGroup.Split('-')[1]
-            
-            if ($OSGroup -match 'arm64') {
-                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
-            }
-            else {
-                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
-            }
-            
-            $ImageFileUrl = $OperatingSystemObject.FilePath
-            $ImageFileName = Split-Path $ImageFileUrl -Leaf
-            $OSBuild = $OperatingSystemObject.OSBuild
+$SetupCompleteTextBox = $window.FindName("SetupCompleteTextBox")
+$setupCompleteValue = [string]$global:OSDCloudWorkflowInit.SetupCompleteCmd
+if ($SetupCompleteTextBox) {
+	$SetupCompleteTextBox.Text = if (-not [string]::IsNullOrWhiteSpace($setupCompleteValue)) {
+		$setupCompleteValue
+	} else {
+		[string]::Empty
+	}
+}
 
-            $LocalImageFileInfo = Find-OSDCloudFile -Name $OperatingSystemObject.FileName -Path '\OSDCloud\OS\' | Sort-Object FullName | Where-Object { $_.Length -gt 3GB }
-            $LocalImageFileInfo = $LocalImageFileInfo | Where-Object { $_.FullName -notlike 'C*' } | Where-Object { $_.FullName -notlike 'X*' } | Select-Object -First 1
-        }
-        else {
-            $OperatingSystem = $null
-            $OSGroup = $null
-            $LocalImageFilePath = $formMainWindowControlOSGroupCombobox.SelectedValue
-            if ($LocalImageFilePath) {
-                $LocalImageFileInfo = $CustomImageChildItem | Where-Object { $_.FullName -eq "$LocalImageFilePath" }
-                $ImageFileName = Split-Path -Path $LocalImageFileInfo.FullName -Leaf
-                $LocalImageName = $formMainWindowControlImageNameCombobox.SelectedValue
-            }
-        }
-        #================================================
-        #   Workflow
-        #================================================
-        $OSDCloudWorkflowName = $formMainWindowControlTaskComboBox.SelectedValue
-        $OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
-        #================================================
-        #   DriverPack
-        #================================================
-        if ($formMainWindowControlDriverPackCombobox.Text) {
-            $DriverPackName = $formMainWindowControlDriverPackCombobox.Text
-            $DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
-        }
-        #================================================
-        #   Global Variables
-        #================================================
-        $global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName
-        $global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
-        $global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystem
-        $global:OSDCloudWorkflowInit.OperatingSystemObject = $OperatingSystemObject
-        $global:OSDCloudWorkflowInit.OSActivation = $OSActivation
-        $global:OSDCloudWorkflowInit.OSBuild = $OSBuild
-        $global:OSDCloudWorkflowInit.OSEdition = $OSEdition
-        $global:OSDCloudWorkflowInit.OSEditionId = $OSEditionId
-        $global:OSDCloudWorkflowInit.OSLanguage = $OSLanguage
-        $global:OSDCloudWorkflowInit.OSGroup = $OSGroup
-        $global:OSDCloudWorkflowInit.OSVersion = $OSVersion
-        $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject
-        $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
-        $global:OSDCloudWorkflowInit.ImageFileName = $ImageFileName
-        $global:OSDCloudWorkflowInit.ImageFileUrl = $ImageFileUrl
-        $global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
-        $global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath
-        $global:OSDCloudWorkflowInit.LocalImageName = $LocalImageName
-        $global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
+$SelectedLanguageText = $window.FindName("SelectedLanguageText")
+$SelectedIdText = $window.FindName("SelectedIdText")
+$SelectedFileNameText = $window.FindName("SelectedFileNameText")
+$DriverPackUrlText = $window.FindName("DriverPackUrlText")
+$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
+$StartButton = $window.FindName("StartButton")
+$StartButton.IsEnabled = $false
 
-        <#
-        $global:OSDCloudWorkflowSettingsUser.SkipClearDisk = $formMainWindowControlSkipClearDisk.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.SkipClearDiskConfirm = $formMainWindowControlSkipClearDiskConfirm.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.SkipRecoveryPartition = $formMainWindowControlSkipRecoveryPartition.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.UpdateDiskDrivers = $formMainWindowControlUpdateDiskDrivers.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.UpdateNetworkDrivers = $formMainWindowControlUpdateNetworkDrivers.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.UpdateScsiDrivers = $formMainWindowControlUpdateScsiDrivers.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.UpdateSystemFirmware = $formMainWindowControlUpdateSystemFirmware.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.PSUpdateModulePowershellGet = $formMainWindowControlPSUpdateModulePowershellGet.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.PSUpdateModulePackageManagement = $formMainWindowControlPSUpdateModulePackageManagement.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.PSInstallModuleOSD = $formMainWindowControlPSInstallModuleOSD.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.PSInstallModuleWindowsAutopilotIntune = $formMainWindowControlPSInstallModuleWindowsAutopilotIntune.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.WinpeRestart = $formMainWindowControlWinpeRestart.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.WinpeShutdown = $formMainWindowControlWinpeShutdown.IsChecked
-        #>
-        #=================================================
-        #   Invoke-OSDCloudWorkflow.ps1
-        #=================================================
-        # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [OSDCloud Frontend]"
-        # $global:OSDCloudWorkflowFrontend | Out-Host
-        # Invoke-OSDCloudWorkflow
-        #=================================================
-    }
-)
-#endregion
-#================================================
-#region Customizations
-#TODO fix the Version since this is not a Module function it doesn't give a version
-$ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
-$formMainWindow.Title = "OSDCloud on $($global:OSDCloudWorkflowInit.ComputerManufacturer) $($global:OSDCloudWorkflowInit.ComputerModel)"
-#endregion
-#================================================
-#region Branding
-$formMainWindowControlBrandingTitleControl.Content = 'OSDCloud'
-$formMainWindowControlBrandingTitleControl.Foreground = '#0067C0'
-#endregion
-#================================================
-#region Startup
-Hide-CmdWindow
-Hide-PowershellWindow
-########################
-## WIRE UP YOUR CONTROLS
-########################
-# simple example: $formMainWindowControlButton.Add_Click({ your code })
-#
-# example with BackgroundScriptBlock and UpdateElement
-# $formmainControlButton.Add_Click({
-#     $sb = {
-#         $SyncClass.UpdateElement("formmainControlProgress","Value",25)
-#     }
-#     Start-BackgroundScriptBlock $sb
-# })
+function Get-ComboValue {
+	param(
+		[Parameter(Mandatory)]
+		[System.Windows.Controls.ComboBox]$ComboBox
+	)
 
-############################
-###### DISPLAY DIALOG ######
-############################
-[void]$formMainWindow.ShowDialog()
+	$value = $ComboBox.SelectedItem
+	if ($null -eq $value) {
+		return $null
+	}
 
-##########################
-##### SCRIPT CLEANUP #####
-##########################
-$jobCleanup.Flag = $false #Stop Cleaning Jobs
-$jobCleanup.PowerShell.Runspace.Close() #Close the runspace
-$jobCleanup.PowerShell.Dispose() #Remove the runspace from memory
-#endregion
-#================================================
+	$text = [string]$value
+	if ([string]::IsNullOrWhiteSpace($text)) {
+		return $null
+	}
+
+	return $text
+}
+
+function Set-StartButtonState {
+	$StartButton.IsEnabled = ($null -ne $script:SelectedImage)
+}
+
+function Update-SelectedDetails {
+	param(
+		[Parameter()]
+		$Item
+	)
+
+	if (-not $Item) {
+		$SelectedIdText.Text = 'No matching catalog entry.'
+		$SelectedLanguageText.Text = '-'
+		$SelectedFileNameText.Text = '-'
+		return
+	}
+
+	$SelectedIdText.Text = [string]$Item.Id
+	$SelectedLanguageText.Text = if ($Item.Language) {
+		[string]$Item.Language
+	} elseif ($Item.LanguageCode) {
+		[string]$Item.LanguageCode
+	} else {
+		'-'
+	}
+	$SelectedFileNameText.Text = [string]$Item.FileName
+}
+
+function Update-OsResults {
+	# Keep filtering logic centralized so every control refreshes the same view.
+	$group = Get-ComboValue -ComboBox $OSGroupCombo
+	$edition = Get-ComboValue -ComboBox $OSEditionCombo
+	$activation = Get-ComboValue -ComboBox $OSActivationCombo
+	$language = Get-ComboValue -ComboBox $LanguageCodeCombo
+
+	$filtered = $OSCatalog | Where-Object {
+		($null -eq $group -or $_.OSGroup -eq $group) -and
+		($null -eq $activation -or $_.OSActivation -eq $activation) -and
+		($null -eq $language -or $_.LanguageCode -eq $language)
+	} | Sort-Object Id
+
+	if ($filtered.Count -gt 0) {
+		$script:SelectedImage = $filtered[0]
+	} else {
+		$script:SelectedImage = $null
+	}
+
+	if ($edition -match 'Home') {
+		$OSActivationCombo.SelectedValue = 'Retail'
+		$OSActivationCombo.IsEnabled = $false
+	}
+	if ($edition -match 'Education') {
+		$OSActivationCombo.IsEnabled = $true
+	}
+	if ($edition -match 'Enterprise') {
+		$OSActivationCombo.SelectedValue = 'Volume'
+		$OSActivationCombo.IsEnabled = $false
+	}
+	if ($edition -match 'Pro') {
+		$OSActivationCombo.IsEnabled = $true
+	}
+
+	Update-SelectedDetails -Item $script:SelectedImage
+
+	Set-StartButtonState
+}
+
+function Update-DriverPackResults {
+	$DriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
+	$global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
+	$global:OSDCloudWorkflowInit.DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+
+	$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
+}
+
+$OSGroupCombo.Add_SelectionChanged({ Update-OsResults })
+$OSEditionCombo.Add_SelectionChanged({ Update-OsResults })
+$OSActivationCombo.Add_SelectionChanged({ Update-OsResults })
+$LanguageCodeCombo.Add_SelectionChanged({ Update-OsResults })
+
+$DriverPackCombo.Add_SelectionChanged({ Update-DriverPackResults })
+
+$script:SelectedImage = $null
+$script:SelectionConfirmed = $false
+
+$StartButton.Add_Click({
+	$selection = $script:SelectedImage
+	if (-not $selection) {
+		[System.Windows.MessageBox]::Show('No catalog entry is available. Adjust the filters and try again.', 'OSDCloud', 'OK', 'Information') | Out-Null
+		return
+	}
+
+	$script:SelectedImage = $selection
+	$script:SelectionConfirmed = $true
+	$window.DialogResult = $true
+	$window.Close()
+})
+
+Update-OsResults
+
+$null = $window.ShowDialog()
+
+if ($script:SelectionConfirmed -and $script:SelectedImage) {
+	#================================================
+	# Local Variables
+	$OSDCloudWorkflowName = $TaskSequenceCombo.SelectedValue
+	$OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
+	$OperatingSystemObject = $script:SelectedImage
+	$OSEditionId = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
+	#================================================
+	# Global Variables
+	$global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName
+	$global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
+	# $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
+	# $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject
+	# DriverPackValues
+	# Flows
+	# Function
+	$global:OSDCloudWorkflowInit.ImageFileName = $OperatingSystemObject.FileName
+	$global:OSDCloudWorkflowInit.ImageFileUrl = $OperatingSystemObject.FilePath
+	# LaunchMethod
+	# Module
+	$global:OSDCloudWorkflowInit.OperatingSystemObject = $OperatingSystemObject
+	$global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystemObject.OSName
+	$global:OSDCloudWorkflowInit.OSActivation = $OperatingSystemObject.OSActivation
+	# OSActivationValues
+	# OSArchitecture
+	$global:OSDCloudWorkflowInit.OSBuild = $OperatingSystemObject.OSBuild
+	# OSBuildVersion
+	$global:OSDCloudWorkflowInit.OSEdition = Get-ComboValue -ComboBox $OSEditionCombo
+	$global:OSDCloudWorkflowInit.OSEditionId = $OSEditionId
+	# OSEditionValues
+	$global:OSDCloudWorkflowInit.OSLanguage = $OperatingSystemObject.LanguageCode
+	# OSLanguageValues
+	$global:OSDCloudWorkflowInit.OSGroup = $OperatingSystemObject.OSGroup
+	# OSGroupValues
+	$global:OSDCloudWorkflowInit.OSVersion = $OperatingSystemObject.OSVersion
+	$global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
+	$global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
+	$global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath
+	$global:OSDCloudWorkflowInit.LocalImageName = $LocalImageName
+	$global:OSDCloudWorkflowInit.RestartAction = Get-ComboValue -ComboBox $RestartActionCombo
+	$workspaceUrl = $WorkspaceUrlTextBox.Text
+	if ([string]::IsNullOrWhiteSpace($workspaceUrl)) {
+		$global:OSDCloudWorkflowInit.ApplicationWorkspaceUrl = $null
+	} else {
+		$global:OSDCloudWorkflowInit.ApplicationWorkspaceUrl = $workspaceUrl.Trim()
+	}
+	if ($SetupCompleteTextBox) {
+		$global:OSDCloudWorkflowInit.SetupCompleteCmd = $SetupCompleteTextBox.Text
+	}
+}
