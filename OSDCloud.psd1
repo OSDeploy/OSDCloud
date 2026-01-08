@@ -87,7 +87,6 @@ FunctionsToExport =
     'Export-OSDWindowsDriversWinPE',
     'Get-PSOSDCloudOperatingSystem',
     'Get-PSOSDCloudOperatingSystems',
-    'Initialize-OSDCloudWorkflow',
     'Get-OSDCloudDevice'
 
 

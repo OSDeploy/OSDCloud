@@ -31,13 +31,7 @@ function Initialize-OSDCloudWorkflow {
     #=================================================
     # OSDCloudWorkflowOSCatalog
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Catalog"
-    if (Get-Command -Name 'Get-PSOSDCloudOperatingSystems' -ErrorAction SilentlyContinue) {
-        $global:OSDCloudWorkflowOSCatalog = Get-PSOSDCloudOperatingSystems
-    } elseif (Get-Command -Name 'Get-OSDCatalogOperatingSystems' -ErrorAction SilentlyContinue) {
-        $global:OSDCloudWorkflowOSCatalog = Get-OSDCatalogOperatingSystems
-    } else {
-        throw "Neither 'Get-PSOSDCloudOperatingSystems' nor 'Get-OSDCatalogOperatingSystems' is available. Cannot initialize OSDCloud OS Catalog."
-    }
+    $global:OSDCloudWorkflowOSCatalog = Get-PSOSDCloudOperatingSystems
     $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.OSArchitecture -match "$Architecture"}
     #=================================================
     # OSDCloudWorkflowSettingsUser

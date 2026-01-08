@@ -1,10 +1,9 @@
 function Get-PSOSDCloudOperatingSystems {
     [CmdletBinding()]
     param ()
-    
     $ErrorActionPreference = 'Stop'
 
-    $srcRoot = Join-Path $(Get-OSDCloudModulePath) "catalogs\osdcloud-operatingsystems"
+    $srcRoot = Join-Path $(Get-OSDCloudModulePath) "catalogs\psosdcloudoperatingsystems"
     $xmlFiles = Get-ChildItem -Path $srcRoot -Filter '*.xml' -Recurse | Sort-Object FullName
 
     $records = @()
@@ -25,8 +24,7 @@ function Get-PSOSDCloudOperatingSystems {
             #   Get the OSBuild from the FileName
             $OSBuild = $node.FileName.Substring(0, 5)
             #=================================================
-            #   OSVersion / OSName
-            #   Convert the OSBuild to the OSVersion
+            #   OperatingSystem / OSName / OSVersion
             #   19045 = Windows 10 22H2
             #   22000 = Windows 11 21H2
             #   22621 = Windows 11 22H2
@@ -35,13 +33,13 @@ function Get-PSOSDCloudOperatingSystems {
             #   26200 = Windows 11 25H2
             #   28000 = Windows 11 26H1
             switch ($OSBuild) {
-                '19045' { $OSVersion = '22H2'; $OSName = 'Windows 10' }
-                '22000' { $OSVersion = '21H2'; $OSName = 'Windows 11' }
-                '22621' { $OSVersion = '22H2'; $OSName = 'Windows 11' }
-                '22631' { $OSVersion = '23H2'; $OSName = 'Windows 11' }
-                '26100' { $OSVersion = '24H2'; $OSName = 'Windows 11' }
-                '26200' { $OSVersion = '25H2'; $OSName = 'Windows 11' }
-                '28000' { $OSVersion = '26H1'; $OSName = 'Windows 11' }
+                '19045' { $OperatingSystem = 'Windows 10 22H2'; $OSName = 'Windows 10'; $OSVersion = '22H2' }
+                '22000' { $OperatingSystem = 'Windows 11 21H2'; $OSName = 'Windows 11'; $OSVersion = '21H2' }
+                '22621' { $OperatingSystem = 'Windows 11 22H2'; $OSName = 'Windows 11'; $OSVersion = '22H2' }
+                '22631' { $OperatingSystem = 'Windows 11 23H2'; $OSName = 'Windows 11'; $OSVersion = '23H2' }
+                '26100' { $OperatingSystem = 'Windows 11 24H2'; $OSName = 'Windows 11'; $OSVersion = '24H2' }
+                '26200' { $OperatingSystem = 'Windows 11 25H2'; $OSName = 'Windows 11'; $OSVersion = '25H2' }
+                '28000' { $OperatingSystem = 'Windows 11 26H1'; $OSName = 'Windows 11'; $OSVersion = '26H1' }
                 default { continue }
             }
             #=================================================
@@ -78,54 +76,35 @@ function Get-PSOSDCloudOperatingSystems {
             #=================================================
             #   Id
             #=================================================
-            $Id = "$OSName $OSVersion $($node.LanguageCode) $OSActivation $OSArchitecture $OSBuildVersion"
-            #=================================================
-            #   OSGroup
-            #=================================================
-            if ($OSName -eq 'Windows 11') {
-                $OSGroup = "Win11-$OSVersion-$OSArchitecture"
-            }
-            elseif ($OSName -eq 'Windows 10') {
-                $OSGroup = "Win10-$OSVersion-$OSArchitecture"
-            }
-            else {
-                continue
-            }
+            $Id = "$OperatingSystem $OSArchitecture $OSActivation $($node.LanguageCode) $OSBuildVersion"
             #=================================================
             #   ObjectProperties
             #=================================================
             $records += [pscustomobject]@{
                 Id              = $Id
-                OSGroup         = $OSGroup
+                OperatingSystem = $OperatingSystem
                 OSName          = $OSName
                 OSVersion       = $OSVersion
                 OSArchitecture  = $OSArchitecture
                 OSActivation    = $OSActivation
-                OSBuild         = $OSBuild
-                OSBuildVersion  = $OSBuildVersion
-                FileName        = $node.FileName
                 LanguageCode    = $node.LanguageCode
                 Language        = $node.Language
-                Architecture    = $node.Architecture
+                OSBuild         = $OSBuild
+                OSBuildVersion  = $OSBuildVersion
+                # Architecture    = $node.Architecture
                 Size            = $node.Size
                 Sha1            = $node.Sha1
                 Sha256          = $node.Sha256
+                FileName        = $node.FileName
                 FilePath        = $node.FilePath
                 # IsRetailOnly    = $node.IsRetailOnly
             }
         }
     }
     $records = $records | Sort-Object -Property FileName -Unique
-    $records = $records | Sort-Object -Property @{Expression = { $_.OSGroup }; Descending = $true }, @{Expression = { $_.OSBuildVersion }; Descending = $true }, LanguageCode, OSActivation, OSArchitecture
+    $records = $records | Sort-Object -Property @{Expression = { $_.OperatingSystem }; Descending = $true }, OSArchitecture, OSActivation, LanguageCode
     
     $global:PSOSDCloudOperatingSystems = $records
-    $global:PSOSDCloudOSGroupValues = $records | Select-Object -Property OSGroup -Unique | Sort-Object -Descending
-    $global:PSOSDCloudOSVersionValues = $records | Select-Object -Property OSVersion -Unique | Sort-Object -Descending
-    $global:PSOSDCloudOSArchitectureValues = $records | Select-Object -Property OSArchitecture -Unique | Sort-Object -Descending
-    $global:PSOSDCloudOSActivationValues = $records | Select-Object -Property OSActivation -Unique | Sort-Object -Descending
-    $global:PSOSDCloudOSBuildValues = $records | Select-Object -Property OSBuild -Unique | Sort-Object -Descending
-    $global:PSOSDCloudLanguageCodeValues = $records | Select-Object -Property LanguageCode -Unique | Sort-Object -Property LanguageCode
-    $global:PSOSDCloudLanguageValues = $records | Select-Object -Property Language -Unique | Sort-Object -Property Language
 
     # $records | Export-Clixml -Path $(Join-Path $buildRoot 'recast-operatingsystems.clixml') -Force
     # $records | ConvertTo-Json | Out-File $(Join-Path $buildRoot 'recast-operatingsystems.json') -Encoding utf8 -Width 2000 -Force
