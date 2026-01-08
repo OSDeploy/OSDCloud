@@ -515,7 +515,7 @@ if ($script:SelectionConfirmed -and $script:SelectedImage) {
 	$OSDCloudWorkflowName = $TaskSequenceCombo.SelectedValue
 	$OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
 	$ObjectOperatingSystem = $script:SelectedImage
-	$OSEditionId = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
+	$OSEditionId = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty OSEditionId
 	#================================================
 	# Global Variables
 	$global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName

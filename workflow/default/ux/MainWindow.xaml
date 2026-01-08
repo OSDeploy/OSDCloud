@@ -223,7 +223,7 @@
                        Padding="2"
                        Width="140"
                        FlowDirection="RightToLeft" />
-                    <ComboBox Name="OperatingSystemCombobox"
+                    <ComboBox Name="OperatingSystemCombo"
                           FontSize="16"
                           Margin="5"
                           Padding="2" >
@@ -234,7 +234,7 @@
                             </LinearGradientBrush>
                         </ComboBox.Background>
                     </ComboBox>
-                    <ComboBox Name="OSLanguageCombobox"
+                    <ComboBox Name="OSLanguageCodeCombo"
                           FontSize="16"
                           Margin="5"
                           Padding="2" />
@@ -251,7 +251,7 @@
                        Padding="2"
                        Width="140"
                        FlowDirection="RightToLeft" />
-                    <ComboBox Name="OSEditionCombobox"
+                    <ComboBox Name="OSEditionCombo"
                           FontSize="15"
                           Margin="5"
                           Padding="2" />
@@ -264,12 +264,12 @@
                        Padding="2"
                        Width="70"
                        FlowDirection="RightToLeft" />
-                    <ComboBox Name="OSEditionIdCombobox"
+                    <ComboBox Name="OSEditionIdCombo"
                           FontSize="15"
                           Margin="5"
                           Padding="2" />
                     <Label Name="OSActivationLabel"
-                       Content="License"
+                       Content="Activation"
                        FontSize="15"
                        FontWeight="Bold"
                        Foreground="#0067C0"
@@ -277,7 +277,7 @@
                        Padding="2"
                        Width="55"
                        FlowDirection="RightToLeft" />
-                    <ComboBox Name="OSActivationCombobox"
+                    <ComboBox Name="OSActivationCombo"
                           FontSize="15"
                           Margin="5"
                           Padding="2" />
@@ -319,7 +319,7 @@
                        Padding="2"
                        Width="140"
                        FlowDirection="RightToLeft" />
-                    <ComboBox Name="DriverPackCombobox"
+                    <ComboBox Name="DriverPackCombo"
                           FontSize="16"
                           Margin="5"
                           Padding="2"
