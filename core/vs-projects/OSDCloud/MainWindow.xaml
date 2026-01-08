@@ -315,7 +315,7 @@
                        Padding="2"
                        Width="140"
                        FlowDirection="RightToLeft" />
-                    <ComboBox Name="OSGroupCombobox"
+                    <ComboBox Name="OperatingSystemCombobox"
                           FontSize="16"
                           Margin="5"
                           Padding="2" >

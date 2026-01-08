@@ -108,7 +108,7 @@
                                    Margin="4" />
                         <ComboBox Grid.Row="1"
                                   Grid.Column="1"
-                                  x:Name="OSGroupCombo"
+                                  x:Name="OperatingSystemCombo"
                                   Margin="4"
                                   Height="24"
                                   FontWeight="SemiBold" />
@@ -116,7 +116,7 @@
                                    Grid.Column="3"
                                    Grid.ColumnSpan="3"
                                    x:Name="SelectedIdText"
-                                   Text="Windows 11 25H2 en-us Retail amd64 26200.7462"
+                                   Text="Windows 11 25H2 amd64 Retail en-us 26200.7462"
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"
                                    Foreground="DarkGray"
@@ -131,14 +131,14 @@
                                    Margin="4" />
                         <ComboBox Grid.Row="2"
                                   Grid.Column="1"
-                                  x:Name="LanguageCodeCombo"
+                                  x:Name="OSLanguageCodeCombo"
                                   Margin="4"
                                   Height="24"
                                   FontWeight="SemiBold" />
                         <TextBlock Grid.Row="2"
                                    Grid.Column="3"
                                    Grid.ColumnSpan="3"
-                                   x:Name="SelectedLanguageText"
+                                   x:Name="SelectedOSLanguageText"
                                    Text="English (United States)"
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"

@@ -301,17 +301,17 @@ $formMainWindowControlTaskComboBox.SelectedIndex = 0
 #endregion
 #=================================================
 #region OSGroup
-$global:OSDCloudWorkflowInit.OSGroupValues | ForEach-Object {
-    $formMainWindowControlOSGroupCombobox.Items.Add($_) | Out-Null
+$global:OSDCloudWorkflowInit.OperatingSystemValues | ForEach-Object {
+    $formMainWindowControlOperatingSystemCombobox.Items.Add($_) | Out-Null
 }
-$formMainWindowControlOSGroupCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSGroup
+$formMainWindowControlOperatingSystemCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSGroup
 #endregion
 #=================================================
 #region OSLanguage
-$global:OSDCloudWorkflowInit.OSLanguageValues | ForEach-Object {
+$global:OSDCloudWorkflowInit.OSLanguageCodeValues | ForEach-Object {
     $formMainWindowControlOSLanguageCombobox.Items.Add($_) | Out-Null
 }
-$formMainWindowControlOSLanguageCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSLanguage
+$formMainWindowControlOSLanguageCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSLanguageCode
 #endregion
 #=================================================
 #region OSEdition
@@ -344,13 +344,13 @@ function Set-FormConfigurationCloud {
     $formMainWindowControlOperatingSystemLabel.Content = 'Operating System'
 
     $OperatingSystemEditions = $global:PSOSDCloudOperatingSystems | `
-        Where-Object {$_.Name -eq "$($formMainWindowControlOSGroupCombobox.SelectedValue)"} | `
+        Where-Object {$_.Name -eq "$($formMainWindowControlOperatingSystemCombobox.SelectedValue)"} | `
         Where-Object {$_.OSLanguageCode -eq "$($formMainWindowControlOSLanguageCombobox.SelectedValue)"} | `
         Select-Object -ExpandProperty Edition -Unique
 
     $formMainWindowControlOSLanguageCombobox.IsEnabled = $true
     $formMainWindowControlOSLanguageCombobox.Visibility = 'Visible'
-    $formMainWindowControlOSLanguageCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSLanguage
+    $formMainWindowControlOSLanguageCombobox.SelectedValue = $global:OSDCloudWorkflowInit.OSLanguageCode
 
     $formMainWindowControlOSEditionLabel.Content = 'Edition'
     $formMainWindowControlOSEditionCombobox.IsEnabled = $true
@@ -398,7 +398,7 @@ if ($CustomImageChildItem) {
     $OSDCloudOperatingSystem = Get-OSDCatalogOperatingSystems
     $CustomImageChildItem = $CustomImageChildItem | Where-Object { $_.Name -notin $OSDCloudOperatingSystem.FileName }
     $CustomImageChildItem | ForEach-Object {
-        $formMainWindowControlOSGroupCombobox.Items.Add($_) | Out-Null
+        $formMainWindowControlOperatingSystemCombobox.Items.Add($_) | Out-Null
     }
 }
 #>
@@ -447,7 +447,7 @@ function Set-FormConfigurationLocal {
     $formMainWindowControlImageNameCombobox.Visibility = 'Visible'
     $formMainWindowControlImageNameCombobox.Items.Clear()
     $formMainWindowControlImageNameCombobox.IsEnabled = $true
-    $GetWindowsImageOptions = Get-WindowsImage -ImagePath $formMainWindowControlOSGroupCombobox.SelectedValue
+    $GetWindowsImageOptions = Get-WindowsImage -ImagePath $formMainWindowControlOperatingSystemCombobox.SelectedValue
     $GetWindowsImageOptions | ForEach-Object {
         $formMainWindowControlImageNameCombobox.Items.Add($_.ImageName) | Out-Null
     }
@@ -456,9 +456,9 @@ function Set-FormConfigurationLocal {
     $formMainWindowControlOSEditionLabel.Content = 'Image Name'
 }
 
-$formMainWindowControlOSGroupCombobox.add_SelectionChanged(
+$formMainWindowControlOperatingSystemCombobox.add_SelectionChanged(
     {
-        if ($formMainWindowControlOSGroupCombobox.SelectedValue -like 'Windows 1*64') {
+        if ($formMainWindowControlOperatingSystemCombobox.SelectedValue -like 'Windows 1*64') {
             Set-FormConfigurationCloud
         }
         else {
@@ -484,10 +484,10 @@ $formMainWindowControlStartButton.add_Click(
         #================================================
         #   ImageFile
         #================================================
-        $OSGroup = $formMainWindowControlOSGroupCombobox.SelectedValue
+        $OSGroup = $formMainWindowControlOperatingSystemCombobox.SelectedValue
 
         # Determine OperatingSystem
-        if ($OSGroup -in $global:OSDCloudWorkflowInit.OSGroupValues) {
+        if ($OSGroup -in $global:OSDCloudWorkflowInit.OperatingSystemValues) {
             if ($OSGroup -match 'Win11') {
                 $OperatingSystem = 'Windows 11'
             } elseif ($OSGroup -match 'Win10') {
@@ -519,7 +519,7 @@ $formMainWindowControlStartButton.add_Click(
         else {
             $OperatingSystem = $null
             $OSGroup = $null
-            $LocalImageFilePath = $formMainWindowControlOSGroupCombobox.SelectedValue
+            $LocalImageFilePath = $formMainWindowControlOperatingSystemCombobox.SelectedValue
             if ($LocalImageFilePath) {
                 $LocalImageFileInfo = $CustomImageChildItem | Where-Object { $_.FullName -eq "$LocalImageFilePath" }
                 $ImageFileName = Split-Path -Path $LocalImageFileInfo.FullName -Leaf
@@ -549,7 +549,7 @@ $formMainWindowControlStartButton.add_Click(
         $global:OSDCloudWorkflowInit.OSBuild = $OSBuild
         $global:OSDCloudWorkflowInit.OSEdition = $OSEdition
         $global:OSDCloudWorkflowInit.OSEditionId = $OSEditionId
-        $global:OSDCloudWorkflowInit.OSLanguage = $OSLanguage
+        $global:OSDCloudWorkflowInit.OSLanguageCode = $OSLanguage
         $global:OSDCloudWorkflowInit.OSGroup = $OSGroup
         $global:OSDCloudWorkflowInit.OSVersion = $OSVersion
         $global:OSDCloudWorkflowInit.ObjectDriverPack = $ObjectDriverPack
