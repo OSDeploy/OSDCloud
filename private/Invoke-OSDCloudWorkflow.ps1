@@ -30,13 +30,13 @@ function Invoke-OSDCloudWorkflow {
         ComputerSerialNumber  = $OSDCloudWorkflowGather.SerialNumber
         ComputerUUID          = (Get-WmiObject -Class Win32_ComputerSystemProduct).UUID
         DriverPackName        = $OSDCloudWorkflowInit.DriverPackName
-        DriverPackObject      = $OSDCloudWorkflowInit.DriverPackObject
+        ObjectDriverPack      = $OSDCloudWorkflowInit.ObjectDriverPack
         IsOnBattery           = $global:IsOnBattery
         IsVM                  = $global:IsVM
         IsWinPE               = $global:IsWinPE
         LogsPath              = "$env:TEMP\osdcloud-logs"
         OperatingSystem       = $OSDCloudWorkflowInit.OperatingSystem
-        OperatingSystemObject = $OSDCloudWorkflowInit.OperatingSystemObject
+        ObjectOperatingSystem = $OSDCloudWorkflowInit.ObjectOperatingSystem
         TimeEnd               = $null
         TimeSpan              = $null
         TimeStart             = [datetime](Get-Date)

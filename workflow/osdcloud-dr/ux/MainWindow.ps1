@@ -482,17 +482,17 @@ $formMainWindowControlStartButton.add_Click(
             $OSVersion = $OSGroup.Split('-')[1]
             
             if ($OSGroup -match 'arm64') {
-                $OperatingSystemObject = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguage }
+                $ObjectOperatingSystem = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguage }
             }
             else {
-                $OperatingSystemObject = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguage }
+                $ObjectOperatingSystem = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguage }
             }
             
-            $ImageFileUrl = $OperatingSystemObject.FilePath
+            $ImageFileUrl = $ObjectOperatingSystem.FilePath
             $ImageFileName = Split-Path $ImageFileUrl -Leaf
-            $OSBuild = $OperatingSystemObject.OSBuild
+            $OSBuild = $ObjectOperatingSystem.OSBuild
 
-            $LocalImageFileInfo = Find-OSDCloudFile -Name $OperatingSystemObject.FileName -Path '\OSDCloud\OS\' | Sort-Object FullName | Where-Object { $_.Length -gt 3GB }
+            $LocalImageFileInfo = Find-OSDCloudFile -Name $ObjectOperatingSystem.FileName -Path '\OSDCloud\OS\' | Sort-Object FullName | Where-Object { $_.Length -gt 3GB }
             $LocalImageFileInfo = $LocalImageFileInfo | Where-Object { $_.FullName -notlike 'C*' } | Where-Object { $_.FullName -notlike 'X*' } | Select-Object -First 1
         }
         else {
@@ -516,7 +516,7 @@ $formMainWindowControlStartButton.add_Click(
         <#
         if ($formMainWindowControlDriverPackCombobox.Text) {
             $DriverPackName = $formMainWindowControlDriverPackCombobox.Text
-            $DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+            $ObjectDriverPack = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
         }
         #>
         #================================================
@@ -525,7 +525,7 @@ $formMainWindowControlStartButton.add_Click(
         $global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName
         $global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
         $global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystem
-        $global:OSDCloudWorkflowInit.OperatingSystemObject = $OperatingSystemObject
+        $global:OSDCloudWorkflowInit.ObjectOperatingSystem = $ObjectOperatingSystem
         $global:OSDCloudWorkflowInit.OSActivation = $OSActivation
         $global:OSDCloudWorkflowInit.OSBuild = $OSBuild
         $global:OSDCloudWorkflowInit.OSEdition = $OSEdition
@@ -533,7 +533,7 @@ $formMainWindowControlStartButton.add_Click(
         $global:OSDCloudWorkflowInit.OSLanguage = $OSLanguage
         $global:OSDCloudWorkflowInit.OSGroup = $OSGroup
         $global:OSDCloudWorkflowInit.OSVersion = $OSVersion
-        $global:OSDCloudWorkflowInit.DriverPackObject = $null
+        $global:OSDCloudWorkflowInit.ObjectDriverPack = $null
         $global:OSDCloudWorkflowInit.DriverPackName = 'None'
         $global:OSDCloudWorkflowInit.ImageFileName = $ImageFileName
         $global:OSDCloudWorkflowInit.ImageFileUrl = $ImageFileUrl

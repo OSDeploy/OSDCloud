@@ -29,46 +29,67 @@ function Initialize-OSDCloudWorkflow {
     $WorkflowObject        = $global:OSDCloudWorkflowTasks | Select-Object -First 1
     $WorkflowName          = $WorkflowObject.name
     #=================================================
-    # OSDCloudWorkflowOSCatalog
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud OS Catalog"
-    $global:OSDCloudWorkflowOSCatalog = Get-PSOSDCloudOperatingSystems
-    $global:OSDCloudWorkflowOSCatalog = $global:OSDCloudWorkflowOSCatalog | Where-Object {$_.OSArchitecture -match "$Architecture"}
-    #=================================================
     # OSDCloudWorkflowSettingsUser
+    #TODO : Remove dependency on User Settings for future releases
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings User"
     Initialize-OSDCloudWorkflowSettingsUser -Name $Name
     #=================================================
-    # OSDCloudWorkflowSettingsOS
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings OS"
-    Initialize-OSDCloudWorkflowSettingsOS -Name $Name
-    if ($global:OSDCloudWorkflowSettingsOS."OSGroup.default" -match 'Win11') {
-        $OperatingSystem = 'Windows 11'
-    } elseif ($global:OSDCloudWorkflowSettingsOS."OperatingSystem.default" -match 'Win10') {
-        $OperatingSystem = 'Windows 10'
-    } else {
-        $OperatingSystem = 'Windows 11'
+    # OSDCloud Operating Systems
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Get OSDCloud OperatingSystems"
+
+    # Limit to matching Processor Architecture
+    $global:PSOSDCloudOperatingSystems = Get-PSOSDCloudOperatingSystems | Where-Object {$_.OSArchitecture -match "$Architecture"}
+
+    # Need to fail if no OS found for Architecture
+    if (-not $global:PSOSDCloudOperatingSystems) {
+        throw "No Operating Systems found for Architecture: $Architecture. Please check your OSDCloud OperatingSystems."
     }
     #=================================================
-    # Configuration
-    $OSActivation          = $global:OSDCloudWorkflowSettingsOS."OSActivation.default"
-    $OSActivationValues    = [array]$global:OSDCloudWorkflowSettingsOS."OSActivation.values"
-    $OSArchitecture        = $Architecture
-    $OSEdition             = $global:OSDCloudWorkflowSettingsOS."OSEdition.default"
-    $OSEditionId           = $global:OSDCloudWorkflowSettingsOS."OSEditionId.default"
-    $OSEditionValues       = [array]$global:OSDCloudWorkflowSettingsOS."OSEdition.values"
-    $OSLanguage            = $global:OSDCloudWorkflowSettingsOS."OSLanguageCode.default"
-    $OSLanguageValues      = [array]$global:OSDCloudWorkflowSettingsOS."OSLanguageCode.values"
-    $OSGroup                = $global:OSDCloudWorkflowSettingsOS."OSGroup.default"
-    $OSGroupValues          = [array]$global:OSDCloudWorkflowSettingsOS."OSGroup.values"
-    $OSVersion             = ($global:OSDCloudWorkflowSettingsOS."OSGroup.default" -split '-')[1]
+    # OSDCloudWorkflowSettingsOS
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Workflow Settings OS"
+    Initialize-OSDCloudWorkflowSettingsOS -Name $Name
     #=================================================
-    # OperatingSystemObject
-    $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
+    # Set initial Operating System
+    <#
+        Id              : Windows 11 25H2 amd64 Retail en-gb 26200.7462
+        OperatingSystem : Windows 11 25H2
+        OSName          : Windows 11
+        OSVersion       : 25H2
+        OSArchitecture  : amd64
+        OSActivation    : Retail
+        LanguageCode    : en-gb
+        Language        : English (United Kingdom)
+        OSBuild         : 26200
+        OSBuildVersion  : 26200.7462
+        Size            : 5626355066
+        Sha1            :
+        Sha256          : 566a518dc46ba5ea401381810751a8abcfe7d012b2f81c9709b787358c606926
+        FileName        : 26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-gb.esd
+        FilePath        : http://dl.delivery.mp.microsoft.com/filestreamingservice/files/79a3f5e0-d04d-4689-a5d4-3ea35f8b189a/26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-gb.esd
+    #>
 
-    $OSBuild            = $OperatingSystemObject.OSBuild
-    $OSBuildVersion     = $OperatingSystemObject.OSBuildVersion
-    $ImageFileUrl       = $OperatingSystemObject.FilePath
-    $ImageFileName      = Split-Path $ImageFileUrl -Leaf
+    $OperatingSystem        = $global:OSDCloudWorkflowSettingsOS."OperatingSystem.default"
+    $OperatingSystemValues  = [array]$global:OSDCloudWorkflowSettingsOS."OperatingSystem.values"
+    $OSActivation           = $global:OSDCloudWorkflowSettingsOS."OSActivation.default"
+    $OSActivationValues     = [array]$global:OSDCloudWorkflowSettingsOS."OSActivation.values"
+    $OSArchitecture         = $Architecture
+    $OSEdition              = $global:OSDCloudWorkflowSettingsOS."OSEdition.default"
+    $OSEditionId            = $global:OSDCloudWorkflowSettingsOS."OSEditionId.default"
+    $OSEditionValues        = [array]$global:OSDCloudWorkflowSettingsOS."OSEdition.values"
+    $OSLanguageCode         = $global:OSDCloudWorkflowSettingsOS."OSLanguageCode.default"
+    $OSLanguageCodeValues   = [array]$global:OSDCloudWorkflowSettingsOS."OSLanguageCode.values"
+    $OSVersion              = ($global:OSDCloudWorkflowSettingsOS."OperatingSystem.default" -split ' ')[2]
+    #=================================================
+    # ObjectOperatingSystem
+    $ObjectOperatingSystem = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
+    if (-not $ObjectOperatingSystem) {
+        throw "No Operating System found for OperatingSystem: $OperatingSystem, OSActivation: $OSActivation, OSLanguageCode: $OSLanguageCode. Please check your OSDCloud OperatingSystems."
+    }
+    $OSName             = $ObjectOperatingSystem.OSName
+    $OSBuild            = $ObjectOperatingSystem.OSBuild
+    $OSBuildVersion     = $ObjectOperatingSystem.OSBuildVersion
+    $ImageFileName      = $ObjectOperatingSystem.FileName
+    $ImageFileUrl       = $ObjectOperatingSystem.FilePath
     #=================================================
     # DriverPack
     switch ($ComputerManufacturer) {
@@ -86,19 +107,17 @@ function Initialize-OSDCloudWorkflow {
         }
     }
 
+    # Remove Windows 10 DriverPacks
+    $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
+
     if ($ComputerModel -match 'Surface') {
         $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
     }
 
-    $DriverPackObject = Get-OSDCatalogDriverPack -Product $ComputerProduct -OSVersion $OperatingSystem -OSReleaseID $OSVersion
-    if ($DriverPackObject) {
-        $DriverPackName = $DriverPackObject.Name
+    $ObjectDriverPack = Get-OSDCatalogDriverPack -Product $ComputerProduct -OSVersion $OSName -OSReleaseID $OSVersion
+    if ($ObjectDriverPack) {
+        $DriverPackName = $ObjectDriverPack.Name
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
-
-        # Remove the Windows 10 DriverPacks if Windows 11 is selected
-        # if ($DriverPackObject.OS -match 'Windows 11') {
-            $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
-        # }
     }
     #=================================================
     # Main
@@ -110,7 +129,6 @@ function Initialize-OSDCloudWorkflow {
         ComputerModel         = $ComputerModel
         ComputerProduct       = $ComputerProduct
         DriverPackName        = $DriverPackName
-        DriverPackObject      = $DriverPackObject
         DriverPackValues      = [array]$DriverPackValues
         Flows                 = [array]$global:OSDCloudWorkflowTasks
         Function              = $($MyInvocation.MyCommand.Name)
@@ -119,7 +137,7 @@ function Initialize-OSDCloudWorkflow {
         LaunchMethod          = 'OSDCloudWorkflow'
         Module                = $($MyInvocation.MyCommand.Module.Name)
         OperatingSystem       = $OperatingSystem
-        OperatingSystemObject = $OperatingSystemObject
+        OperatingSystemValues = $OperatingSystemValues
         OSActivation          = $OSActivation
         OSActivationValues    = $OSActivationValues
         OSArchitecture        = $OSArchitecture
@@ -128,12 +146,12 @@ function Initialize-OSDCloudWorkflow {
         OSEdition             = $OSEdition
         OSEditionId           = $OSEditionId
         OSEditionValues       = $OSEditionValues
-        OSLanguage            = $OSLanguage
-        OSLanguageValues      = $OSLanguageValues
-        OSGroup               = $OSGroup
-        OSGroupValues         = $OSGroupValues
+        OSLanguageCode        = $OSLanguageCode
+        OSLanguageCodeValues  = $OSLanguageCodeValues
         OSVersion             = $OSVersion
         TimeStart             = $null
+        ObjectDriverPack      = $ObjectDriverPack
+        ObjectOperatingSystem = $ObjectOperatingSystem
     }
     #=================================================
 }

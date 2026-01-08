@@ -5,9 +5,9 @@ function step-validate-isdriverpackready {
         $DriverPackName = $global:OSDCloudWorkflowInvoke.DriverPackName,
 
         [System.String]
-        $DriverPackGuid = $global:OSDCloudWorkflowInvoke.DriverPackObject.Guid,
+        $DriverPackGuid = $global:OSDCloudWorkflowInvoke.ObjectDriverPack.Guid,
 
-        $DriverPackObject = $global:OSDCloudWorkflowInvoke.DriverPackObject
+        $ObjectDriverPack = $global:OSDCloudWorkflowInvoke.ObjectDriverPack
     )
     #=================================================
     # Start the step
@@ -30,20 +30,20 @@ function step-validate-isdriverpackready {
     }
     #=================================================
     # Is there a DriverPack Object?
-    if (-not ($DriverPackObject)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPackObject is not set. OK."
+    if (-not ($ObjectDriverPack)) {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] ObjectDriverPack is not set. OK."
         return
     }
     #=================================================
     # Is there a DriverPack Guid?
     if (-not ($DriverPackGuid)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPackObject.GUID is not set. OK."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] ObjectDriverPack.GUID is not set. OK."
         return
     }
     #=================================================
     # Is there a URL?
-    if (-not $($DriverPackObject.Url)) {
-        Write-Warning "[$(Get-Date -format G)] DriverPackObject does not have a Url to validate."
+    if (-not $($ObjectDriverPack.Url)) {
+        Write-Warning "[$(Get-Date -format G)] ObjectDriverPack does not have a Url to validate."
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'
         Start-Sleep -Seconds 86400
         exit
@@ -51,7 +51,7 @@ function step-validate-isdriverpackready {
     #=================================================
     # Is it reachable online?
     try {
-        $WebRequest = Invoke-WebRequest -Uri $DriverPackObject.Url -UseBasicParsing -Method Head
+        $WebRequest = Invoke-WebRequest -Uri $ObjectDriverPack.Url -UseBasicParsing -Method Head
         if ($WebRequest.StatusCode -eq 200) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] DriverPack URL returned a 200 status code. OK."
             return
@@ -62,7 +62,7 @@ function step-validate-isdriverpackready {
     }
     #=================================================
     # Does the file exist on a Drive?
-    $FileName = Split-Path $DriverPackObject.Url -Leaf
+    $FileName = Split-Path $ObjectDriverPack.Url -Leaf
     $MatchingFiles = @()
     $MatchingFiles = Get-PSDrive -PSProvider FileSystem | ForEach-Object {
         Get-ChildItem "$($_.Name):\OSDCloud\DriverPacks\" -Include "$FileName" -File -Recurse -Force -ErrorAction Ignore
@@ -79,8 +79,8 @@ function step-validate-isdriverpackready {
     # DriverPack does not exist
     Write-Warning "[$(Get-Date -format G)] Unable to validate if the OperatingSystem is reachable online or offline."
     Write-Warning "[$(Get-Date -format G)] OSDCloud will continue without a DriverPack. Clearing variables."
-    $global:OSDCloudWorkflowInit.DriverPackObject
-    $global:OSDCloudWorkflowInit.DriverPackObject = $null
+    $global:OSDCloudWorkflowInit.ObjectDriverPack
+    $global:OSDCloudWorkflowInit.ObjectDriverPack = $null
     $global:OSDCloudWorkflowInit.DriverPackName = 'None'
     Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] Continue $WorkflowName in 5 seconds..."
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Press CTRL+C to cancel"

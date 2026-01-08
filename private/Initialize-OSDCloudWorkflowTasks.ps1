@@ -10,7 +10,7 @@ function Initialize-OSDCloudWorkflowTasks {
         $Name = 'default',
 
         [System.String]
-        $Architecture = $Env:PROCESSOR_ARCHITECTURE,
+        $Architecture = $env:PROCESSOR_ARCHITECTURE,
 
         $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow"
     )

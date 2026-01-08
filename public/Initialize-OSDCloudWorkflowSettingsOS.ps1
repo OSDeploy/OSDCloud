@@ -13,7 +13,7 @@ function Initialize-OSDCloudWorkflowSettingsOS {
         $AsJson,
 
         [System.String]
-        $Architecture = $Env:PROCESSOR_ARCHITECTURE,
+        $Architecture = $env:PROCESSOR_ARCHITECTURE,
 
         $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow"
     )
@@ -73,6 +73,8 @@ function Initialize-OSDCloudWorkflowSettingsOS {
         Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
         break
     }
+    
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Importing settings from $SettingsOSPath"
     $rawJsonContent = Get-Content -Path $SettingsOSPath -Raw
 
     if ($AsJson) {
@@ -85,7 +87,7 @@ function Initialize-OSDCloudWorkflowSettingsOS {
     $hashtable = [ordered]@{}
     (ConvertFrom-Json $JsonContent).psobject.properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
 
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowSettingsOS: $SettingsOSPath"
+    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] OSDCloud OS Settings are stored in `$global:OSDCloudWorkflowSettingsOS"
     $global:OSDCloudWorkflowSettingsOS = $hashtable
     #=================================================
     # End the function

@@ -384,7 +384,7 @@ $SelectedLanguageText = $window.FindName("SelectedLanguageText")
 $SelectedIdText = $window.FindName("SelectedIdText")
 $SelectedFileNameText = $window.FindName("SelectedFileNameText")
 $DriverPackUrlText = $window.FindName("DriverPackUrlText")
-$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
+$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.ObjectDriverPack.Url
 $StartButton = $window.FindName("StartButton")
 $StartButton.IsEnabled = $false
 
@@ -477,9 +477,9 @@ function Update-OsResults {
 function Update-DriverPackResults {
 	$DriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
 	$global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
-	$global:OSDCloudWorkflowInit.DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+	$global:OSDCloudWorkflowInit.ObjectDriverPack = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
 
-	$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
+	$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.ObjectDriverPack.Url
 }
 
 $OSGroupCombo.Add_SelectionChanged({ Update-OsResults })
@@ -514,36 +514,36 @@ if ($script:SelectionConfirmed -and $script:SelectedImage) {
 	# Local Variables
 	$OSDCloudWorkflowName = $TaskSequenceCombo.SelectedValue
 	$OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
-	$OperatingSystemObject = $script:SelectedImage
+	$ObjectOperatingSystem = $script:SelectedImage
 	$OSEditionId = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
 	#================================================
 	# Global Variables
 	$global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName
 	$global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
 	# $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
-	# $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject
+	# $global:OSDCloudWorkflowInit.ObjectDriverPack = $ObjectDriverPack
 	# DriverPackValues
 	# Flows
 	# Function
-	$global:OSDCloudWorkflowInit.ImageFileName = $OperatingSystemObject.FileName
-	$global:OSDCloudWorkflowInit.ImageFileUrl = $OperatingSystemObject.FilePath
+	$global:OSDCloudWorkflowInit.ImageFileName = $ObjectOperatingSystem.FileName
+	$global:OSDCloudWorkflowInit.ImageFileUrl = $ObjectOperatingSystem.FilePath
 	# LaunchMethod
 	# Module
-	$global:OSDCloudWorkflowInit.OperatingSystemObject = $OperatingSystemObject
-	$global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystemObject.OSName
-	$global:OSDCloudWorkflowInit.OSActivation = $OperatingSystemObject.OSActivation
+	$global:OSDCloudWorkflowInit.ObjectOperatingSystem = $ObjectOperatingSystem
+	$global:OSDCloudWorkflowInit.OperatingSystem = $ObjectOperatingSystem.OSName
+	$global:OSDCloudWorkflowInit.OSActivation = $ObjectOperatingSystem.OSActivation
 	# OSActivationValues
 	# OSArchitecture
-	$global:OSDCloudWorkflowInit.OSBuild = $OperatingSystemObject.OSBuild
+	$global:OSDCloudWorkflowInit.OSBuild = $ObjectOperatingSystem.OSBuild
 	# OSBuildVersion
 	$global:OSDCloudWorkflowInit.OSEdition = Get-ComboValue -ComboBox $OSEditionCombo
 	$global:OSDCloudWorkflowInit.OSEditionId = $OSEditionId
 	# OSEditionValues
-	$global:OSDCloudWorkflowInit.OSLanguage = $OperatingSystemObject.LanguageCode
+	$global:OSDCloudWorkflowInit.OSLanguage = $ObjectOperatingSystem.LanguageCode
 	# OSLanguageValues
-	$global:OSDCloudWorkflowInit.OSGroup = $OperatingSystemObject.OSGroup
+	$global:OSDCloudWorkflowInit.OSGroup = $ObjectOperatingSystem.OSGroup
 	# OSGroupValues
-	$global:OSDCloudWorkflowInit.OSVersion = $OperatingSystemObject.OSVersion
+	$global:OSDCloudWorkflowInit.OSVersion = $ObjectOperatingSystem.OSVersion
 	$global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
 	$global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
 	$global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath

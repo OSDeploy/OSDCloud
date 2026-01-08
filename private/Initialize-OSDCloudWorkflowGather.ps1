@@ -64,7 +64,7 @@ function Initialize-OSDCloudWorkflowGather {
     Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] IsVM: $IsVM"
 
     # Processor Information
-    $Architecture = $Env:PROCESSOR_ARCHITECTURE
+    $Architecture = $env:PROCESSOR_ARCHITECTURE
     Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Architecture: $Architecture"
 
     # Battery Information

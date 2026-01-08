@@ -13,7 +13,7 @@ function Initialize-OSDCloudWorkflowSettingsUser {
         $AsJson,
 
         [System.String]
-        $Architecture = $Env:PROCESSOR_ARCHITECTURE,
+        $Architecture = $env:PROCESSOR_ARCHITECTURE,
 
         $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow"
     )
