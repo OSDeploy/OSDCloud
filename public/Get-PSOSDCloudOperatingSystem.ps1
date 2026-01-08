@@ -10,8 +10,8 @@ function Get-PSOSDCloudOperatingSystem {
         OSVersion       : 25H2
         OSArchitecture  : amd64
         OSActivation    : Retail
-        LanguageCode    : en-gb
-        Language        : English (United Kingdom)
+        OSLanguageCode  : en-gb
+        OSLanguage      : English (United Kingdom)
         OSBuild         : 26200
         OSBuildVersion  : 26200.7462
         Size            : 5626355066
@@ -26,36 +26,34 @@ function Get-PSOSDCloudOperatingSystem {
     # Limit the results based on $env:PROCESSOR_ARCHITECTURE
     $ProcessorArchitecture = $env:PROCESSOR_ARCHITECTURE
     if ($ProcessorArchitecture -and ($records.OSArchitecture -match $ProcessorArchitecture)) {
-        Write-Verbose "Client OSArchitecture from environment variable env:PROCESSOR_ARCHITECTURE is $ProcessorArchitecture. Filtering results for OSArchitecture = $ProcessorArchitecture"
+        Write-Verbose "Set OSArchitecture from PROCESSOR_ARCHITECTURE environment variable $ProcessorArchitecture"
         $records = $records | Where-Object { $_.OSArchitecture -eq $ProcessorArchitecture }
     }
     #=================================================
-    # OSDCloud LanguageCode
+    # OSDCloud OSLanguageCode
     # Preference Order:
-    # 1. $global:OSDCLOUD_LANGUAGECODE
-    # 2. $env:OSDCLOUD_LANGUAGECODE
+    # 1. $global:OSDCLOUD_OSLANGUAGECODE
+    $LanguageCodeGlobal = $global:OSDCLOUD_OSLANGUAGECODE
+    # 2. $env:OSDCLOUD_OSLANGUAGECODE
+    $LanguageCodeEnvironment = $env:OSDCLOUD_OSLANGUAGECODE
     # 3. Get-Culture
-    #TODO this needs more work to make sure there is a single match
-    $Culture = Get-Culture | Select-Object -ExpandProperty Name -First 1
+    $LanguageCodeCulture = Get-Culture | Select-Object -ExpandProperty Name -First 1
 
-    if ($global:OSDCLOUD_LANGUAGECODE) {
-        $p = [string]$global:OSDCLOUD_LANGUAGECODE
-        if ($p -and ($records.LanguageCode -match $p)) {
-            Write-Verbose "Filtering results for LanguageCode = global:OSDCLOUD_LANGUAGECODE = $p"
-            $records = $records | Where-Object { $_.LanguageCode -eq $p }
-        }
+    if ($LanguageCodeGlobal -and ($records.OSLanguageCode -match $LanguageCodeGlobal)) {
+        Write-Verbose "Set OSLanguageCode from global variable $LanguageCodeGlobal"
+        $records = $records | Where-Object { $_.OSLanguageCode -eq $LanguageCodeGlobal }
     }
-    elseif ($env:OSDCLOUD_LANGUAGECODE) {
-        $p = [string]$env:OSDCLOUD_LANGUAGECODE
-        if ($p -and ($records.LanguageCode -match $p)) {
-            Write-Verbose "Environment variable env:OSDCLOUD_LANGUAGECODE is $p. Filtering results for LanguageCode = $p"
-            $records = $records | Where-Object { $_.LanguageCode -eq $p }
-        }
+    elseif ($LanguageCodeEnvironment -and ($records.OSLanguageCode -match $LanguageCodeEnvironment)) {
+        Write-Verbose "Set OSLanguageCode from environment variable $LanguageCodeEnvironment"
+        $records = $records | Where-Object { $_.OSLanguageCode -eq $LanguageCodeEnvironment }
     }
-    elseif ($Culture -and ($records.LanguageCode -match $Culture)) {
-        Write-Verbose "Filtering results for LanguageCode = Get-Culture = $p"
-        $records = $records | Where-Object { $_.LanguageCode -eq $Culture }
+    elseif ($LanguageCodeCulture -and ($records.OSLanguageCode -match $LanguageCodeCulture)) {
+        Write-Verbose "Set OSLanguageCode from Get-Culture value $LanguageCodeCulture"
+        $records = $records | Where-Object { $_.OSLanguageCode -eq $LanguageCodeCulture }
     }
-
+    else {
+        Write-Verbose "No OSLanguageCode preference set, using default records"
+    }
+    #=================================================
     return $records | Select-Object -First 1
 }

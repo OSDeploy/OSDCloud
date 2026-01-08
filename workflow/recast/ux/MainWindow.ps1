@@ -12,7 +12,7 @@ param(
 Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
 #================================================
 # Import the OS Catalog
-$OSCatalog = $global:OSDCloudWorkflowOSCatalog
+$OSCatalog = $global:PSOSDCloudOperatingSystems
 
 # Import the Custom OS Catalog
 if ($OSCatalogPath) {
@@ -445,7 +445,7 @@ function Update-OsResults {
 	$filtered = $OSCatalog | Where-Object {
 		($null -eq $group -or $_.OSGroup -eq $group) -and
 		($null -eq $activation -or $_.OSActivation -eq $activation) -and
-		($null -eq $language -or $_.LanguageCode -eq $language)
+		($null -eq $language -or $_.OSLanguageCode -eq $language)
 	} | Sort-Object Id
 
 	if ($filtered.Count -gt 0) {

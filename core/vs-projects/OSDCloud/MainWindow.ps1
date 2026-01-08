@@ -343,9 +343,9 @@ if ($global:OSDCloudWorkflowInit.DriverPackName) {
 function Set-FormConfigurationCloud {
     $formMainWindowControlOperatingSystemLabel.Content = 'Operating System'
 
-    $OperatingSystemEditions = $global:OSDCloudWorkflowOSCatalog | `
+    $OperatingSystemEditions = $global:PSOSDCloudOperatingSystems | `
         Where-Object {$_.Name -eq "$($formMainWindowControlOSGroupCombobox.SelectedValue)"} | `
-        Where-Object {$_.LanguageCode -eq "$($formMainWindowControlOSLanguageCombobox.SelectedValue)"} | `
+        Where-Object {$_.OSLanguageCode -eq "$($formMainWindowControlOSLanguageCombobox.SelectedValue)"} | `
         Select-Object -ExpandProperty Edition -Unique
 
     $formMainWindowControlOSLanguageCombobox.IsEnabled = $true
@@ -503,10 +503,10 @@ $formMainWindowControlStartButton.add_Click(
             $OSVersion = $OSGroup.Split('-')[1]
             
             if ($OSGroup -match 'arm64') {
-                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
+                $OperatingSystemObject = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguage }
             }
             else {
-                $OperatingSystemObject = $global:OSDCloudWorkflowOSCatalog | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.LanguageCode -eq $OSLanguage }
+                $OperatingSystemObject = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguage }
             }
             
             $ImageFileUrl = $OperatingSystemObject.FilePath
