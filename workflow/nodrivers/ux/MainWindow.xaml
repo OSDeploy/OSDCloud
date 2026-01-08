@@ -275,7 +275,7 @@
                        Foreground="#0067C0"
                        Margin="5"
                        Padding="2"
-                       Width="55"
+                       Width="80"
                        FlowDirection="RightToLeft" />
                     <ComboBox Name="OSActivationCombo"
                           FontSize="15"

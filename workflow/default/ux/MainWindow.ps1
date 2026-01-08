@@ -320,10 +320,12 @@ if ($global:OSDCloudWorkflowInit.DriverPackName) {
 function Set-FormConfigurationCloud {
     $formMainWindowControlOperatingSystemLabel.Content = 'Operating System'
 
+    <#
     $OperatingSystemEditions = $global:PSOSDCloudOperatingSystems | `
         Where-Object {$_.OperatingSystem -eq "$($formMainWindowControlOperatingSystemCombo.SelectedValue)"} | `
         Where-Object {$_.OSLanguageCode -eq "$($formMainWindowControlOSLanguageCodeCombo.SelectedValue)"} | `
         Select-Object -ExpandProperty OSEdition -Unique
+    #>
 
     $formMainWindowControlOSLanguageCodeCombo.IsEnabled = $true
     $formMainWindowControlOSLanguageCodeCombo.Visibility = 'Visible'
@@ -406,7 +408,7 @@ $formMainWindowControlOSEditionCombo.add_SelectionChanged(
             $formMainWindowControlOSActivationCombo.IsEnabled = $true
         }
 
-        $formMainWindowControlOSEditionIdCombo.SelectedValue = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $formMainWindowControlOSEditionCombo.SelectedValue } | Select-Object -ExpandProperty OSEditionId
+        $formMainWindowControlOSEditionIdCombo.SelectedValue = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $formMainWindowControlOSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
     }
 )
 #endregion
@@ -470,17 +472,12 @@ $formMainWindowControlStartButton.add_Click(
             $OSLanguageCode = $formMainWindowControlOSLanguageCodeCombo.SelectedValue
             $OSEdition = $formMainWindowControlOSEditionCombo.SelectedValue
             $OSEditionId = $formMainWindowControlOSEditionIdCombo.SelectedValue
-            $OSVersion = $OSGroup.Split(' ')[2]
+            $OSVersion = $OperatingSystem.Split(' ')[2]
             
-            if ($OSGroup -match 'arm64') {
-                $ObjectOperatingSystem = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
-            }
-            else {
-                $ObjectOperatingSystem = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OSGroup -match $OSGroup } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
-            }
+            $ObjectOperatingSystem = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
             
             $ImageFileUrl = $ObjectOperatingSystem.FilePath
-            $ImageFileName = Split-Path $ImageFileUrl -Leaf
+            $ImageFileName = $ObjectOperatingSystem.FileName
             $OSBuild = $ObjectOperatingSystem.OSBuild
 
             $LocalImageFileInfo = Find-OSDCloudFile -Name $ObjectOperatingSystem.FileName -Path '\OSDCloud\OS\' | Sort-Object FullName | Where-Object { $_.Length -gt 3GB }
@@ -488,7 +485,6 @@ $formMainWindowControlStartButton.add_Click(
         }
         else {
             $OperatingSystem = $null
-            $OSGroup = $null
             $LocalImageFilePath = $formMainWindowControlOperatingSystemCombo.SelectedValue
             if ($LocalImageFilePath) {
                 $LocalImageFileInfo = $CustomImageChildItem | Where-Object { $_.FullName -eq "$LocalImageFilePath" }
@@ -514,21 +510,22 @@ $formMainWindowControlStartButton.add_Click(
         $global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName
         $global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
         $global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystem
-        $global:OSDCloudWorkflowInit.ObjectOperatingSystem = $ObjectOperatingSystem
         $global:OSDCloudWorkflowInit.OSActivation = $OSActivation
         $global:OSDCloudWorkflowInit.OSBuild = $OSBuild
         $global:OSDCloudWorkflowInit.OSEdition = $OSEdition
         $global:OSDCloudWorkflowInit.OSEditionId = $OSEditionId
-        $global:OSDCloudWorkflowInit.OSLanguageCode = $OSLanguage
-        $global:OSDCloudWorkflowInit.OperatingSystem = $OSGroup
+        $global:OSDCloudWorkflowInit.OSLanguageCode = $OSLanguageCode
         $global:OSDCloudWorkflowInit.OSVersion = $OSVersion
-        $global:OSDCloudWorkflowInit.ObjectDriverPack = $ObjectDriverPack
         $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
         $global:OSDCloudWorkflowInit.ImageFileName = $ImageFileName
         $global:OSDCloudWorkflowInit.ImageFileUrl = $ImageFileUrl
         $global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
         $global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath
         $global:OSDCloudWorkflowInit.LocalImageName = $LocalImageName
+
+        $global:OSDCloudWorkflowInit.ObjectDriverPack = $ObjectDriverPack
+        $global:OSDCloudWorkflowInit.ObjectOperatingSystem = $ObjectOperatingSystem
+        
         $global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
 
         <#
