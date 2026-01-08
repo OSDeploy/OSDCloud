@@ -20,15 +20,15 @@ function Export-OSDWindowsDriversWinPE {
         foreach ($Device in $PnputilDevices) {
             # Don't process these Drivers
             if ($Device.ClassName -match "AudioEndpoint|AudioProcessingObject|Biometric|Bluetooth|Camera|ComputeAccelerator|Display|Firmware|MEDIA|Printer|PrintQueue|SoftwareComponent|SoftwareDevice|WSDPrintDevice") {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] $($Device.ClassName) - $($Device.DeviceDescription)"
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $($Device.ClassName) - $($Device.DeviceDescription)"
                 continue
             }
             if ($Device.DeviceDescription -match "Firmware|Smart Sound") {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] $($Device.ClassName) - $($Device.DeviceDescription)"
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $($Device.ClassName) - $($Device.DeviceDescription)"
                 continue
             }
 
-            Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format G)] $($Device.ClassName) - $($Device.DeviceDescription)"
+            Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($Device.ClassName) - $($Device.DeviceDescription)"
             $FolderName = $Device.DriverName -replace '.inf', ''
             $ExportPath = "$Path\$($Device.ClassName)\$($Device.ManufacturerName)\$FolderName"
 
@@ -43,7 +43,7 @@ function Export-OSDWindowsDriversWinPE {
             if (-not $FolderSizeBytes) { $FolderSizeBytes = 0 }
 
             $FolderSizeMB = [math]::Round($FolderSizeBytes / 1MB, 2)
-            Write-Host "[$(Get-Date -format G)] $FolderSizeMB MB"
+            Write-Host "[$(Get-Date -format s)] $FolderSizeMB MB"
         }
     }
 }

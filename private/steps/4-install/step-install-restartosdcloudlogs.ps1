@@ -3,7 +3,7 @@ function step-install-restartosdcloudlogs {
     param ()
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -27,11 +27,11 @@ function step-install-restartosdcloudlogs {
     $TranscriptFullName = Join-Path $LogsPath "transcript-$((Get-Date).ToString('yyyy-MM-dd-HHmmss')).log"
 
     $null = Start-Transcript -Path $TranscriptFullName -ErrorAction SilentlyContinue
-    # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] $TranscriptFullName"
+    # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $TranscriptFullName"
     #endregion
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

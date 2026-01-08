@@ -23,7 +23,7 @@ function Invoke-OSDCloudPEStartupCommand {
 	)
     #=================================================
     $Error.Clear()
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     #=================================================
 	# https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-runasynchronous
 	# https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-runsynchronous
@@ -69,7 +69,7 @@ $Unattend = @"
 	$Unattend | Out-File -FilePath "$env:Temp\$Command.xml" -Encoding utf8 -Force
 
 	if ($Wait -and $NoExit) {
-		Write-Host -ForegroundColor Yellow "[$(Get-Date -format G)] This window may need to be closed to continue the WinPE startup process"
+		Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] This window may need to be closed to continue the WinPE startup process"
 	}
 
 	if ($Wait) {
@@ -78,6 +78,6 @@ $Unattend = @"
 		Start-Process -FilePath wpeinit -ArgumentList "-unattend:$env:Temp\$Command.xml"
 	}
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Done"
     #=================================================
 }

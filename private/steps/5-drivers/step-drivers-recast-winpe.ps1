@@ -3,7 +3,7 @@ function step-drivers-recast-winpe {
     param ()
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -30,7 +30,7 @@ function step-drivers-recast-winpe {
     if ($PnputilDevices) {
         $PnputilDevices | Export-Clixml -Path "$LogPath\drivers-recast-winpe.xml" -Force
         # Export Drivers to Disk
-        Write-Verbose "[$(Get-Date -format G)] Exporting drivers to: $OutputPath"
+        Write-Verbose "[$(Get-Date -format s)] Exporting drivers to: $OutputPath"
         foreach ($Device in $PnputilDevices) {
             # Check that the Device has a DriverName
             if ($Device.Drivername) {
@@ -42,7 +42,7 @@ function step-drivers-recast-winpe {
                 }
                 
                 # Export the driver using pnputil
-                Write-Verbose "[$(Get-Date -format G)] Exporting $($Device.DriverName) to: $destinationPath"
+                Write-Verbose "[$(Get-Date -format s)] Exporting $($Device.DriverName) to: $destinationPath"
                 $null = & pnputil.exe /export-driver $Device.DriverName $destinationPath
             }
         }
@@ -67,7 +67,7 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\Setup" /v OOBEInProgressDriverUpdatesPostpone
     #>
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

@@ -29,12 +29,12 @@ function Invoke-OSDCloudWorkflowUx {
     }
 
     if (-not (Test-Path $OSDCloudUxPath)) {
-        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Unable to locate $OSDCloudUxPath"
+        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to locate $OSDCloudUxPath"
         break
     }
 
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] $OSDCloudUxPath"
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Launching OSDCloud $ModuleVersion"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $OSDCloudUxPath"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Launching OSDCloud $ModuleVersion"
 
     . $OSDCloudUxPath
     #=================================================

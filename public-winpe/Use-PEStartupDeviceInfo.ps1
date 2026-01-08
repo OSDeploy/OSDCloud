@@ -2,9 +2,9 @@ function Use-PEStartupDeviceInfo {
     [CmdletBinding()]
     param ()
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     $Error.Clear()
-    $host.ui.RawUI.WindowTitle = "[$(Get-Date -format G)] OSDCloud WinPE and Device Information"
+    $host.ui.RawUI.WindowTitle = "[$(Get-Date -format s)] OSDCloud WinPE and Device Information"
     #=================================================
     # Modules
     $OSDModuleVersion = (Get-OSDModuleVersion).ToString()
@@ -119,6 +119,6 @@ function Use-PEStartupDeviceInfo {
     }
     # Start backup PowerShell Session (minimized)
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     #=================================================
 }

@@ -3,7 +3,7 @@ function step-install-bcdboot {
     param ()
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -14,12 +14,12 @@ function step-install-bcdboot {
 
     # Check what architecture we are using
     if ($global:OSDCloudWorkflowInit.OSArchitecture -match 'ARM64') {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] X:\Windows\System32\bcdboot.exe C:\Windows /c /v"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] X:\Windows\System32\bcdboot.exe C:\Windows /c /v"
         $BCDBootOutput = & X:\Windows\System32\bcdboot.exe C:\Windows /c /v
         $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
     }
     else {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] C:\Windows\System32\bcdboot.exe C:\Windows /c /v"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] C:\Windows\System32\bcdboot.exe C:\Windows /c /v"
         $BCDBootOutput = & C:\Windows\System32\bcdboot.exe C:\Windows /c /v
         $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
     }
@@ -30,7 +30,7 @@ function step-install-bcdboot {
     #endregion
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

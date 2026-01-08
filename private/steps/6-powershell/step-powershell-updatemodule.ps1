@@ -3,7 +3,7 @@ function step-powershell-updatemodule {
     param ()
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -27,21 +27,21 @@ function step-powershell-updatemodule {
     foreach ($Name in $ExistingModules) {
         $FindModule = Find-Module -Name $Name -ErrorAction SilentlyContinue
         if ($null -eq $FindModule) {
-            # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Unable to update $Name"
+            # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Unable to update $Name"
             continue
         }
 
         try {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Save-Module -Name $Name -Path `"$PowerShellSavePath\Modules`" -Force"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Save-Module -Name $Name -Path `"$PowerShellSavePath\Modules`" -Force"
             Save-Module -Name $Name -Path "$PowerShellSavePath\Modules" -Force -ErrorAction Stop
         }
         catch {
-            Write-Warning "[$(Get-Date -format G)] Save-Module failed: $Name"
+            Write-Warning "[$(Get-Date -format s)] Save-Module failed: $Name"
         }
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }
