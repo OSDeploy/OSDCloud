@@ -27,6 +27,26 @@ function Initialize-OSDCloudWorkflowGather {
         New-Item -Path $WmiLogsPath -ItemType Directory -Force | Out-Null
     }
 
+    # Win32_Environment
+    $Win32Environment = Get-CimInstance -ClassName Win32_Environment | Select-Object -Property *
+    $Win32Environment | Where-Object {$_.SystemVariable -eq $true} | Select-Object -Property Name, VariableValue | Out-File $WmiLogsPath\Win32_Environment-System.txt -Width 4096 -Force
+
+    # Win32_TimeZone
+    $Win32TimeZone = Get-CimInstance -ClassName Win32_TimeZone | Select-Object -Property *
+    $Win32TimeZone | Out-File $WmiLogsPath\Win32_TimeZone.txt -Width 4096 -Force
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TimeZone: $($Win32TimeZone.StandardName)"
+
+    # Win32_CurrentTime
+    $Win32CurrentTime = Get-CimInstance -ClassName Win32_CurrentTime | Select-Object -Property *
+    $Win32CurrentTime | Out-File $WmiLogsPath\Win32_CurrentTime.txt -Width 4096 -Force
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] CurrentTime: $($Win32CurrentTime.Hour):$($Win32CurrentTime.Minute):$($Win32CurrentTime.Second)"
+
+    # Win32_SystemTimeZone
+    $Win32SystemTimeZone = Get-CimInstance -ClassName Win32_SystemTimeZone | Select-Object -Property *
+    $Win32SystemTimeZone | Out-File $WmiLogsPath\Win32_SystemTimeZone.txt -Width 4096 -Force
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] SystemTimeZone: $($Win32SystemTimeZone.StandardName)"
+    
+
     # Win32_PnPEntityError
     $Win32PnPEntityError = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object -Property * | Where-Object { $_.Status -eq 'Error' } | Sort-Object HardwareID -Unique | Sort-Object Name
     $Win32PnPEntityError | Out-File $WmiLogsPath\Win32_PnPEntityError.txt -Width 4096 -Force
