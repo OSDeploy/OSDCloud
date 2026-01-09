@@ -19,6 +19,7 @@ function Initialize-OSDCloudWorkflowGather {
     if (-not (Test-Path -Path $LogsPath)) {
         New-Item -Path $LogsPath -ItemType Directory -Force | Out-Null
     }
+    ipconfig | Out-File $LogsPath\ipconfig.txt -Width 4096 -Force
 
     # Create WMI Log Files
     $WmiLogsPath = "$env:TEMP\osdcloud-logs-wmi"
@@ -76,7 +77,9 @@ function Initialize-OSDCloudWorkflowGather {
 
     # Battery Information
     $Win32Battery = Get-CimInstance -ClassName Win32_Battery | Select-Object -Property *
-    $Win32Battery | Out-File $WmiLogsPath\Win32_Battery.txt -Width 4096 -Force
+    if ($Win32Battery) {
+        $Win32Battery | Out-File $WmiLogsPath\Win32_Battery.txt -Width 4096 -Force
+    }
     [System.Boolean]$IsOnBattery = ($Win32Battery.BatteryStatus -contains 1)
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IsOnBattery: $IsOnBattery"
     

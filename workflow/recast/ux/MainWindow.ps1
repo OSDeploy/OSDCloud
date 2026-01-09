@@ -322,11 +322,17 @@ if ($global:OSDCloudWorkflowInit.DriverPackValues) {
 }
 $DriverPackCombo = $window.FindName("DriverPackCombo")
 $DriverPackCombo.ItemsSource = $DriverPackCatalog
-$DriverPackCombo.SelectedValue = $global:OSDCloudWorkflowInit.DriverPackName
+if ($global:OSDCloudWorkflowInit.DriverPackName) {
+	$DriverPackCombo.SelectedValue = $global:OSDCloudWorkflowInit.DriverPackName
+}
+else {
+	$DriverPackCombo.SelectedIndex = 0
+}
+
 #================================================
 # Optional Settings
 $RestartActionCombo = $window.FindName("RestartActionCombo")
-$WorkspaceUrlTextBox = $window.FindName("WorkspaceUrlTextBox")
+$AWZoneTextBox = $window.FindName("AWZoneTextBox")
 
 $RestartActionOptions = @('Restart','Shutdown','Exit')
 $RestartActionCombo.ItemsSource = $RestartActionOptions
@@ -334,23 +340,22 @@ $RestartActionCombo.ItemsSource = $RestartActionOptions
 $RestartActionDefault = if ($global:OSDCloudWorkflowInit.RestartAction) {
 	$global:OSDCloudWorkflowInit.RestartAction
 } else {
-	'Restart'
+	'Exit'
 }
 
-<#
 if ($RestartActionDefault -and ($RestartActionOptions -contains $RestartActionDefault)) {
 	$RestartActionCombo.SelectedItem = $RestartActionDefault
 } else {
 	$RestartActionCombo.SelectedIndex = 0
 }
 
-$WorkspaceUrlTextBox.Text = if ($global:OSDCloudWorkflowInit.ApplicationWorkspaceUrl) {
-	[string]$global:OSDCloudWorkflowInit.ApplicationWorkspaceUrl
-} else {
-	[string]::Empty
+if ($AWZoneTextBox) {
+	$AWZoneTextBox.Text = if ($global:OSDCloudWorkflowInit.ApplicationWorkspaceZone) {
+		[string]$global:OSDCloudWorkflowInit.ApplicationWorkspaceZone
+	} else {
+		[string]::Empty
+	}
 }
-
-#>
 #================================================
 # Other Settings
 $ComputerManufacturerText = $window.FindName("ComputerManufacturerText")
@@ -368,20 +373,6 @@ $TotalMemoryText.Text = if ($global:OSDCloudWorkflowGather.TotalPhysicalMemoryGB
 	"$($global:OSDCloudWorkflowGather.TotalPhysicalMemoryGB) GB"
 } else {
 	'Unknown'
-}
-
-$Win32TpmTextBox = $window.FindName("Win32TpmTextBox")
-$Win32TpmTextBox.Text = if ($global:OSDCloudWorkflowGather.Win32Tpm) {
-	$global:OSDCloudWorkflowGather.Win32Tpm | Out-String
-} else {
-	'Win32Tpm data is not available.'
-}
-
-$NetworkInformationTextBox = $window.FindName("NetworkInformationTextBox")
-$NetworkInformationTextBox.Text = if ($global:OSDCloudWorkflowGather.NetworkAdapter) {
-	ipconfig | Out-String
-} else {
-	'Network information is not available.'
 }
 
 $SetupCompleteTextBox = $window.FindName("SetupCompleteTextBox")
@@ -561,12 +552,21 @@ if ($script:SelectionConfirmed) {
 	$global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath
 	$global:OSDCloudWorkflowInit.LocalImageName = $LocalImageName
 	$global:OSDCloudWorkflowInit.RestartAction = Get-ComboValue -ComboBox $RestartActionCombo
-	$workspaceUrl = $WorkspaceUrlTextBox.Text
-	if ([string]::IsNullOrWhiteSpace($workspaceUrl)) {
-		$global:OSDCloudWorkflowInit.ApplicationWorkspaceUrl = $null
+
+	if ([string]::IsNullOrWhiteSpace($AWDeploymentTextBox.Text)) {
+		$global:OSDCloudWorkflowInit.ApplicationWorkspaceDeployment = $null
+		$global:OSDCloudWorkflowInit.ApplicationWorkspaceZone = $null
 	} else {
-		$global:OSDCloudWorkflowInit.ApplicationWorkspaceUrl = $workspaceUrl.Trim()
+		$global:OSDCloudWorkflowInit.ApplicationWorkspaceDeployment = $AWDeploymentTextBox.Text.Trim()
 	}
+
+	if ([string]::IsNullOrWhiteSpace($AWZoneTextBox.Text)) {
+		$global:OSDCloudWorkflowInit.ApplicationWorkspaceDeployment = $null
+		$global:OSDCloudWorkflowInit.ApplicationWorkspaceZone = $null
+	} else {
+		$global:OSDCloudWorkflowInit.ApplicationWorkspaceZone = $AWZoneTextBox.Text.Trim()
+	}
+
 	if ($SetupCompleteTextBox) {
 		$global:OSDCloudWorkflowInit.SetupCompleteCmd = $SetupCompleteTextBox.Text
 	}

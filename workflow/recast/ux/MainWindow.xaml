@@ -341,53 +341,6 @@
                     </Grid>
                 </Border>
             </TabItem>
-            <TabItem Header="TPM">
-                <Border Background="White"
-                        BorderBrush="#DDE5F5"
-                        BorderThickness="1"
-                        Padding="16"
-                        Margin="0">
-                    <Grid>
-                        <TextBox x:Name="Win32TpmTextBox"
-                                 Background="WhiteSmoke"
-                                 Foreground="#3b455a"
-                                 FontFamily="Consolas"
-                                 TextWrapping="Wrap"
-                                 AcceptsReturn="True"
-                                 VerticalScrollBarVisibility="Auto"
-                                 HorizontalScrollBarVisibility="Auto"
-                                 IsReadOnly="True"
-                                 BorderBrush="#d7dde8"
-                                 BorderThickness="1"
-                                 Padding="8"
-                                 VerticalAlignment="Top"
-                                 Text="$global:OSDCloudWorkflowGather.Win32Tpm | Out-String" />
-                    </Grid>
-                </Border>
-            </TabItem>
-            <TabItem Header="Network">
-                <Border Background="White"
-                        BorderBrush="#DDE5F5"
-                        BorderThickness="1"
-                        Padding="16"
-                        Margin="0">
-                    <Grid>
-                        <TextBox x:Name="NetworkInformationTextBox"
-                                 Background="WhiteSmoke"
-                                 Foreground="#3b455a"
-                                 FontFamily="Consolas"
-                                 TextWrapping="Wrap"
-                                 AcceptsReturn="True"
-                                 VerticalScrollBarVisibility="Auto"
-                                 HorizontalScrollBarVisibility="Auto"
-                                 IsReadOnly="True"
-                                 BorderBrush="#d7dde8"
-                                 BorderThickness="1"
-                                 Padding="8"
-                                 Text="Network data will appear here." />
-                    </Grid>
-                </Border>
-            </TabItem>
             <TabItem Header="SetupComplete.cmd">
                 <Border Background="White"
                         BorderBrush="#DDE5F5"
@@ -452,7 +405,7 @@
                         <TextBox Grid.Row="1"
                                  Grid.Column="1"
                                  x:Name="AWZoneTextBox"
-                                 Text="david.liquit.com"
+                                 Text=""
                                  Margin="4"
                                  Height="24"
                                  FontWeight="SemiBold"
