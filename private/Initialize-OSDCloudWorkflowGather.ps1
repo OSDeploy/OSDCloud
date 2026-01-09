@@ -20,17 +20,24 @@ function Initialize-OSDCloudWorkflowGather {
         New-Item -Path $LogsPath -ItemType Directory -Force | Out-Null
     }
 
-    # Export Driver Error Information
+    # Create WMI Log Files
+    $WmiLogsPath = "$env:TEMP\osdcloud-logs-wmi"
+    if (-not (Test-Path -Path $WmiLogsPath)) {
+        New-Item -Path $WmiLogsPath -ItemType Directory -Force | Out-Null
+    }
+
+    # Win32_PnPEntityError
     $Win32PnPEntityError = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object -Property * | Where-Object { $_.Status -eq 'Error' } | Sort-Object HardwareID -Unique | Sort-Object Name
-    $Win32PnPEntityError | Out-File $LogsPath\Win32_PnPEntityError.txt -Width 4096 -Force
+    $Win32PnPEntityError | Out-File $WmiLogsPath\Win32_PnPEntityError.txt -Width 4096 -Force
 
-    # Operating System Information
+    # Win32_OperatingSystem
     $Win32OperatingSystem = Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -Property *
-    $Win32OperatingSystem | Out-File $LogsPath\Win32_OperatingSystem.txt -Width 4096 -Force
+    $Win32OperatingSystem | Out-File $WmiLogsPath\Win32_OperatingSystem.txt -Width 4096 -Force
 
-    # Computer System Information
+    # Win32_ComputerSystem
     $Win32ComputerSystem = Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -Property *
-    $Win32ComputerSystem | Out-File $LogsPath\Win32_ComputerSystem.txt -Width 4096 -Force
+    $Win32ComputerSystem | Out-File $WmiLogsPath\Win32_ComputerSystem.txt -Width 4096 -Force
+
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerName: $($Win32ComputerSystem.Name)"
     $IsWinPE = $false
     $IsWinOS = $false
@@ -69,18 +76,18 @@ function Initialize-OSDCloudWorkflowGather {
 
     # Battery Information
     $Win32Battery = Get-CimInstance -ClassName Win32_Battery | Select-Object -Property *
-    $Win32Battery | Out-File $LogsPath\Win32_Battery.txt -Width 4096 -Force
+    $Win32Battery | Out-File $WmiLogsPath\Win32_Battery.txt -Width 4096 -Force
     [System.Boolean]$IsOnBattery = ($Win32Battery.BatteryStatus -contains 1)
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IsOnBattery: $IsOnBattery"
     
     # Bios Information
     $Win32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
-    $Win32BIOS | Out-File $LogsPath\Win32_BIOS.txt -Width 4096 -Force
+    $Win32BIOS | Out-File $WmiLogsPath\Win32_BIOS.txt -Width 4096 -Force
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Bios Version: $($Win32BIOS.SMBIOSBIOSVersion)"
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Bios ReleaseDate: $($Win32BIOS.ReleaseDate)"
 
     $Win32BaseBoard = Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property *
-    $Win32BaseBoard | Out-File $LogsPath\Win32_BaseBoard.txt -Width 4096 -Force
+    $Win32BaseBoard | Out-File $WmiLogsPath\Win32_BaseBoard.txt -Width 4096 -Force
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Bios BaseBoard Product: $($Win32BaseBoard.Product)"
 
     # Computer Hardware Information
@@ -116,7 +123,7 @@ function Initialize-OSDCloudWorkflowGather {
 
     # Disk Information
     $Win32DiskDrive = Get-CimInstance -ClassName Win32_DiskDrive | Select-Object -Property *
-    $Win32DiskDrive | Out-File $LogsPath\Win32_DiskDrive.txt -Width 4096 -Force
+    $Win32DiskDrive | Out-File $WmiLogsPath\Win32_DiskDrive.txt -Width 4096 -Force
     foreach ($Item in $Win32DiskDrive) {
         Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Disk: $($Item.Model) [$($Item.DeviceID)]"
     }
@@ -177,7 +184,7 @@ function Initialize-OSDCloudWorkflowGather {
 
     # Network Adapter Configuration Information
     $Win32NetworkAdapterConfiguration = Get-CimInstance -ClassName Win32_NetworkAdapterConfiguration | Where-Object { $_.IPEnabled -eq $true } | Select-Object -Property *
-    $Win32NetworkAdapterConfiguration | Out-File $LogsPath\Win32_NetworkAdapterConfiguration.txt -Width 4096 -Force
+    $Win32NetworkAdapterConfiguration | Out-File $WmiLogsPath\Win32_NetworkAdapterConfiguration.txt -Width 4096 -Force
     foreach ($Item in $Win32NetworkAdapterConfiguration) {
         Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] NetAdapterConfig: $($Item.IPAddress) [$($Item.Description)]"
     }
@@ -192,7 +199,7 @@ function Initialize-OSDCloudWorkflowGather {
 
     # Network Adapter Information
     $Win32NetworkAdapter = Get-CimInstance -ClassName Win32_NetworkAdapter | Select-Object -Property *
-    $Win32NetworkAdapter | Out-File $LogsPath\Win32_NetworkAdapter.txt -Width 4096 -Force
+    $Win32NetworkAdapter | Out-File $WmiLogsPath\Win32_NetworkAdapter.txt -Width 4096 -Force
     $Win32NetworkAdapterGuid = $Win32NetworkAdapter | Where-Object { $null -ne $_.GUID }
     if ($Win32NetworkAdapterGuid) {
         foreach ($Item in $Win32NetworkAdapterGuid) {
@@ -202,7 +209,7 @@ function Initialize-OSDCloudWorkflowGather {
     
     # Processor Information
     $Win32Processor = Get-CimInstance -ClassName Win32_Processor | Select-Object -Property *
-    $Win32Processor | Out-File $LogsPath\Win32_Processor.txt -Width 4096 -Force
+    $Win32Processor | Out-File $WmiLogsPath\Win32_Processor.txt -Width 4096 -Force
     foreach ($Item in $Win32Processor) {
         Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Processor: $($Item.Name) [$($Item.NumberOfLogicalProcessors) Logical]"
     }
@@ -215,7 +222,8 @@ function Initialize-OSDCloudWorkflowGather {
     $Win32Tpm = @{}
     try {
         $Win32Tpm = Get-CimInstance -Namespace 'ROOT\cimv2\Security\MicrosoftTpm' -ClassName Win32_Tpm -ErrorAction Stop
-        
+        $Win32Tpm | Out-File $WmiLogsPath\MicrosoftTpm.txt -Width 4096 -Force
+    
         $DeviceTpmIsActivated = $($Win32Tpm.IsActivated_InitialValue)
         $DeviceTpmIsEnabled = $($Win32Tpm.IsEnabled_InitialValue)
         $DeviceTpmIsOwned = $($Win32Tpm.IsOwned_InitialValue)

@@ -43,6 +43,9 @@
                 <MenuItem x:Name="LogsMenuItem"
                         Header="Logs"
                         Padding="4" />
+                <MenuItem x:Name="WmiMenuItem"
+                        Header="WMI"
+                        Padding="4" />
                 <MenuItem x:Name="AboutMenuItem"
                           Header="About"
                           Padding="4" />

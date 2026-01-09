@@ -83,6 +83,7 @@ $RunPowerShell = $window.FindName("RunPowerShell")
 $RunPwsh = $window.FindName("RunPwsh")
 $AboutMenuItem = $window.FindName("AboutMenuItem")
 $LogsMenuItem = $window.FindName("LogsMenuItem")
+$WmiMenuItem = $window.FindName("WmiMenuItem")
 
 $RunCmdPrompt.Add_Click({
 	try {
@@ -178,6 +179,47 @@ function Set-LogsMenuItems {
 }
 
 Set-LogsMenuItems
+function Set-WmiMenuItems {
+	$WmiMenuItem.Items.Clear()
+
+	$logsRoot = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'osdcloud-logs-wmi'
+	if (-not (Test-Path -LiteralPath $logsRoot)) {
+		Add-NoLogsMenuEntry -MenuItem $WmiMenuItem
+		return
+	}
+
+	$logFiles = Get-ChildItem -LiteralPath $logsRoot -File -ErrorAction SilentlyContinue | Sort-Object -Property Name
+	if (-not $logFiles) {
+		Add-NoLogsMenuEntry -MenuItem $WmiMenuItem
+		return
+	}
+
+	foreach ($logFile in $logFiles) {
+		$logMenuItem = [System.Windows.Controls.MenuItem]::new()
+		# Double underscores so WPF renders underscores literally instead of mnemonics
+		$logMenuItem.Header = $logFile.Name -replace '_', '__'
+		$logMenuItem.Tag = $logFile.FullName
+
+		$logMenuItem.Add_Click({
+			param($sender, $args)
+			$logPath = [string]$sender.Tag
+			if (-not (Test-Path -LiteralPath $logPath)) {
+				[System.Windows.MessageBox]::Show('Log file not found.', 'Open Log', 'OK', 'Warning') | Out-Null
+				return
+			}
+
+			try {
+				Start-Process -FilePath 'notepad.exe' -ArgumentList @("`"$logPath`"") -ErrorAction Stop
+			} catch {
+				[System.Windows.MessageBox]::Show("Failed to open log: $($_.Exception.Message)", 'Open Log', 'OK', 'Error') | Out-Null
+			}
+		})
+
+		$WmiMenuItem.Items.Add($logMenuItem) | Out-Null
+	}
+}
+
+Set-WmiMenuItems
 #================================================
 # TaskSequence
 $TaskSequenceCombo = $window.FindName("TaskSequenceCombo")
