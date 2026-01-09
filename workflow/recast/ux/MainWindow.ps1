@@ -16,6 +16,7 @@ $OSCatalog = $global:PSOSDCloudOperatingSystems
 
 # Import the Custom OS Catalog
 if ($OSCatalogPath) {
+	Write-Verbose "Loading custom OS catalog from '$OSCatalogPath'."
 	$resolvedCatalogPath = [System.IO.Path]::GetFullPath($OSCatalogPath)
 	if (-not (Test-Path -LiteralPath $resolvedCatalogPath)) {
 		throw "Catalog file not found at '$resolvedCatalogPath'."
@@ -33,7 +34,7 @@ if ($OSCatalogPath) {
 }
 #================================================
 # Variables
-$Architecture = $global:OSDCloudWorkflowGather.IsAutopilotReady
+$Architecture = $global:OSDCloudWorkflowGather.Architecture
 $BiosReleaseDate = $global:OSDCloudWorkflowGather.BiosReleaseDate
 $BiosVersion = $global:OSDCloudWorkflowGather.BiosVersion
 $ChassisTypeChassisType = $global:OSDCloudWorkflowGather.ChassisTypeChassisType
@@ -600,4 +601,10 @@ if ($script:SelectionConfirmed -and $script:SelectedImage) {
 	if ($SetupCompleteTextBox) {
 		$global:OSDCloudWorkflowInit.SetupCompleteCmd = $SetupCompleteTextBox.Text
 	}
+
+    $LogsPath = "$env:TEMP\osdcloud-logs"
+    if (-not (Test-Path -Path $LogsPath)) {
+        New-Item -Path $LogsPath -ItemType Directory -Force | Out-Null
+    }
+	$global:OSDCloudWorkflowInit | Out-File -FilePath "$LogsPath\OSDCloudWorkflowInit.txt" -Force
 }

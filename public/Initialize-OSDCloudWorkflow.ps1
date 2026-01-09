@@ -18,10 +18,6 @@ function Initialize-OSDCloudWorkflow {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Gather $ModuleVersion"
         Initialize-OSDCloudWorkflowGather
     }
-    $Architecture          = $global:OSDCloudWorkflowGather.Architecture
-    $ComputerManufacturer  = $global:OSDCloudWorkflowGather.ComputerManufacturer
-    $ComputerModel         = $global:OSDCloudWorkflowGather.ComputerModel
-    $ComputerProduct       = $global:OSDCloudWorkflowGather.ComputerProduct
     #=================================================
     # OSDCloudWorkflowTasks
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Tasks"
@@ -38,6 +34,7 @@ function Initialize-OSDCloudWorkflow {
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Get OSDCloud OperatingSystems"
 
     # Limit to matching Processor Architecture
+    $Architecture = $global:OSDCloudWorkflowGather.Architecture
     $global:PSOSDCloudOperatingSystems = Get-PSOSDCloudOperatingSystems | Where-Object {$_.OSArchitecture -match "$Architecture"}
 
     # Need to fail if no OS found for Architecture
@@ -92,6 +89,7 @@ function Initialize-OSDCloudWorkflow {
     $ImageFileUrl       = $ObjectOperatingSystem.FilePath
     #=================================================
     # DriverPack
+    $ComputerManufacturer  = $global:OSDCloudWorkflowGather.ComputerManufacturer
     switch ($ComputerManufacturer) {
         'Dell' {
             $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' }
@@ -110,10 +108,12 @@ function Initialize-OSDCloudWorkflow {
     # Remove Windows 10 DriverPacks
     $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
 
+    $ComputerModel = $global:OSDCloudWorkflowGather.ComputerModel
     if ($ComputerModel -match 'Surface') {
         $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
     }
 
+    $ComputerProduct = $global:OSDCloudWorkflowGather.ComputerProduct
     $ObjectDriverPack = Get-OSDCatalogDriverPack -Product $ComputerProduct -OSVersion $OSName -OSReleaseID $OSVersion
     if ($ObjectDriverPack) {
         $DriverPackName = $ObjectDriverPack.Name
