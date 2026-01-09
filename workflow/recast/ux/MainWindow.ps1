@@ -3,35 +3,9 @@
 	Interactive picker for OSDCloud operating system catalog entries.
 #>
 [CmdletBinding()]
-param(
-	[Parameter()]
-	[ValidateNotNullOrEmpty()]
-	[System.String]$OSCatalogPath
-)
+param()
 #================================================
 Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
-#================================================
-# Import the OS Catalog
-$OSCatalog = $global:PSOSDCloudOperatingSystems
-
-# Import the Custom OS Catalog
-if ($OSCatalogPath) {
-	Write-Verbose "Loading custom OS catalog from '$OSCatalogPath'."
-	$resolvedCatalogPath = [System.IO.Path]::GetFullPath($OSCatalogPath)
-	if (-not (Test-Path -LiteralPath $resolvedCatalogPath)) {
-		throw "Catalog file not found at '$resolvedCatalogPath'."
-	}
-
-	try {
-		$OSCatalog = Get-Content -LiteralPath $resolvedCatalogPath -Raw | ConvertFrom-Json -ErrorAction Stop
-	} catch {
-		throw "Unable to load '$resolvedCatalogPath'. $($_.Exception.Message)"
-	}
-
-	if (-not $OSCatalog) {
-		throw "Catalog '$resolvedCatalogPath' did not return any items."
-	}
-}
 #================================================
 # Variables
 $Architecture = $global:OSDCloudWorkflowGather.Architecture
@@ -138,7 +112,6 @@ function Add-NoLogsMenuEntry {
 	$noLogsItem.IsEnabled = $false
 	$MenuItem.Items.Add($noLogsItem) | Out-Null
 }
-
 function Set-LogsMenuItems {
 	$LogsMenuItem.Items.Clear()
 
@@ -178,7 +151,6 @@ function Set-LogsMenuItems {
 		$LogsMenuItem.Items.Add($logMenuItem) | Out-Null
 	}
 }
-
 Set-LogsMenuItems
 function Set-WmiMenuItems {
 	$WmiMenuItem.Items.Clear()
@@ -219,7 +191,6 @@ function Set-WmiMenuItems {
 		$WmiMenuItem.Items.Add($logMenuItem) | Out-Null
 	}
 }
-
 Set-WmiMenuItems
 #================================================
 # TaskSequence
@@ -237,7 +208,7 @@ if ($global:OSDCloudWorkflowInit.OperatingSystemValues) {
 }
 # Catalog Configuration
 else {
-	$OperatingSystemValues = $OSCatalog.OperatingSystem | Sort-Object -Unique | Sort-Object -Descending
+	$OperatingSystemValues = $global:PSOSDCloudOperatingSystems.OperatingSystem | Sort-Object -Unique | Sort-Object -Descending
 	Write-Verbose "Catalog OperatingSystemValues = $OperatingSystemValues"
 }
 $OperatingSystemCombo = $window.FindName("OperatingSystemCombo")
@@ -320,7 +291,7 @@ if ($global:OSDCloudWorkflowInit.OSLanguageCodeValues) {
 }
 # Catalog Configuration
 else {
-	$OSLanguageCodeValues = $OSCatalog.OSLanguageCode | Sort-Object -Unique | Sort-Object -Descending
+	$OSLanguageCodeValues = $global:PSOSDCloudOperatingSystems.OSLanguageCode | Sort-Object -Unique | Sort-Object -Descending
 	Write-Verbose "Catalog OSLanguageCodeValues = $OSLanguageCodeValues"
 }
 $OSLanguageCodeCombo = $window.FindName("OSLanguageCodeCombo")
@@ -451,7 +422,7 @@ function Get-ComboValue {
 }
 
 function Set-StartButtonState {
-	$StartButton.IsEnabled = ($null -ne $script:SelectedImage)
+	$StartButton.IsEnabled = ($null -ne $global:OSDCloudWorkflowInit.ObjectOperatingSystem)
 }
 
 function Update-SelectedDetails {
@@ -470,9 +441,11 @@ function Update-SelectedDetails {
 	$SelectedIdText.Text = [string]$Item.Id
 	$SelectedOSLanguageText.Text = if ($Item.OSLanguage) {
 		[string]$Item.OSLanguage
-	} elseif ($Item.OSLanguageCode) {
+	}
+	elseif ($Item.OSLanguageCode) {
 		[string]$Item.OSLanguageCode
-	} else {
+	}
+	else {
 		'-'
 	}
 	$SelectedFileNameText.Text = [string]$Item.FileName
@@ -480,35 +453,39 @@ function Update-SelectedDetails {
 
 function Update-OsResults {
 	# Keep filtering logic centralized so every control refreshes the same view.
-	$osgroup = Get-ComboValue -ComboBox $OperatingSystemCombo
-	$edition = Get-ComboValue -ComboBox $OSEditionCombo
-	$activation = Get-ComboValue -ComboBox $OSActivationCombo
-	$language = Get-ComboValue -ComboBox $OSLanguageCodeCombo
+	$updateOperatingSystem = Get-ComboValue -ComboBox $OperatingSystemCombo
+	$updateOSEdition = Get-ComboValue -ComboBox $OSEditionCombo
+	$updateOSActivation = Get-ComboValue -ComboBox $OSActivationCombo
+	$updateOSLanguageCode = Get-ComboValue -ComboBox $OSLanguageCodeCombo
 
-	$filtered = $OSCatalog | Where-Object {
-		($null -eq $osgroup -or $_.OperatingSystem -eq $osgroup) -and
-		($null -eq $activation -or $_.OSActivation -eq $activation) -and
-		($null -eq $language -or $_.OSLanguageCode -eq $language)
-	} | Sort-Object Id
+	Write-Verbose "updateOperatingSystem = $updateOperatingSystem"
+	Write-Verbose "updateOSEdition = $updateOSEdition"
+	Write-Verbose "updateOSActivation = $updateOSActivation"
+	Write-Verbose "updateOSLanguageCode = $updateOSLanguageCode"
 
-	if ($filtered.Count -gt 0) {
-		$script:SelectedImage = $filtered[0]
-	} else {
-		$script:SelectedImage = $null
-	}
+    $global:OSDCloudWorkflowInit.ObjectOperatingSystem = $global:PSOSDCloudOperatingSystems | `
+		Where-Object { $_.OperatingSystem -match $updateOperatingSystem } | `
+		Where-Object { $_.OSActivation -eq $updateOSActivation } | `
+		Where-Object { $_.OSLanguageCode -eq $updateOSLanguageCode } | Select-Object -First 1
+	
+    if (-not $global:OSDCloudWorkflowInit.ObjectOperatingSystem) {
+        throw "No Operating System found for OperatingSystem: $updateOperatingSystem, OSActivation: $updateOSActivation, OSLanguageCode: $updateOSLanguageCode. Please check your OSDCloud OperatingSystems."
+    }
 
-	if ($edition -match 'Home') {
+	$script:SelectedImage = $global:OSDCloudWorkflowInit.ObjectOperatingSystem
+
+	if ($updateOSEdition -match 'Home') {
 		$OSActivationCombo.SelectedValue = 'Retail'
 		$OSActivationCombo.IsEnabled = $false
 	}
-	if ($edition -match 'Education') {
+	if ($updateOSEdition -match 'Education') {
 		$OSActivationCombo.IsEnabled = $true
 	}
-	if ($edition -match 'Enterprise') {
+	if ($updateOSEdition -match 'Enterprise') {
 		$OSActivationCombo.SelectedValue = 'Volume'
 		$OSActivationCombo.IsEnabled = $false
 	}
-	if ($edition -match 'Pro') {
+	if ($updateOSEdition -match 'Pro') {
 		$OSActivationCombo.IsEnabled = $true
 	}
 
@@ -532,17 +509,9 @@ $OSLanguageCodeCombo.Add_SelectionChanged({ Update-OsResults })
 
 $DriverPackCombo.Add_SelectionChanged({ Update-DriverPackResults })
 
-$script:SelectedImage = $null
 $script:SelectionConfirmed = $false
 
 $StartButton.Add_Click({
-	$selection = $script:SelectedImage
-	if (-not $selection) {
-		[System.Windows.MessageBox]::Show('No catalog entry is available. Adjust the filters and try again.', 'OSDCloud', 'OK', 'Information') | Out-Null
-		return
-	}
-
-	$script:SelectedImage = $selection
 	$script:SelectionConfirmed = $true
 	$window.DialogResult = $true
 	$window.Close()
@@ -552,13 +521,13 @@ Update-OsResults
 
 $null = $window.ShowDialog()
 
-if ($script:SelectionConfirmed -and $script:SelectedImage) {
+if ($script:SelectionConfirmed) {
 	#================================================
 	# Local Variables
 	$OSDCloudWorkflowName = $TaskSequenceCombo.SelectedValue
 	$OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
-	$ObjectOperatingSystem = $script:SelectedImage
-	$OSEditionId = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.OSEdition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty OSEditionId
+	$ObjectOperatingSystem = $global:OSDCloudWorkflowInit.ObjectOperatingSystem
+	$OSEditionId = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
 	#================================================
 	# Global Variables
 	$global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName

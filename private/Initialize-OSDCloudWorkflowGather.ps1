@@ -222,7 +222,7 @@ function Initialize-OSDCloudWorkflowGather {
     $Win32Tpm = @{}
     try {
         $Win32Tpm = Get-CimInstance -Namespace 'ROOT\cimv2\Security\MicrosoftTpm' -ClassName Win32_Tpm -ErrorAction Stop
-        $Win32Tpm | Out-File $WmiLogsPath\MicrosoftTpm.txt -Width 4096 -Force
+        $Win32Tpm | Out-File $WmiLogsPath\Win32_Tpm.txt -Width 4096 -Force
     
         $DeviceTpmIsActivated = $($Win32Tpm.IsActivated_InitialValue)
         $DeviceTpmIsEnabled = $($Win32Tpm.IsEnabled_InitialValue)

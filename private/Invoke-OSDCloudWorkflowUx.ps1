@@ -36,6 +36,6 @@ function Invoke-OSDCloudWorkflowUx {
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $OSDCloudUxPath"
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Launching OSDCloud $ModuleVersion"
 
-    . $OSDCloudUxPath -Verbose
+    . $OSDCloudUxPath
     #=================================================
 }

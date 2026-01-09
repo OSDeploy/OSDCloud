@@ -49,27 +49,28 @@ function Initialize-OSDCloudWorkflowSettingsOS {
         }
     }
 
-    if (-not (Test-Path $PathAmd64)) {
-        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathAmd64"
-        break
-    }
-    else {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathAmd64"
-    }
-    if (-not (Test-Path $PathArm64)) {
-        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathArm64"
-        break
-    }
-    else {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathArm64"
-    }
-
     # Import the RAW content of the JSON file
     if ($Architecture -eq 'AMD64') {
+        if (-not (Test-Path $PathAmd64)) {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathAmd64"
+            break
+        }
+        else {
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathAmd64"
+        }
         $SettingsOSPath = $PathAmd64
-    } elseif ($Architecture -eq 'ARM64') {
+    }
+    elseif ($Architecture -eq 'ARM64') {
+        if (-not (Test-Path $PathArm64)) {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathArm64"
+            break
+        }
+        else {
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathArm64"
+        }
         $SettingsOSPath = $PathArm64
-    } else {
+    }
+    else {
         Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
         break
     }
