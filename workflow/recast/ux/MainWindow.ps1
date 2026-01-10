@@ -8,17 +8,17 @@ param()
 Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
 #================================================
 # Variables
-$Architecture = $global:OSDCloudWorkflowGather.Architecture
-$BiosReleaseDate = $global:OSDCloudWorkflowGather.BiosReleaseDate
-$BiosVersion = $global:OSDCloudWorkflowGather.BiosVersion
-$ChassisTypeChassisType = $global:OSDCloudWorkflowGather.ChassisTypeChassisType
+$Architecture = $global:OSDCloudWorkflowDevice.ProcessorArchitecture
+$BiosReleaseDate = $global:OSDCloudWorkflowDevice.BiosReleaseDate
+$BiosVersion = $global:OSDCloudWorkflowDevice.BiosVersion
+$ChassisType = $global:OSDCloudWorkflowDevice.ChassisType
 $ComputerManufacturer = $global:OSDCloudWorkflowInit.ComputerManufacturer
 $ComputerModel = $global:OSDCloudWorkflowInit.ComputerModel
 $ComputerProduct = $global:OSDCloudWorkflowInit.ComputerProduct
-$ComputerSystemSKUNumber = $global:OSDCloudWorkflowGather.ComputerSystemSKUNumber
-$IsAutopilotReady = $global:OSDCloudWorkflowGather.IsAutopilotReady
-$IsTpmReady = $global:OSDCloudWorkflowGather.IsTpmReady
-$SerialNumber = $global:OSDCloudWorkflowGather.SerialNumber
+$ComputerSystemSKUNumber = $global:OSDCloudWorkflowDevice.ComputerSystemSKUNumber
+$IsAutopilotReady = $global:OSDCloudWorkflowDevice.IsAutopilotReady
+$IsTpmReady = $global:OSDCloudWorkflowDevice.IsTpmReady
+$SerialNumber = $global:OSDCloudWorkflowDevice.SerialNumber
 #================================================
 # XAML
 $xamlfile = Get-Item -Path "$PSScriptRoot\MainWindow.xaml"
@@ -369,8 +369,8 @@ $ComputerSystemSKUNumberText.Text = $ComputerSystemSKUNumber
 $SerialNumberText = $window.FindName("SerialNumberText")
 $SerialNumberText.Text = $SerialNumber
 $TotalMemoryText = $window.FindName("TotalMemoryText")
-$TotalMemoryText.Text = if ($global:OSDCloudWorkflowGather.TotalPhysicalMemoryGB) {
-	"$($global:OSDCloudWorkflowGather.TotalPhysicalMemoryGB) GB"
+$TotalMemoryText.Text = if ($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) {
+	"$($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) GB"
 } else {
 	'Unknown'
 }
@@ -389,7 +389,7 @@ $SelectedOSLanguageText = $window.FindName("SelectedOSLanguageText")
 $SelectedIdText = $window.FindName("SelectedIdText")
 $SelectedFileNameText = $window.FindName("SelectedFileNameText")
 $DriverPackUrlText = $window.FindName("DriverPackUrlText")
-$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.ObjectDriverPack.Url
+$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
 $StartButton = $window.FindName("StartButton")
 $StartButton.IsEnabled = $false
 
@@ -413,7 +413,7 @@ function Get-ComboValue {
 }
 
 function Set-StartButtonState {
-	$StartButton.IsEnabled = ($null -ne $global:OSDCloudWorkflowInit.ObjectOperatingSystem)
+	$StartButton.IsEnabled = ($null -ne $global:OSDCloudWorkflowInit.OperatingSystemObject)
 }
 
 function Update-SelectedDetails {
@@ -454,16 +454,16 @@ function Update-OsResults {
 	Write-Verbose "updateOSActivation = $updateOSActivation"
 	Write-Verbose "updateOSLanguageCode = $updateOSLanguageCode"
 
-    $global:OSDCloudWorkflowInit.ObjectOperatingSystem = $global:PSOSDCloudOperatingSystems | `
+    $global:OSDCloudWorkflowInit.OperatingSystemObject = $global:PSOSDCloudOperatingSystems | `
 		Where-Object { $_.OperatingSystem -match $updateOperatingSystem } | `
 		Where-Object { $_.OSActivation -eq $updateOSActivation } | `
 		Where-Object { $_.OSLanguageCode -eq $updateOSLanguageCode } | Select-Object -First 1
 	
-    if (-not $global:OSDCloudWorkflowInit.ObjectOperatingSystem) {
+    if (-not $global:OSDCloudWorkflowInit.OperatingSystemObject) {
         throw "No Operating System found for OperatingSystem: $updateOperatingSystem, OSActivation: $updateOSActivation, OSLanguageCode: $updateOSLanguageCode. Please check your OSDCloud OperatingSystems."
     }
 
-	$script:SelectedImage = $global:OSDCloudWorkflowInit.ObjectOperatingSystem
+	$script:SelectedImage = $global:OSDCloudWorkflowInit.OperatingSystemObject
 
 	if ($updateOSEdition -match 'Home') {
 		$OSActivationCombo.SelectedValue = 'Retail'
@@ -488,9 +488,9 @@ function Update-OsResults {
 function Update-DriverPackResults {
 	$DriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
 	$global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
-	$global:OSDCloudWorkflowInit.ObjectDriverPack = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+	$global:OSDCloudWorkflowInit.DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
 
-	$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.ObjectDriverPack.Url
+	$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
 }
 
 $OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
@@ -517,36 +517,36 @@ if ($script:SelectionConfirmed) {
 	# Local Variables
 	$OSDCloudWorkflowName = $TaskSequenceCombo.SelectedValue
 	$OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
-	$ObjectOperatingSystem = $global:OSDCloudWorkflowInit.ObjectOperatingSystem
+	$OperatingSystemObject = $global:OSDCloudWorkflowInit.OperatingSystemObject
 	$OSEditionId = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
 	#================================================
 	# Global Variables
 	$global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName
 	$global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
 	# $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
-	# $global:OSDCloudWorkflowInit.ObjectDriverPack = $ObjectDriverPack
+	# $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject
 	# DriverPackValues
 	# Flows
 	# Function
-	$global:OSDCloudWorkflowInit.ImageFileName = $ObjectOperatingSystem.FileName
-	$global:OSDCloudWorkflowInit.ImageFileUrl = $ObjectOperatingSystem.FilePath
+	$global:OSDCloudWorkflowInit.ImageFileName = $OperatingSystemObject.FileName
+	$global:OSDCloudWorkflowInit.ImageFileUrl = $OperatingSystemObject.FilePath
 	# LaunchMethod
 	# Module
-	$global:OSDCloudWorkflowInit.ObjectOperatingSystem = $ObjectOperatingSystem
-	$global:OSDCloudWorkflowInit.OperatingSystem = $ObjectOperatingSystem.OSName
-	$global:OSDCloudWorkflowInit.OSActivation = $ObjectOperatingSystem.OSActivation
+	$global:OSDCloudWorkflowInit.OperatingSystemObject = $OperatingSystemObject
+	$global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystemObject.OSName
+	$global:OSDCloudWorkflowInit.OSActivation = $OperatingSystemObject.OSActivation
 	# OSActivationValues
 	# OSArchitecture
-	$global:OSDCloudWorkflowInit.OSBuild = $ObjectOperatingSystem.OSBuild
+	$global:OSDCloudWorkflowInit.OSBuild = $OperatingSystemObject.OSBuild
 	# OSBuildVersion
 	$global:OSDCloudWorkflowInit.OSEdition = Get-ComboValue -ComboBox $OSEditionCombo
 	$global:OSDCloudWorkflowInit.OSEditionId = $OSEditionId
 	# OSEditionValues
-	$global:OSDCloudWorkflowInit.OSLanguageCode = $ObjectOperatingSystem.OSLanguageCode
+	$global:OSDCloudWorkflowInit.OSLanguageCode = $OperatingSystemObject.OSLanguageCode
 	# OSLanguageValues
-	$global:OSDCloudWorkflowInit.OperatingSystem = $ObjectOperatingSystem.OperatingSystem
+	$global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystemObject.OperatingSystem
 	# OperatingSystemValues
-	$global:OSDCloudWorkflowInit.OSVersion = $ObjectOperatingSystem.OSVersion
+	$global:OSDCloudWorkflowInit.OSVersion = $OperatingSystemObject.OSVersion
 	$global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
 	$global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
 	$global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath

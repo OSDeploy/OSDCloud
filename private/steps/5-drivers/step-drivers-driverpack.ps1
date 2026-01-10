@@ -5,9 +5,9 @@ function step-drivers-driverpack {
         $DriverPackName = $global:OSDCloudWorkflowInvoke.DriverPackName,
 
         [System.String]
-        $DriverPackGuid = $global:OSDCloudWorkflowInvoke.ObjectDriverPack.Guid,
+        $DriverPackGuid = $global:OSDCloudWorkflowInvoke.DriverPackObject.Guid,
 
-        $ObjectDriverPack = $global:OSDCloudWorkflowInvoke.ObjectDriverPack
+        $DriverPackObject = $global:OSDCloudWorkflowInvoke.DriverPackObject
     )
     #=================================================
     # Start the step
@@ -30,20 +30,20 @@ function step-drivers-driverpack {
     }
     #=================================================
     # Is there a DriverPack Object?
-    if (-not ($ObjectDriverPack)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] ObjectDriverPack is not set. OK."
+    if (-not ($DriverPackObject)) {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DriverPackObject is not set. OK."
         return
     }
     #=================================================
     # Is there a DriverPack Guid?
     if (-not ($DriverPackGuid)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] ObjectDriverPack.GUID is not set. OK."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DriverPackObject.GUID is not set. OK."
         return
     }
     #=================================================
     # Is there a URL?
-    if (-not $($ObjectDriverPack.Url)) {
-        Write-Warning "[$(Get-Date -format s)] ObjectDriverPack does not have a Url to validate."
+    if (-not $($DriverPackObject.Url)) {
+        Write-Warning "[$(Get-Date -format s)] DriverPackObject does not have a Url to validate."
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'
         Start-Sleep -Seconds 86400
         exit
@@ -52,7 +52,7 @@ function step-drivers-driverpack {
     # Is it reachable online?
     $IsOnline = $false
     try {
-        $WebRequest = Invoke-WebRequest -Uri $ObjectDriverPack.Url -UseBasicParsing -Method Head
+        $WebRequest = Invoke-WebRequest -Uri $DriverPackObject.Url -UseBasicParsing -Method Head
         if ($WebRequest.StatusCode -eq 200) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DriverPack URL returned a 200 status code. OK."
             $IsOnline = $true
@@ -64,7 +64,7 @@ function step-drivers-driverpack {
     #=================================================
     # Does the file exist on a Drive?
     $IsOffline = $false
-    $FileName = Split-Path $ObjectDriverPack.Url -Leaf
+    $FileName = Split-Path $DriverPackObject.Url -Leaf
     $MatchingFiles = @()
     $MatchingFiles = Get-PSDrive -PSProvider FileSystem | ForEach-Object {
         Get-ChildItem "$($_.Name):\OSDCloud\DriverPacks\" -Include "$FileName" -File -Recurse -Force -ErrorAction Ignore
@@ -84,7 +84,7 @@ function step-drivers-driverpack {
         return
     }
     #=================================================
-    # Example ObjectDriverPack
+    # Example DriverPackObject
     <#
         CatalogVersion : 25.04.11
         Status         :
@@ -106,13 +106,13 @@ function step-drivers-driverpack {
     #>
     #=================================================
     # Variables
-    $FileName = $ObjectDriverPack.FileName
+    $FileName = $DriverPackObject.FileName
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
-    $Manufacturer = $ObjectDriverPack.Manufacturer
+    $Manufacturer = $DriverPackObject.Manufacturer
     $ScriptsPath = "C:\Windows\Setup\Scripts"
     $SetupCompleteCmd = "$ScriptsPath\SetupComplete.cmd"
     $SetupSpecializeCmd = "C:\Windows\Temp\osdcloud\SetupSpecialize.cmd"
-    $Url = $ObjectDriverPack.Url
+    $Url = $DriverPackObject.Url
     #=================================================
     # Create DownloadPath Directory
     $DownloadPath = "C:\Windows\Temp\osdcloud-driverpack-download"
@@ -131,9 +131,9 @@ function step-drivers-driverpack {
 
     if ($USBDrive) {
         $USBDownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\DriverPacks\$Manufacturer"
-        $FileName = Split-Path $ObjectDriverPack.Url -Leaf
+        $FileName = Split-Path $DriverPackObject.Url -Leaf
 
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Url: $($ObjectDriverPack.Url)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Url: $($DriverPackObject.Url)"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] USBDownloadPath: $USBDownloadPath"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] FileName: $FileName"
 
@@ -141,7 +141,7 @@ function step-drivers-driverpack {
         if (-not (Test-Path $USBDownloadPath)) {
             $null = New-Item -Path $USBDownloadPath -ItemType Directory -Force
         }
-        $SaveWebFile = Save-WebFile -SourceUrl $ObjectDriverPack.Url -DestinationDirectory "$USBDownloadPath" -DestinationName $FileName
+        $SaveWebFile = Save-WebFile -SourceUrl $DriverPackObject.Url -DestinationDirectory "$USBDownloadPath" -DestinationName $FileName
 
         if ($SaveWebFile) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Copying Offline DriverPack to $DownloadPath"
@@ -154,7 +154,7 @@ function step-drivers-driverpack {
         if (-not (Test-Path $DownloadPath)) {
             $null = New-Item -Path $DownloadPath -ItemType Directory -Force
         }
-        $SaveWebFile = Save-WebFile -SourceUrl $ObjectDriverPack.Url -DestinationDirectory $DownloadPath -ErrorAction Stop
+        $SaveWebFile = Save-WebFile -SourceUrl $DriverPackObject.Url -DestinationDirectory $DownloadPath -ErrorAction Stop
         $FileInfo = $SaveWebFile
     }
     #=================================================
@@ -166,7 +166,7 @@ function step-drivers-driverpack {
         return
     }
 
-    $ObjectDriverPack | ConvertTo-Json | Out-File "$($OutFileObject.FullName).json" -Encoding ascii -Width 2000 -Force
+    $DriverPackObject | ConvertTo-Json | Out-File "$($OutFileObject.FullName).json" -Encoding ascii -Width 2000 -Force
     
     $DownloadedFile = $OutFileObject.FullName
     $ExpandPath = 'C:\Windows\Temp\osdcloud-driverpack-expand'
@@ -275,7 +275,7 @@ function step-drivers-driverpack {
     #=================================================
     #   Lenovo
     #=================================================
-    if (($OutFileObject.Extension -eq '.exe') -and ($ObjectDriverPack.Manufacturer -match 'Lenovo')) {
+    if (($OutFileObject.Extension -eq '.exe') -and ($DriverPackObject.Manufacturer -match 'Lenovo')) {
         if (-not (Test-Path $ScriptsPath)) {
             New-Item -Path $ScriptsPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
         }

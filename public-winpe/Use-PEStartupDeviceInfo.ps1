@@ -20,20 +20,11 @@ function Use-PEStartupDeviceInfo {
     #=================================================
     # Export Hardware Information
     # Write-Host -ForegroundColor DarkCyan "Gathering Device Information"
-    $Win32Battery = Get-CimInstance -ClassName Win32_Battery | Select-Object -Property *
-    $Win32Battery | Out-File $LogsPath\Win32_Battery.txt -Width 4096 -Force
     $Win32BaseBoard = Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property *
-    $Win32BaseBoard | Out-File $LogsPath\Win32_BaseBoard.txt -Width 4096 -Force
     $Win32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
-    $Win32BIOS | Out-File $LogsPath\Win32_BIOS.txt -Width 4096 -Force
     $Win32ComputerSystem = Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -Property *
-    $Win32ComputerSystem | Out-File $LogsPath\Win32_ComputerSystem.txt -Width 4096 -Force
     $Win32OperatingSystem = Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -Property *
-    $Win32OperatingSystem | Out-File $LogsPath\Win32_OperatingSystem.txt -Width 4096 -Force
     $Win32Processor = Get-CimInstance -ClassName Win32_Processor | Select-Object -Property *
-    $Win32Processor | Out-File $LogsPath\Win32_Processor.txt -Width 4096 -Force
-    $Win32PnPEntityError = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object -Property * | Where-Object { $_.Status -eq 'Error' } | Sort-Object HardwareID -Unique | Sort-Object Name
-    $Win32PnPEntityError | Out-File $LogsPath\Win32_PnPEntityError.txt -Width 4096 -Force
     #=================================================
     # Device Details
     Write-Host -ForegroundColor DarkGray "WinPE" $Win32OperatingSystem.Version $Win32OperatingSystem.OSArchitecture

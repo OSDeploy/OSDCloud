@@ -250,7 +250,7 @@ function Show-PowershellWindow() {
 #=================================================
 #region OSDCloudWorkflowSettingsUser
 # Tpm
-if ($global:OSDCloudWorkflowGather.IsTpmReady -eq $true) {
+if ($global:OSDCloudWorkflowDevice.IsTpmReady -eq $true) {
     $formMainWindowControlIsTpmReady.Foreground = 'Green'
     $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Success
 }
@@ -260,7 +260,7 @@ else {
 }
 
 # Autopilot
-if ($global:OSDCloudWorkflowGather.IsAutopilotReady -eq $true) {
+if ($global:OSDCloudWorkflowDevice.IsAutopilotReady -eq $true) {
     $formMainWindowControlIsAutopilotReady.Foreground = 'Green'
     $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Success
 }
@@ -474,13 +474,13 @@ $formMainWindowControlStartButton.add_Click(
             $OSEditionId = $formMainWindowControlOSEditionIdCombo.SelectedValue
             $OSVersion = $OperatingSystem.Split(' ')[2]
             
-            $ObjectOperatingSystem = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
+            $OperatingSystemObject = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
             
-            $ImageFileUrl = $ObjectOperatingSystem.FilePath
-            $ImageFileName = $ObjectOperatingSystem.FileName
-            $OSBuild = $ObjectOperatingSystem.OSBuild
+            $ImageFileUrl = $OperatingSystemObject.FilePath
+            $ImageFileName = $OperatingSystemObject.FileName
+            $OSBuild = $OperatingSystemObject.OSBuild
 
-            $LocalImageFileInfo = Find-OSDCloudFile -Name $ObjectOperatingSystem.FileName -Path '\OSDCloud\OS\' | Sort-Object FullName | Where-Object { $_.Length -gt 3GB }
+            $LocalImageFileInfo = Find-OSDCloudFile -Name $OperatingSystemObject.FileName -Path '\OSDCloud\OS\' | Sort-Object FullName | Where-Object { $_.Length -gt 3GB }
             $LocalImageFileInfo = $LocalImageFileInfo | Where-Object { $_.FullName -notlike 'C*' } | Where-Object { $_.FullName -notlike 'X*' } | Select-Object -First 1
         }
         else {
@@ -502,7 +502,7 @@ $formMainWindowControlStartButton.add_Click(
         #================================================
         if ($formMainWindowControlDriverPackCombo.Text) {
             $DriverPackName = $formMainWindowControlDriverPackCombo.Text
-            $ObjectDriverPack = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+            $DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
         }
         #================================================
         #   Global Variables
@@ -523,8 +523,8 @@ $formMainWindowControlStartButton.add_Click(
         $global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath
         $global:OSDCloudWorkflowInit.LocalImageName = $LocalImageName
 
-        $global:OSDCloudWorkflowInit.ObjectDriverPack = $ObjectDriverPack
-        $global:OSDCloudWorkflowInit.ObjectOperatingSystem = $ObjectOperatingSystem
+        $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject
+        $global:OSDCloudWorkflowInit.OperatingSystemObject = $OperatingSystemObject
         
         $global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
 

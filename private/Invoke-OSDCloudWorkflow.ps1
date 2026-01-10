@@ -15,28 +15,28 @@ function Invoke-OSDCloudWorkflow {
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
     # Set global variables
-    [System.String]$global:Architecture = $OSDCloudWorkflowGather.Architecture
-    [System.Boolean]$global:IsOnBattery = $OSDCloudWorkflowGather.IsOnBattery
-    [System.Boolean]$global:IsVM = $OSDCloudWorkflowGather.IsVM
+    [System.String]$global:Architecture = $OSDCloudWorkflowDevice.ProcessorArchitecture
+    [System.Boolean]$global:IsOnBattery = $OSDCloudWorkflowDevice.IsOnBattery
+    [System.Boolean]$global:IsVM = $OSDCloudWorkflowDevice.IsVM
     [System.Boolean]$global:IsWinPE = $($env:SystemDrive -eq 'X:')
     #=================================================
     $global:OSDCloudWorkflowInvoke = $null
     $global:OSDCloudWorkflowInvoke = [ordered]@{
         Architecture          = $global:Architecture
-        ComputerChassisType   = $OSDCloudWorkflowGather.ChassisType
-        ComputerManufacturer  = $OSDCloudWorkflowGather.ComputerManufacturer
-        ComputerModel         = $OSDCloudWorkflowGather.ComputerModel
-        ComputerProduct       = $OSDCloudWorkflowGather.ComputerProduct
-        ComputerSerialNumber  = $OSDCloudWorkflowGather.SerialNumber
+        ComputerChassisType   = $OSDCloudWorkflowDevice.ChassisType
+        ComputerManufacturer  = $OSDCloudWorkflowDevice.ComputerManufacturer
+        ComputerModel         = $OSDCloudWorkflowDevice.ComputerModel
+        ComputerProduct       = $OSDCloudWorkflowDevice.ComputerProduct
+        ComputerSerialNumber  = $OSDCloudWorkflowDevice.SerialNumber
         ComputerUUID          = (Get-WmiObject -Class Win32_ComputerSystemProduct).UUID
         DriverPackName        = $OSDCloudWorkflowInit.DriverPackName
-        ObjectDriverPack      = $OSDCloudWorkflowInit.ObjectDriverPack
+        DriverPackObject      = $OSDCloudWorkflowInit.DriverPackObject
         IsOnBattery           = $global:IsOnBattery
         IsVM                  = $global:IsVM
         IsWinPE               = $global:IsWinPE
         LogsPath              = "$env:TEMP\osdcloud-logs"
         OperatingSystem       = $OSDCloudWorkflowInit.OperatingSystem
-        ObjectOperatingSystem = $OSDCloudWorkflowInit.ObjectOperatingSystem
+        OperatingSystemObject = $OSDCloudWorkflowInit.OperatingSystemObject
         TimeEnd               = $null
         TimeSpan              = $null
         TimeStart             = [datetime](Get-Date)

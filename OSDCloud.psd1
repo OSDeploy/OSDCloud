@@ -87,9 +87,10 @@ FunctionsToExport =
     'Export-OSDWindowsDriversWinPE',
     'Get-PSOSDCloudOperatingSystem',
     'Get-PSOSDCloudOperatingSystems',
-    'Get-OSDCloudDevice',
     'Initialize-OSDCloudWorkflow',
-    'Initialize-OSDCloudWorkflowSettingsOS'
+    'Initialize-OSDCloudWorkflowDevice',
+    'Initialize-OSDCloudWorkflowSettingsOS',
+    'Get-DeploymentDiskObject'
 
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
