@@ -32,12 +32,15 @@ function Get-PSOSDCloudOperatingSystem {
     #=================================================
     # OSDCloud OSLanguageCode
     # Preference Order:
-    # 1. $global:OSDCLOUD_OSLANGUAGECODE
+    # 1. Parameter
+    # Do it
+    # 2. $global:OSDCLOUD_OSLANGUAGECODE
     $LanguageCodeGlobal = $global:OSDCLOUD_OSLANGUAGECODE
-    # 2. $env:OSDCLOUD_OSLANGUAGECODE
+    # 3. $env:OSDCLOUD_OSLANGUAGECODE
     $LanguageCodeEnvironment = $env:OSDCLOUD_OSLANGUAGECODE
-    # 3. Get-Culture
+    # 4. Get-Culture
     $LanguageCodeCulture = Get-Culture | Select-Object -ExpandProperty Name -First 1
+    # 5. Default Json Configuration
 
     if ($LanguageCodeGlobal -and ($records.OSLanguageCode -match $LanguageCodeGlobal)) {
         Write-Verbose "Set OSLanguageCode from global variable $LanguageCodeGlobal"

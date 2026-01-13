@@ -12,13 +12,14 @@ $Architecture = $global:OSDCloudWorkflowDevice.ProcessorArchitecture
 $BiosReleaseDate = $global:OSDCloudWorkflowDevice.BiosReleaseDate
 $BiosVersion = $global:OSDCloudWorkflowDevice.BiosVersion
 $ChassisType = $global:OSDCloudWorkflowDevice.ChassisType
-$ComputerManufacturer = $global:OSDCloudWorkflowInit.ComputerManufacturer
-$ComputerModel = $global:OSDCloudWorkflowInit.ComputerModel
-$ComputerProduct = $global:OSDCloudWorkflowInit.ComputerProduct
+$ComputerManufacturer = $global:OSDCloudWorkflowDevice.ComputerManufacturer
+$ComputerModel = $global:OSDCloudWorkflowDevice.ComputerModel
+$ComputerProduct = $global:OSDCloudWorkflowDevice.ComputerProduct
 $ComputerSystemSKUNumber = $global:OSDCloudWorkflowDevice.ComputerSystemSKUNumber
 $IsAutopilotReady = $global:OSDCloudWorkflowDevice.IsAutopilotReady
 $IsTpmReady = $global:OSDCloudWorkflowDevice.IsTpmReady
 $SerialNumber = $global:OSDCloudWorkflowDevice.SerialNumber
+$UUID = $global:OSDCloudWorkflowDevice.UUID
 #================================================
 # XAML
 $xamlfile = Get-Item -Path "$PSScriptRoot\MainWindow.xaml"
@@ -58,7 +59,7 @@ $RunPowerShell = $window.FindName("RunPowerShell")
 $RunPwsh = $window.FindName("RunPwsh")
 $AboutMenuItem = $window.FindName("AboutMenuItem")
 $LogsMenuItem = $window.FindName("LogsMenuItem")
-$WmiMenuItem = $window.FindName("WmiMenuItem")
+$HardwareMenuItem = $window.FindName("HardwareMenuItem")
 
 $RunCmdPrompt.Add_Click({
 	try {
@@ -152,18 +153,18 @@ function Set-LogsMenuItems {
 	}
 }
 Set-LogsMenuItems
-function Set-WmiMenuItems {
-	$WmiMenuItem.Items.Clear()
+function Set-HardwareMenuItems {
+	$HardwareMenuItem.Items.Clear()
 
 	$logsRoot = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'osdcloud-logs-wmi'
 	if (-not (Test-Path -LiteralPath $logsRoot)) {
-		Add-NoLogsMenuEntry -MenuItem $WmiMenuItem
+		Add-NoLogsMenuEntry -MenuItem $HardwareMenuItem
 		return
 	}
 
 	$logFiles = Get-ChildItem -LiteralPath $logsRoot -File -ErrorAction SilentlyContinue | Sort-Object -Property Name
 	if (-not $logFiles) {
-		Add-NoLogsMenuEntry -MenuItem $WmiMenuItem
+		Add-NoLogsMenuEntry -MenuItem $HardwareMenuItem
 		return
 	}
 
@@ -188,17 +189,38 @@ function Set-WmiMenuItems {
 			}
 		})
 
-		$WmiMenuItem.Items.Add($logMenuItem) | Out-Null
+		$HardwareMenuItem.Items.Add($logMenuItem) | Out-Null
 	}
 }
-Set-WmiMenuItems
+Set-HardwareMenuItems
 #================================================
 # TaskSequence
 $TaskSequenceCombo = $window.FindName("TaskSequenceCombo")
 $TaskSequenceCombo.ItemsSource = $global:OSDCloudWorkflowInit.Flows.Name
 $TaskSequenceCombo.SelectedIndex = 0
+$TaskSequenceCombo.Add_SelectionChanged({
+	if ($SummaryTaskSequenceText) {
+		$value = [string]$TaskSequenceCombo.SelectedItem
+		$SummaryTaskSequenceText.Text = if (-not [string]::IsNullOrWhiteSpace($value)) { $value } else { 'Not selected' }
+	}
+})
 #================================================
-# OperatingSystemValues
+# Disk
+try {
+	$DiskCombo = $window.FindName("DiskCombo")
+	if ($DiskCombo) {
+		$deploymentDisks = @(Get-DeploymentDiskObject -ErrorAction SilentlyContinue)
+		if ($deploymentDisks) {
+			$DiskCombo.ItemsSource = $deploymentDisks | Select-Object -ExpandProperty DiskNumber
+			if ($DiskCombo.Items.Count -gt 0) {
+				$DiskCombo.SelectedIndex = 0
+			}
+		}
+	}
+} catch {
+	Write-Verbose "Error populating Disk combo: $_"
+}
+#================================================
 # GlobalVariable Configuration
 # Environment Configuration
 # Workflow Configuration
@@ -393,6 +415,21 @@ $DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.
 $StartButton = $window.FindName("StartButton")
 $StartButton.IsEnabled = $false
 
+$SummaryOsNameText = $window.FindName('SummaryOsNameText')
+$SummaryOsEditionText = $window.FindName('SummaryOsEditionText')
+$SummaryOsActivationText = $window.FindName('SummaryOsActivationText')
+$SummaryOsLanguageText = $window.FindName('SummaryOsLanguageText')
+$SummaryOsFileText = $window.FindName('SummaryOsFileText')
+$SummaryDeviceUUIDText = $window.FindName('SummaryDeviceUUIDText')
+$SummaryDeviceManufacturerText = $window.FindName('SummaryDeviceManufacturerText')
+$SummaryDeviceModelText = $window.FindName('SummaryDeviceModelText')
+$SummaryDeviceSerialText = $window.FindName('SummaryDeviceSerialText')
+$SummaryDeviceMemoryText = $window.FindName('SummaryDeviceMemoryText')
+$SummaryTaskSequenceText = $window.FindName('SummaryTaskSequenceText')
+$SummaryDriverPackText = $window.FindName('SummaryDriverPackText')
+$SummaryDriverPackUrlText = $window.FindName('SummaryDriverPackUrlText')
+$DiskCombo = $window.FindName('DiskCombo')
+
 function Get-ComboValue {
 	param(
 		[Parameter(Mandatory)]
@@ -410,6 +447,33 @@ function Get-ComboValue {
 	}
 
 	return $text
+}
+
+function Update-Summary {
+	if (-not $SummaryOsNameText) {
+		return
+	}
+
+	$osObject = $global:OSDCloudWorkflowInit.OperatingSystemObject
+	$SummaryOsNameText.Text = if ($osObject) { [string]$osObject.OperatingSystem } else { 'Not selected' }
+	$SummaryOsEditionText.Text = if ($OSEditionCombo) { Get-ComboValue -ComboBox $OSEditionCombo } else { '-' }
+	$SummaryOsActivationText.Text = if ($OSActivationCombo) { Get-ComboValue -ComboBox $OSActivationCombo } else { '-' }
+	$SummaryOsLanguageText.Text = if ($osObject -and $osObject.OSLanguageCode) { [string]$osObject.OSLanguageCode } elseif ($OSLanguageCodeCombo) { Get-ComboValue -ComboBox $OSLanguageCodeCombo } else { '-' }
+	$SummaryOsFileText.Text = if ($osObject) { [string]$osObject.FileName } else { '-' }
+
+	$SummaryDeviceUUIDText.Text = if (-not [string]::IsNullOrWhiteSpace($UUID)) { $UUID } else { 'Unknown' }
+	$SummaryDeviceManufacturerText.Text = if (-not [string]::IsNullOrWhiteSpace($ComputerManufacturer)) { $ComputerManufacturer } else { 'Unknown' }
+	$SummaryDeviceModelText.Text = if (-not [string]::IsNullOrWhiteSpace($ComputerModel)) { $ComputerModel } else { 'Unknown' }
+	$SummaryDeviceSerialText.Text = if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) { $SerialNumber } else { 'Unknown' }
+	$SummaryDeviceMemoryText.Text = if ($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) { "$($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) GB" } else { 'Unknown' }
+
+	if ($SummaryDriverPackText) {
+		$driverPackValue = [string]$DriverPackCombo.SelectedItem
+		$SummaryDriverPackText.Text = if (-not [string]::IsNullOrWhiteSpace($driverPackValue)) { $driverPackValue } else { 'None' }
+	}
+	if ($SummaryDriverPackUrlText) {
+		$SummaryDriverPackUrlText.Text = if ($DriverPackUrlText) { [string]$DriverPackUrlText.Text } else { 'None' }
+	}
 }
 
 function Set-StartButtonState {
@@ -482,6 +546,8 @@ function Update-OsResults {
 
 	Update-SelectedDetails -Item $script:SelectedImage
 
+	Update-Summary
+
 	Set-StartButtonState
 }
 
@@ -489,8 +555,8 @@ function Update-DriverPackResults {
 	$DriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
 	$global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
 	$global:OSDCloudWorkflowInit.DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
-
 	$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
+	Update-Summary
 }
 
 $OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
@@ -509,6 +575,12 @@ $StartButton.Add_Click({
 })
 
 Update-OsResults
+
+# Initialize Configuration summary with current values
+if ($SummaryTaskSequenceText) {
+	$value = [string]$TaskSequenceCombo.SelectedItem
+	$SummaryTaskSequenceText.Text = if (-not [string]::IsNullOrWhiteSpace($value)) { $value } else { 'Not selected' }
+}
 
 $null = $window.ShowDialog()
 
