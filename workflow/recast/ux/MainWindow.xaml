@@ -7,7 +7,7 @@
     <Grid Margin="10,0,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="500" />
             <RowDefinition Height="10" />
@@ -25,23 +25,39 @@
                 <MenuItem x:Name="AboutMenuItem" Header="About" Padding="4" />
             </Menu>
         </Grid>
-        <Border Grid.Row="1" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="8" Margin="4">
+        <Border Grid.Row="1" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="0" Margin="4">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="32" />
-                    <RowDefinition Height="32" />
-                    <RowDefinition Height="32" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="UUID" Foreground="#3b455a" Margin="0,0,8,0" />
-                    <TextBlock Grid.Row="0" Grid.Column="1" x:Name="SummaryDeviceUUIDText" Text="Unknown" Foreground="DarkGray" TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Manufacturer" Foreground="#3b455a" Margin="0,0,8,0" />
-                    <TextBlock Grid.Row="1" Grid.Column="1" x:Name="SummaryDeviceManufacturerText" Text="Unknown" Foreground="DarkGray" TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Model" Foreground="#3b455a" Margin="0,0,8,0" />
-                    <TextBlock Grid.Row="2" Grid.Column="1" x:Name="SummaryDeviceModelText" Text="Unknown" Foreground="DarkGray" TextWrapping="Wrap" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Serial Number" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="SummaryDeviceSerialText" x:Name="SummaryDeviceSerialText" Foreground="DarkGray" FontWeight="Bold"/>
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="UUID" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="SummaryDeviceUUIDText" x:Name="SummaryDeviceUUIDText" Foreground="DarkGray" FontWeight="Bold"/>
+
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Manufacturer" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="SummaryDeviceManufacturerText" x:Name="SummaryDeviceManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="3" Text="Model" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="4" Text="SummaryDeviceModelText" x:Name="SummaryDeviceModelText" Foreground="DarkGray" FontWeight="Bold" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="System Product" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="ComputerProductText" x:Name="ComputerProductText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="2" Grid.Column="3" Text="System SKU" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="2" Grid.Column="4" Text="ComputerSystemSKUNumberText" x:Name="ComputerSystemSKUNumberText" Foreground="DarkGray" FontWeight="Bold" />
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Memory" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="SummaryDeviceMemoryText" x:Name="SummaryDeviceMemoryText" Foreground="DarkGray" FontWeight="Bold" />
             </Grid>
         </Border>
         <TabControl Grid.Row="3" Grid.RowSpan="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Margin="4" Padding="0">
@@ -104,11 +120,6 @@
                             <TextBlock Grid.Row="7" Grid.Column="0" Text="File" Foreground="#3b455a" Margin="0,0,8,0" />
                             <TextBlock Grid.Row="7" Grid.Column="1" x:Name="SummaryOsFileText" Text="-" Foreground="DarkGray" TextWrapping="Wrap" Margin="0,0,8,0" />
 
-
-                            <TextBlock Grid.Row="12" Grid.Column="0" Text="Serial" Foreground="#3b455a" Margin="0,0,8,0" />
-                            <TextBlock Grid.Row="12" Grid.Column="1" x:Name="SummaryDeviceSerialText" Text="Unknown" Foreground="DarkGray" TextWrapping="Wrap" />
-                            <TextBlock Grid.Row="13" Grid.Column="0" Text="Memory" Foreground="#3b455a" Margin="0,0,8,0" />
-                            <TextBlock Grid.Row="13" Grid.Column="1" x:Name="SummaryDeviceMemoryText" Text="Unknown" Foreground="DarkGray" TextWrapping="Wrap" />
                             <TextBlock Grid.Row="15" Grid.Column="0" Text="DriverPack" Foreground="#3b455a" Margin="0,0,8,0" />
                             <TextBlock Grid.Row="15" Grid.Column="1" x:Name="SummaryDriverPackText" Text="None" Foreground="#3b455a" TextWrapping="Wrap" />
                             <TextBlock Grid.Row="16" Grid.Column="0" Text="DriverPack Url" FontWeight="SemiBold" Foreground="#3b455a" Margin="0,0,8,0" VerticalAlignment="Top" />
@@ -225,10 +236,7 @@
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="Unknown" x:Name="ComputerManufacturerText" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" Margin="4" />
                         <TextBlock Grid.Row="0" Grid.Column="3" Text="Model" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
                         <TextBlock Grid.Row="0" Grid.Column="4" Text="Unknown" Grid.ColumnSpan="2" x:Name="ComputerModelText" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" Margin="4" />
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="System Product" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Unknown" x:Name="ComputerProductText" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" Margin="4" />
-                        <TextBlock Grid.Row="1" Grid.Column="3" Text="System SKU" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                        <TextBlock Grid.Row="1" Grid.Column="4" Text="Unknown" x:Name="ComputerSystemSKUNumberText" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" Margin="4" />
+
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Serial Number" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="Unknown" x:Name="SerialNumberText" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" Margin="4" />
                         <TextBlock Grid.Row="3" Grid.Column="0" Text="Total Memory" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
