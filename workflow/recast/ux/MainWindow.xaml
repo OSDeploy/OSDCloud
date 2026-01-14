@@ -3,29 +3,29 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:OSDCloud" mc:Ignorable="d" Title="OSDCloud" Height="800" Width="800" Background="#FFF6F8FF" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
+    xmlns:local="clr-namespace:OSDCloud" mc:Ignorable="d" Title="OSDCloud" Width="800" Height="700" Background="#FFF6F8FF" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
     <Grid Margin="10,0,10,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
-            <RowDefinition Height="500" />
+            <RowDefinition Height="430" />
             <RowDefinition Height="10" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu Background="White" BorderBrush="#DDE5F5" BorderThickness="0" FontWeight="Bold" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <MenuItem x:Name="HardwareMenuItem" Header="Hardware" Padding="4" />
+                <MenuItem x:Name="LogsMenuItem" Header="Logs" Padding="4" />
                 <MenuItem Header="Shell" Padding="4" ScrollViewer.CanContentScroll="True" UseLayoutRounding="False">
                     <MenuItem x:Name="RunCmdPrompt" Header="CMD Prompt" />
                     <MenuItem x:Name="RunPowerShell" Header="Windows PowerShell" />
                     <MenuItem x:Name="RunPwsh" Header="PowerShell 7" Visibility="Collapsed" />
                 </MenuItem>
-                <MenuItem x:Name="HardwareMenuItem" Header="Hardware" Padding="4" />
-                <MenuItem x:Name="LogsMenuItem" Header="Logs" Padding="4" />
                 <MenuItem x:Name="AboutMenuItem" Header="About" Padding="4" />
             </Menu>
         </Grid>
-        <Border Grid.Row="1" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="0" Margin="4">
+        <Border Grid.Row="1" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20" />
@@ -34,102 +34,40 @@
                     <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="180" />
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Serial Number" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="SummaryDeviceSerialText" x:Name="SummaryDeviceSerialText" Foreground="DarkGray" FontWeight="Bold"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="deviceSerialNumberText" x:Name="deviceSerialNumberText" Foreground="DarkGray" FontWeight="Bold"/>
                 <TextBlock Grid.Row="0" Grid.Column="3" Text="UUID" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="0" Grid.Column="4" Text="SummaryDeviceUUIDText" x:Name="SummaryDeviceUUIDText" Foreground="DarkGray" FontWeight="Bold"/>
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="deviceUUIDText" x:Name="deviceUUIDText" Foreground="DarkGray" FontWeight="Bold"/>
 
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Manufacturer" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="SummaryDeviceManufacturerText" x:Name="SummaryDeviceManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceManufacturerText" x:Name="deviceManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
                 <TextBlock Grid.Row="1" Grid.Column="3" Text="Model" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="1" Grid.Column="4" Text="SummaryDeviceModelText" x:Name="SummaryDeviceModelText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="4" Text="deviceModelText" x:Name="deviceModelText" Foreground="DarkGray" FontWeight="Bold" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="System Product" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="ComputerProductText" x:Name="ComputerProductText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="deviceProductText" x:Name="deviceProductText" Foreground="DarkGray" FontWeight="Bold" />
                 <TextBlock Grid.Row="2" Grid.Column="3" Text="System SKU" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="2" Grid.Column="4" Text="ComputerSystemSKUNumberText" x:Name="ComputerSystemSKUNumberText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="2" Grid.Column="4" Text="deviceSystemSKUText" x:Name="deviceSystemSKUText" Foreground="DarkGray" FontWeight="Bold" />
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Memory" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="SummaryDeviceMemoryText" x:Name="SummaryDeviceMemoryText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="deviceTotalMemoryText" x:Name="deviceTotalMemoryText" Foreground="DarkGray" FontWeight="Bold" />
             </Grid>
         </Border>
-        <TabControl Grid.Row="3" Grid.RowSpan="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Margin="4" Padding="0">
+        <TabControl Grid.Row="3" Grid.RowSpan="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="FontWeight" Value="Bold" />
                 </Style>
             </TabControl.Resources>
-            <TabItem Header="Deployment Summary">
-                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="10" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="20" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="110" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Task Sequence" Foreground="#3b455a" Margin="0,0,8,0" />
-                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="SummaryTaskSequenceText" Text="Not selected" Foreground="#3b455a" TextWrapping="Wrap" />
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Operating System" Foreground="#3b455a" Margin="0,0,8,0" />
-                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="SummaryOsNameText" Text="Not selected" Foreground="#3b455a" TextWrapping="Wrap" />
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Edition" Foreground="#3b455a" Margin="0,0,8,0" />
-                            <TextBlock Grid.Row="4" Grid.Column="1" x:Name="SummaryOsEditionText" Text="-" Foreground="#3b455a" TextWrapping="Wrap" />
-                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Activation" Foreground="#3b455a" Margin="0,0,8,0" />
-                            <TextBlock Grid.Row="5" Grid.Column="1" x:Name="SummaryOsActivationText" Text="-" Foreground="#3b455a" TextWrapping="Wrap" />
-                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Language" Foreground="#3b455a" Margin="0,0,8,0" />
-                            <TextBlock Grid.Row="6" Grid.Column="1" x:Name="SummaryOsLanguageText" Text="-" Foreground="#3b455a" TextWrapping="Wrap" />
-                            <TextBlock Grid.Row="7" Grid.Column="0" Text="File" Foreground="#3b455a" Margin="0,0,8,0" />
-                            <TextBlock Grid.Row="7" Grid.Column="1" x:Name="SummaryOsFileText" Text="-" Foreground="DarkGray" TextWrapping="Wrap" Margin="0,0,8,0" />
-
-                            <TextBlock Grid.Row="15" Grid.Column="0" Text="DriverPack" Foreground="#3b455a" Margin="0,0,8,0" />
-                            <TextBlock Grid.Row="15" Grid.Column="1" x:Name="SummaryDriverPackText" Text="None" Foreground="#3b455a" TextWrapping="Wrap" />
-                            <TextBlock Grid.Row="16" Grid.Column="0" Text="DriverPack Url" FontWeight="SemiBold" Foreground="#3b455a" Margin="0,0,8,0" VerticalAlignment="Top" />
-                            <TextBlock Grid.Row="16" Grid.Column="1" x:Name="SummaryDriverPackUrlText" Text="None" Foreground="DarkGray" TextWrapping="Wrap" VerticalAlignment="Top" />
-                        </Grid>
-                    </ScrollViewer>
-                </Border>
-            </TabItem>
-            <TabItem Header="Settings">
-                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Margin="0" Padding="8">
+            <TabItem Header="Deployment Settings">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -144,15 +82,6 @@
                                 <RowDefinition Height="32" />
                                 <RowDefinition Height="32" />
                                 <RowDefinition Height="20" />
-                                <RowDefinition Height="32" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="32" />
-                                <RowDefinition Height="32" />
-                                <RowDefinition Height="32" />
-                                <RowDefinition Height="32" />
-                                <RowDefinition Height="32" />
-                                <RowDefinition Height="32" />
-                                <RowDefinition Height="32" />
                                 <RowDefinition Height="32" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -189,13 +118,8 @@
                             <TextBlock Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Text="DriverPack Url" Margin="4" />
                             <TextBlock Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="5" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap" x:Name="DriverPackUrlText" Text="None" Margin="4" />
                             
-                            <TextBlock Grid.Row="11" Grid.Column="0" Text="WinPE Post Action" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                            <ComboBox Grid.Row="11" Grid.Column="1" x:Name="RestartActionCombo" Margin="4" Height="24" FontWeight="SemiBold" ToolTip="env:OSDCLOUD_WINPEPOSTACTION" />
-                            
-                            <TextBlock Grid.Row="13" Grid.Column="0" Text="OOBE Windows Update" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                            <ComboBox Grid.Row="13" Grid.Column="1" x:Name="OOBEWindowsUpdateCombo" Margin="4" Height="24" FontWeight="SemiBold" ToolTip="env:OSDCLOUD_WINPEPOSTACTION" />
-                            <TextBlock Grid.Row="14" Grid.Column="0" Text="OOBE Driver Update" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                            <ComboBox Grid.Row="14" Grid.Column="1" x:Name="OOBEDriverUpdateCombo" Margin="4" Height="24" FontWeight="SemiBold" ToolTip="env:OSDCLOUD_WINPEPOSTACTION" />
+                            <TextBlock Grid.Row="11" Grid.Column="0" Text="Post Action" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
+                            <ComboBox Grid.Row="11" Grid.Column="1" x:Name="PostActionCombo" Margin="4" Height="24" FontWeight="SemiBold" ToolTip="env:OSDCLOUD_POSTACTION" />
                         </Grid>
                     </ScrollViewer>
                 </Border>
@@ -216,34 +140,6 @@
                     </Grid>
                 </Border>
             </TabItem>
-            <TabItem Header="Drivers">
-                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="32" />
-                            <RowDefinition Height="32" />
-                            <RowDefinition Height="32" />
-                            <RowDefinition Height="32" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Manufacturer" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="Unknown" x:Name="ComputerManufacturerText" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" Margin="4" />
-                        <TextBlock Grid.Row="0" Grid.Column="3" Text="Model" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                        <TextBlock Grid.Row="0" Grid.Column="4" Text="Unknown" Grid.ColumnSpan="2" x:Name="ComputerModelText" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" Margin="4" />
-
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Serial Number" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="Unknown" x:Name="SerialNumberText" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" Margin="4" />
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Total Memory" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="Unknown" x:Name="TotalMemoryText" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" Margin="4" />
-                    </Grid>
-                </Border>
-            </TabItem>
             <TabItem Header="Scripts">
                 <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
                     <Grid>
@@ -255,16 +151,21 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="Pre-Deployment Scriptblock" FontWeight="SemiBold" Foreground="#3b455a" Margin="0,0,0,4" />
-                        <TextBox x:Name="PreDeploymentScriptTextBox" Grid.Row="1" Background="WhiteSmoke" Foreground="#3b455a" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" BorderBrush="#d7dde8" BorderThickness="1" Padding="8" ToolTip="PowerShell scriptblock to run before deployment" />
+                        <TextBox Grid.Row="1" x:Name="PreDeploymentScriptTextBox" Background="WhiteSmoke" Foreground="#3b455a" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" BorderBrush="#d7dde8" BorderThickness="1" Padding="8" Text="# PowerShell content in this ScriptBlock will be executed immediately after pressing Start" ToolTip="PowerShell content in this ScriptBlock will be executed immediately after pressing Start" />
                         <TextBlock Grid.Row="3" Text="Post-Deployment Scriptblock" FontWeight="SemiBold" Foreground="#3b455a" Margin="0,0,0,4" />
-                        <TextBox x:Name="PostDeploymentScriptTextBox" Grid.Row="4" Background="WhiteSmoke" Foreground="#3b455a" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" BorderBrush="#d7dde8" BorderThickness="1" Padding="8" ToolTip="PowerShell scriptblock to run after deployment" />
+                        <TextBox Grid.Row="4" x:Name="PostDeploymentScriptTextBox" Background="WhiteSmoke" Foreground="#3b455a" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" BorderBrush="#d7dde8" BorderThickness="1" Padding="8" Text="# PowerShell content in this ScriptBlock will be executed immediately before WinPE Post Action" ToolTip="PowerShell content in this ScriptBlock will be executed immediately before WinPE Post Action" />
                     </Grid>
                 </Border>
             </TabItem>
             <TabItem Header="SetupComplete">
                 <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
                     <Grid>
-                        <TextBox x:Name="SetupCompleteTextBox" Background="WhiteSmoke" Foreground="#3b455a" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" BorderBrush="#d7dde8" BorderThickness="1" Padding="8" ToolTip="Commands to run in SetupComplete.cmd" />
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="SetupComplete.cmd" FontWeight="SemiBold" Foreground="#3b455a" Margin="0,0,0,4" />
+                        <TextBox Grid.Row="1" x:Name="SetupCompleteTextBox" Background="WhiteSmoke" Foreground="#3b455a" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" BorderBrush="#d7dde8" BorderThickness="1" Padding="8" Text="REM CMD content in this block will be executed at the end of SetupComplete.cmd before OOBE starts" ToolTip="CMD content in this block will be executed at the end of SetupComplete.cmd before OOBE starts" />
                     </Grid>
                 </Border>
             </TabItem>
@@ -286,52 +187,64 @@
                     </Grid>
                 </Border>
             </TabItem>
-            <TabItem Header="Analytics">
+            <TabItem Header="Data Collection">
                 <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <TextBlock Text="Deployment Analytics" FontWeight="Bold" FontSize="16" Foreground="#3b455a" Margin="0,0,0,12" />
+                            <TextBlock Text="OSDCloud Data Collection" FontWeight="Bold" FontSize="16" Foreground="#3b455a" Margin="0,0,0,12" />
                             <TextBlock TextWrapping="Wrap" Foreground="#3b455a" Margin="0,0,0,12">
-                                <Run Text="Energy-Mass Equivalence:" FontWeight="SemiBold" />
+                                <Run Text="Device Information:" FontWeight="SemiBold" />
                                 <LineBreak />
-                                <Run Text="E = mc²" FontFamily="Consolas" />
+                                <Run Text="Serial Number: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionSerialNumber" Text="Not Available" FontFamily="Consolas" Foreground="DarkGray" />
                                 <LineBreak />
-                                <Run Text="Where E is energy, m is mass, and c is the speed of light (299,792,458 m/s)" />
+                                <Run Text="Manufacturer: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionManufacturer" Text="Not Available" FontFamily="Consolas" Foreground="DarkGray" />
+                                <LineBreak />
+                                <Run Text="Model: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionModel" Text="Not Available" FontFamily="Consolas" Foreground="DarkGray" />
+                                <LineBreak />
+                                <Run Text="UUID: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionUUID" Text="Not Available" FontFamily="Consolas" Foreground="DarkGray" />
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Foreground="#3b455a" Margin="0,0,0,12">
-                                <Run Text="Deployment Velocity:" FontWeight="SemiBold" />
+                                <Run Text="Operating System Selection:" FontWeight="SemiBold" />
                                 <LineBreak />
-                                <Run Text="v = Δx / Δt" FontFamily="Consolas" />
+                                <Run Text="OS: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionOS" Text="Not Selected" FontFamily="Consolas" Foreground="DarkGray" />
                                 <LineBreak />
-                                <Run Text="Where v is velocity, Δx is displacement, and Δt is time elapsed" />
+                                <Run Text="Language: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionLanguage" Text="Not Selected" FontFamily="Consolas" Foreground="DarkGray" />
+                                <LineBreak />
+                                <Run Text="Edition: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionEdition" Text="Not Selected" FontFamily="Consolas" Foreground="DarkGray" />
+                                <LineBreak />
+                                <Run Text="Activation: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionActivation" Text="Not Selected" FontFamily="Consolas" Foreground="DarkGray" />
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Foreground="#3b455a" Margin="0,0,0,12">
-                                <Run Text="Network Throughput:" FontWeight="SemiBold" />
+                                <Run Text="Task Sequence:" FontWeight="SemiBold" />
                                 <LineBreak />
-                                <Run Text="T = D / t" FontFamily="Consolas" />
-                                <LineBreak />
-                                <Run Text="Where T is throughput (bits/sec), D is data transferred (bits), and t is time (seconds)" />
+                                <Run Text="Task: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionTaskSequence" Text="Not Selected" FontFamily="Consolas" Foreground="DarkGray" />
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Foreground="#3b455a" Margin="0,0,0,12">
-                                <Run Text="Storage Capacity:" FontWeight="SemiBold" />
+                                <Run Text="Driver Configuration:" FontWeight="SemiBold" />
                                 <LineBreak />
-                                <Run Text="C = n × s" FontFamily="Consolas" />
-                                <LineBreak />
-                                <Run Text="Where C is total capacity, n is number of units, and s is size per unit" />
+                                <Run Text="DriverPack: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionDriverPack" Text="Not Selected" FontFamily="Consolas" Foreground="DarkGray" />
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Foreground="#3b455a" Margin="0,0,0,12">
-                                <Run Text="Kinetic Energy:" FontWeight="SemiBold" />
+                                <Run Text="Disk Configuration:" FontWeight="SemiBold" />
                                 <LineBreak />
-                                <Run Text="KE = ½mv²" FontFamily="Consolas" />
-                                <LineBreak />
-                                <Run Text="Where KE is kinetic energy, m is mass, and v is velocity" />
+                                <Run Text="Target Disk: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionTargetDisk" Text="Not Selected" FontFamily="Consolas" Foreground="DarkGray" />
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Foreground="#3b455a">
-                                <Run Text="Power Consumption:" FontWeight="SemiBold" />
+                                <Run Text="Post Action:" FontWeight="SemiBold" />
                                 <LineBreak />
-                                <Run Text="P = E / t" FontFamily="Consolas" />
-                                <LineBreak />
-                                <Run Text="Where P is power (watts), E is energy (joules), and t is time (seconds)" />
+                                <Run Text="Action: " FontFamily="Consolas" />
+                                <Run x:Name="DataCollectionPostAction" Text="Not Selected" FontFamily="Consolas" Foreground="DarkGray" />
                             </TextBlock>
                         </StackPanel>
                     </ScrollViewer>

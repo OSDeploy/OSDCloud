@@ -353,22 +353,22 @@ else {
 
 #================================================
 # Optional Settings
-$RestartActionCombo = $window.FindName("RestartActionCombo")
+$PostActionCombo = $window.FindName("PostActionCombo")
 $AWZoneTextBox = $window.FindName("AWZoneTextBox")
 
-$RestartActionOptions = @('Restart','Shutdown','Exit')
-$RestartActionCombo.ItemsSource = $RestartActionOptions
+$PostActionOptions = @('Quit','Restart','Shutdown')
+$PostActionCombo.ItemsSource = $PostActionOptions
 
-$RestartActionDefault = if ($global:OSDCloudWorkflowInit.RestartAction) {
-	$global:OSDCloudWorkflowInit.RestartAction
+$PostActionDefault = if ($global:OSDCloudWorkflowInit.PostAction) {
+	$global:OSDCloudWorkflowInit.PostAction
 } else {
 	'Exit'
 }
 
-if ($RestartActionDefault -and ($RestartActionOptions -contains $RestartActionDefault)) {
-	$RestartActionCombo.SelectedItem = $RestartActionDefault
+if ($PostActionDefault -and ($PostActionOptions -contains $PostActionDefault)) {
+	$PostActionCombo.SelectedItem = $PostActionDefault
 } else {
-	$RestartActionCombo.SelectedIndex = 0
+	$PostActionCombo.SelectedIndex = 0
 }
 
 if ($AWZoneTextBox) {
@@ -380,18 +380,20 @@ if ($AWZoneTextBox) {
 }
 #================================================
 # Other Settings
-$ComputerManufacturerText = $window.FindName("ComputerManufacturerText")
-$ComputerManufacturerText.Text = $ComputerManufacturer
-$ComputerModelText = $window.FindName("ComputerModelText")
-$ComputerModelText.Text = $ComputerModel
-$ComputerProductText = $window.FindName("ComputerProductText")
-$ComputerProductText.Text = $ComputerProduct
-$ComputerSystemSKUNumberText = $window.FindName("ComputerSystemSKUNumberText")
-$ComputerSystemSKUNumberText.Text = $ComputerSystemSKUNumber
-$SerialNumberText = $window.FindName("SerialNumberText")
-$SerialNumberText.Text = $SerialNumber
-$TotalMemoryText = $window.FindName("TotalMemoryText")
-$TotalMemoryText.Text = if ($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) {
+$deviceManufacturerText = $window.FindName("deviceManufacturerText")
+$deviceManufacturerText.Text = $ComputerManufacturer
+$deviceModelText = $window.FindName("deviceModelText")
+$deviceModelText.Text = $ComputerModel
+$deviceProductText = $window.FindName("deviceProductText")
+$deviceProductText.Text = $ComputerProduct
+$deviceSystemSKUText = $window.FindName("deviceSystemSKUText")
+$deviceSystemSKUText.Text = $ComputerSystemSKUNumber
+$deviceSerialNumberText = $window.FindName("deviceSerialNumberText")
+$deviceSerialNumberText.Text = $SerialNumber
+$deviceUUIDText = $window.FindName("deviceUUIDText")
+$deviceUUIDText.Text = $UUID
+$deviceTotalMemoryText = $window.FindName("deviceTotalMemoryText")
+$deviceTotalMemoryText.Text = if ($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) {
 	"$($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) GB"
 } else {
 	'Unknown'
@@ -403,7 +405,7 @@ if ($SetupCompleteTextBox) {
 	$SetupCompleteTextBox.Text = if (-not [string]::IsNullOrWhiteSpace($setupCompleteValue)) {
 		$setupCompleteValue
 	} else {
-		[string]::Empty
+		[string]"REM CMD content in this block will be executed at the end of SetupComplete.cmd before OOBE starts"
 	}
 }
 
@@ -414,20 +416,6 @@ $DriverPackUrlText = $window.FindName("DriverPackUrlText")
 $DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
 $StartButton = $window.FindName("StartButton")
 $StartButton.IsEnabled = $false
-
-$SummaryOsNameText = $window.FindName('SummaryOsNameText')
-$SummaryOsEditionText = $window.FindName('SummaryOsEditionText')
-$SummaryOsActivationText = $window.FindName('SummaryOsActivationText')
-$SummaryOsLanguageText = $window.FindName('SummaryOsLanguageText')
-$SummaryOsFileText = $window.FindName('SummaryOsFileText')
-$SummaryDeviceUUIDText = $window.FindName('SummaryDeviceUUIDText')
-$SummaryDeviceManufacturerText = $window.FindName('SummaryDeviceManufacturerText')
-$SummaryDeviceModelText = $window.FindName('SummaryDeviceModelText')
-$SummaryDeviceSerialText = $window.FindName('SummaryDeviceSerialText')
-$SummaryDeviceMemoryText = $window.FindName('SummaryDeviceMemoryText')
-$SummaryTaskSequenceText = $window.FindName('SummaryTaskSequenceText')
-$SummaryDriverPackText = $window.FindName('SummaryDriverPackText')
-$SummaryDriverPackUrlText = $window.FindName('SummaryDriverPackUrlText')
 $DiskCombo = $window.FindName('DiskCombo')
 
 function Get-ComboValue {
@@ -447,33 +435,6 @@ function Get-ComboValue {
 	}
 
 	return $text
-}
-
-function Update-Summary {
-	if (-not $SummaryOsNameText) {
-		return
-	}
-
-	$osObject = $global:OSDCloudWorkflowInit.OperatingSystemObject
-	$SummaryOsNameText.Text = if ($osObject) { [string]$osObject.OperatingSystem } else { 'Not selected' }
-	$SummaryOsEditionText.Text = if ($OSEditionCombo) { Get-ComboValue -ComboBox $OSEditionCombo } else { '-' }
-	$SummaryOsActivationText.Text = if ($OSActivationCombo) { Get-ComboValue -ComboBox $OSActivationCombo } else { '-' }
-	$SummaryOsLanguageText.Text = if ($osObject -and $osObject.OSLanguageCode) { [string]$osObject.OSLanguageCode } elseif ($OSLanguageCodeCombo) { Get-ComboValue -ComboBox $OSLanguageCodeCombo } else { '-' }
-	$SummaryOsFileText.Text = if ($osObject) { [string]$osObject.FileName } else { '-' }
-
-	$SummaryDeviceUUIDText.Text = if (-not [string]::IsNullOrWhiteSpace($UUID)) { $UUID } else { 'Unknown' }
-	$SummaryDeviceManufacturerText.Text = if (-not [string]::IsNullOrWhiteSpace($ComputerManufacturer)) { $ComputerManufacturer } else { 'Unknown' }
-	$SummaryDeviceModelText.Text = if (-not [string]::IsNullOrWhiteSpace($ComputerModel)) { $ComputerModel } else { 'Unknown' }
-	$SummaryDeviceSerialText.Text = if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) { $SerialNumber } else { 'Unknown' }
-	$SummaryDeviceMemoryText.Text = if ($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) { "$($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) GB" } else { 'Unknown' }
-
-	if ($SummaryDriverPackText) {
-		$driverPackValue = [string]$DriverPackCombo.SelectedItem
-		$SummaryDriverPackText.Text = if (-not [string]::IsNullOrWhiteSpace($driverPackValue)) { $driverPackValue } else { 'None' }
-	}
-	if ($SummaryDriverPackUrlText) {
-		$SummaryDriverPackUrlText.Text = if ($DriverPackUrlText) { [string]$DriverPackUrlText.Text } else { 'None' }
-	}
 }
 
 function Set-StartButtonState {
@@ -546,8 +507,6 @@ function Update-OsResults {
 
 	Update-SelectedDetails -Item $script:SelectedImage
 
-	Update-Summary
-
 	Set-StartButtonState
 }
 
@@ -556,7 +515,6 @@ function Update-DriverPackResults {
 	$global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
 	$global:OSDCloudWorkflowInit.DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
 	$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
-	Update-Summary
 }
 
 $OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
@@ -623,7 +581,7 @@ if ($script:SelectionConfirmed) {
 	$global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
 	$global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath
 	$global:OSDCloudWorkflowInit.LocalImageName = $LocalImageName
-	$global:OSDCloudWorkflowInit.RestartAction = Get-ComboValue -ComboBox $RestartActionCombo
+	$global:OSDCloudWorkflowInit.PostAction = Get-ComboValue -ComboBox $PostActionCombo
 
 	if ([string]::IsNullOrWhiteSpace($AWDeploymentTextBox.Text)) {
 		$global:OSDCloudWorkflowInit.ApplicationWorkspaceDeployment = $null
