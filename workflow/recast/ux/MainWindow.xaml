@@ -40,24 +40,25 @@
                     <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Serial Number" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="deviceSerialNumberText" x:Name="deviceSerialNumberText" Foreground="DarkGray" FontWeight="Bold"/>
-                <TextBlock Grid.Row="0" Grid.Column="3" Text="UUID" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="0" Grid.Column="4" Text="deviceUUIDText" x:Name="deviceUUIDText" Foreground="DarkGray" FontWeight="Bold"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Manufacturer" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="deviceManufacturerText" x:Name="deviceManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="Model" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="deviceModelText" x:Name="deviceModelText" Foreground="DarkGray" FontWeight="Bold" />
 
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Product" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceProductText" x:Name="deviceProductText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="3" Text="System SKU" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="4" Text="deviceSystemSKUText" x:Name="deviceSystemSKUText" Foreground="DarkGray" FontWeight="Bold" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Manufacturer" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceManufacturerText" x:Name="deviceManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
-                <TextBlock Grid.Row="1" Grid.Column="3" Text="Model" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="1" Grid.Column="4" Text="deviceModelText" x:Name="deviceModelText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Serial Number" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="deviceSerialNumberText" x:Name="deviceSerialNumberText" Foreground="Blue" FontWeight="Bold"/>
+                <TextBlock Grid.Row="2" Grid.Column="3" Text="UUID" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="2" Grid.Column="4" Text="deviceUUIDText" x:Name="deviceUUIDText" Foreground="DarkGray" FontWeight="Bold"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="System Product" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="deviceProductText" x:Name="deviceProductText" Foreground="DarkGray" FontWeight="Bold" />
-                <TextBlock Grid.Row="2" Grid.Column="3" Text="System SKU" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="2" Grid.Column="4" Text="deviceSystemSKUText" x:Name="deviceSystemSKUText" Foreground="DarkGray" FontWeight="Bold" />
-
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Memory" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="deviceTotalMemoryText" x:Name="deviceTotalMemoryText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Bios Version" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="deviceBiosVersionText" x:Name="deviceBiosVersionText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="3" Grid.Column="3" Text="Bios Date" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="3" Grid.Column="4" Text="deviceBiosReleaseDateText" x:Name="deviceBiosReleaseDateText" Foreground="DarkGray" FontWeight="Bold" />
             </Grid>
         </Border>
         <TabControl Grid.Row="3" Grid.RowSpan="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
@@ -187,11 +188,11 @@
                     </Grid>
                 </Border>
             </TabItem>
-            <TabItem Header="Data Collection">
+            <TabItem Header="Analytics">
                 <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel>
-                            <TextBlock Text="OSDCloud Data Collection" FontWeight="Bold" FontSize="16" Foreground="#3b455a" Margin="0,0,0,12" />
+                            <TextBlock Text="OSDCloud Analytics" FontWeight="Bold" FontSize="16" Foreground="#3b455a" Margin="0,0,0,12" />
                             <TextBlock TextWrapping="Wrap" Foreground="#3b455a" Margin="0,0,0,12">
                                 <Run Text="Device Information:" FontWeight="SemiBold" />
                                 <LineBreak />

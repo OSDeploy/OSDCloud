@@ -8,18 +8,15 @@ param()
 Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
 #================================================
 # Variables
-$Architecture = $global:OSDCloudWorkflowDevice.ProcessorArchitecture
-$BiosReleaseDate = $global:OSDCloudWorkflowDevice.BiosReleaseDate
-$BiosVersion = $global:OSDCloudWorkflowDevice.BiosVersion
-$ChassisType = $global:OSDCloudWorkflowDevice.ChassisType
-$ComputerManufacturer = $global:OSDCloudWorkflowDevice.ComputerManufacturer
-$ComputerModel = $global:OSDCloudWorkflowDevice.ComputerModel
-$ComputerProduct = $global:OSDCloudWorkflowDevice.ComputerProduct
-$ComputerSystemSKUNumber = $global:OSDCloudWorkflowDevice.ComputerSystemSKUNumber
-$IsAutopilotReady = $global:OSDCloudWorkflowDevice.IsAutopilotReady
-$IsTpmReady = $global:OSDCloudWorkflowDevice.IsTpmReady
-$SerialNumber = $global:OSDCloudWorkflowDevice.SerialNumber
-$UUID = $global:OSDCloudWorkflowDevice.UUID
+$deviceBiosVersion = $global:OSDCloudWorkflowDevice.BiosVersion
+$deviceBiosReleaseDate = $global:OSDCloudWorkflowDevice.BiosReleaseDate
+$deviceComputerManufacturer = $global:OSDCloudWorkflowDevice.ComputerManufacturer
+$deviceUUID = $global:OSDCloudWorkflowDevice.UUID
+$deviceComputerModel = $global:OSDCloudWorkflowDevice.ComputerModel
+$deviceComputerProduct = $global:OSDCloudWorkflowDevice.ComputerProduct
+$deviceComputerSystemSKUNumber = $global:OSDCloudWorkflowDevice.ComputerSystemSKUNumber
+$deviceSerialNumber = $global:OSDCloudWorkflowDevice.SerialNumber
+$getOSDCloudModuleVersion = Get-OSDCloudModuleVersion
 #================================================
 # XAML
 $xamlfile = Get-Item -Path "$PSScriptRoot\MainWindow.xaml"
@@ -28,23 +25,15 @@ $xaml = Get-Content $xamlfile.FullName
 $stringReader = [System.IO.StringReader]::new($xaml)
 $xmlReader = [System.Xml.XmlReader]::Create($stringReader)
 $window = [Windows.Markup.XamlReader]::Load($xmlReader)
+#================================================
+# XAML - Window Title
 $deviceTitleParts = @()
-$manufacturerText = [string]$ComputerManufacturer
-$modelText = [string]$ComputerModel
-$serialText = [string]$SerialNumber
 
-if (-not [string]::IsNullOrWhiteSpace($manufacturerText)) {
-	$deviceTitleParts += $manufacturerText
+if (-not [string]::IsNullOrWhiteSpace($getOSDCloudModuleVersion)) {
+	$deviceTitleParts += $getOSDCloudModuleVersion
 }
-if (-not [string]::IsNullOrWhiteSpace($modelText)) {
-	$deviceTitleParts += $modelText
-}
-if (-not [string]::IsNullOrWhiteSpace($serialText)) {
-	$deviceTitleParts += "$serialText"
-}
-
 if ($deviceTitleParts.Count -gt 0) {
-	$window.Title = "OSDCloud on $($deviceTitleParts -join ' - ')"
+	$window.Title = "OSDCloud version $($deviceTitleParts -join ' - ')"
 }
 #================================================
 # Logo
@@ -380,24 +369,31 @@ if ($AWZoneTextBox) {
 }
 #================================================
 # Other Settings
+$deviceBiosVersionText = $window.FindName("deviceBiosVersionText")
+$deviceBiosVersionText.Text = $deviceBiosVersion
+$deviceBiosReleaseDateText = $window.FindName("deviceBiosReleaseDateText")
+$deviceBiosReleaseDateText.Text = $deviceBiosReleaseDate
 $deviceManufacturerText = $window.FindName("deviceManufacturerText")
-$deviceManufacturerText.Text = $ComputerManufacturer
+$deviceManufacturerText.Text = $deviceComputerManufacturer
 $deviceModelText = $window.FindName("deviceModelText")
-$deviceModelText.Text = $ComputerModel
+$deviceModelText.Text = $deviceComputerModel
 $deviceProductText = $window.FindName("deviceProductText")
-$deviceProductText.Text = $ComputerProduct
+$deviceProductText.Text = $deviceComputerProduct
 $deviceSystemSKUText = $window.FindName("deviceSystemSKUText")
-$deviceSystemSKUText.Text = $ComputerSystemSKUNumber
+$deviceSystemSKUText.Text = $deviceComputerSystemSKUNumber
 $deviceSerialNumberText = $window.FindName("deviceSerialNumberText")
-$deviceSerialNumberText.Text = $SerialNumber
+$deviceSerialNumberText.Text = $deviceSerialNumber
 $deviceUUIDText = $window.FindName("deviceUUIDText")
-$deviceUUIDText.Text = $UUID
+$deviceUUIDText.Text = $deviceUUID
+
+<#
 $deviceTotalMemoryText = $window.FindName("deviceTotalMemoryText")
 $deviceTotalMemoryText.Text = if ($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) {
 	"$($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) GB"
 } else {
 	'Unknown'
 }
+#>
 
 $SetupCompleteTextBox = $window.FindName("SetupCompleteTextBox")
 $setupCompleteValue = [string]$global:OSDCloudWorkflowInit.SetupCompleteCmd
