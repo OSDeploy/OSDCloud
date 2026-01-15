@@ -32,6 +32,7 @@
                     <RowDefinition Height="20" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="20" />
+                    <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120" />
@@ -59,6 +60,11 @@
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="deviceBiosVersionText" x:Name="deviceBiosVersionText" Foreground="DarkGray" FontWeight="Bold" />
                 <TextBlock Grid.Row="3" Grid.Column="3" Text="Bios Date" Margin="8,0" FontWeight="Bold" />
                 <TextBlock Grid.Row="3" Grid.Column="4" Text="deviceBiosReleaseDateText" x:Name="deviceBiosReleaseDateText" Foreground="DarkGray" FontWeight="Bold" />
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="TPM 2.0" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="deviceIsTpmReadyText" x:Name="deviceIsTpmReadyText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="4" Grid.Column="3" Text="Autopilot Compat" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="4" Grid.Column="4" Text="deviceIsAutopilotReadyText" x:Name="deviceIsAutopilotReadyText" Foreground="DarkGray" FontWeight="Bold" />
             </Grid>
         </Border>
         <TabControl Grid.Row="3" Grid.RowSpan="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
@@ -136,7 +142,7 @@
                             <ColumnDefinition Width="120" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Disk" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Target Disk Index" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
                         <ComboBox x:Name="DiskCombo" Grid.Row="0" Grid.Column="1" Margin="4" Height="24" FontWeight="SemiBold" />
                     </Grid>
                 </Border>

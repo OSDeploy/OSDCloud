@@ -17,6 +17,8 @@ $deviceComputerProduct = $global:OSDCloudWorkflowDevice.ComputerProduct
 $deviceComputerSystemSKUNumber = $global:OSDCloudWorkflowDevice.ComputerSystemSKUNumber
 $deviceSerialNumber = $global:OSDCloudWorkflowDevice.SerialNumber
 $getOSDCloudModuleVersion = Get-OSDCloudModuleVersion
+$deviceIsAutopilotReady = $global:OSDCloudWorkflowDevice.IsAutopilotReady
+$deviceIsTPMReady = $global:OSDCloudWorkflowDevice.IsTPMReady
 #================================================
 # XAML
 $xamlfile = Get-Item -Path "$PSScriptRoot\MainWindow.xaml"
@@ -383,6 +385,10 @@ $deviceSystemSKUText = $window.FindName("deviceSystemSKUText")
 $deviceSystemSKUText.Text = $deviceComputerSystemSKUNumber
 $deviceSerialNumberText = $window.FindName("deviceSerialNumberText")
 $deviceSerialNumberText.Text = $deviceSerialNumber
+$deviceIsAutopilotReadyText = $window.FindName("deviceIsAutopilotReadyText")
+$deviceIsAutopilotReadyText.Text = $deviceIsAutopilotReady
+$deviceIsTpmReadyText = $window.FindName("deviceIsTpmReadyText")
+$deviceIsTpmReadyText.Text = $deviceIsTPMReady
 $deviceUUIDText = $window.FindName("deviceUUIDText")
 $deviceUUIDText.Text = $deviceUUID
 
