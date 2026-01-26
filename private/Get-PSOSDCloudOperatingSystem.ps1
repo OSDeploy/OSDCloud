@@ -33,7 +33,6 @@ function Get-PSOSDCloudOperatingSystem {
     # OSDCloud OSLanguageCode
     # Preference Order:
     # 1. Parameter
-    # Do it
     # 2. $global:OSDCLOUD_OSLANGUAGECODE
     $LanguageCodeGlobal = $global:OSDCLOUD_OSLANGUAGECODE
     # 3. $env:OSDCLOUD_OSLANGUAGECODE

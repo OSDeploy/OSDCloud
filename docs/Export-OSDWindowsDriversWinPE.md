@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Invoke-OSDCloudPEStartup
+# Export-OSDWindowsDriversWinPE
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,8 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Invoke-OSDCloudPEStartup [-Id] <String> [[-Value] <String>] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+Export-OSDWindowsDriversWinPE [[-Path] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -23,7 +22,7 @@ Invoke-OSDCloudPEStartup [-Id] <String> [[-Value] <String>] [-ProgressAction <Ac
 ## EXAMPLES
 
 ### Example 1
-```
+```powershell
 PS C:\> {{ Add example code here }}
 ```
 
@@ -31,24 +30,8 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
-### -Id
-{{ Fill Id Description }}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-Accepted values: OSK, DeviceHardware, Info, IPConfig, UpdateModule, WiFi
-
-Required: True
-Position: 0
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Value
-{{ Fill Value Description }}
+### -Path
+{{ Fill Path Description }}
 
 ```yaml
 Type: String
@@ -56,9 +39,9 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 1
+Position: 0
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -82,7 +65,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
+### System.String
+
 ## OUTPUTS
 
 ### System.Object
