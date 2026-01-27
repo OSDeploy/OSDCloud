@@ -13,24 +13,24 @@ function Initialize-OSDCloudWorkflowSettingsUser {
         $AsJson,
 
         [System.String]
-        $Architecture = $Env:PROCESSOR_ARCHITECTURE,
+        $Architecture = $env:PROCESSOR_ARCHITECTURE,
 
         $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow"
     )
     #=================================================
     $Error.Clear()
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     $ModuleName = $($MyInvocation.MyCommand.Module.Name)
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleName: $ModuleName"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ModuleName: $ModuleName"
     $ModuleBase = $($MyInvocation.MyCommand.Module.ModuleBase)
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleBase: $ModuleBase"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ModuleBase: $ModuleBase"
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
     # Workflow Path must exist, there is no fallback
     if (-not (Test-Path $Path)) {
-        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] The specified Path does not exist"
-        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] $Path"
+        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] The specified Path does not exist"
+        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $Path"
         break
     }
 
@@ -49,28 +49,29 @@ function Initialize-OSDCloudWorkflowSettingsUser {
         }
     }
 
-    if (-not (Test-Path $PathAmd64)) {
-        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathAmd64"
-        break
-    }
-    else {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] $PathAmd64"
-    }
-    if (-not (Test-Path $PathArm64)) {
-        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathArm64"
-        break
-    }
-    else {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] $PathArm64"
-    }
-
     # Import the RAW content of the JSON file
     if ($Architecture -eq 'AMD64') {
+        if (-not (Test-Path $PathAmd64)) {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathAmd64"
+            break
+        }
+        else {
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathAmd64"
+        }
         $SettingsUserPath = $PathAmd64
-    } elseif ($Architecture -eq 'ARM64') {
+    }
+    elseif ($Architecture -eq 'ARM64') {
+        if (-not (Test-Path $PathArm64)) {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathArm64"
+            break
+        }
+        else {
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathArm64"
+        }
         $SettingsUserPath = $PathArm64
-    } else {
-        Write-Warning "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
+    }
+    else {
+        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
         break
     }
     $rawJsonContent = Get-Content -Path $SettingsUserPath -Raw
@@ -85,11 +86,11 @@ function Initialize-OSDCloudWorkflowSettingsUser {
     $hashtable = [ordered]@{}
     (ConvertFrom-Json $JsonContent).psobject.properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
 
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowSettingsUser: $SettingsUserPath"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowSettingsUser: $SettingsUserPath"
     $global:OSDCloudWorkflowSettingsUser = $hashtable
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

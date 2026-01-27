@@ -3,7 +3,7 @@ function step-preinstall-restoreusbdriveletter {
     param ()
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -11,7 +11,7 @@ function step-preinstall-restoreusbdriveletter {
     #=================================================
     #region Main
     if ($global:OSDCloudWorkflowInvoke.USBPartitions) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Restoring USB Drive Letters. OK."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Restoring USB Drive Letters. OK."
         foreach ($Item in $global:OSDCloudWorkflowInvoke.USBPartitions) {
             $Params = @{
                 AssignDriveLetter = $true
@@ -25,7 +25,7 @@ function step-preinstall-restoreusbdriveletter {
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

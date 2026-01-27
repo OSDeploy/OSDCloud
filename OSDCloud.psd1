@@ -12,7 +12,7 @@
 RootModule = 'OSDCloud.psm1'
 
 # Version number of this module.
-ModuleVersion = '25.9.30.3'
+ModuleVersion = '26.1.26.1'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop'
@@ -77,14 +77,13 @@ FunctionsToExport =
     'Get-OSDCloudModulePath',
     'Get-OSDCloudModuleVersion',
     'Invoke-OSDCloudPEStartup',
-    'Start-OSDCloudWorkflow',
     'Use-PEStartupDeviceInfo',
     'Use-PEStartupHardware',
     'Use-PEStartupHardwareErrors',
     'Use-PEStartupIpconfig',
     'Use-PEStartupUpdateModule',
-    'Use-PEStartupWiFi'
-
+    'Use-PEStartupWiFi',
+    'Export-OSDWindowsDriversWinPE'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

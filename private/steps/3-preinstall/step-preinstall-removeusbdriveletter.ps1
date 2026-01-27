@@ -3,7 +3,7 @@ function step-preinstall-removeusbdriveletter {
     param ()
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -21,7 +21,7 @@ function step-preinstall-removeusbdriveletter {
 
     # Remove USB Drive Letters
     if ($global:OSDCloudWorkflowInvoke.USBPartitions) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)] Removing USB Drive Letters. OK."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Removing USB Drive Letters. OK."
         foreach ($Item in $global:OSDCloudWorkflowInvoke.USBPartitions) {
             $Params = @{
                 AccessPath      = "$($Item.DriveLetter):"
@@ -35,7 +35,7 @@ function step-preinstall-removeusbdriveletter {
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

@@ -5,14 +5,14 @@ function step-powershell-savemodule {
     )
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     #region Main
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format G)]"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)]"
     $PowerShellSavePath = 'C:\Program Files\WindowsPowerShell'
 
     if (-not (Test-Path "$PowerShellSavePath\Configuration")) {
@@ -29,11 +29,11 @@ function step-powershell-savemodule {
         Save-Module -Name $Name -Path "$PowerShellSavePath\Modules" -Force -ErrorAction Stop
     }
     catch {
-        Write-Warning "[$(Get-Date -format G)] Unable to Save-Module $Name to $PowerShellSavePath\Modules"
+        Write-Warning "[$(Get-Date -format s)] Unable to Save-Module $Name to $PowerShellSavePath\Modules"
     }
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

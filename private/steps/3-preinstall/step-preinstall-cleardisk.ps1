@@ -7,7 +7,7 @@ function step-preinstall-cleardisk {
     )
     #=================================================
     # Start the step
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
@@ -16,7 +16,7 @@ function step-preinstall-cleardisk {
     #region Main
     # If Confirm is set to false, we need to check if there are multiple disks
     if (($Confirm -eq $false) -and (($global:OSDCloudWorkflowInvoke.GetDiskFixed | Measure-Object).Count -ge 2)) {
-        Write-Warning "[$(Get-Date -format G)] OSDCloud has detected more than 1 Fixed Disk is installed. Clear-Disk with Confirm is required"
+        Write-Warning "[$(Get-Date -format s)] OSDCloud has detected more than 1 Fixed Disk is installed. Clear-Disk with Confirm is required"
         $Confirm = $true
     }
 
@@ -24,7 +24,7 @@ function step-preinstall-cleardisk {
     #endregion
     #=================================================
     # End the function
-    $Message = "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
 }

@@ -2,9 +2,9 @@ function Use-PEStartupDeviceInfo {
     [CmdletBinding()]
     param ()
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     $Error.Clear()
-    $host.ui.RawUI.WindowTitle = "[$(Get-Date -format G)] OSDCloud WinPE and Device Information"
+    $host.ui.RawUI.WindowTitle = "[$(Get-Date -format s)] OSDCloud WinPE and Device Information"
     #=================================================
     # Modules
     $OSDModuleVersion = (Get-OSDModuleVersion).ToString()
@@ -20,20 +20,11 @@ function Use-PEStartupDeviceInfo {
     #=================================================
     # Export Hardware Information
     # Write-Host -ForegroundColor DarkCyan "Gathering Device Information"
-    $Win32Battery = Get-CimInstance -ClassName Win32_Battery | Select-Object -Property *
-    $Win32Battery | Out-File $LogsPath\Win32_Battery.txt -Width 4096 -Force
     $Win32BaseBoard = Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property *
-    $Win32BaseBoard | Out-File $LogsPath\Win32_BaseBoard.txt -Width 4096 -Force
     $Win32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
-    $Win32BIOS | Out-File $LogsPath\Win32_BIOS.txt -Width 4096 -Force
     $Win32ComputerSystem = Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -Property *
-    $Win32ComputerSystem | Out-File $LogsPath\Win32_ComputerSystem.txt -Width 4096 -Force
     $Win32OperatingSystem = Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -Property *
-    $Win32OperatingSystem | Out-File $LogsPath\Win32_OperatingSystem.txt -Width 4096 -Force
     $Win32Processor = Get-CimInstance -ClassName Win32_Processor | Select-Object -Property *
-    $Win32Processor | Out-File $LogsPath\Win32_Processor.txt -Width 4096 -Force
-    $Win32PnPEntityError = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object -Property * | Where-Object { $_.Status -eq 'Error' } | Sort-Object HardwareID -Unique | Sort-Object Name
-    $Win32PnPEntityError | Out-File $LogsPath\Win32_PnPEntityError.txt -Width 4096 -Force
     #=================================================
     # Device Details
     Write-Host -ForegroundColor DarkGray "WinPE" $Win32OperatingSystem.Version $Win32OperatingSystem.OSArchitecture
@@ -119,6 +110,6 @@ function Use-PEStartupDeviceInfo {
     }
     # Start backup PowerShell Session (minimized)
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] End"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     #=================================================
 }

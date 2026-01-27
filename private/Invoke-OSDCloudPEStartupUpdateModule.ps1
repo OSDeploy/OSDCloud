@@ -23,7 +23,7 @@ function Invoke-OSDCloudPEStartupUpdateModule {
 	)
     #=================================================
     $Error.Clear()
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Start"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     #=================================================
 	# Are we on the last version of the module?
     $InstalledModule = Get-Module -Name $Name -ListAvailable -ErrorAction Ignore | Sort-Object Version -Descending | Select-Object -First 1
@@ -90,7 +90,7 @@ $Unattend = @"
 	$Unattend | Out-File -FilePath "$env:Temp\UpdatePSModule$Name.xml" -Encoding utf8 -Force
 
 	if ($Wait -and $NoExit) {
-		Write-Host -ForegroundColor Yellow "[$(Get-Date -format G)] This window may need to be closed to continue the WinPE startup process"
+		Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] This window may need to be closed to continue the WinPE startup process"
 	}
 	
 	if ($Wait) {
@@ -101,6 +101,6 @@ $Unattend = @"
 	}
 	
     #=================================================
-    Write-Verbose "[$(Get-Date -format G)] [$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Done"
     #=================================================
 }
