@@ -124,8 +124,40 @@
                             
                             <TextBlock Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Text="DriverPack Url" Margin="4" />
                             <TextBlock Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="5" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap" x:Name="DriverPackUrlText" Text="None" Margin="4" />
+                            
+                            <TextBlock Grid.Row="11" Grid.Column="0" Text="Post Action" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
+                            <ComboBox Grid.Row="11" Grid.Column="1" x:Name="PostActionCombo" Margin="4" Height="24" FontWeight="SemiBold" ToolTip="env:OSDCLOUD_POSTACTION" />
                         </Grid>
                     </ScrollViewer>
+                </Border>
+            </TabItem>
+            <TabItem Header="Scripts">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Pre-Deployment Scriptblock" FontWeight="SemiBold" Foreground="#3b455a" Margin="0,0,0,4" />
+                        <TextBox Grid.Row="1" x:Name="PreDeploymentScriptTextBox" Background="WhiteSmoke" Foreground="#3b455a" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" BorderBrush="#d7dde8" BorderThickness="1" Padding="8" Text="# PowerShell content in this ScriptBlock will be executed immediately after pressing Start" ToolTip="PowerShell content in this ScriptBlock will be executed immediately after pressing Start" />
+                        <TextBlock Grid.Row="3" Text="Post-Deployment Scriptblock" FontWeight="SemiBold" Foreground="#3b455a" Margin="0,0,0,4" />
+                        <TextBox Grid.Row="4" x:Name="PostDeploymentScriptTextBox" Background="WhiteSmoke" Foreground="#3b455a" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" BorderBrush="#d7dde8" BorderThickness="1" Padding="8" Text="# PowerShell content in this ScriptBlock will be executed immediately before WinPE Post Action" ToolTip="PowerShell content in this ScriptBlock will be executed immediately before WinPE Post Action" />
+                    </Grid>
+                </Border>
+            </TabItem>
+            <TabItem Header="SetupComplete">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="16" Margin="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="SetupComplete.cmd" FontWeight="SemiBold" Foreground="#3b455a" Margin="0,0,0,4" />
+                        <TextBox Grid.Row="1" x:Name="SetupCompleteTextBox" Background="WhiteSmoke" Foreground="#3b455a" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" BorderBrush="#d7dde8" BorderThickness="1" Padding="8" Text="REM CMD content in this block will be executed at the end of SetupComplete.cmd before OOBE starts" ToolTip="CMD content in this block will be executed at the end of SetupComplete.cmd before OOBE starts" />
+                    </Grid>
                 </Border>
             </TabItem>
         </TabControl>

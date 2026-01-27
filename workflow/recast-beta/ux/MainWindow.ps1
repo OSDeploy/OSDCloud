@@ -324,6 +324,24 @@ if ($global:OSDCloudWorkflowInit.DriverPackName) {
 else {
 	$DriverPackCombo.SelectedIndex = 0
 }
+
+#================================================
+# Optional Settings
+$PostActionCombo = $window.FindName("PostActionCombo")
+$PostActionOptions = @('Quit','Restart','Shutdown')
+$PostActionCombo.ItemsSource = $PostActionOptions
+
+$PostActionDefault = if ($global:OSDCloudWorkflowInit.PostAction) {
+	$global:OSDCloudWorkflowInit.PostAction
+} else {
+	'Exit'
+}
+
+if ($PostActionDefault -and ($PostActionOptions -contains $PostActionDefault)) {
+	$PostActionCombo.SelectedItem = $PostActionDefault
+} else {
+	$PostActionCombo.SelectedIndex = 0
+}
 #================================================
 # Other Settings
 $deviceBiosVersionText = $window.FindName("deviceBiosVersionText")
@@ -346,6 +364,26 @@ $deviceIsTpmReadyText = $window.FindName("deviceIsTpmReadyText")
 $deviceIsTpmReadyText.Text = $deviceIsTPMReady
 $deviceUUIDText = $window.FindName("deviceUUIDText")
 $deviceUUIDText.Text = $deviceUUID
+
+<#
+$deviceTotalMemoryText = $window.FindName("deviceTotalMemoryText")
+$deviceTotalMemoryText.Text = if ($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) {
+	"$($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) GB"
+} else {
+	'Unknown'
+}
+#>
+
+$SetupCompleteTextBox = $window.FindName("SetupCompleteTextBox")
+$setupCompleteValue = [string]$global:OSDCloudWorkflowInit.SetupCompleteCmd
+if ($SetupCompleteTextBox) {
+	$SetupCompleteTextBox.Text = if (-not [string]::IsNullOrWhiteSpace($setupCompleteValue)) {
+		$setupCompleteValue
+	} else {
+		[string]"REM CMD content in this block will be executed at the end of SetupComplete.cmd before OOBE starts"
+	}
+}
+
 $SelectedOSLanguageText = $window.FindName("SelectedOSLanguageText")
 $SelectedIdText = $window.FindName("SelectedIdText")
 $SelectedFileNameText = $window.FindName("SelectedFileNameText")
@@ -517,6 +555,11 @@ if ($script:SelectionConfirmed) {
 	$global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
 	$global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath
 	$global:OSDCloudWorkflowInit.LocalImageName = $LocalImageName
+	$global:OSDCloudWorkflowInit.PostAction = Get-ComboValue -ComboBox $PostActionCombo
+
+	if ($SetupCompleteTextBox) {
+		$global:OSDCloudWorkflowInit.SetupCompleteCmd = $SetupCompleteTextBox.Text
+	}
 
     $LogsPath = "$env:TEMP\osdcloud-logs"
     if (-not (Test-Path -Path $LogsPath)) {
