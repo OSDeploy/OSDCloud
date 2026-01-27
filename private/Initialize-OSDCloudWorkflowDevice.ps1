@@ -31,7 +31,7 @@ function Initialize-OSDCloudWorkflowDevice {
     $Win32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
     $Win32BIOS | Out-File $WmiLogsPath\Win32_BIOS.txt -Width 4096 -Force
     #=================================================
-    #CIM_ComputerSystem
+    # CIM_ComputerSystem
     $CimComputerSystem = Get-CimInstance -ClassName Cim_ComputerSystem | Select-Object -Property *
     $CimComputerSystem | Out-File $WmiLogsPath\Cim_ComputerSystem.txt -Width 4096 -Force
     #=================================================
