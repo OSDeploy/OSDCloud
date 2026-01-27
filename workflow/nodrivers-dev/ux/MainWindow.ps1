@@ -260,7 +260,7 @@ else {
 }
 
 # Autopilot
-if ($global:OSDCloudWorkflowDevice.IsAutopilotReady -eq $true) {
+if ($global:OSDCloudWorkflowDevice.IsAutopilotReady) {
     $formMainWindowControlIsAutopilotReady.Foreground = 'Green'
     $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Success
 }
