@@ -12,7 +12,7 @@
 RootModule = 'OSDCloud.psm1'
 
 # Version number of this module.
-ModuleVersion = '26.1.26.1'
+ModuleVersion = '26.1.30.1'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop'
@@ -27,10 +27,10 @@ Author = 'David Segura, Michael Escamilla'
 CompanyName = 'OSDeploy'
 
 # Copyright statement for this module
-Copyright = '(c) 2025 @ osdeploy.com. All rights reserved.'
+Copyright = '(c) 2026 @ osdeploy.com. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'OSDCloud with Windows 11 25H2'
+Description = 'OSDCloud'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
