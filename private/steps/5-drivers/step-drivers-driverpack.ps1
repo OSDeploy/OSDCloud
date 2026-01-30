@@ -141,7 +141,7 @@ function step-drivers-driverpack {
         if (-not (Test-Path $USBDownloadPath)) {
             $null = New-Item -Path $USBDownloadPath -ItemType Directory -Force
         }
-        $SaveWebFile = Save-WebFile -SourceUrl $DriverPackObject.Url -DestinationDirectory "$USBDownloadPath" -DestinationName $FileName
+        $SaveWebFile = OSDCloud-DownloadFile -SourceUrl $DriverPackObject.Url -DestinationDirectory "$USBDownloadPath" -DestinationName $FileName
 
         if ($SaveWebFile) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Copying Offline DriverPack to $DownloadPath"
@@ -154,7 +154,7 @@ function step-drivers-driverpack {
         if (-not (Test-Path $DownloadPath)) {
             $null = New-Item -Path $DownloadPath -ItemType Directory -Force
         }
-        $SaveWebFile = Save-WebFile -SourceUrl $DriverPackObject.Url -DestinationDirectory $DownloadPath -ErrorAction Stop
+        $SaveWebFile = OSDCloud-DownloadFile -SourceUrl $DriverPackObject.Url -DestinationDirectory $DownloadPath -ErrorAction Stop
         $FileInfo = $SaveWebFile
     }
     #=================================================

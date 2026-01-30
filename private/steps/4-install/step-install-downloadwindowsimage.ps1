@@ -42,7 +42,7 @@ function step-install-downloadwindowsimage {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] FileName: $FileName"
 
         # Download the file
-        $SaveWebFile = Save-WebFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory "$DownloadPath" -DestinationName $FileName
+        $SaveWebFile = OSDCloud-DownloadFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory "$DownloadPath" -DestinationName $FileName
 
         if ($SaveWebFile) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Copy Offline OS to C:\OSDCloud\OS\$($SaveWebFile.Name)"
@@ -52,7 +52,7 @@ function step-install-downloadwindowsimage {
     }
     else {
         # $SaveWebFile is a FileInfo Object, not a path
-        $SaveWebFile = Save-WebFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory 'C:\OSDCloud\OS' -ErrorAction Stop
+        $SaveWebFile = OSDCloud-DownloadFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory 'C:\OSDCloud\OS' -ErrorAction Stop
         $FileInfo = $SaveWebFile
     }
     #=================================================
