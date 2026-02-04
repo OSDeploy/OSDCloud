@@ -9,7 +9,7 @@
     "default": false,
     "steps": [
         {
-            "name": "Start Workflow",
+            "name": "Start OSDCloud Deployment Workflow",
             "description": "Start the OSDCloud Workflow",
             "command": "step-initialize-startosdcloudworkflow",
             "args": [],
@@ -22,7 +22,7 @@
             }
         },
         {
-            "name": "Start Logs",
+            "name": "Initialize Logs",
             "description": "Creates the log directory and initializes logging",
             "command": "step-initialize-startosdcloudlogs",
             "args": [],
@@ -55,7 +55,7 @@
             }
         },
         {
-            "name": "Validate Local Disk",
+            "name": "Validate Local Disk Availability",
             "description": "Tests the local disk for readiness",
             "command": "step-validate-isdiskready",
             "args": [],
@@ -66,7 +66,7 @@
             }
         },
         {
-            "name": "Remove usbdriveletter",
+            "name": "Remove USB Drive Letters",
             "description": "Removes drive letters assigned to USB devices",
             "command": "step-preinstall-removeusbdriveletter",
             "args": [],
@@ -77,7 +77,7 @@
             }
         },
         {
-            "name": "Clear-Disk",
+            "name": "Clear Local Disk",
             "description": "Clears the disk for a fresh start",
             "command": "step-preinstall-cleardisk",
             "args": [],
@@ -88,7 +88,7 @@
             }
         },
         {
-            "name": "PartitionDisk",
+            "name": "Partition Local Disk",
             "description": "Partitions the disk for installation",
             "command": "step-preinstall-partitiondisk",
             "args": [],
@@ -99,7 +99,7 @@
             }
         },
         {
-            "name": "Addusbdriveletter",
+            "name": "Restore USB Drive Letters",
             "description": "Assigns drive letters to USB devices",
             "command": "step-preinstall-restoreusbdriveletter",
             "args": [],
@@ -110,7 +110,7 @@
             }
         },
         {
-            "name": "InvokePowercfgHighPerformance",
+            "name": "Enable High Performance PowerPlan [WinPE]",
             "description": "Sets the system to high performance mode",
             "command": "step-preinstall-enablehighperformance",
             "args": [],
@@ -121,7 +121,7 @@
             }
         },
         {
-            "name": "DownloadWindowsOS",
+            "name": "Download Windows ESD from Microsoft",
             "description": "Downloads the Windows OS image",
             "command": "step-install-downloadwindowsimage",
             "args": [],
@@ -132,7 +132,7 @@
             }
         },
         {
-            "name": "GetWindowsImageIndex",
+            "name": "Selecting Windows Image Index",
             "description": "Retrieves the index of the Windows image",
             "command": "step-install-getwindowsimageindex",
             "args": [],
@@ -143,7 +143,7 @@
             }
         },
         {
-            "name": "ExpandWindowsImage",
+            "name": "Expand Windows Image to Local Disk",
             "status": "Ready",
             "description": "Expands the Windows image for installation",
             "command": "step-install-expandwindowsimage",
@@ -155,7 +155,7 @@
             }
         },
         {
-            "name": "Restart Logs",
+            "name": "Restart Logs [C:\\Windows\\Temp\\osdcloud-logs]",
             "status": "Ready",
             "description": "Restarts the OSDCloud logs",
             "command": "step-install-restartosdcloudlogs",
@@ -167,7 +167,7 @@
             }
         },
         {
-            "name": "Check WindowsEdition",
+            "name": "Verify Windows Edition on Local Disk",
             "description": "Checks the Windows edition of the image",
             "command": "step-install-getwindowsedition",
             "args": [],
@@ -189,7 +189,7 @@
             }
         },
         {
-            "name": "BCDBoot",
+            "name": "Apply BCDBoot Configuration",
             "status": "Ready",
             "description": "Configures the bootloader using BCDBoot",
             "command": "step-install-bcdboot",
@@ -227,7 +227,7 @@
             }
         },
         {
-            "name": "Save DriverPack",
+            "name": "Download DriverPack from OEM",
             "description": "Downloads the Manufacturer DriverPack",
             "command": "step-drivers-driverpack",
             "args": [],
@@ -238,7 +238,7 @@
             }
         },
         {
-            "name": "Microsoft Update Catalog Drivers",
+            "name": "Download Drivers from Microsoft Update Catalog",
             "description": "Downloads drivers from Microsoft Update Catalog",
             "command": "step-drivers-msupdate",
             "args": [],
@@ -249,7 +249,7 @@
             }
         },
         {
-            "name": "Add WindowsDriver - DriverPack",
+            "name": "Apply or Stage OEM DriverPack [offline Windows Image]",
             "description": "Adds WindowsDriver to the offline OS",
             "command": "step-drivers-addwindowsdriver-driverpack",
             "args": [],
@@ -260,7 +260,7 @@
             }
         },
         {
-            "name": "Add WindowsDriver - Microsoft Update Catalog",
+            "name": "Apply Microsoft Update Drivers - All [offline Windows Image]",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-msupdate",
             "args": [],
@@ -271,7 +271,7 @@
             }
         },
         {
-            "name": "Add WindowsDriver - Microsoft Update Catalog - Disk",
+            "name": "Apply Microsoft Update Drivers - Disk [offline Windows Image]",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-disk",
             "args": [],
@@ -282,7 +282,7 @@
             }
         },
         {
-            "name": "Add WindowsDriver - Microsoft Update Catalog - Net",
+            "name": "Apply Microsoft Update Drivers - Net [offline Windows Image]",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-net",
             "args": [],
@@ -293,7 +293,7 @@
             }
         },
         {
-            "name": "Add WindowsDriver - Microsoft Update Catalog - Scsi",
+            "name": "Apply Microsoft Update Drivers - Scsi [offline Windows Image]",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-scsi",
             "args": [],
@@ -304,7 +304,7 @@
             }
         },
         {
-            "name": "Add WindowsDriver - Microsoft Update Catalog - Firmware",
+            "name": "Apply Microsoft Update Drivers - Firmware [offline Windows Image]",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-firmware",
             "args": [],
@@ -326,7 +326,7 @@
             }
         },
         {
-            "name": "SetupDisplayedEula Hotfix",
+            "name": "Apply Setup Displayed Eula Hotfix [offline Windows Image]",
             "description": "Applies a hotfix for the displayed EULA",
             "command": "step-update-setupdisplayedeula",
             "args": [],
@@ -337,7 +337,7 @@
             }
         },
         {
-            "name": "Update PowerShell Modules",
+            "name": "Update PowerShell Modules [offline Windows Image]",
             "description": "Update existing PowerShell Modules in offline Windows",
             "command": "step-powershell-updatemodule",
             "args": [],
@@ -348,7 +348,7 @@
             }
         },
         {
-            "name": "Save PowerShell Module OSD to offline Windows",
+            "name": "Save PowerShell Module OSD [offline Windows Image]",
             "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
@@ -360,7 +360,7 @@
             }
         },
         {
-            "name": "Save PowerShell Module WindowsAutopilotIntune to offline Windows",
+            "name": "Save PowerShell Module WindowsAutopilotIntune [offline Windows Image]",
             "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
@@ -372,7 +372,7 @@
             }
         },
         {
-            "name": "Export OSInformation",
+            "name": "Export OS Information to Logs [offline Windows Image]",
             "status": "Ready",
             "description": "Exports information about the operating system",
             "command": "step-finalize-exportofflineosinfo",
@@ -384,7 +384,7 @@
             }
         },
         {
-            "name": "Stop Logs",
+            "name": "Stop Logs [C:\\Windows\\Temp\\osdcloud-logs]",
             "status": "Ready",
             "description": "Stops logging and copys to the log directory",
             "command": "step-osdcloud-logs-stop",

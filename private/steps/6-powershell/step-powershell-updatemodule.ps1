@@ -32,7 +32,7 @@ function step-powershell-updatemodule {
         }
 
         try {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Save-Module -Name $Name -Path `"$PowerShellSavePath\Modules`" -Force"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $Name"
             Save-Module -Name $Name -Path "$PowerShellSavePath\Modules" -Force -ErrorAction Stop
         }
         catch {

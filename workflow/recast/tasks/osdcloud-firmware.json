@@ -1,12 +1,12 @@
 {
-    "id": "42daa70d-ef6e-4d59-b263-4b15e46524d5",
-    "name": "OSDCloud Autopilot",
-    "description": "Includes Autopilot PowerShell Modules",
-    "author": "OSDeploy",
-    "version": "2025.9.23.1",
+    "id": "35467ccf-b8c9-485a-ba93-e59f4a70fd36",
+    "name": "OSDCloud [Firmware Update]",
+    "description": "OSDCloud by Recast Software",
+    "author": "Recast Software",
+    "version": "2026.2.3.1",
     "amd64": true,
     "arm64": true,
-    "default": false,
+    "default": true,
     "steps": [
         {
             "name": "Start OSDCloud Deployment Workflow",
@@ -14,7 +14,7 @@
             "command": "step-initialize-startosdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud Autopilot"
+                "WorkflowName": "OSDCloud [Firmware Update]"
             },
             "rules": {
                 "runinfullos": true,
@@ -322,7 +322,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": true
+                "skip": false
             }
         },
         {
@@ -370,7 +370,7 @@
             },
             "rules": {
                 "runinfullos": false,
-                "skip": false
+                "skip": true
             }
         },
         {
@@ -388,7 +388,7 @@
         {
             "name": "Stop Logs [C:\\Windows\\Temp\\osdcloud-logs]",
             "status": "Ready",
-            "description": "Stops logging and copys to the log directory",
+            "description": "Stops logging and copies to the log directory",
             "command": "step-osdcloud-logs-stop",
             "args": [],
             "parameters": {},

@@ -43,7 +43,7 @@ function Invoke-OSDCloudWorkflow {
     }
     #=================================================
     if ($null -ne $global:OSDCloudWorkflowInit.WorkflowObject) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Starting OSDCloud Workflow"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)]"
         
         foreach ($step in $global:OSDCloudWorkflowInit.WorkflowObject.steps) {
             # Set the current step in the global variable
@@ -51,19 +51,19 @@ function Invoke-OSDCloudWorkflow {
 
             # Skip the step if the skip condition is met
             if ($step.rules.skip -eq $true) {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($step.command)][Skip:True]"
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Skip:True] $($step.name)"
                 continue
             }
 
             # Steps should only run in WinPE, but some steps can be configured to run in full OS
             if (($global:IsWinPE -ne $true) -and ($step.rules.runinfullos -ne $true)) {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($step.command)][Skip:FullOS]"
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Skip:FullOS] $($step.name)"
                 continue
             }
 
             # Delay
             if ($step.rules.delay -eq $true) {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($step.command)][Delay:True]"
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Delay:True] $($step.name)"
                 Start-Sleep -Seconds 10
             }
             
@@ -71,11 +71,11 @@ function Invoke-OSDCloudWorkflow {
             if ($step.command) {
                 $command = $step.command
                 if (-not (Get-Command $command -ErrorAction SilentlyContinue)) {
-                    Write-Host -ForegroundColor DarkRed "[$(Get-Date -format s)] [Step command does not exist]"
+                    Write-Host -ForegroundColor DarkRed "[$(Get-Date -format s)] [Step command does not exist] $($step.command)"
                     continue
                 }
             } else {
-                Write-Host -ForegroundColor DarkRed "[$(Get-Date -format s)] [Step does not contain a command]"
+                Write-Host -ForegroundColor DarkRed "[$(Get-Date -format s)] [Step does not contain a command] $($step.command)"
                 continue
             }
 
@@ -99,21 +99,21 @@ function Invoke-OSDCloudWorkflow {
             # Execute
             
             if ($command -and ($arguments.Count -ge 1) -and ($parameters.Count -ge 1)) {
-                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] [$($step.command)][Arguments:$arguments]"
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name) [Arguments:$arguments]"
                 ($parameters | Out-String).Trim()
                 if ($Test) { continue }
                 & $command @parameters @arguments
             } elseif ($command -and ($arguments.Count -ge 1)) {
-                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] [$($step.command)][Arguments:$arguments]"
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name) [Arguments:$arguments]"
                 if ($Test) { continue }
                 & $command @arguments
             } elseif ($command -and ($parameters.Count -ge 1)) {
-                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] [$($step.command)]"
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name)"
                 ($parameters | Out-String).Trim()
                 if ($Test) { continue }
                 & $command @parameters
             } elseif ($command) {
-                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] [$($step.command)]"
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name)"
                 if ($Test) { continue }
                 & $command
             } else {

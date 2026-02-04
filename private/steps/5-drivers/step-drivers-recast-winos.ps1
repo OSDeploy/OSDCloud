@@ -17,7 +17,7 @@ function step-drivers-recast-winos {
         if (-not (Test-Path -Path $LogPath)) {
             New-Item -ItemType Directory -Path $LogPath -Force | Out-Null
         }
-        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-recast-winos.log" -ErrorAction SilentlyContinue
+        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-recast-winos.log" -ErrorAction SilentlyContinue | Out-Null
     }
     #=================================================
     # End the function

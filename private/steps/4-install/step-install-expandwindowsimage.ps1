@@ -50,7 +50,7 @@ function step-install-expandwindowsimage {
     # Expand WindowsImage
     if ($IsWinPE -eq $true) {
         try {
-            Expand-WindowsImage @Params
+            Expand-WindowsImage @Params | Out-Null
         }
         catch {
             Write-Warning "[$(Get-Date -format s)] Expand-WindowsImage failed."
