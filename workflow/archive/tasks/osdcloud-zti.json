@@ -377,7 +377,7 @@
         {
             "name": "Stop Logs [C:\\Windows\\Temp\\osdcloud-logs]",
             "status": "Ready",
-            "description": "Stops logging and copys to the log directory",
+            "description": "Stops logging and copies to the log directory",
             "command": "step-osdcloud-logs-stop",
             "args": [],
             "parameters": {},
