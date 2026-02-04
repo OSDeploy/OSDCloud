@@ -1,12 +1,12 @@
 {
-    "id": "3d99cfe4-a3ae-485f-bd63-6f6a0627f62e",
-    "name": "OSDCloud Core Autopilot",
-    "description": "OSDCloud Autopilot without DriverPacks",
-    "author": "OSDeploy",
-    "version": "2025.9.23.1",
+    "id": "35467ccf-b8c9-485a-ba93-e59f4a70fd36",
+    "name": "OSDCloud [Firmware Update]",
+    "description": "OSDCloud by Recast Software",
+    "author": "Recast Software",
+    "version": "2026.2.3.1",
     "amd64": true,
     "arm64": true,
-    "default": false,
+    "default": true,
     "steps": [
         {
             "name": "Start OSDCloud Deployment Workflow",
@@ -14,7 +14,7 @@
             "command": "step-initialize-startosdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud Core"
+                "WorkflowName": "OSDCloud [Firmware Update]"
             },
             "rules": {
                 "runinfullos": true,
@@ -51,7 +51,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": true
+                "skip": false
             }
         },
         {
@@ -178,8 +178,8 @@
             }
         },
         {
-            "name": "Move WindowsImage",
-            "description": "Moves the Windows Image to C:\\Windows\\Temp\\osdcloud\\os",
+            "name": "Remove the downloaded Windows Image",
+            "description": "Remove the Windows Image",
             "command": "step-install-removewindowsimage",
             "args": [],
             "parameters": {},
@@ -201,24 +201,35 @@
             }
         },
         {
-            "name": "Export WinPE Drivers",
+            "name": "Exporting WinPE Drivers to Local Disk",
             "status": "Ready",
             "category": "drivers",
-            "description": "Export the in-use WinPE drivers to the osdisk",
+            "description": "Export in-use WinPE drivers to offline Windows Temp",
             "command": "step-drivers-recast-winpe",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "runinfullos": false,
                 "skip": false
             }
         },
         {
-            "name": "Add WinPE Drivers",
+            "name": "Applying WinPE Drivers to offline Windows Image",
             "status": "Ready",
             "category": "drivers",
-            "description": "Add the exported WinPE drivers to the offline os",
+            "description": "Add WinPE drivers to Windows offline",
             "command": "step-drivers-recast-winos",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "runinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Applying WinPE Drivers to offline Windows Recovery Environment",
+            "description": "Add WinPE drivers to the winre.wim offline",
+            "command": "step-drivers-recast-winre",
             "args": [],
             "parameters": {},
             "rules": {
@@ -234,7 +245,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": true
+                "skip": false
             }
         },
         {
@@ -245,7 +256,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": true,
-                "skip": true
+                "skip": false
             }
         },
         {
@@ -256,7 +267,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": true
+                "skip": false
             }
         },
         {
@@ -267,7 +278,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": true
+                "skip": false
             }
         },
         {
@@ -289,7 +300,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": true
+                "skip": false
             }
         },
         {
@@ -311,7 +322,7 @@
             "parameters": {},
             "rules": {
                 "runinfullos": false,
-                "skip": true
+                "skip": false
             }
         },
         {
@@ -345,7 +356,8 @@
                 "name": "OSD"
             },
             "rules": {
-                "skip": false
+                "runinfullos": false,
+                "skip": true
             }
         },
         {
@@ -357,7 +369,8 @@
                 "name": "WindowsAutopilotIntune"
             },
             "rules": {
-                "skip": false
+                "runinfullos": false,
+                "skip": true
             }
         },
         {
@@ -375,7 +388,7 @@
         {
             "name": "Stop Logs [C:\\Windows\\Temp\\osdcloud-logs]",
             "status": "Ready",
-            "description": "Stops logging and copys to the log directory",
+            "description": "Stops logging and copies to the log directory",
             "command": "step-osdcloud-logs-stop",
             "args": [],
             "parameters": {},

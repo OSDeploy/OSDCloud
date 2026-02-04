@@ -8,7 +8,7 @@
     "arm64": true,
     "steps": [
         {
-            "name": "Validate Local Disk",
+            "name": "Validate Local Disk Availability",
             "description": "Tests the local disk for readiness",
             "command": "step-validate-isdiskready",
             "args": [],
@@ -19,7 +19,7 @@
             }
         },
         {
-            "name": "Remove usbdriveletter",
+            "name": "Remove USB Drive Letters",
             "description": "Removes drive letters assigned to USB devices",
             "command": "step-preinstall-removeusbdriveletter",
             "args": [],
@@ -30,7 +30,7 @@
             }
         },
         {
-            "name": "Clear-Disk",
+            "name": "Clear Local Disk",
             "description": "Clears the disk for a fresh start",
             "command": "step-preinstall-cleardisk",
             "args": [],
@@ -41,7 +41,7 @@
             }
         },
         {
-            "name": "PartitionDisk",
+            "name": "Partition Local Disk",
             "description": "Partitions the disk for installation",
             "command": "step-preinstall-partitiondisk",
             "args": [],
@@ -52,7 +52,7 @@
             }
         },
         {
-            "name": "Addusbdriveletter",
+            "name": "Restore USB Drive Letters",
             "description": "Assigns drive letters to USB devices",
             "command": "step-preinstall-restoreusbdriveletter",
             "args": [],

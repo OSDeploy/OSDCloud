@@ -36,7 +36,7 @@ function step-drivers-recast-winre {
             Add-WindowsDriver -Path $WinreMountPath -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-recast-winre.log" -ErrorAction SilentlyContinue
         }
 
-        Dismount-WindowsImage -Path $WinreMountPath -Save -LogPath "$LogPath\dismount-winre.log" -ErrorAction SilentlyContinue
+        Dismount-WindowsImage -Path $WinreMountPath -Save -LogPath "$LogPath\dismount-winre.log" -ErrorAction SilentlyContinue | Out-Null
 
         if (Test-Path -Path $WinreMountPath) {
             Remove-Item -Path $WinreMountPath -Recurse -Force -ErrorAction SilentlyContinue

@@ -100,7 +100,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Task Sequence" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
-                            <ComboBox Grid.Row="0" Grid.Column="1" x:Name="TaskSequenceCombo" Margin="4" Height="24" FontWeight="SemiBold" />
+                            <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TaskSequenceCombo" Margin="4" Height="24" FontWeight="SemiBold" />
 
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Operating System" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#3b455a" Margin="4" />
                             <ComboBox Grid.Row="2" Grid.Column="1" x:Name="OperatingSystemCombo" Margin="4" Height="24" FontWeight="SemiBold" />
@@ -135,11 +135,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-                <Image x:Name="LogoImage" Source="Logo.png" Height="40" Stretch="Uniform" Margin="0,0,0,0" />
+                <Image x:Name="LogoImage" Source="Logo.png" Height="40" Stretch="Uniform" Margin="0,0,0,4" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Bottom">
-                <TextBlock Text="" FontSize="20" FontWeight="Bold" Foreground="#0063b1" Margin="0,0,12,0" VerticalAlignment="Center" />
-                <Button x:Name="StartButton" Content="Start" Width="128" Height="40" Background="#0372FF" Foreground="White" FontSize="16" FontWeight="SemiBold" BorderBrush="#0372FF" Padding="8,0" IsDefault="True" />
+            <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                <TextBlock Text="" FontSize="20" FontWeight="Bold" Foreground="#0063b1" Margin="0,0,0,4" VerticalAlignment="Center" />
+                <Button x:Name="StartButton" Content="Start" Width="128" Height="40" Background="#0372FF" Foreground="White" FontSize="16" FontWeight="SemiBold" BorderBrush="#0372FF" Padding="0,0" IsDefault="True" Margin="0,0,0,4" />
             </StackPanel>
         </Grid>
     </Grid>
