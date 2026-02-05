@@ -1,12 +1,12 @@
 {
-    "id": "2e9c67bd-5aee-4c96-89dc-37bcf23738c0",
-    "name": "OSDCloud Core",
-    "description": "OSDCloud without DriverPacks",
-    "author": "OSDeploy",
-    "version": "2025.9.23.1",
+    "id": "fc9512c2-fdbd-4ef3-949f-314fd6575bf3",
+    "name": "OSDCloud [Driver Recast]",
+    "description": "OSDCloud deployment without driver installation steps",
+    "author": "Recast Software",
+    "version": "2026.2.4.1",
     "amd64": true,
     "arm64": true,
-    "default": false,
+    "default": true,
     "steps": [
         {
             "name": "Start OSDCloud Deployment Workflow",
@@ -14,7 +14,7 @@
             "command": "step-initialize-startosdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud Core"
+                "WorkflowName": "OSDCloud [Driver Recast]"
             },
             "rules": {
                 "testinfullos": true,
@@ -178,8 +178,8 @@
             }
         },
         {
-            "name": "Move WindowsImage",
-            "description": "Moves the Windows Image to C:\\Windows\\Temp\\osdcloud\\os",
+            "name": "Remove the downloaded Windows Image",
+            "description": "Remove the Windows Image",
             "command": "step-install-removewindowsimage",
             "args": [],
             "parameters": {},
@@ -201,24 +201,35 @@
             }
         },
         {
-            "name": "Export WinPE Drivers",
+            "name": "Exporting WinPE Drivers to Local Disk",
             "status": "Ready",
             "category": "drivers",
-            "description": "Export the in-use WinPE drivers to the osdisk",
+            "description": "Export in-use WinPE drivers to offline Windows Temp",
             "command": "step-drivers-recast-winpe",
             "args": [],
             "parameters": {},
             "rules": {
-                "testinfullos": true,
+                "testinfullos": false,
                 "skip": false
             }
         },
         {
-            "name": "Add WinPE Drivers",
+            "name": "Applying WinPE Drivers to offline Windows Image",
             "status": "Ready",
             "category": "drivers",
-            "description": "Add the exported WinPE drivers to the offline os",
+            "description": "Add WinPE drivers to Windows offline",
             "command": "step-drivers-recast-winos",
+            "args": [],
+            "parameters": {},
+            "rules": {
+                "testinfullos": false,
+                "skip": false
+            }
+        },
+        {
+            "name": "Applying WinPE Drivers to offline Windows Recovery Environment",
+            "description": "Add WinPE drivers to the winre.wim offline",
+            "command": "step-drivers-recast-winre",
             "args": [],
             "parameters": {},
             "rules": {
@@ -315,17 +326,6 @@
             }
         },
         {
-            "name": "Add WindowsDriver - Recast to WinRE",
-            "description": "Adds Windows Drivers to the offline winre.wim",
-            "command": "step-drivers-recast-winre",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "testinfullos": false,
-                "skip": true
-            }
-        },
-        {
             "name": "Apply Setup Displayed Eula Hotfix [offline Windows Image]",
             "description": "Applies a hotfix for the displayed EULA",
             "command": "step-update-setupdisplayedeula",
@@ -356,6 +356,7 @@
                 "name": "OSD"
             },
             "rules": {
+                "testinfullos": false,
                 "skip": true
             }
         },
@@ -368,6 +369,7 @@
                 "name": "WindowsAutopilotIntune"
             },
             "rules": {
+                "testinfullos": false,
                 "skip": true
             }
         },

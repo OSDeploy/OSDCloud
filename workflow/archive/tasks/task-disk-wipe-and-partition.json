@@ -14,7 +14,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -25,7 +25,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -36,7 +36,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -47,7 +47,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -58,7 +58,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         }

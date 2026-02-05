@@ -17,7 +17,7 @@
                 "WorkflowName": "OSDCloud"
             },
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -28,7 +28,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -39,7 +39,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -50,7 +50,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -61,7 +61,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -72,7 +72,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -85,7 +85,7 @@
                 "confirm": false
             },
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -96,7 +96,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -107,7 +107,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -118,7 +118,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -129,7 +129,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -140,7 +140,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -152,7 +152,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -164,7 +164,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -175,7 +175,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -186,7 +186,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -198,7 +198,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -211,7 +211,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -224,7 +224,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -235,7 +235,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -246,7 +246,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -257,7 +257,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -268,7 +268,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -279,7 +279,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
@@ -290,7 +290,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -301,7 +301,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
@@ -312,7 +312,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
@@ -323,7 +323,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -334,7 +334,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -370,7 +370,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -382,7 +382,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -394,7 +394,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         }

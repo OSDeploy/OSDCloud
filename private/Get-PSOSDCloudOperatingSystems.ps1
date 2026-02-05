@@ -103,10 +103,5 @@ function Get-PSOSDCloudOperatingSystems {
     }
     $records = $records | Sort-Object -Property FileName -Unique
     $records = $records | Sort-Object -Property @{Expression = { $_.OperatingSystem }; Descending = $true }, OSArchitecture, OSActivation, OSLanguageCode
-    
-    # $global:PSOSDCloudOperatingSystems = $records
-    # $records | Export-Clixml -Path $(Join-Path $buildRoot 'recast-operatingsystems.clixml') -Force
-    # $records | ConvertTo-Json | Out-File $(Join-Path $buildRoot 'recast-operatingsystems.json') -Encoding utf8 -Width 2000 -Force
-
     return $records
 }

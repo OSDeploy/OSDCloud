@@ -9,9 +9,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="420" />
-            <RowDefinition Height="5" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="55" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu Background="White" BorderBrush="#DDE5F5" BorderThickness="0" FontWeight="Bold" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -126,6 +126,11 @@
                             <TextBlock Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="5" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap" x:Name="DriverPackUrlText" Text="None" Margin="4" />
                         </Grid>
                     </ScrollViewer>
+                </Border>
+            </TabItem>
+            <TabItem Header="Task Sequence Steps">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
+                    <DataGrid x:Name="TaskSequenceStepsGrid" AutoGenerateColumns="True" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="False" GridLinesVisibility="All" HeadersVisibility="All" AlternatingRowBackground="#F5F5F5" />
                 </Border>
             </TabItem>
         </TabControl>

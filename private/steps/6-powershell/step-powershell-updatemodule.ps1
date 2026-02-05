@@ -9,6 +9,18 @@ function step-powershell-updatemodule {
     # Get the configuration of the step
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
+    # Is it reachable online?
+    try {
+        $WebRequest = Invoke-WebRequest -Uri 'https://www.powershellgallery.com' -UseBasicParsing -Method Head
+        if ($WebRequest.StatusCode -eq 200) {
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] PowerShell Gallery returned a 200 status code. OK."
+        }
+    }
+    catch {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] PowerShell Gallery is not reachable."
+        return
+    }
+    #=================================================
     #region Main
     $PowerShellSavePath = 'C:\Program Files\WindowsPowerShell'
 
