@@ -31,10 +31,10 @@ function step-install-downloadwindowsimage {
     }
     #=================================================
     # Is there a USB drive available?
-    $USBDrive = Get-USBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
 
     if ($USBDrive) {
-        $DownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\OS\$($OperatingSystemObject.OperatingSystem) $($OperatingSystemObject.OSVersion)"
+        $DownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\OS\$($OperatingSystemObject.OperatingSystem)"
         $FileName = Split-Path $OperatingSystemObject.FilePath -Leaf
 
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Url: $($OperatingSystemObject.FilePath)"

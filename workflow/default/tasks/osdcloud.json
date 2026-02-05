@@ -1,413 +1,229 @@
 {
     "id": "2bc42a9c-3ce1-44a6-847d-593c47d362c5",
     "name": "OSDCloud",
-    "description": "OSDCloud default Task Sequence",
-    "author": "OSDeploy",
-    "version": "2025.9.23.1",
+    "description": "OSDCloud",
+    "author": "osdcloud@recastsoftware.com",
+    "version": "2026.2.5.1",
     "amd64": true,
     "arm64": true,
     "default": true,
     "steps": [
         {
             "name": "Start OSDCloud Deployment Workflow",
-            "description": "Start the OSDCloud Workflow",
-            "command": "step-initialize-startosdcloudworkflow",
-            "args": [],
+            "command": "step-initialize-osdcloudworkflow",
             "parameters": {
                 "WorkflowName": "OSDCloud"
             },
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "args": {},
+            "disable": false,
+            "testinfullos": true
         },
         {
             "name": "Initialize Logs",
-            "description": "Creates the log directory and initializes logging",
-            "command": "step-initialize-startosdcloudlogs",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "command": "step-initialize-osdcloudlogs",
+            "testinfullos": true
         },
         {
             "name": "Validate WindowsImage Availability",
-            "description": "Test if the image exists and is reachable",
-            "command": "step-validate-iswindowsimageready",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "command": "step-validate-targetwindowsimage",
+            "testinfullos": true
         },
         {
             "name": "Validate DriverPack Availability",
-            "description": "Tests if the driver pack is reachable",
-            "command": "step-validate-isdriverpackready",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "command": "step-validate-targetdriverpack",
+            "testinfullos": true
         },
         {
             "name": "Validate Local Disk Availability",
-            "description": "Tests the local disk for readiness",
-            "command": "step-validate-isdiskready",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "command": "step-validate-targetdisk",
+            "testinfullos": false
         },
         {
             "name": "Remove USB Drive Letters",
-            "description": "Removes drive letters assigned to USB devices",
             "command": "step-preinstall-removeusbdriveletter",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Clear Local Disk",
-            "description": "Clears the disk for a fresh start",
-            "command": "step-preinstall-cleardisk",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "command": "step-preinstall-cleartargetdisk",
+            "testinfullos": false
         },
         {
             "name": "Partition Local Disk",
-            "description": "Partitions the disk for installation",
-            "command": "step-preinstall-partitiondisk",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "command": "step-preinstall-partitiontargetdisk",
+            "testinfullos": false
         },
         {
             "name": "Restore USB Drive Letters",
-            "description": "Assigns drive letters to USB devices",
             "command": "step-preinstall-restoreusbdriveletter",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Enable High Performance PowerPlan [WinPE]",
-            "description": "Sets the system to high performance mode",
             "command": "step-preinstall-enablehighperformance",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Download Windows ESD from Microsoft",
-            "description": "Downloads the Windows OS image",
             "command": "step-install-downloadwindowsimage",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "testinfullos": true
         },
         {
-            "name": "Selecting Windows Image Index",
-            "description": "Retrieves the index of the Windows image",
+            "name": "Select Windows Image Index",
             "command": "step-install-getwindowsimageindex",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "testinfullos": true
         },
         {
             "name": "Expand Windows Image to Local Disk",
-            "status": "Ready",
-            "description": "Expands the Windows image for installation",
             "command": "step-install-expandwindowsimage",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Restart Logs [C:\\Windows\\Temp\\osdcloud-logs]",
-            "status": "Ready",
-            "description": "Restarts the OSDCloud logs",
             "command": "step-install-restartosdcloudlogs",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "testinfullos": true
         },
         {
             "name": "Verify Windows Edition on Local Disk",
-            "description": "Checks the Windows edition of the image",
             "command": "step-install-getwindowsedition",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Remove the downloaded Windows Image",
-            "description": "Remove the Windows Image",
             "command": "step-install-removewindowsimage",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Apply BCDBoot Configuration",
-            "status": "Ready",
-            "description": "Configures the bootloader using BCDBoot",
             "command": "step-install-bcdboot",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Exporting WinPE Drivers to Local Disk",
-            "status": "Ready",
-            "category": "drivers",
-            "description": "Export in-use WinPE drivers to offline Windows Temp",
             "command": "step-drivers-recast-winpe",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Applying WinPE Drivers to offline Windows Image",
-            "status": "Ready",
-            "category": "drivers",
-            "description": "Add WinPE drivers to Windows offline",
             "command": "step-drivers-recast-winos",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Applying WinPE Drivers to offline Windows Recovery Environment",
-            "description": "Add WinPE drivers to the winre.wim offline",
             "command": "step-drivers-recast-winre",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
             "name": "Download DriverPack from OEM",
-            "description": "Downloads the Manufacturer DriverPack",
             "command": "step-drivers-driverpack",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "testinfullos": true
         },
         {
             "name": "Download Drivers from Microsoft Update Catalog",
-            "description": "Downloads drivers from Microsoft Update Catalog",
             "command": "step-drivers-msupdate",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "testinfullos": true
         },
         {
-            "name": "Apply or Stage OEM DriverPack [offline Windows Image]",
-            "description": "Adds WindowsDriver to the offline OS",
+            "name": "Apply or Stage OEM DriverPack",
             "command": "step-drivers-addwindowsdriver-driverpack",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
-            "name": "Apply Microsoft Update Drivers - All [offline Windows Image]",
-            "description": "Adds Windows Drivers to the offline OS",
+            "name": "Apply Microsoft Update Drivers - All",
             "command": "step-drivers-addwindowsdriver-msupdate",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
-            "name": "Apply Microsoft Update Drivers - Disk [offline Windows Image]",
-            "description": "Adds Windows Drivers to the offline OS",
+            "name": "Apply Microsoft Update Drivers - Disk",
             "command": "step-drivers-addwindowsdriver-disk",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
+            "disable": true,
+            "testinfullos": false
         },
         {
-            "name": "Apply Microsoft Update Drivers - Net [offline Windows Image]",
-            "description": "Adds Windows Drivers to the offline OS",
+            "name": "Apply Microsoft Update Drivers - Net",
             "command": "step-drivers-addwindowsdriver-net",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
-            "name": "Apply Microsoft Update Drivers - Scsi [offline Windows Image]",
-            "description": "Adds Windows Drivers to the offline OS",
+            "name": "Apply Microsoft Update Drivers - Scsi",
             "command": "step-drivers-addwindowsdriver-scsi",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
+            "disable": true,
+            "testinfullos": false
         },
         {
-            "name": "Apply Microsoft Update Drivers - Firmware [offline Windows Image]",
-            "description": "Adds Windows Drivers to the offline OS",
+            "name": "Apply Microsoft Update Drivers - Firmware",
             "command": "step-drivers-addwindowsdriver-firmware",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
+            "testinfullos": false
         },
         {
-            "name": "Apply Setup Displayed Eula Hotfix [offline Windows Image]",
-            "description": "Applies a hotfix for the displayed EULA",
+            "name": "Hotfix  - Setup Displayed Eula",
             "command": "step-update-setupdisplayedeula",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
-            "name": "Update PowerShell Modules [offline Windows Image]",
-            "description": "Update existing PowerShell Modules in offline Windows",
+            "name": "Update PowerShell Modules -Offline",
             "command": "step-powershell-updatemodule",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
-            "name": "Save PowerShell Module OSD [offline Windows Image]",
-            "description": "Saves a PS Module by name parameter to offline Windows",
+            "name": "Save PowerShell Module OSD",
             "command": "step-powershell-savemodule",
-            "args": [],
             "parameters": {
                 "name": "OSD"
             },
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
+            "disable": true,
+            "testinfullos": false
         },
         {
-            "name": "Save PowerShell Module WindowsAutopilotIntune [offline Windows Image]",
-            "description": "Saves a PS Module by name parameter to offline Windows",
+            "name": "Save PowerShell Module WindowsAutopilotIntune",
             "command": "step-powershell-savemodule",
-            "args": [],
             "parameters": {
                 "name": "WindowsAutopilotIntune"
             },
-            "rules": {
-                "runinfullos": false,
-                "skip": true
-            }
+            "disable": true,
+            "testinfullos": false
         },
         {
-            "name": "Export OS Information to Logs [offline Windows Image]",
-            "status": "Ready",
-            "description": "Exports information about the operating system",
+            "name": "Save PowerShell Module Microsoft.Graph.Groups",
+            "command": "step-powershell-savemodule",
+            "parameters": {
+                "name": "Microsoft.Graph.Groups"
+            },
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Save PowerShell Module Microsoft.Graph.Authentication",
+            "command": "step-powershell-savemodule",
+            "parameters": {
+                "name": "Microsoft.Graph.Authentication"
+            },
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Save PowerShell Module Microsoft.Graph.Identity.DirectoryManagement",
+            "command": "step-powershell-savemodule",
+            "parameters": {
+                "name": "Microsoft.Graph.Identity.DirectoryManagement"
+            },
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Export OS Information to Logs",
             "command": "step-finalize-exportofflineosinfo",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": false,
-                "skip": false
-            }
+            "testinfullos": false
         },
         {
-            "name": "Stop Logs [C:\\Windows\\Temp\\osdcloud-logs]",
-            "status": "Ready",
-            "description": "Stops logging and copies to the log directory",
-            "command": "step-osdcloud-logs-stop",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "name": "Stop Logs",
+            "command": "step-finalize-osdcloudlogs",
+            "testinfullos": true
         },
         {
             "name": "Stop Workflow",
-            "status": "Ready",
-            "description": "Stops the OSDCloud workflow",
             "command": "step-finalize-stoposdcloudworkflow",
-            "args": [],
-            "parameters": {},
-            "rules": {
-                "runinfullos": true,
-                "skip": false
-            }
+            "testinfullos": true
         }
     ]
 }

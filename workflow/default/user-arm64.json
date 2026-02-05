@@ -23,7 +23,7 @@
         "Confirm": true,
         "Debug": true,
         "Skip": false,
-        "ToolTip": "Skip clearing the Local Disk.&#x0a;Skip this step will also skip Clear-Disk.&#x0a;This will also skip the New-OSDisk step.",
+        "ToolTip": "Skip clearing the Local Disk.&#x0a;Skip this step will also skip Clear-Disk.&#x0a;This will also skip the New-OSDCloudDisk step.",
         "Verbose": false
     },
     "PartitionDisk": {

@@ -7,8 +7,6 @@ function Use-PEStartupDeviceInfo {
     $host.ui.RawUI.WindowTitle = "[$(Get-Date -format s)] OSDCloud WinPE and Device Information"
     #=================================================
     # Modules
-    $OSDModuleVersion = (Get-OSDModuleVersion).ToString()
-    Write-Host -ForegroundColor DarkCyan "OSD PowerShell Module $OSDModuleVersion"
     $OSDCloudModuleVersion = (Get-OSDCloudModuleVersion).ToString()
     Write-Host -ForegroundColor DarkCyan "OSDCloud PowerShell Module $OSDCloudModuleVersion"
     #=================================================

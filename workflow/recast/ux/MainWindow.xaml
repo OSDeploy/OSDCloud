@@ -8,9 +8,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="430" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="420" />
+            <RowDefinition Height="5" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
@@ -63,7 +63,7 @@
 
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="TPM 2.0" Margin="8,0" FontWeight="Bold" />
                 <TextBlock Grid.Row="4" Grid.Column="1" Text="deviceIsTpmReadyText" x:Name="deviceIsTpmReadyText" Foreground="DarkGray" FontWeight="Bold" />
-                <TextBlock Grid.Row="4" Grid.Column="3" Text="Autopilot" Margin="8,0" FontWeight="Bold" />
+                <TextBlock Grid.Row="4" Grid.Column="3" Text="Autopilot Ready" Margin="8,0" FontWeight="Bold" />
                 <TextBlock Grid.Row="4" Grid.Column="4" Text="deviceIsAutopilotReadyText" x:Name="deviceIsAutopilotReadyText" Foreground="DarkGray" FontWeight="Bold" />
             </Grid>
         </Border>

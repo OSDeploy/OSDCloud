@@ -49,20 +49,20 @@ function Invoke-OSDCloudWorkflow {
             # Set the current step in the global variable
             $global:OSDCloudWorkflowCurrentStep = $step
 
-            # Skip the step if the skip condition is met
-            if ($step.rules.skip -eq $true) {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Skip:True] $($step.name)"
+            # Skip the step if it is set to disable
+            if ($step.disable -eq $true) {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Disable:True] $($step.name)"
                 continue
             }
 
             # Steps should only run in WinPE, but some steps can be configured to run in full OS
-            if (($global:IsWinPE -ne $true) -and ($step.rules.runinfullos -ne $true)) {
+            if (($global:IsWinPE -ne $true) -and ($step.testinfullos -ne $true)) {
                 Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Skip:FullOS] $($step.name)"
                 continue
             }
 
             # Delay
-            if ($step.rules.delay -eq $true) {
+            if ($step.delay -eq $true) {
                 Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Delay:True] $($step.name)"
                 Start-Sleep -Seconds 10
             }
@@ -80,10 +80,14 @@ function Invoke-OSDCloudWorkflow {
             }
 
             # Arguments
+            $arguments = @()
             if ($step.args) {
-                [array]$arguments = @($step.args)
-                $arguments = $arguments | ForEach-Object { $_.Trim() } # Trim whitespace from arguments
-                $arguments = $arguments | Where-Object { $_ -ne "" } # Remove empty arguments
+                # Only process if args is an array of strings, not an empty object
+                if ($step.args -is [array]) {
+                    [array]$arguments = @($step.args)
+                    $arguments = $arguments | Where-Object { $_ -is [string] } | ForEach-Object { $_.Trim() } # Trim whitespace from arguments
+                    $arguments = $arguments | Where-Object { $_ -ne "" } # Remove empty arguments
+                }
             }
 
             if ($step.parameters) {

@@ -11,57 +11,57 @@
         {
             "name": "Start OSDCloud Deployment Workflow",
             "description": "Start the OSDCloud Workflow",
-            "command": "step-initialize-startosdcloudworkflow",
+            "command": "step-initialize-osdcloudworkflow",
             "args": [],
             "parameters": {
                 "WorkflowName": "OSDCloud Core"
             },
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
         {
             "name": "Initialize Logs",
             "description": "Creates the log directory and initializes logging",
-            "command": "step-initialize-startosdcloudlogs",
+            "command": "step-initialize-osdcloudlogs",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
         {
             "name": "Validate WindowsImage Availability",
             "description": "Test if the image exists and is reachable",
-            "command": "step-validate-iswindowsimageready",
+            "command": "step-validate-targetwindowsimage",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
         {
             "name": "Validate DriverPack Availability",
             "description": "Tests if the driver pack is reachable",
-            "command": "step-validate-isdriverpackready",
+            "command": "step-validate-targetdriverpack",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": true
             }
         },
         {
             "name": "Validate Local Disk Availability",
             "description": "Tests the local disk for readiness",
-            "command": "step-validate-isdiskready",
+            "command": "step-validate-targetdisk",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -72,29 +72,29 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
         {
             "name": "Clear Local Disk",
             "description": "Clears the disk for a fresh start",
-            "command": "step-preinstall-cleardisk",
+            "command": "step-preinstall-cleartargetdisk",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
         {
             "name": "Partition Local Disk",
             "description": "Partitions the disk for installation",
-            "command": "step-preinstall-partitiondisk",
+            "command": "step-preinstall-partitiontargetdisk",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -105,7 +105,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -116,7 +116,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -127,7 +127,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -138,7 +138,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -150,7 +150,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -162,7 +162,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -173,7 +173,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -184,7 +184,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -196,7 +196,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -209,7 +209,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -222,7 +222,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
@@ -233,7 +233,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": true
             }
         },
@@ -244,73 +244,73 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": true
             }
         },
         {
-            "name": "Apply or Stage OEM DriverPack [offline Windows Image]",
+            "name": "Apply or Stage OEM DriverPack",
             "description": "Adds WindowsDriver to the offline OS",
             "command": "step-drivers-addwindowsdriver-driverpack",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
         {
-            "name": "Apply Microsoft Update Drivers - All [offline Windows Image]",
+            "name": "Apply Microsoft Update Drivers - All",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-msupdate",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
         {
-            "name": "Apply Microsoft Update Drivers - Disk [offline Windows Image]",
+            "name": "Apply Microsoft Update Drivers - Disk",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-disk",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
         {
-            "name": "Apply Microsoft Update Drivers - Net [offline Windows Image]",
+            "name": "Apply Microsoft Update Drivers - Net",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-net",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
         {
-            "name": "Apply Microsoft Update Drivers - Scsi [offline Windows Image]",
+            "name": "Apply Microsoft Update Drivers - Scsi",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-scsi",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
         {
-            "name": "Apply Microsoft Update Drivers - Firmware [offline Windows Image]",
+            "name": "Apply Microsoft Update Drivers - Firmware",
             "description": "Adds Windows Drivers to the offline OS",
             "command": "step-drivers-addwindowsdriver-firmware",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
@@ -321,34 +321,34 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": true
             }
         },
         {
-            "name": "Apply Setup Displayed Eula Hotfix [offline Windows Image]",
+            "name": "Hotfix  - Setup Displayed Eula",
             "description": "Applies a hotfix for the displayed EULA",
             "command": "step-update-setupdisplayedeula",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
         {
-            "name": "Update PowerShell Modules [offline Windows Image]",
+            "name": "Update PowerShell Modules -Offline",
             "description": "Update existing PowerShell Modules in offline Windows",
             "command": "step-powershell-updatemodule",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
         {
-            "name": "Save PowerShell Module OSD [offline Windows Image]",
+            "name": "Save PowerShell Module OSD",
             "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
@@ -360,7 +360,7 @@
             }
         },
         {
-            "name": "Save PowerShell Module WindowsAutopilotIntune [offline Windows Image]",
+            "name": "Save PowerShell Module WindowsAutopilotIntune",
             "description": "Saves a PS Module by name parameter to offline Windows",
             "command": "step-powershell-savemodule",
             "args": [],
@@ -372,26 +372,26 @@
             }
         },
         {
-            "name": "Export OS Information to Logs [offline Windows Image]",
+            "name": "Export OS Information to Logs",
             "status": "Ready",
             "description": "Exports information about the operating system",
             "command": "step-finalize-exportofflineosinfo",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": false,
+                "testinfullos": false,
                 "skip": false
             }
         },
         {
-            "name": "Stop Logs [C:\\Windows\\Temp\\osdcloud-logs]",
+            "name": "Stop Logs",
             "status": "Ready",
             "description": "Stops logging and copies to the log directory",
-            "command": "step-osdcloud-logs-stop",
+            "command": "step-finalize-osdcloudlogs",
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         },
@@ -403,7 +403,7 @@
             "args": [],
             "parameters": {},
             "rules": {
-                "runinfullos": true,
+                "testinfullos": true,
                 "skip": false
             }
         }

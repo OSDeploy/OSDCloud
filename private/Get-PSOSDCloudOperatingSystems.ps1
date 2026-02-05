@@ -3,7 +3,7 @@ function Get-PSOSDCloudOperatingSystems {
     param ()
     $ErrorActionPreference = 'Stop'
 
-    $srcRoot = Join-Path $(Get-OSDCloudModulePath) "catalogs\psosdcloudoperatingsystems"
+    $srcRoot = Join-Path $(Get-OSDCloudModulePath) "catalogs\operatingsystem"
     $xmlFiles = Get-ChildItem -Path $srcRoot -Filter '*.xml' -Recurse | Sort-Object FullName
 
     $records = @()
@@ -103,10 +103,5 @@ function Get-PSOSDCloudOperatingSystems {
     }
     $records = $records | Sort-Object -Property FileName -Unique
     $records = $records | Sort-Object -Property @{Expression = { $_.OperatingSystem }; Descending = $true }, OSArchitecture, OSActivation, OSLanguageCode
-    
-    # $global:PSOSDCloudOperatingSystems = $records
-    # $records | Export-Clixml -Path $(Join-Path $buildRoot 'recast-operatingsystems.clixml') -Force
-    # $records | ConvertTo-Json | Out-File $(Join-Path $buildRoot 'recast-operatingsystems.json') -Encoding utf8 -Width 2000 -Force
-
     return $records
 }

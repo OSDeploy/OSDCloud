@@ -248,25 +248,20 @@ function Show-PowershellWindow() {
 }
 #endregion
 #=================================================
-#region OSDCloudWorkflowSettingsUser
 # Tpm
 if ($global:OSDCloudWorkflowDevice.IsTpmReady -eq $true) {
     $formMainWindowControlIsTpmReady.Foreground = 'Green'
-    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Success
 }
 else {
     $formMainWindowControlIsTpmReady.Foreground = 'Red'
-    $formMainWindowControlIsTpmReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Error
 }
 
 # Autopilot
 if ($global:OSDCloudWorkflowDevice.IsAutopilotReady -eq $true) {
     $formMainWindowControlIsAutopilotReady.Foreground = 'Green'
-    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Success
 }
 else {
     $formMainWindowControlIsAutopilotReady.Foreground = 'Red'
-    $formMainWindowControlIsAutopilotReady.ToolTip = $global:OSDCloudWorkflowSettingsUser.IsTpmReady.Error
 }
 #endregion
 #=================================================
@@ -353,7 +348,7 @@ Set-FormConfigurationCloud
 #region CustomImage
 <#
 [array]$OSDCloudWorkflowSettingsOSIso = @()
-[array]$OSDCloudWorkflowSettingsOSIso = Find-OSDCloudFile -Name '*.iso' -Path '\OSDCloud\OS\' | Where-Object { $_.Length -gt 3GB }
+[array]$OSDCloudWorkflowSettingsOSIso = Find-OSDCloudAsset -Name '*.iso' -Path '\OSDCloud\OS\' | Where-Object { $_.Length -gt 3GB }
 
 foreach ($Item in $OSDCloudWorkflowSettingsOSIso) {
     if ((Get-DiskImage -ImagePath $Item.FullName).Attached) {
@@ -367,10 +362,10 @@ foreach ($Item in $OSDCloudWorkflowSettingsOSIso) {
 }
 
 $CustomImageChildItem = @()
-[array]$CustomImageChildItem = Find-OSDCloudFile -Name '*.wim' -Path '\OSDCloud\OS\'
-[array]$CustomImageChildItem += Find-OSDCloudFile -Name 'install.wim' -Path '\Sources\'
-[array]$CustomImageChildItem += Find-OSDCloudFile -Name '*.esd' -Path '\OSDCloud\OS\'
-[array]$CustomImageChildItem += Find-OSDCloudFile -Name '*install.swm' -Path '\OSDCloud\OS\'
+[array]$CustomImageChildItem = Find-OSDCloudAsset -Name '*.wim' -Path '\OSDCloud\OS\'
+[array]$CustomImageChildItem += Find-OSDCloudAsset -Name 'install.wim' -Path '\Sources\'
+[array]$CustomImageChildItem += Find-OSDCloudAsset -Name '*.esd' -Path '\OSDCloud\OS\'
+[array]$CustomImageChildItem += Find-OSDCloudAsset -Name '*install.swm' -Path '\OSDCloud\OS\'
 $CustomImageChildItem = $CustomImageChildItem | Sort-Object -Property Length -Unique | Sort-Object FullName | Where-Object { $_.Length -gt 2GB }
         
 if ($CustomImageChildItem) {
@@ -480,7 +475,7 @@ $formMainWindowControlStartButton.add_Click(
             $ImageFileName = $OperatingSystemObject.FileName
             $OSBuild = $OperatingSystemObject.OSBuild
 
-            $LocalImageFileInfo = Find-OSDCloudFile -Name $OperatingSystemObject.FileName -Path '\OSDCloud\OS\' | Sort-Object FullName | Where-Object { $_.Length -gt 3GB }
+            $LocalImageFileInfo = Find-OSDCloudAsset -Name $OperatingSystemObject.FileName -Path '\OSDCloud\OS\' | Sort-Object FullName | Where-Object { $_.Length -gt 3GB }
             $LocalImageFileInfo = $LocalImageFileInfo | Where-Object { $_.FullName -notlike 'C*' } | Where-Object { $_.FullName -notlike 'X*' } | Select-Object -First 1
         }
         else {
@@ -527,22 +522,6 @@ $formMainWindowControlStartButton.add_Click(
         $global:OSDCloudWorkflowInit.OperatingSystemObject = $OperatingSystemObject
         
         $global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
-
-        <#
-        $global:OSDCloudWorkflowSettingsUser.SkipClearDisk = $formMainWindowControlSkipClearDisk.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.SkipClearDiskConfirm = $formMainWindowControlSkipClearDiskConfirm.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.SkipRecoveryPartition = $formMainWindowControlSkipRecoveryPartition.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.UpdateDiskDrivers = $formMainWindowControlUpdateDiskDrivers.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.UpdateNetworkDrivers = $formMainWindowControlUpdateNetworkDrivers.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.UpdateScsiDrivers = $formMainWindowControlUpdateScsiDrivers.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.UpdateSystemFirmware = $formMainWindowControlUpdateSystemFirmware.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.PSUpdateModulePowershellGet = $formMainWindowControlPSUpdateModulePowershellGet.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.PSUpdateModulePackageManagement = $formMainWindowControlPSUpdateModulePackageManagement.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.PSInstallModuleOSD = $formMainWindowControlPSInstallModuleOSD.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.PSInstallModuleWindowsAutopilotIntune = $formMainWindowControlPSInstallModuleWindowsAutopilotIntune.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.WinpeRestart = $formMainWindowControlWinpeRestart.IsChecked
-        $global:OSDCloudWorkflowSettingsUser.WinpeShutdown = $formMainWindowControlWinpeShutdown.IsChecked
-        #>
         #=================================================
         #   Invoke-OSDCloudWorkflow.ps1
         #=================================================

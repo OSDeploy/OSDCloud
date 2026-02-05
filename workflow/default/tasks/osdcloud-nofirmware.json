@@ -1,0 +1,230 @@
+{
+    "id": "c8f19ff7-8867-4df2-afd4-20e6a921d488",
+    "name": "OSDCloud [No Firmware Update]",
+    "description": "OSDCloud [No Firmware Update]",
+    "author": "osdcloud@recastsoftware.com",
+    "version": "2026.2.5.1",
+    "amd64": true,
+    "arm64": true,
+    "default": true,
+    "steps": [
+        {
+            "name": "Start OSDCloud Deployment Workflow",
+            "command": "step-initialize-osdcloudworkflow",
+            "parameters": {
+                "WorkflowName": "OSDCloud [No Firmware Update]"
+            },
+            "args": {},
+            "disable": false,
+            "testinfullos": true
+        },
+        {
+            "name": "Initialize Logs",
+            "command": "step-initialize-osdcloudlogs",
+            "testinfullos": true
+        },
+        {
+            "name": "Validate WindowsImage Availability",
+            "command": "step-validate-targetwindowsimage",
+            "testinfullos": true
+        },
+        {
+            "name": "Validate DriverPack Availability",
+            "command": "step-validate-targetdriverpack",
+            "testinfullos": true
+        },
+        {
+            "name": "Validate Local Disk Availability",
+            "command": "step-validate-targetdisk",
+            "testinfullos": false
+        },
+        {
+            "name": "Remove USB Drive Letters",
+            "command": "step-preinstall-removeusbdriveletter",
+            "testinfullos": false
+        },
+        {
+            "name": "Clear Local Disk",
+            "command": "step-preinstall-cleartargetdisk",
+            "testinfullos": false
+        },
+        {
+            "name": "Partition Local Disk",
+            "command": "step-preinstall-partitiontargetdisk",
+            "testinfullos": false
+        },
+        {
+            "name": "Restore USB Drive Letters",
+            "command": "step-preinstall-restoreusbdriveletter",
+            "testinfullos": false
+        },
+        {
+            "name": "Enable High Performance PowerPlan [WinPE]",
+            "command": "step-preinstall-enablehighperformance",
+            "testinfullos": false
+        },
+        {
+            "name": "Download Windows ESD from Microsoft",
+            "command": "step-install-downloadwindowsimage",
+            "testinfullos": true
+        },
+        {
+            "name": "Select Windows Image Index",
+            "command": "step-install-getwindowsimageindex",
+            "testinfullos": true
+        },
+        {
+            "name": "Expand Windows Image to Local Disk",
+            "command": "step-install-expandwindowsimage",
+            "testinfullos": false
+        },
+        {
+            "name": "Restart Logs [C:\\Windows\\Temp\\osdcloud-logs]",
+            "command": "step-install-restartosdcloudlogs",
+            "testinfullos": true
+        },
+        {
+            "name": "Verify Windows Edition on Local Disk",
+            "command": "step-install-getwindowsedition",
+            "testinfullos": false
+        },
+        {
+            "name": "Remove the downloaded Windows Image",
+            "command": "step-install-removewindowsimage",
+            "testinfullos": false
+        },
+        {
+            "name": "Apply BCDBoot Configuration",
+            "command": "step-install-bcdboot",
+            "testinfullos": false
+        },
+        {
+            "name": "Exporting WinPE Drivers to Local Disk",
+            "command": "step-drivers-recast-winpe",
+            "testinfullos": false
+        },
+        {
+            "name": "Applying WinPE Drivers to offline Windows Image",
+            "command": "step-drivers-recast-winos",
+            "testinfullos": false
+        },
+        {
+            "name": "Applying WinPE Drivers to offline Windows Recovery Environment",
+            "command": "step-drivers-recast-winre",
+            "testinfullos": false
+        },
+        {
+            "name": "Download DriverPack from OEM",
+            "command": "step-drivers-driverpack",
+            "testinfullos": true
+        },
+        {
+            "name": "Download Drivers from Microsoft Update Catalog",
+            "command": "step-drivers-msupdate",
+            "testinfullos": true
+        },
+        {
+            "name": "Apply or Stage OEM DriverPack",
+            "command": "step-drivers-addwindowsdriver-driverpack",
+            "testinfullos": false
+        },
+        {
+            "name": "Apply Microsoft Update Drivers - All",
+            "command": "step-drivers-addwindowsdriver-msupdate",
+            "testinfullos": false
+        },
+        {
+            "name": "Apply Microsoft Update Drivers - Disk",
+            "command": "step-drivers-addwindowsdriver-disk",
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Apply Microsoft Update Drivers - Net",
+            "command": "step-drivers-addwindowsdriver-net",
+            "testinfullos": false
+        },
+        {
+            "name": "Apply Microsoft Update Drivers - Scsi",
+            "command": "step-drivers-addwindowsdriver-scsi",
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Apply Microsoft Update Drivers - Firmware",
+            "command": "step-drivers-addwindowsdriver-firmware",
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Hotfix  - Setup Displayed Eula",
+            "command": "step-update-setupdisplayedeula",
+            "testinfullos": false
+        },
+        {
+            "name": "Update PowerShell Modules -Offline",
+            "command": "step-powershell-updatemodule",
+            "testinfullos": false
+        },
+        {
+            "name": "Save PowerShell Module OSD",
+            "command": "step-powershell-savemodule",
+            "parameters": {
+                "name": "OSD"
+            },
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Save PowerShell Module WindowsAutopilotIntune",
+            "command": "step-powershell-savemodule",
+            "parameters": {
+                "name": "WindowsAutopilotIntune"
+            },
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Save PowerShell Module Microsoft.Graph.Groups",
+            "command": "step-powershell-savemodule",
+            "parameters": {
+                "name": "Microsoft.Graph.Groups"
+            },
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Save PowerShell Module Microsoft.Graph.Authentication",
+            "command": "step-powershell-savemodule",
+            "parameters": {
+                "name": "Microsoft.Graph.Authentication"
+            },
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Save PowerShell Module Microsoft.Graph.Identity.DirectoryManagement",
+            "command": "step-powershell-savemodule",
+            "parameters": {
+                "name": "Microsoft.Graph.Identity.DirectoryManagement"
+            },
+            "disable": true,
+            "testinfullos": false
+        },
+        {
+            "name": "Export OS Information to Logs",
+            "command": "step-finalize-exportofflineosinfo",
+            "testinfullos": false
+        },
+        {
+            "name": "Stop Logs",
+            "command": "step-finalize-osdcloudlogs",
+            "testinfullos": true
+        },
+        {
+            "name": "Stop Workflow",
+            "command": "step-finalize-stoposdcloudworkflow",
+            "testinfullos": true
+        }
+    ]
+}

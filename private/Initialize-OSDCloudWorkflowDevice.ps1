@@ -166,6 +166,27 @@ function Initialize-OSDCloudWorkflowDevice {
     [System.Boolean]$IsOnBattery = ($Win32Battery.BatteryStatus -contains 1)
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IsOnBattery: $IsOnBattery"
     #=================================================
+    # IsUEFI
+    [System.Boolean]$IsUEFI = $false
+    if ($env:firmware_type -eq 'UEFI') {
+        $IsUEFI = $true
+    }
+    if ($env:firmware_type -eq 'Legacy') {
+        $IsUEFI = $false
+    }
+    elseif ($IsWinPE) {
+        Start-Process -WindowStyle Hidden -FilePath wpeutil.exe -ArgumentList ('updatebootinfo') -Wait
+        $IsUEFI = (Get-ItemProperty -Path HKLM:\System\CurrentControlSet\Control).PEFirmwareType -eq 2
+    }
+    else {
+        if ($null -eq (Get-ItemProperty HKLM:\System\CurrentControlSet\Control\SecureBoot\State -ErrorAction SilentlyContinue)) {
+            $IsUEFI = $false
+        } else {
+            $IsUEFI = $true
+        }
+    }
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IsUEFI: $IsUEFI"
+    #=================================================
     # IsVM
     [System.Boolean]$IsVM = $false
     $vmDetectionSources = @(
@@ -181,7 +202,7 @@ function Initialize-OSDCloudWorkflowDevice {
     [System.Boolean]$IsVM = ($vmDetectionSources -join ' ') -match $vmPattern
     #=================================================
     if (!($ComputerProduct)) {
-        $ComputerProduct = Get-MyComputerProduct
+        $ComputerProduct = Get-MyDeviceProduct
     }
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerProduct: $ComputerProduct"
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerSystemSKU: $($Win32ComputerSystem.SystemSKUNumber)"
@@ -248,6 +269,7 @@ function Initialize-OSDCloudWorkflowDevice {
         IsTablet                = [System.Boolean]$IsTablet
         IsTpmReady              = [System.Boolean]$false
         IsVM                    = [System.Boolean]$IsVM
+        IsUEFI                  = [System.Boolean]$IsUEFI
         NetGateways             = $NetGateways
         NetIPAddress            = $NetIPAddress
         NetMacAddress           = $NetMacAddress
