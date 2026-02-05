@@ -10,7 +10,7 @@
         {
             "name": "Validate Local Disk Availability",
             "description": "Tests the local disk for readiness",
-            "command": "step-validate-isdiskready",
+            "command": "step-validate-targetdisk",
             "args": [],
             "parameters": {},
             "rules": {
@@ -32,7 +32,7 @@
         {
             "name": "Clear Local Disk",
             "description": "Clears the disk for a fresh start",
-            "command": "step-preinstall-cleardisk",
+            "command": "step-preinstall-cleartargetdisk",
             "args": [],
             "parameters": {},
             "rules": {
@@ -43,7 +43,7 @@
         {
             "name": "Partition Local Disk",
             "description": "Partitions the disk for installation",
-            "command": "step-preinstall-partitiondisk",
+            "command": "step-preinstall-partitiontargetdisk",
             "args": [],
             "parameters": {},
             "rules": {

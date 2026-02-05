@@ -3,7 +3,7 @@ function Get-PSOSDCloudOperatingSystems {
     param ()
     $ErrorActionPreference = 'Stop'
 
-    $srcRoot = Join-Path $(Get-OSDCloudModulePath) "catalogs\psosdcloudoperatingsystems"
+    $srcRoot = Join-Path $(Get-OSDCloudModulePath) "catalogs\operatingsystem"
     $xmlFiles = Get-ChildItem -Path $srcRoot -Filter '*.xml' -Recurse | Sort-Object FullName
 
     $records = @()

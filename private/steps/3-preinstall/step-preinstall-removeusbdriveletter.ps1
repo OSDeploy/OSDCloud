@@ -17,7 +17,7 @@ function step-preinstall-removeusbdriveletter {
     #>
 
     # Store the USB Partitions
-    $global:OSDCloudWorkflowInvoke.USBPartitions = Get-USBPartition
+    $global:OSDCloudWorkflowInvoke.USBPartitions = Get-DeviceUSBPartition
 
     # Remove USB Drive Letters
     if ($global:OSDCloudWorkflowInvoke.USBPartitions) {

@@ -56,7 +56,7 @@ function Initialize-OSDCloudWorkflow {
     # OSDCloudWorkflowSettingsUser
     #TODO : Remove dependency on User Settings for future releases
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings User"
-    Initialize-OSDCloudWorkflowSettingsUser -Name $Name
+    # Initialize-OSDCloudWorkflowSettingsUser -Name $Name
     #=================================================
     # OSDCloud Operating Systems
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Get OSDCloud OperatingSystems"
