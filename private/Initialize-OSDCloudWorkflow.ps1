@@ -11,7 +11,6 @@ function Initialize-OSDCloudWorkflow {
     #=================================================
     # Get module details
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
-    $OSDModuleVersion = $((Get-OSDModuleVersion).ToString())
     #=================================================
     # Dependencies
     # Make sure curl.exe is present and throw if not
