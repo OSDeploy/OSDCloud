@@ -14,10 +14,9 @@
             "parameters": {
                 "WorkflowName": "OSDCloud"
             },
-            "args": {},
-            "debug": false,
-            "disable": false,
             "pause": false,
+            "skip": false,
+            "debug": false,
             "verbose": false,
             "testinfullos": true
         },
@@ -29,7 +28,7 @@
         {
             "name": "Test TargetDisk",
             "command": "step-test-targetdisk",
-            "testinfullos": false
+            "testinfullos": true
         },
         {
             "name": "Test WindowsImage",
@@ -43,28 +42,23 @@
         },
         {
             "name": "Remove USB Drive Letters",
-            "command": "step-preinstall-removeusbdriveletter",
-            "testinfullos": false
+            "command": "step-preinstall-removeusbdriveletter"
         },
         {
             "name": "Clear Local Disk",
-            "command": "step-preinstall-cleartargetdisk",
-            "testinfullos": false
+            "command": "step-preinstall-cleartargetdisk"
         },
         {
             "name": "Partition Local Disk",
-            "command": "step-preinstall-partitiontargetdisk",
-            "testinfullos": false
+            "command": "step-preinstall-partitiontargetdisk"
         },
         {
             "name": "Restore USB Drive Letters",
-            "command": "step-preinstall-restoreusbdriveletter",
-            "testinfullos": false
+            "command": "step-preinstall-restoreusbdriveletter"
         },
         {
             "name": "Enable High Performance Power Plan",
-            "command": "step-preinstall-enablehighperformance",
-            "testinfullos": false
+            "command": "step-preinstall-enablehighperformance"
         },
         {
             "name": "Download Windows ESD from Microsoft",
@@ -78,8 +72,7 @@
         },
         {
             "name": "Expand Windows Image to Local Disk",
-            "command": "step-install-expandwindowsimage",
-            "testinfullos": false
+            "command": "step-install-expandwindowsimage"
         },
         {
             "name": "Restart Logs [C:\\Windows\\Temp\\osdcloud-logs]",
@@ -88,33 +81,27 @@
         },
         {
             "name": "Verify Windows Edition on Local Disk",
-            "command": "step-install-getwindowsedition",
-            "testinfullos": false
+            "command": "step-install-getwindowsedition"
         },
         {
             "name": "Remove the downloaded Windows Image",
-            "command": "step-install-removewindowsimage",
-            "testinfullos": false
+            "command": "step-install-removewindowsimage"
         },
         {
             "name": "Apply BCDBoot Configuration",
-            "command": "step-install-bcdboot",
-            "testinfullos": false
+            "command": "step-install-bcdboot"
         },
         {
             "name": "Exporting WinPE Drivers to Local Disk",
-            "command": "step-drivers-recast-winpe",
-            "testinfullos": false
+            "command": "step-drivers-recast-winpe"
         },
         {
             "name": "Applying WinPE Drivers to offline Windows Image",
-            "command": "step-drivers-recast-winos",
-            "testinfullos": false
+            "command": "step-drivers-recast-winos"
         },
         {
             "name": "Applying WinPE Drivers to offline Windows Recovery Environment",
-            "command": "step-drivers-recast-winre",
-            "testinfullos": false
+            "command": "step-drivers-recast-winre"
         },
         {
             "name": "Download DriverPack from OEM",
@@ -128,45 +115,37 @@
         },
         {
             "name": "Apply or Stage OEM DriverPack",
-            "command": "step-drivers-addwindowsdriver-driverpack",
-            "testinfullos": false
+            "command": "step-drivers-addwindowsdriver-driverpack"
         },
         {
             "name": "Apply Microsoft Update Drivers - All",
-            "command": "step-drivers-addwindowsdriver-msupdate",
-            "testinfullos": false
+            "command": "step-drivers-addwindowsdriver-msupdate"
         },
-                    {
-                        "name": "Apply Microsoft Update Drivers - Disk",
-                        "command": "step-drivers-addwindowsdriver-disk",
-                        "skip": true,
-                        "testinfullos": false
-                    },
-                    {
-                        "name": "Apply Microsoft Update Drivers - Net",
-                        "command": "step-drivers-addwindowsdriver-net",
-                        "testinfullos": false
-                    },
-                    {
-                        "name": "Apply Microsoft Update Drivers - Scsi",
-                        "command": "step-drivers-addwindowsdriver-scsi",
-                        "skip": true,
-                        "testinfullos": false
-                    },
-                    {
-                        "name": "Apply Microsoft Update Drivers - Firmware",
-                        "command": "step-drivers-addwindowsdriver-firmware",
-                        "testinfullos": false
-                    },
+        {
+            "name": "Apply Microsoft Update Drivers - Disk",
+            "command": "step-drivers-addwindowsdriver-disk",
+            "skip": true
+        },
+        {
+            "name": "Apply Microsoft Update Drivers - Net",
+            "command": "step-drivers-addwindowsdriver-net"
+        },
+        {
+            "name": "Apply Microsoft Update Drivers - Scsi",
+            "command": "step-drivers-addwindowsdriver-scsi",
+            "skip": true
+        },
+        {
+            "name": "Apply Microsoft Update Drivers - Firmware",
+            "command": "step-drivers-addwindowsdriver-firmware"
+        },
         {
             "name": "Hotfix  - Setup Displayed Eula",
-            "command": "step-update-setupdisplayedeula",
-            "testinfullos": false
+            "command": "step-update-setupdisplayedeula"
         },
         {
             "name": "Update PowerShell Modules -Offline",
-            "command": "step-powershell-updatemodule",
-            "testinfullos": false
+            "command": "step-powershell-updatemodule"
         },
         {
             "name": "Save PowerShell Module OSD",
@@ -174,8 +153,7 @@
             "parameters": {
                 "name": "OSD"
             },
-            "disable": true,
-            "testinfullos": false
+            "skip": true
         },
         {
             "name": "Save PowerShell Module WindowsAutopilotIntune",
@@ -183,8 +161,7 @@
             "parameters": {
                 "name": "WindowsAutopilotIntune"
             },
-            "disable": true,
-            "testinfullos": false
+            "skip": true
         },
         {
             "name": "Save PowerShell Module Microsoft.Graph.Groups",
@@ -192,8 +169,7 @@
             "parameters": {
                 "name": "Microsoft.Graph.Groups"
             },
-            "disable": true,
-            "testinfullos": false
+            "skip": true
         },
         {
             "name": "Save PowerShell Module Microsoft.Graph.Authentication",
@@ -201,8 +177,7 @@
             "parameters": {
                 "name": "Microsoft.Graph.Authentication"
             },
-            "disable": true,
-            "testinfullos": false
+            "skip": true
         },
         {
             "name": "Save PowerShell Module Microsoft.Graph.Identity.DirectoryManagement",
@@ -210,13 +185,11 @@
             "parameters": {
                 "name": "Microsoft.Graph.Identity.DirectoryManagement"
             },
-            "disable": true,
-            "testinfullos": false
+            "skip": true
         },
         {
             "name": "Export OS Information to Logs",
-            "command": "step-finalize-exportofflineosinfo",
-            "testinfullos": false
+            "command": "step-finalize-exportofflineosinfo"
         },
         {
             "name": "Stop Logs",
