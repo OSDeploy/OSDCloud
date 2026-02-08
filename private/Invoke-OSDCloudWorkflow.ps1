@@ -114,8 +114,8 @@ function Invoke-OSDCloudWorkflow {
             # Set the current step in the global variable
             $global:OSDCloudWorkflowCurrentStep = $step
             #=================================================
-            # Should we skip this step?
-            if ($step.skip -eq $true) {
+            # Should we skip this step? (support both 'skip' and legacy 'disable')
+            if (($step.skip -eq $true) -or ($step.disable -eq $true)) {
                 Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Skip:True] $($step.name)"
                 continue
             }
@@ -185,7 +185,37 @@ function Invoke-OSDCloudWorkflow {
             } elseif ($commandline) {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name)"
                 if ($Test) { continue }
-                Invoke-Expression $commandline
+                # Parse the command line into a command and arguments to avoid Invoke-Expression
+                $parseErrors = $null
+                $tokens = [System.Management.Automation.PSParser]::Tokenize($commandline, [ref]$parseErrors)
+
+                if ($parseErrors -and $parseErrors.Count -gt 0) {
+                    Write-Error "Failed to parse command line for step '$($step.name)': $commandline"
+                    continue
+                }
+
+                if (-not $tokens -or $tokens.Count -eq 0) {
+                    Write-Error "Empty or invalid command line for step '$($step.name)': $commandline"
+                    continue
+                }
+
+                # First token is the command; subsequent CommandArgument tokens are arguments
+                $exeToken = $tokens | Where-Object { $_.Type -eq 'Command' } | Select-Object -First 1
+                if (-not $exeToken) {
+                    Write-Error "No executable command found in command line for step '$($step.name)': $commandline"
+                    continue
+                }
+
+                $exe = $exeToken.Content
+                $cmdArgs = @()
+                foreach ($tok in $tokens) {
+                    if ($tok -eq $exeToken) { continue }
+                    if ($tok.Type -eq 'CommandArgument') {
+                        $cmdArgs += $tok.Content
+                    }
+                }
+
+                & $exe @cmdArgs
             } elseif ($command -and ($arguments.Count -ge 1) -and ($parameters.Count -ge 1)) {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name) [Arguments:$arguments]"
                 ($parameters | Out-String).Trim()

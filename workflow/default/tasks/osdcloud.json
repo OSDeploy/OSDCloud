@@ -136,28 +136,28 @@
             "command": "step-drivers-addwindowsdriver-msupdate",
             "testinfullos": false
         },
-        {
-            "name": "Apply Microsoft Update Drivers - Disk",
-            "command": "step-drivers-addwindowsdriver-disk",
-            "disable": true,
-            "testinfullos": false
-        },
-        {
-            "name": "Apply Microsoft Update Drivers - Net",
-            "command": "step-drivers-addwindowsdriver-net",
-            "testinfullos": false
-        },
-        {
-            "name": "Apply Microsoft Update Drivers - Scsi",
-            "command": "step-drivers-addwindowsdriver-scsi",
-            "disable": true,
-            "testinfullos": false
-        },
-        {
-            "name": "Apply Microsoft Update Drivers - Firmware",
-            "command": "step-drivers-addwindowsdriver-firmware",
-            "testinfullos": false
-        },
+                    {
+                        "name": "Apply Microsoft Update Drivers - Disk",
+                        "command": "step-drivers-addwindowsdriver-disk",
+                        "skip": true,
+                        "testinfullos": false
+                    },
+                    {
+                        "name": "Apply Microsoft Update Drivers - Net",
+                        "command": "step-drivers-addwindowsdriver-net",
+                        "testinfullos": false
+                    },
+                    {
+                        "name": "Apply Microsoft Update Drivers - Scsi",
+                        "command": "step-drivers-addwindowsdriver-scsi",
+                        "skip": true,
+                        "testinfullos": false
+                    },
+                    {
+                        "name": "Apply Microsoft Update Drivers - Firmware",
+                        "command": "step-drivers-addwindowsdriver-firmware",
+                        "testinfullos": false
+                    },
         {
             "name": "Hotfix  - Setup Displayed Eula",
             "command": "step-update-setupdisplayedeula",

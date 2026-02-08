@@ -12,7 +12,7 @@ function step-test-targetwindowsimage {
     # Get the configuration of the step
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
-    # Is there an Opeating System ImageFile URL?
+    # Is there an Operating System ImageFile URL?
     if (-not ($global:OSDCloudWorkflowInvoke.OperatingSystemObject.FilePath)) {
         Write-Warning "[$(Get-Date -format s)] OperatingSystemObject does not have a Url to validate."
         Write-Warning 'Press Ctrl+C to cancel OSDCloud'

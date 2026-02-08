@@ -27,7 +27,7 @@
         },
         {
             "name": "Initialize: Command Line",
-            "command": "",
+            "skip": true,
             "testinfullos": true
         },
         {

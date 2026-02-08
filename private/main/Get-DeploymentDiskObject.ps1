@@ -151,7 +151,7 @@ function Get-DeploymentDiskObject {
     #=================================================
     # if no disks found, throw
     if ($GetDisk.Count -eq 0) {
-        Throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] No disks were found that couold be used for OSDCloud."
+        Throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] No disks were found that could be used for OSDCloud."
     }
     # if more than 1, then need to warn
     if ($GetDisk.Count -gt 1) {
