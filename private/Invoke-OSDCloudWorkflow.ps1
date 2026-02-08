@@ -42,43 +42,118 @@ function Invoke-OSDCloudWorkflow {
         TimeStart             = [datetime](Get-Date)
     }
     #=================================================
+    # Analytics - PostHog Telemetry
+    function Send-OSDCloudPostHogEvent {
+        param(
+            [Parameter(Mandatory)]
+            [string]$EventName,
+            [Parameter(Mandatory)]
+            [string]$ApiKey,
+            [Parameter(Mandatory)]
+            [string]$DistinctId,
+            [Parameter()]
+            [hashtable]$Properties
+        )
+
+        try {
+            $payload = [ordered]@{
+                api_key     = $ApiKey
+                event       = $EventName
+                properties  = $Properties + @{
+                    distinct_id = $DistinctId
+                }
+                timestamp   = (Get-Date).ToString('o')
+            }
+
+            $body = $payload | ConvertTo-Json -Depth 4 -Compress
+            Invoke-RestMethod -Method Post `
+                -Uri 'https://us.i.posthog.com/capture/' `
+                -Body $body `
+                -ContentType 'application/json' `
+                -TimeoutSec 2 `
+                -ErrorAction Stop | Out-Null
+
+            Write-Verbose "[$(Get-Date -format s)] [PostHog] Event sent: $EventName"
+        } catch {
+            Write-Verbose "[$(Get-Date -format s)] [PostHog] Failed to send event: $($_.Exception.Message)"
+        }
+    }
+
+    # Send workflow start event to PostHog
+    if (-not $Test) {
+        $postHogApiKey = 'phc_2h7nQJCo41Hc5C64B2SkcEBZOvJ6mHr5xAHZyjPl3ZK'
+        if (-not [string]::IsNullOrWhiteSpace($postHogApiKey)) {
+            [string]$distinctId = $global:OSDCloudWorkflowInvoke.ComputerUUID
+            if ([string]::IsNullOrWhiteSpace($distinctId)) {
+                $distinctId = $global:OSDCloudWorkflowInvoke.ComputerSerialNumber
+            }
+
+            $eventProperties = @{
+                workflow              = [string]$global:OSDCloudWorkflowInit.WorkflowName
+                computerManufacturer  = [string]$global:OSDCloudWorkflowInvoke.ComputerManufacturer
+                computerModel         = [string]$global:OSDCloudWorkflowInvoke.ComputerModel
+                computerProduct       = [string]$global:OSDCloudWorkflowInvoke.ComputerProduct
+                driverPackName        = [string]$global:OSDCloudWorkflowInit.DriverPackName
+                osName                = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSName
+                osVersion             = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSVersion
+                osActivationStatus    = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSActivation
+                osBuild               = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSBuild
+                osBuildVersion        = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSBuildVersion
+                osLanguageCode        = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSLanguageCode
+                osdcloudVersion       = [string]$ModuleVersion
+            }
+
+            Send-OSDCloudPostHogEvent -EventName 'osdcloud_workflow_start' -ApiKey $postHogApiKey -DistinctId $distinctId -Properties $eventProperties
+        }
+    }
+    #=================================================
     if ($null -ne $global:OSDCloudWorkflowInit.WorkflowObject) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)]"
         
         foreach ($step in $global:OSDCloudWorkflowInit.WorkflowObject.steps) {
             # Set the current step in the global variable
             $global:OSDCloudWorkflowCurrentStep = $step
-
-            # Skip the step if it is set to disable
-            if ($step.disable -eq $true) {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Disable:True] $($step.name)"
+            #=================================================
+            # Should we skip this step?
+            if ($step.skip -eq $true) {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Skip:True] $($step.name)"
                 continue
             }
-
-            # Steps should only run in WinPE, but some steps can be configured to run in full OS
+            #=================================================
+            # Can we test this step in full Windows OS (not WinPE)?
             if (($global:IsWinPE -ne $true) -and ($step.testinfullos -ne $true)) {
                 Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Skip:FullOS] $($step.name)"
                 continue
             }
-
-            # Delay
-            if ($step.delay -eq $true) {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Delay:True] $($step.name)"
-                Start-Sleep -Seconds 10
+            #=================================================
+            # Can we pause before this step?
+            if ($step.pause -eq $true) {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [Pause:True] $($step.name)"
+                Pause
             }
-            
-            # Test the command
+            #=================================================
+            # Command or ScriptBlock
+            $command = $null
+            $commandline = $null
             if ($step.command) {
                 $command = $step.command
-                if (-not (Get-Command $command -ErrorAction SilentlyContinue)) {
+
+                if (($command -is [string]) -and ($command.Contains(" "))) {
+                    $commandline = $command
+                }
+                elseif (-not (Get-Command $command -ErrorAction SilentlyContinue)) {
                     Write-Host -ForegroundColor DarkRed "[$(Get-Date -format s)] [Step command does not exist] $($step.command)"
                     continue
                 }
-            } else {
-                Write-Host -ForegroundColor DarkRed "[$(Get-Date -format s)] [Step does not contain a command] $($step.command)"
+            }
+            elseif ($step.scriptblock) {
+                $command = [scriptblock]::Create($step.scriptblock)
+            }
+            else {
+                Write-Host -ForegroundColor DarkRed "[$(Get-Date -format s)] [Step does not contain a command] $($step.name)"
                 continue
             }
-
+            #=================================================
             # Arguments
             $arguments = @()
             if ($step.args) {
@@ -89,7 +164,9 @@ function Invoke-OSDCloudWorkflow {
                     $arguments = $arguments | Where-Object { $_ -ne "" } # Remove empty arguments
                 }
             }
-
+            #=================================================
+            # Parameters
+            $parameters = $null
             if ($step.parameters) {
                 $parameters = $null
                 $parameters = [ordered]@{}
@@ -101,8 +178,15 @@ function Invoke-OSDCloudWorkflow {
             }
 
             # Execute
-            
-            if ($command -and ($arguments.Count -ge 1) -and ($parameters.Count -ge 1)) {
+            if ($step.scriptblock) {
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name) [ScriptBlock:$($step.scriptblock)]"
+                if ($Test) { continue }
+                & $command
+            } elseif ($commandline) {
+                Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name)"
+                if ($Test) { continue }
+                Invoke-Expression $commandline
+            } elseif ($command -and ($arguments.Count -ge 1) -and ($parameters.Count -ge 1)) {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name) [Arguments:$arguments]"
                 ($parameters | Out-String).Trim()
                 if ($Test) { continue }
@@ -124,13 +208,6 @@ function Invoke-OSDCloudWorkflow {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] No command to execute."
                 continue
             }
-            <#
-                try {
-                }
-                catch {
-                    Write-Host -ForegroundColor DarkRed "Error executing step: $($step.name). Error: $_"
-                }
-            #>
         }
         # End of workflow steps
         Write-Host -ForegroundColor Green "[$(Get-Date -format s)] Workflow execution done."

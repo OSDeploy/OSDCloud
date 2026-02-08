@@ -1,4 +1,4 @@
-function step-validate-targetdriverpack {
+function step-test-targetdriverpack {
     [CmdletBinding()]
     param (
         [System.String]

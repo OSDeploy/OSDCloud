@@ -213,8 +213,17 @@ function Save-TaskSequenceSteps {
 	if ($Steps) {
 		$stepsArray = @($Steps)
 		foreach ($step in $stepsArray) {
-			if (-not (Get-Member -InputObject $step -Name 'disable' -ErrorAction SilentlyContinue)) {
-				$step | Add-Member -MemberType NoteProperty -Name 'disable' -Value $false
+			if (-not (Get-Member -InputObject $step -Name 'skip' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'skip' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'debug' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'debug' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'pause' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'pause' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'verbose' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'verbose' -Value $false
 			}
 		}
 		$workflowObject.steps = $stepsArray
@@ -226,16 +235,40 @@ function Save-TaskSequenceSteps {
 $TaskSequenceStepsGrid.Add_AutoGeneratingColumn({
 	param($sender, $e)
 
-	if ($e.PropertyName -ieq 'disable') {
-		$binding = [System.Windows.Data.Binding]::new('disable')
+	if ($e.PropertyName -ieq 'skip' -or $e.PropertyName -ieq 'debug' -or $e.PropertyName -ieq 'pause' -or $e.PropertyName -ieq 'verbose') {
+		$binding = [System.Windows.Data.Binding]::new($e.PropertyName)
 		$binding.Mode = [System.Windows.Data.BindingMode]::TwoWay
 		$binding.UpdateSourceTrigger = [System.Windows.Data.UpdateSourceTrigger]::PropertyChanged
 
 		$checkboxColumn = [System.Windows.Controls.DataGridCheckBoxColumn]::new()
-		$checkboxColumn.Header = 'disable'
+		$checkboxColumn.Header = $e.PropertyName
 		$checkboxColumn.Binding = $binding
 		$checkboxColumn.IsReadOnly = $false
 		$e.Column = $checkboxColumn
+		return
+	}
+
+	if ($e.PropertyName -ieq 'command') {
+		$binding = [System.Windows.Data.Binding]::new($e.PropertyName)
+		$binding.Mode = [System.Windows.Data.BindingMode]::TwoWay
+		$binding.UpdateSourceTrigger = [System.Windows.Data.UpdateSourceTrigger]::PropertyChanged
+
+		$e.Column.IsReadOnly = $false
+		if ($e.Column -is [System.Windows.Controls.DataGridTextColumn]) {
+			$e.Column.Binding = $binding
+		}
+		return
+	}
+
+	if ($e.PropertyName -ieq 'name') {
+		$binding = [System.Windows.Data.Binding]::new($e.PropertyName)
+		$binding.Mode = [System.Windows.Data.BindingMode]::TwoWay
+		$binding.UpdateSourceTrigger = [System.Windows.Data.UpdateSourceTrigger]::PropertyChanged
+
+		$e.Column.IsReadOnly = $false
+		if ($e.Column -is [System.Windows.Controls.DataGridTextColumn]) {
+			$e.Column.Binding = $binding
+		}
 		return
 	}
 
@@ -254,10 +287,19 @@ function Update-TaskSequenceSteps {
 	if ($workflowObject -and $workflowObject.steps) {
 		$steps = $workflowObject.steps
 		
-		# Ensure all steps have the disable property, defaulting to false if missing
+		# Ensure all steps have checkbox properties, defaulting to false if missing
 		foreach ($step in $steps) {
-			if (-not (Get-Member -InputObject $step -Name 'disable' -ErrorAction SilentlyContinue)) {
-				$step | Add-Member -MemberType NoteProperty -Name 'disable' -Value $false
+			if (-not (Get-Member -InputObject $step -Name 'skip' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'skip' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'debug' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'debug' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'pause' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'pause' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'verbose' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'verbose' -Value $false
 			}
 		}
 		

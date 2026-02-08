@@ -9,7 +9,7 @@
     "default": true,
     "steps": [
         {
-            "name": "Start OSDCloud Deployment Workflow",
+            "name": "Initialize OSDCloud Workflow",
             "description": "Start the OSDCloud Workflow",
             "command": "step-initialize-osdcloudworkflow",
             "args": [],
@@ -22,7 +22,7 @@
             }
         },
         {
-            "name": "Initialize Logs",
+            "name": "Initialize OSDCloud Logs",
             "description": "Creates the log directory and initializes logging",
             "command": "step-initialize-osdcloudlogs",
             "args": [],
@@ -33,9 +33,9 @@
             }
         },
         {
-            "name": "Validate WindowsImage Availability",
+            "name": "Test WindowsImage",
             "description": "Test if the image exists and is reachable",
-            "command": "step-validate-targetwindowsimage",
+            "command": "step-test-targetwindowsimage",
             "args": [],
             "parameters": {},
             "rules": {
@@ -44,9 +44,9 @@
             }
         },
         {
-            "name": "Validate DriverPack Availability",
+            "name": "Test DriverPack",
             "description": "Tests if the driver pack is reachable",
-            "command": "step-validate-targetdriverpack",
+            "command": "step-test-targetdriverpack",
             "args": [],
             "parameters": {},
             "rules": {
@@ -55,9 +55,9 @@
             }
         },
         {
-            "name": "Validate Local Disk Availability",
+            "name": "Test TargetDisk",
             "description": "Tests the local disk for readiness",
-            "command": "step-validate-targetdisk",
+            "command": "step-test-targetdisk",
             "args": [],
             "parameters": {},
             "rules": {
@@ -110,7 +110,7 @@
             }
         },
         {
-            "name": "Enable High Performance PowerPlan [WinPE]",
+            "name": "Enable High Performance Power Plan",
             "description": "Sets the system to high performance mode",
             "command": "step-preinstall-enablehighperformance",
             "args": [],

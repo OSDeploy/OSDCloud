@@ -9,34 +9,37 @@
     "default": true,
     "steps": [
         {
-            "name": "Start OSDCloud Deployment Workflow",
+            "name": "Initialize OSDCloud Workflow",
             "command": "step-initialize-osdcloudworkflow",
             "parameters": {
                 "WorkflowName": "OSDCloud"
             },
             "args": {},
+            "debug": false,
             "disable": false,
+            "pause": false,
+            "verbose": false,
             "testinfullos": true
         },
         {
-            "name": "Initialize Logs",
+            "name": "Initialize OSDCloud Logs",
             "command": "step-initialize-osdcloudlogs",
             "testinfullos": true
         },
         {
-            "name": "Validate WindowsImage Availability",
-            "command": "step-validate-targetwindowsimage",
-            "testinfullos": true
-        },
-        {
-            "name": "Validate DriverPack Availability",
-            "command": "step-validate-targetdriverpack",
-            "testinfullos": true
-        },
-        {
-            "name": "Validate Local Disk Availability",
-            "command": "step-validate-targetdisk",
+            "name": "Test TargetDisk",
+            "command": "step-test-targetdisk",
             "testinfullos": false
+        },
+        {
+            "name": "Test WindowsImage",
+            "command": "step-test-targetwindowsimage",
+            "testinfullos": true
+        },
+        {
+            "name": "Test DriverPack",
+            "command": "step-test-targetdriverpack",
+            "testinfullos": true
         },
         {
             "name": "Remove USB Drive Letters",
@@ -59,7 +62,7 @@
             "testinfullos": false
         },
         {
-            "name": "Enable High Performance PowerPlan [WinPE]",
+            "name": "Enable High Performance Power Plan",
             "command": "step-preinstall-enablehighperformance",
             "testinfullos": false
         },

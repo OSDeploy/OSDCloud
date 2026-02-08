@@ -1,4 +1,4 @@
-function step-validate-targetwindowsimage {
+function step-test-targetwindowsimage {
     [CmdletBinding()]
     param (
         [System.String]

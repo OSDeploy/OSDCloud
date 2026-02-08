@@ -15,7 +15,7 @@ function Initialize-OSDCloudWorkflow {
     # Dependencies
     # Make sure curl.exe is present and throw if not
     if (-not (Get-Command -Name 'curl.exe' -ErrorAction SilentlyContinue)) {
-        throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-OSDCloudWorkflow requires 'curl.exe' which is not available on this system"
+        throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDCloud requires 'curl.exe' which is not available on this system. Please ensure curl.exe is available in the system PATH."
     }
     #=================================================
     # Get-DeploymentDiskObject
@@ -23,15 +23,16 @@ function Initialize-OSDCloudWorkflow {
 
     # Make sure Get-DeploymentDiskObject returns a single object
     if (-not $DeploymentDiskObject) {
-        throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-OSDCloudWorkflow requires at least one valid deployment disk. Please check your system disks."
+        throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDCloud requires at least one Local Disk, but no compatible Local Disk was found."
     }
     # Warn if multiple disks found and inform which disk will be used
     # Include the Friendly Name of the disk for clarity
     # Include the size in GB for clarity
     if ($DeploymentDiskObject.Count -gt 1) {
-        $DiskInfoList = $DeploymentDiskObject | ForEach-Object { "DiskNumber: $($_.DiskNumber), FriendlyName: $($_.FriendlyName), Size(GB): $([math]::Round($_.Size / 1GB, 2))" }
-        $DiskInfoString = $DiskInfoList -join "; "
-        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-OSDCloudWorkflow found multiple valid deployment disks. Using DiskNumber: $($DeploymentDiskObject[0].DiskNumber). Available disks: $DiskInfoString"
+        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Multiple Local Disks were found. OSDCloud will default to DiskNumber: $($DeploymentDiskObject[0].DiskNumber)"
+        $DeploymentDiskObject | ForEach-Object {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DiskNumber: $($_.DiskNumber), FriendlyName: $($_.FriendlyName), Size(GB): $([math]::Round($_.Size / 1GB, 2))"
+        }
     }
     # Limit to the first disk found
     $DeploymentDiskObject = $DeploymentDiskObject | Select-Object -First 1

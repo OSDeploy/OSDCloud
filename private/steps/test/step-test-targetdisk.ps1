@@ -1,4 +1,4 @@
-function step-validate-targetdisk {
+function step-test-targetdisk {
     [CmdletBinding()]
     param ()
     #=================================================
