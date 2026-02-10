@@ -214,7 +214,7 @@
             }
         },
         {
-            "name": "Applying WinPE Drivers to offline Windows Image",
+            "name": "Apply WinPE Drivers to offline Windows Image",
             "status": "Ready",
             "category": "drivers",
             "description": "Add WinPE drivers to Windows offline",
@@ -227,7 +227,7 @@
             }
         },
         {
-            "name": "Applying WinPE Drivers to offline Windows Recovery Environment",
+            "name": "Apply WinPE Drivers to offline Windows Recovery Environment",
             "description": "Add WinPE drivers to the winre.wim offline",
             "command": "step-drivers-recast-winre",
             "args": [],
@@ -326,7 +326,7 @@
             }
         },
         {
-            "name": "Hotfix  - Setup Displayed Eula",
+            "name": "Hotfix for Setup Displayed Eula",
             "description": "Applies a hotfix for the displayed EULA",
             "command": "step-update-setupdisplayedeula",
             "args": [],

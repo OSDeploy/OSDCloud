@@ -315,7 +315,7 @@
             }
         },
         {
-            "name": "Hotfix  - Setup Displayed Eula",
+            "name": "Hotfix for Setup Displayed Eula",
             "description": "Applies a hotfix for the displayed EULA",
             "command": "step-update-setupdisplayedeula",
             "args": [],

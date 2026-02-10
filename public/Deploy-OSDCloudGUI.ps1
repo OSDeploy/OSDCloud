@@ -19,10 +19,10 @@ function Deploy-OSDCloudGUI {
     #=================================================
     # Ensure workflow frontend is triggered before invoking workflow
     if ($null -ne $global:OSDCloudWorkflowInit.TimeStart) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invoke-OSDCloudWorkflow $Name"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invoke-OSDCloudWorkflowTask $Name"
         $OSDCloudWorkflowInit | Out-Host
         try {
-            Invoke-OSDCloudWorkflow
+            Invoke-OSDCloudWorkflowTask
         } catch {
             Write-Warning "Failed to invoke OSDCloud Workflow $Name $_"
             break

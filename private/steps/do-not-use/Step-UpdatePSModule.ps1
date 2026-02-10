@@ -55,7 +55,7 @@ function Step-UpdatePSModule {
         
             foreach ($Item in $StepOfflinePath) {
                 if (Test-Path "$($Item.FullName)\PowerShell\Required") {
-                    Write-Host -ForegroundColor Cyan "Applying PowerShell Modules and Scripts in $($Item.FullName)\PowerShell\Required"
+                    Write-Host -ForegroundColor Cyan "Apply PowerShell Modules and Scripts in $($Item.FullName)\PowerShell\Required"
                     robocopy "$($Item.FullName)\PowerShell\Required" "$PowerShellSavePath" *.* /s /ndl /njh /njs
                 }
             }

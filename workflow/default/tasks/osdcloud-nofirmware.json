@@ -96,11 +96,11 @@
             "command": "step-drivers-recast-winpe"
         },
         {
-            "name": "Applying WinPE Drivers to offline Windows Image",
+            "name": "Apply WinPE Drivers to offline Windows Image",
             "command": "step-drivers-recast-winos"
         },
         {
-            "name": "Applying WinPE Drivers to offline Windows Recovery Environment",
+            "name": "Apply WinPE Drivers to offline Windows Recovery Environment",
             "command": "step-drivers-recast-winre"
         },
         {
@@ -146,7 +146,7 @@
             "skip": true
         },
         {
-            "name": "Hotfix  - Setup Displayed Eula",
+            "name": "Hotfix for Setup Displayed Eula",
             "command": "step-update-setupdisplayedeula"
         },
         {

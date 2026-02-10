@@ -1,4 +1,4 @@
-function Invoke-OSDCloudWorkflow {
+function Invoke-OSDCloudWorkflowTask {
     [CmdletBinding()]
     param (
         [switch]
@@ -314,7 +314,7 @@ function Invoke-OSDCloudWorkflow {
             }
         }
         # End of workflow steps
-        Write-Host -ForegroundColor Green "[$(Get-Date -format s)] Workflow execution done."
+        Write-Host -ForegroundColor Green "[$(Get-Date -format s)] Workflow Task execution done."
         #=================================================
         # End the function
         $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
