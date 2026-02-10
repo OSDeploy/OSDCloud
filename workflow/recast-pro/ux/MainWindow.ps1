@@ -439,7 +439,7 @@ if ($OSLanguageCodeDefault -and ($OSLanguageCodeValues -contains $OSLanguageCode
 # Workflow Configuration
 #================================================
 # Import the DriverPack Catalog
-$DriverPackCatalog = @('None','Microsoft Catalog')
+$DriverPackCatalog = @('None','Microsoft Update Catalog')
 if ($global:OSDCloudWorkflowInit.DriverPackValues) {
 	$DriverPackCatalog += $global:OSDCloudWorkflowInit.DriverPackValues | ForEach-Object { $_.Name }
 }

@@ -38,7 +38,7 @@ function Invoke-OSDCloudPEStartup {
                 $WebRequest = Invoke-WebRequest -Uri "https://www.powershellgallery.com" -UseBasicParsing -Method Head
             }
             catch {
-                Invoke-OSDCloudPEStartupCommand Use-PEStartupWiFi -Wait
+                Invoke-OSDCloudPEStartupCommand Use-PEStartupWifi -Wait
             }
         }
         'IPConfig' {

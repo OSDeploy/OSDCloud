@@ -30,7 +30,7 @@ function step-drivers-recast-winpe {
     if ($PnputilDevices) {
         $PnputilDevices | Export-Clixml -Path "$LogPath\drivers-recast-winpe.xml" -Force
         # Export Drivers to Disk
-        Write-Verbose "[$(Get-Date -format s)] Exporting drivers to: $OutputPath"
+        Write-Verbose "[$(Get-Date -format s)] Export drivers to: $OutputPath"
         foreach ($Device in $PnputilDevices) {
             # Check that the Device has a DriverName
             if ($Device.Drivername) {
@@ -42,7 +42,7 @@ function step-drivers-recast-winpe {
                 }
                 
                 # Export the driver using pnputil
-                Write-Verbose "[$(Get-Date -format s)] Exporting $($Device.DriverName) to: $destinationPath"
+                Write-Verbose "[$(Get-Date -format s)] Export $($Device.DriverName) to: $destinationPath"
                 $null = & pnputil.exe /export-driver $Device.DriverName $destinationPath
             }
         }

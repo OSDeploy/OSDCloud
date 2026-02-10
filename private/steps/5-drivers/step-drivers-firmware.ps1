@@ -18,8 +18,8 @@ function step-drivers-firmware {
         return
     }
     if ($IsOnBattery -eq $true) {
-        # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Microsoft Update Firmware is not enabled for devices on battery power"
-        # return
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Microsoft Update Firmware is not enabled for devices on battery power"
+        return
     }
     #=================================================
     # Is it reachable online?
@@ -27,14 +27,15 @@ function step-drivers-firmware {
     try {
         $WebRequest = Invoke-WebRequest -Uri $Url -UseBasicParsing -Method Head
         if ($WebRequest.StatusCode -eq 200) {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Microsoft Update Catalog URL returned a 200 status code. OK."
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Microsoft Update Catalog returned a 200 status code. OK."
         }
     }
     catch {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Microsoft Update Catalog URL is not reachable. Skip."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Microsoft Update Catalog is not reachable. Skip."
         return
     }
 
+    <#
     $FirmwarePath = "C:\Windows\Temp\osdcloud-drivers-firmware"
 
     $Params = @{
@@ -47,11 +48,29 @@ function step-drivers-firmware {
     if (-not (Test-Path $Params.Path)) {
         New-Item @Params | Out-Null
     }
+    #>
 
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Firmware Updates will be downloaded from Microsoft Update Catalog to $FirmwarePath"
+    $DestinationDirectory = "C:\Windows\Temp\osdcloud-drivers-firmware"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Firmware Updates will be downloaded from Microsoft Update Catalog to $DestinationDirectory"
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Not all systems support a driver Firmware Update"
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] BIOS or Firmware Settings may need to be enabled for Firmware Updates"
-    Save-SystemFirmwareUpdate -DestinationDirectory $FirmwarePath
+    # Save-SystemFirmwareUpdate -DestinationDirectory $DestinationDirectory
+
+    $SystemFirmwareId = Get-SystemFirmwareResource
+    $SystemFirmwareId = $SystemFirmwareId -replace '[{}]',''
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] System Firmware Hardware ID: $SystemFirmwareId"
+
+    <#
+        Try {
+            Get-MicrosoftUpdateCatalogResult -Search $SystemFirmwareId -SortBy Date -Descending | Select-Object LastUpdated,Title,Version,Size,Guid -First 1
+        }
+        Catch {
+            #Do nothing
+        }
+
+    #>
+
+    Save-MicrosoftUpdateCatalogDriver -DestinationDirectory $DestinationDirectory -HardwareID $SystemFirmwareId
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"

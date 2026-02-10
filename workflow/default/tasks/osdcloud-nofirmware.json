@@ -92,7 +92,7 @@
             "command": "step-install-bcdboot"
         },
         {
-            "name": "Exporting WinPE Drivers to Local Disk",
+            "name": "Export WinPE Drivers to Local Disk",
             "command": "step-drivers-recast-winpe"
         },
         {
@@ -104,18 +104,28 @@
             "command": "step-drivers-recast-winre"
         },
         {
-            "name": "Download DriverPack from OEM",
+            "name": "Firmware: Download from Microsoft Update Catalog",
+            "command": "step-drivers-firmware",
+            "testinfullos": true
+        },
+        {
+            "name": "Firmware: Apply Driver",
+            "command": "step-drivers-addwindowsdriver-firmware",
+            "skip": true
+        },
+        {
+            "name": "OEM DriverPack: Download from OEM",
             "command": "step-drivers-driverpack",
             "testinfullos": true
+        },
+        {
+            "name": "OEM DriverPack: Apply or stage in SetupComplete.cmd",
+            "command": "step-drivers-addwindowsdriver-driverpack"
         },
         {
             "name": "Download Drivers from Microsoft Update Catalog",
             "command": "step-drivers-msupdate",
             "testinfullos": true
-        },
-        {
-            "name": "Apply or Stage OEM DriverPack",
-            "command": "step-drivers-addwindowsdriver-driverpack"
         },
         {
             "name": "Apply Microsoft Update Drivers - All",
@@ -133,11 +143,6 @@
         {
             "name": "Apply Microsoft Update Drivers - Scsi",
             "command": "step-drivers-addwindowsdriver-scsi",
-            "skip": true
-        },
-        {
-            "name": "Apply Microsoft Update Drivers - Firmware",
-            "command": "step-drivers-addwindowsdriver-firmware",
             "skip": true
         },
         {

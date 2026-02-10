@@ -9,7 +9,10 @@ function Use-PEStartupHardware {
     $Results = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object Status, DeviceID, Name, Manufacturer, PNPClass, Service | Sort-Object DeviceID
 
     if ($Results) {
-        Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] Get-CimInstance Win32_PnPEntity Hardware Devices"
+        Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] WinPE Hardware Devices"        
+        $Command = "Get-CimInstance -ClassName Win32_PnPEntity | Select-Object Status, DeviceID, Name, Manufacturer, PNPClass, Service | Sort-Object DeviceID | Format-Table -AutoSize"
+        Write-Host -ForegroundColor DarkGray $Command
+        Set-Clipboard -Value $Command
         Write-Output $Results | Format-Table -AutoSize
     }
     else {

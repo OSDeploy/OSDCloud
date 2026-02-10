@@ -1,4 +1,4 @@
-function Use-PEStartupWiFi {
+function Use-PEStartupWifi {
     [CmdletBinding()]
     param ()
     #=================================================
@@ -10,7 +10,7 @@ function Use-PEStartupWiFi {
         if ($WirelessConnect) {
             #TODO - Enable functionality for WirelessConnect.exe
             Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] Starting WirelessConnect.exe"
-            Start-Process PowerShell -ArgumentList 'Start-WinREWiFi -WirelessConnect' -Wait
+            Start-Process PowerShell -ArgumentList 'Invoke-OSDCloudWifi -WirelessConnect' -Wait
         }
         elseif ($WifiProfile) {
             #TODO - Enable functionality for WifiProfile
@@ -18,11 +18,11 @@ function Use-PEStartupWiFi {
             $Global:WifiProfile = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Name -ne 'C' } | ForEach-Object {
                 Get-ChildItem "$($_.Root)OSDCloud\Config\Scripts" -Include "WiFiProfile.xml" -File -Recurse -Force -ErrorAction Ignore
             }
-            Start-Process PowerShell -ArgumentList "Start-WinREWiFi -WifiProfile `"$Global:WifiProfile`"" -Wait
+            Start-Process PowerShell -ArgumentList "Invoke-OSDCloudWifi -WifiProfile `"$Global:WifiProfile`"" -Wait
         }
         else {
             Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] Starting Wi-Fi"
-            Start-Process PowerShell Start-WinREWiFi -Wait
+            Start-Process PowerShell Invoke-OSDCloudWifi -Wait
         }
     }
 

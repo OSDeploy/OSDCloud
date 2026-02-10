@@ -201,7 +201,7 @@
             }
         },
         {
-            "name": "Exporting WinPE Drivers to Local Disk",
+            "name": "Export WinPE Drivers to Local Disk",
             "status": "Ready",
             "category": "drivers",
             "description": "Export in-use WinPE drivers to offline Windows Temp",

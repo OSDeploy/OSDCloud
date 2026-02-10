@@ -173,7 +173,7 @@ function step-drivers-driverpack {
     if (-not (Test-Path "$ExpandPath")) {
         New-Item $ExpandPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
     }
-    Write-Host -ForegroundColor DarkGray "DriverPack: $DownloadedFile"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DriverPack: $DownloadedFile"
     #=================================================
     #   Cab
     #=================================================

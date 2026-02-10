@@ -24,7 +24,7 @@ function Step-UpdatePSModule {
             New-Item -Path "$PowerShellSavePath\Scripts" -ItemType Directory -Force | Out-Null
         }
         
-        if (Test-WebConnection -Uri "https://www.powershellgallery.com") {
+        if (Test-OSDCloudInternetConnection -Uri "https://www.powershellgallery.com") {
             Copy-PSModuleToFolder -Name OSD -Destination "$PowerShellSavePath\Modules"
             try {
                 Save-Script -Name Get-WindowsAutopilotInfo -Path "$PowerShellSavePath\Scripts" -ErrorAction Stop
