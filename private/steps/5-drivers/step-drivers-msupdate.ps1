@@ -10,10 +10,10 @@ function step-drivers-msupdate {
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     # Gather Variables
-    $ComputerManufacturer = $global:DeployOSDCloud.ComputerManufacturer
+    $ComputerManufacturer = $global:OSDCloudDeploy.ComputerManufacturer
     #=================================================
     # Step Variables
-    $DriverPackName = $global:DeployOSDCloud.DriverPackName
+    $DriverPackName = $global:OSDCloudDeploy.DriverPackName
     #=================================================
     # Exclusions
     if ($PSVersionTable.PSVersion.Major -ne 5) {

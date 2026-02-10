@@ -9,11 +9,11 @@ function Deploy-OSDCloudCLI {
     )
     #=================================================
     # Initialize OSDCloudWorkflow
-    Initialize-DeployOSDCloud -Name $Name
+    Initialize-OSDCloudDeploy -Name $Name
     #=================================================
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invoke-OSDCloudWorkflowTask"
-    $global:DeployOSDCloud.TimeStart = Get-Date
-    $DeployOSDCloud | Out-Host
+    $global:OSDCloudDeploy.TimeStart = Get-Date
+    $global:OSDCloudDeploy | Out-Host
     Invoke-OSDCloudWorkflowTask
     #=================================================
 }

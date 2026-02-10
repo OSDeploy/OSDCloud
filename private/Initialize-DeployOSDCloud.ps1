@@ -1,4 +1,4 @@
-function Initialize-DeployOSDCloud {
+function Initialize-OSDCloudDeploy {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false,
@@ -48,7 +48,7 @@ function Initialize-DeployOSDCloud {
     Initialize-OSDCloudWorkflowTasks -WorkflowName $Name
     # Make sure at least one workflow task is defined
     if (-not $global:OSDCloudTasks) {
-        throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-DeployOSDCloud requires at least one valid workflow task. Please check your OSDCloud Workflow Tasks."
+        throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-OSDCloudDeploy requires at least one valid workflow task. Please check your OSDCloud Workflow Tasks."
     }
     # Update WorkflowTaskObject and WorkflowTaskName in the Init global variable
     $WorkflowTaskObject = $global:OSDCloudTasks | Select-Object -First 1
@@ -149,8 +149,8 @@ function Initialize-DeployOSDCloud {
     }
     #=================================================
     # Main
-    $global:DeployOSDCloud = $null
-    $global:DeployOSDCloud = [ordered]@{
+    $global:OSDCloudDeploy = $null
+    $global:OSDCloudDeploy = [ordered]@{
         ComputerManufacturer  = $ComputerManufacturer
         ComputerModel         = $ComputerModel
         ComputerProduct       = $ComputerProduct

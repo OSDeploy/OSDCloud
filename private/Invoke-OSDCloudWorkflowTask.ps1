@@ -29,14 +29,14 @@ function Invoke-OSDCloudWorkflowTask {
         ComputerProduct       = $OSDCloudDevice.ComputerProduct
         ComputerSerialNumber  = $OSDCloudDevice.SerialNumber
         ComputerUUID          = (Get-WmiObject -Class Win32_ComputerSystemProduct).UUID
-        DriverPackName        = $DeployOSDCloud.DriverPackName
-        DriverPackObject      = $DeployOSDCloud.DriverPackObject
+        DriverPackName        = $global:OSDCloudDeploy.DriverPackName
+        DriverPackObject      = $global:OSDCloudDeploy.DriverPackObject
         IsOnBattery           = $global:IsOnBattery
         IsVM                  = $global:IsVM
         IsWinPE               = $global:IsWinPE
         LogsPath              = "$env:TEMP\osdcloud-logs"
-        OperatingSystem       = $DeployOSDCloud.OperatingSystem
-        OperatingSystemObject = $DeployOSDCloud.OperatingSystemObject
+        OperatingSystem       = $global:OSDCloudDeploy.OperatingSystem
+        OperatingSystemObject = $global:OSDCloudDeploy.OperatingSystemObject
         TimeEnd               = $null
         TimeSpan              = $null
         TimeStart             = [datetime](Get-Date)
@@ -168,23 +168,23 @@ function Invoke-OSDCloudWorkflowTask {
         winTimeZone                 = [string]$computerInfo.TimeZone
         winVersion                  = [string]$computerInfo.OsVersion
         osdcloudModuleVersion       = [string]$ModuleVersion
-        osdcloudWorkflowName        = [string]$global:DeployOSDCloud.WorkflowName
-        osdcloudWorkflowTaskName    = [string]$global:DeployOSDCloud.WorkflowTaskName
-        osdcloudDriverPackName      = [string]$global:DeployOSDCloud.DriverPackName
-        osdcloudOSName              = [string]$global:DeployOSDCloud.OperatingSystemObject.OSName
-        osdcloudOSVersion           = [string]$global:DeployOSDCloud.OperatingSystemObject.OSVersion
-        osdcloudOSActivationStatus  = [string]$global:DeployOSDCloud.OperatingSystemObject.OSActivation
-        osdcloudOSBuild             = [string]$global:DeployOSDCloud.OperatingSystemObject.OSBuild
-        osdcloudOSBuildVersion      = [string]$global:DeployOSDCloud.OperatingSystemObject.OSBuildVersion
-        osdcloudOSLanguageCode      = [string]$global:DeployOSDCloud.OperatingSystemObject.OSLanguageCode
+        osdcloudWorkflowName        = [string]$global:OSDCloudDeploy.WorkflowName
+        osdcloudWorkflowTaskName    = [string]$global:OSDCloudDeploy.WorkflowTaskName
+        osdcloudDriverPackName      = [string]$global:OSDCloudDeploy.DriverPackName
+        osdcloudOSName              = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSName
+        osdcloudOSVersion           = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSVersion
+        osdcloudOSActivationStatus  = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSActivation
+        osdcloudOSBuild             = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSBuild
+        osdcloudOSBuildVersion      = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSBuildVersion
+        osdcloudOSLanguageCode      = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSLanguageCode
     }
     $postApi = 'phc_2h7nQJCo41Hc5C64B2SkcEBZOvJ6mHr5xAHZyjPl3ZK'
     Send-OSDCloudLiveEvent -EventName $eventName -ApiKey $postApi -DistinctId $distinctId -Properties $eventProperties
     #=================================================
-    if ($null -ne $global:DeployOSDCloud.WorkflowTaskObject) {
+    if ($null -ne $global:OSDCloudDeploy.WorkflowTaskObject) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)]"
         
-        foreach ($step in $global:DeployOSDCloud.WorkflowTaskObject.steps) {
+        foreach ($step in $global:OSDCloudDeploy.WorkflowTaskObject.steps) {
             # Set the current step in the global variable
             $global:OSDCloudCurrentStep = $step
             #=================================================

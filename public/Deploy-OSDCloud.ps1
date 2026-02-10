@@ -12,30 +12,30 @@ function Deploy-OSDCloud {
     )
     #=================================================
     # Initialize OSDCloudWorkflow
-    Initialize-DeployOSDCloud -Name $Name
+    Initialize-OSDCloudDeploy -Name $Name
     #=================================================
     if ($CLI.IsPresent) {
         #=================================================
         # Initialize OSDCloudWorkflow
-        Initialize-DeployOSDCloud -Name $Name
+        Initialize-OSDCloudDeploy -Name $Name
         #=================================================
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invoke-OSDCloudWorkflowTask"
-        $global:DeployOSDCloud.TimeStart = Get-Date
-        $DeployOSDCloud | Out-Host
+        $global:OSDCloudDeploy.TimeStart = Get-Date
+        $global:OSDCloudDeploy | Out-Host
         Invoke-OSDCloudWorkflowTask
         #=================================================
     }
     else {
         # Prevents the workflow from starting unless the Start button is clicked in the Ux
-        $global:DeployOSDCloud.TimeStart = $null
+        $global:OSDCloudDeploy.TimeStart = $null
         #=================================================
         # OSDCloudWorkflowUx
         Invoke-OSDCloudWorkflowUx -WorkflowName $Name
         #=================================================
         # Ensure workflow frontend is triggered before invoking workflow
-        if ($null -ne $global:DeployOSDCloud.TimeStart) {
+        if ($null -ne $global:OSDCloudDeploy.TimeStart) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invoke-OSDCloudWorkflowTask $Name"
-            $DeployOSDCloud | Out-Host
+            $global:OSDCloudDeploy | Out-Host
             try {
                 Invoke-OSDCloudWorkflowTask
             }

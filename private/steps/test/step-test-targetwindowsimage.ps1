@@ -65,11 +65,11 @@ function step-test-targetwindowsimage {
         #$null = Install-Module -Name $global:OSDCloudWorkflowInvoke.LaunchMethod -Force -ErrorAction Ignore -WarningAction Ignore
     }
 
-    if ($global:DeployOSDCloud.LocalImageFileInfo) {
+    if ($global:OSDCloudDeploy.LocalImageFileInfo) {
         # Test if the file is on USB (example: check if path starts with a removable drive letter)
-        if (!(Test-Path $global:DeployOSDCloud.LocalImageFileInfo)) {
+        if (!(Test-Path $global:OSDCloudDeploy.LocalImageFileInfo)) {
             Write-Warning "[$(Get-Date -format s)] OSDCloud failed to find the Operating System Local ImageFile Item"
-            Write-Warning $($global:DeployOSDCloud.LocalImageFileInfo)
+            Write-Warning $($global:OSDCloudDeploy.LocalImageFileInfo)
             Write-Warning "Press Ctrl+C to cancel OSDCloud"
             Start-Sleep -Seconds 86400
             Exit

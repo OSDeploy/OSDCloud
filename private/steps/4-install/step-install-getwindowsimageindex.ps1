@@ -13,11 +13,11 @@ function step-install-getwindowsimageindex {
         Contains the FullName of the WindowsImage to be expanded.
         This variable was created by step-install-downloadwindowsimage
 
-        $global:DeployOSDCloud.OSEditionId
+        $global:OSDCloudDeploy.OSEditionId
         Contains the EditionId of the WindowsImage to be expanded.
         This property may not exist and is created by the Frontend.
 
-        $global:DeployOSDCloud.LocalImageName
+        $global:OSDCloudDeploy.LocalImageName
         Contains the ImageName of the WindowsImage to be expanded.
         This property may not exist and is created by the Frontend.
 
@@ -33,11 +33,11 @@ function step-install-getwindowsimageindex {
 
         [Parameter(Mandatory = $false)]
         [System.String]
-        $EditionId = $global:DeployOSDCloud.OSEditionId,
+        $EditionId = $global:OSDCloudDeploy.OSEditionId,
 
         [Parameter(Mandatory = $false)]
         [System.String]
-        $ImageName = $global:DeployOSDCloud.LocalImageName
+        $ImageName = $global:OSDCloudDeploy.LocalImageName
     )
     #=================================================
     # Start the step

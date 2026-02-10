@@ -266,48 +266,48 @@ else {
 #endregion
 #=================================================
 #region OSDCloud Workflow Library
-$global:DeployOSDCloud.Flows | ForEach-Object {
+$global:OSDCloudDeploy.Flows | ForEach-Object {
     $formMainWindowControlTaskComboBox.Items.Add($_.Name) | Out-Null
 }
 $formMainWindowControlTaskComboBox.SelectedIndex = 0
 #endregion
 #=================================================
 #region OperatingSystem
-$global:DeployOSDCloud.OperatingSystemValues | ForEach-Object {
+$global:OSDCloudDeploy.OperatingSystemValues | ForEach-Object {
     $formMainWindowControlOperatingSystemCombo.Items.Add($_) | Out-Null
 }
-$formMainWindowControlOperatingSystemCombo.SelectedValue = $global:DeployOSDCloud.OperatingSystem
+$formMainWindowControlOperatingSystemCombo.SelectedValue = $global:OSDCloudDeploy.OperatingSystem
 #endregion
 #=================================================
 #region OSLanguage
-$global:DeployOSDCloud.OSLanguageCodeValues | ForEach-Object {
+$global:OSDCloudDeploy.OSLanguageCodeValues | ForEach-Object {
     $formMainWindowControlOSLanguageCodeCombo.Items.Add($_) | Out-Null
 }
-$formMainWindowControlOSLanguageCodeCombo.SelectedValue = $global:DeployOSDCloud.OSLanguageCode
+$formMainWindowControlOSLanguageCodeCombo.SelectedValue = $global:OSDCloudDeploy.OSLanguageCode
 #endregion
 #=================================================
 #region OSEdition
-$global:DeployOSDCloud.OSEditionValues | ForEach-Object {
+$global:OSDCloudDeploy.OSEditionValues | ForEach-Object {
     $formMainWindowControlOSEditionCombo.Items.Add($_.Edition) | Out-Null
 }
 
-$global:DeployOSDCloud.OSEditionValues | ForEach-Object {
+$global:OSDCloudDeploy.OSEditionValues | ForEach-Object {
     $formMainWindowControlOSEditionIdCombo.Items.Add($_.EditionId) | Out-Null
 }
 #endregion
 #=================================================
 #region OSActivation
-$global:DeployOSDCloud.OSActivationValues | ForEach-Object {
+$global:OSDCloudDeploy.OSActivationValues | ForEach-Object {
     $formMainWindowControlOSActivationCombo.Items.Add($_) | Out-Null
 }
 #endregion
 #=================================================
 #region DriverPack
-$global:DeployOSDCloud.DriverPackValues | ForEach-Object {
+$global:OSDCloudDeploy.DriverPackValues | ForEach-Object {
     $formMainWindowControlDriverPackCombo.Items.Add($_.Name) | Out-Null
 }
-if ($global:DeployOSDCloud.DriverPackName) {
-    $formMainWindowControlDriverPackCombo.SelectedValue = $global:DeployOSDCloud.DriverPackName
+if ($global:OSDCloudDeploy.DriverPackName) {
+    $formMainWindowControlDriverPackCombo.SelectedValue = $global:OSDCloudDeploy.DriverPackName
 }
 #endregion
 #=================================================
@@ -324,20 +324,20 @@ function Set-FormConfigurationCloud {
 
     $formMainWindowControlOSLanguageCodeCombo.IsEnabled = $true
     $formMainWindowControlOSLanguageCodeCombo.Visibility = 'Visible'
-    $formMainWindowControlOSLanguageCodeCombo.SelectedValue = $global:DeployOSDCloud.OSLanguageCode
+    $formMainWindowControlOSLanguageCodeCombo.SelectedValue = $global:OSDCloudDeploy.OSLanguageCode
 
     $formMainWindowControlOSEditionLabel.Content = 'Edition'
     $formMainWindowControlOSEditionCombo.IsEnabled = $true
     $formMainWindowControlOSEditionCombo.Visibility = 'Visible'
-    $formMainWindowControlOSEditionCombo.SelectedValue = $global:DeployOSDCloud.OSEdition
+    $formMainWindowControlOSEditionCombo.SelectedValue = $global:OSDCloudDeploy.OSEdition
 
     $formMainWindowControlOSActivationCombo.IsEnabled = $true
     $formMainWindowControlOSActivationCombo.Visibility = 'Visible'
-    $formMainWindowControlOSActivationCombo.SelectedValue = $global:DeployOSDCloud.OSActivation
+    $formMainWindowControlOSActivationCombo.SelectedValue = $global:OSDCloudDeploy.OSActivation
 
     $formMainWindowControlOSEditionIdCombo.IsEnabled = $false
     $formMainWindowControlOSEditionIdCombo.Visibility = 'Visible'
-    $formMainWindowControlOSEditionIdCombo.SelectedValue = $global:DeployOSDCloud.OSEditionId
+    $formMainWindowControlOSEditionIdCombo.SelectedValue = $global:OSDCloudDeploy.OSEditionId
 
     $formMainWindowControlImageNameCombobox.Items.Clear()
     $formMainWindowControlImageNameCombobox.Visibility = 'Collapsed'
@@ -403,7 +403,7 @@ $formMainWindowControlOSEditionCombo.add_SelectionChanged(
             $formMainWindowControlOSActivationCombo.IsEnabled = $true
         }
 
-        $formMainWindowControlOSEditionIdCombo.SelectedValue = $global:DeployOSDCloud.OSEditionValues | Where-Object { $_.Edition -eq $formMainWindowControlOSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
+        $formMainWindowControlOSEditionIdCombo.SelectedValue = $global:OSDCloudDeploy.OSEditionValues | Where-Object { $_.Edition -eq $formMainWindowControlOSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
     }
 )
 #endregion
@@ -461,7 +461,7 @@ $formMainWindowControlStartButton.add_Click(
         $OperatingSystem = $formMainWindowControlOperatingSystemCombo.SelectedValue
 
         # Determine OperatingSystem
-        if ($OperatingSystem -in $global:DeployOSDCloud.OperatingSystemValues) {
+        if ($OperatingSystem -in $global:OSDCloudDeploy.OperatingSystemValues) {
 
             $OSActivation = $formMainWindowControlOSActivationCombo.SelectedValue
             $OSLanguageCode = $formMainWindowControlOSLanguageCodeCombo.SelectedValue
@@ -491,37 +491,37 @@ $formMainWindowControlStartButton.add_Click(
         #   Workflow
         #================================================
         $OSDCloudWorkflowTaskName = $formMainWindowControlTaskComboBox.SelectedValue
-        $OSDCloudWorkflowTaskObject = $global:DeployOSDCloud.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowTaskName } | Select-Object -First 1
+        $OSDCloudWorkflowTaskObject = $global:OSDCloudDeploy.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowTaskName } | Select-Object -First 1
         #================================================
         #   DriverPack
         #================================================
         if ($formMainWindowControlDriverPackCombo.Text) {
             $DriverPackName = $formMainWindowControlDriverPackCombo.Text
-            $DriverPackObject = $global:DeployOSDCloud.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+            $DriverPackObject = $global:OSDCloudDeploy.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
         }
         #================================================
         #   Global Variables
         #================================================
-        $global:DeployOSDCloud.WorkflowTaskName = $OSDCloudWorkflowTaskName
-        $global:DeployOSDCloud.WorkflowTaskObject = $OSDCloudWorkflowTaskObject
-        $global:DeployOSDCloud.OperatingSystem = $OperatingSystem
-        $global:DeployOSDCloud.OSActivation = $OSActivation
-        $global:DeployOSDCloud.OSBuild = $OSBuild
-        $global:DeployOSDCloud.OSEdition = $OSEdition
-        $global:DeployOSDCloud.OSEditionId = $OSEditionId
-        $global:DeployOSDCloud.OSLanguageCode = $OSLanguageCode
-        $global:DeployOSDCloud.OSVersion = $OSVersion
-        $global:DeployOSDCloud.DriverPackName = $DriverPackName
-        $global:DeployOSDCloud.ImageFileName = $ImageFileName
-        $global:DeployOSDCloud.ImageFileUrl = $ImageFileUrl
-        $global:DeployOSDCloud.LocalImageFileInfo = $LocalImageFileInfo
-        $global:DeployOSDCloud.LocalImageFilePath = $LocalImageFilePath
-        $global:DeployOSDCloud.LocalImageName = $LocalImageName
+        $global:OSDCloudDeploy.WorkflowTaskName = $OSDCloudWorkflowTaskName
+        $global:OSDCloudDeploy.WorkflowTaskObject = $OSDCloudWorkflowTaskObject
+        $global:OSDCloudDeploy.OperatingSystem = $OperatingSystem
+        $global:OSDCloudDeploy.OSActivation = $OSActivation
+        $global:OSDCloudDeploy.OSBuild = $OSBuild
+        $global:OSDCloudDeploy.OSEdition = $OSEdition
+        $global:OSDCloudDeploy.OSEditionId = $OSEditionId
+        $global:OSDCloudDeploy.OSLanguageCode = $OSLanguageCode
+        $global:OSDCloudDeploy.OSVersion = $OSVersion
+        $global:OSDCloudDeploy.DriverPackName = $DriverPackName
+        $global:OSDCloudDeploy.ImageFileName = $ImageFileName
+        $global:OSDCloudDeploy.ImageFileUrl = $ImageFileUrl
+        $global:OSDCloudDeploy.LocalImageFileInfo = $LocalImageFileInfo
+        $global:OSDCloudDeploy.LocalImageFilePath = $LocalImageFilePath
+        $global:OSDCloudDeploy.LocalImageName = $LocalImageName
 
-        $global:DeployOSDCloud.DriverPackObject = $DriverPackObject
-        $global:DeployOSDCloud.OperatingSystemObject = $OperatingSystemObject
+        $global:OSDCloudDeploy.DriverPackObject = $DriverPackObject
+        $global:OSDCloudDeploy.OperatingSystemObject = $OperatingSystemObject
         
-        $global:DeployOSDCloud.TimeStart = (Get-Date)
+        $global:OSDCloudDeploy.TimeStart = (Get-Date)
         #=================================================
         #   Invoke-OSDCloudWorkflowTask.ps1
         #=================================================
@@ -536,7 +536,7 @@ $formMainWindowControlStartButton.add_Click(
 #region Customizations
 #TODO fix the Version since this is not a Module function it doesn't give a version
 $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
-$formMainWindow.Title = "OSDCloud on $($global:DeployOSDCloud.ComputerManufacturer) $($global:DeployOSDCloud.ComputerModel)"
+$formMainWindow.Title = "OSDCloud on $($global:OSDCloudDeploy.ComputerManufacturer) $($global:OSDCloudDeploy.ComputerModel)"
 #endregion
 #================================================
 #region Branding
