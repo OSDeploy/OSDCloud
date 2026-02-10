@@ -1,9 +1,9 @@
-function Invoke-OSDCloudPEStartupUpdateModule {
+function Invoke-PEStartupCommand {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, Position = 0)]
         [System.String]
-        $Name,
+        $Command,
 
         [Parameter(Mandatory = $false)]
         [ValidateSet('Normal', 'Minimized', 'Maximized', 'Hidden')]
@@ -25,27 +25,6 @@ function Invoke-OSDCloudPEStartupUpdateModule {
     $Error.Clear()
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     #=================================================
-	# Are we on the last version of the module?
-    $InstalledModule = Get-Module -Name $Name -ListAvailable -ErrorAction Ignore | Sort-Object Version -Descending | Select-Object -First 1
-    $GalleryPSModule = Find-Module -Name $Name -ErrorAction Ignore -WarningAction Ignore
-    #=================================================
-    # Install the OSD module if it is not installed or if the version is older than the gallery version
-    if ($GalleryPSModule) {
-        if (($GalleryPSModule.Version -as [version]) -le ($InstalledModule.Version -as [version])) {
-			return
-        }
-    }
-    #=================================================
-	<#
-	# Make sure we are online and can reach the PowerShell Gallery
-	try {
-		$WebRequest = Invoke-WebRequest -Uri "https://www.powershellgallery.com/packages/$Name" -UseBasicParsing -Method Head
-	}
-	catch {
-		return
-    }
-	#>
-    #=================================================
 	# https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-runasynchronous
 	# https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-runsynchronous
 
@@ -66,8 +45,8 @@ $Unattend = @"
 			<Run$($Run)>
 				<Run$($Run)Command wcm:action="add">
 					<Order>1</Order>
-					<Description>Update PowerShell Module $Name</Description>
-					<Path>powershell.exe -NoLogo -NoProfile -WindowStyle $WindowStyle $PSNoExit-Command Use-PEStartupUpdateModule -Name $Name</Path>
+					<Description>$Command</Description>
+					<Path>powershell.exe -NoLogo -NoProfile -WindowStyle $WindowStyle $PSNoExit-Command $Command</Path>
 				</Run$($Run)Command>
 			</Run$($Run)>
 		</component>
@@ -78,8 +57,8 @@ $Unattend = @"
 			<Run$($Run)>
 				<Run$($Run)Command wcm:action="add">
 					<Order>1</Order>
-					<Description>Update PowerShell Module $Name</Description>
-					<Path>powershell.exe -NoLogo -NoProfile -WindowStyle $WindowStyle $PSNoExit-Command Use-PEStartupUpdateModule -Name $Name</Path>
+					<Description>$Command</Description>
+					<Path>powershell.exe -NoLogo -NoProfile -WindowStyle $WindowStyle $PSNoExit-Command $Command</Path>
 				</Run$($Run)Command>
 			</Run$($Run)>
 		</component>
@@ -87,19 +66,17 @@ $Unattend = @"
 </unattend>
 "@
 
-	$Unattend | Out-File -FilePath "$env:Temp\UpdatePSModule$Name.xml" -Encoding utf8 -Force
+	$Unattend | Out-File -FilePath "$env:Temp\$Command.xml" -Encoding utf8 -Force
 
 	if ($Wait -and $NoExit) {
 		Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] This window may need to be closed to continue the WinPE startup process"
 	}
-	
+
 	if ($Wait) {
-		Start-Process -FilePath wpeinit -Wait -ArgumentList "-unattend:$env:Temp\UpdatePSModule$Name.xml"
+		Start-Process -FilePath wpeinit -Wait -ArgumentList "-unattend:$env:Temp\$Command.xml"
+	} else {
+		Start-Process -FilePath wpeinit -ArgumentList "-unattend:$env:Temp\$Command.xml"
 	}
-	else {
-		Start-Process -FilePath wpeinit -ArgumentList "-unattend:$env:Temp\UpdatePSModule$Name.xml"
-	}
-	
     #=================================================
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Done"
     #=================================================

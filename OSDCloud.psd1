@@ -77,13 +77,13 @@ FunctionsToExport =
     'Get-OSDCloudModulePath',
     'Get-OSDCloudModuleVersion',
     'Invoke-OSDCloudPEStartup',
-    'Use-PEStartupDeviceInfo',
-    'Use-PEStartupHardware',
-    'Use-PEStartupHardwareErrors',
-    'Use-PEStartupIpconfig',
-    'Use-PEStartupUpdateModule',
-    'Use-PEStartupWifi',
     'Invoke-OSDCloudWifi',
+    'Show-PEStartupDeviceInfo',
+    'Show-PEStartupHardware',
+    'Show-PEStartupHardwareErrors',
+    'Show-PEStartupIpconfig',
+    'Show-PEStartupWifi',
+    'Use-PEStartupUpdateModule',
     'Export-OSDWindowsDriversWinPE'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

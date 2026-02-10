@@ -1,4 +1,4 @@
-function Use-PEStartupWifi {
+function Show-PEStartupWifi {
     [CmdletBinding()]
     param ()
     #=================================================

@@ -1,4 +1,4 @@
-function Initialize-OSDCloudWorkflowSettingsUser {
+function Initialize-OSDCloudSettingsOS {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false,
@@ -34,18 +34,18 @@ function Initialize-OSDCloudWorkflowSettingsUser {
         break
     }
 
-    $WorkflowSettingsUserPath = Join-Path $Path $Name
-    $WorkflowSettingsUserDefaultPath = Join-Path $Path 'default'
+    $WorkflowSettingsOSPath = Join-Path $Path $Name
+    $WorkflowSettingsOSDefaultPath = Join-Path $Path 'default'
 
-    $PathAmd64 = "$WorkflowSettingsUserPath\user-amd64.json"
-    $PathArm64 = "$WorkflowSettingsUserPath\user-arm64.json"
+    $PathAmd64 = "$WorkflowSettingsOSPath\os-amd64.json"
+    $PathArm64 = "$WorkflowSettingsOSPath\os-arm64.json"
 
-    if (-not ($WorkflowSettingsUserPath -eq $WorkflowSettingsUserDefaultPath)) {
+    if (-not ($WorkflowSettingsOSPath -eq $WorkflowSettingsOSDefaultPath)) {
         if (-not (Test-Path $PathAmd64)) {
-            $PathAmd64 = "$WorkflowSettingsUserDefaultPath\user-amd64.json"
+            $PathAmd64 = "$WorkflowSettingsOSDefaultPath\os-amd64.json"
         }
         if (-not (Test-Path $PathArm64)) {
-            $PathArm64 = "$WorkflowSettingsUserDefaultPath\user-arm64.json"
+            $PathArm64 = "$WorkflowSettingsOSDefaultPath\os-arm64.json"
         }
     }
 
@@ -58,7 +58,7 @@ function Initialize-OSDCloudWorkflowSettingsUser {
         else {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathAmd64"
         }
-        $SettingsUserPath = $PathAmd64
+        $SettingsOSPath = $PathAmd64
     }
     elseif ($Architecture -eq 'ARM64') {
         if (-not (Test-Path $PathArm64)) {
@@ -68,13 +68,15 @@ function Initialize-OSDCloudWorkflowSettingsUser {
         else {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathArm64"
         }
-        $SettingsUserPath = $PathArm64
+        $SettingsOSPath = $PathArm64
     }
     else {
         Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
         break
     }
-    $rawJsonContent = Get-Content -Path $SettingsUserPath -Raw
+    
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Importing settings from $SettingsOSPath"
+    $rawJsonContent = Get-Content -Path $SettingsOSPath -Raw
 
     if ($AsJson) {
         return $rawJsonContent
@@ -86,8 +88,8 @@ function Initialize-OSDCloudWorkflowSettingsUser {
     $hashtable = [ordered]@{}
     (ConvertFrom-Json $JsonContent).psobject.properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
 
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowSettingsUser: $SettingsUserPath"
-    $global:OSDCloudWorkflowSettingsUser = $hashtable
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDCloud OS Settings are stored in `$global:OSDCloudWorkflowSettingsOS"
+    $global:OSDCloudWorkflowSettingsOS = $hashtable
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"

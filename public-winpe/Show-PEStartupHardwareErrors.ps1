@@ -1,4 +1,4 @@
-function Use-PEStartupHardwareErrors {
+function Show-PEStartupHardwareErrors {
     [CmdletBinding()]
     param ()
     #=================================================

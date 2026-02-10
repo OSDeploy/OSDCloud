@@ -17,7 +17,7 @@ function Invoke-OSDCloudWorkflowUx {
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
     #=================================================
     if (-not ($global:OSDCloudWorkflowInit)) {
-        Initialize-OSDCloudWorkflow
+        Initialize-DeployOSDCloud
     }
 
     $WorkflowSettingsUxPath = Join-Path $Path (Join-Path $Name 'ux')

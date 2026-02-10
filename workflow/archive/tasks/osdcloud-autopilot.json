@@ -11,7 +11,7 @@
         {
             "name": "Initialize OSDCloud Workflow",
             "description": "Start the OSDCloud Workflow",
-            "command": "step-initialize-osdcloudworkflow",
+            "command": "step-initialize-osdcloudworkflowtask",
             "args": [],
             "parameters": {
                 "WorkflowTaskName": "OSDCloud Autopilot"

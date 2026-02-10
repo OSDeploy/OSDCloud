@@ -1,4 +1,4 @@
-function Use-PEStartupDeviceInfo {
+function Show-PEStartupDeviceInfo {
     [CmdletBinding()]
     param ()
     #=================================================

@@ -1,4 +1,4 @@
-function step-initialize-osdcloudworkflow {
+function step-initialize-osdcloudworkflowtask {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false)]

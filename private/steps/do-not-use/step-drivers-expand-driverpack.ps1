@@ -62,7 +62,7 @@ function step-drivers-expand-driverpack {
                     #If found an EXE in c:\drivers
                     if (Test-Path -Path $env:windir\System32\7za.exe) {
                         #If 7zip is found
-                        Write-Host -ForegroundColor Cyan "[$(Get-Date -format s)] Found 7zip, using to Expand HP Softpaq"
+                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Found 7zip, using to Expand HP Softpaq"
                         Write-Host "[$(Get-Date -format s)] SaveMyDriverPack: $SaveMyDriverPack"
                         Write-Host "[$(Get-Date -format s)] SaveMyDriverPack.FullName: $($SaveMyDriverPack.FullName)"
                         $DestinationPath = Join-Path $Item.Directory $Item.BaseName

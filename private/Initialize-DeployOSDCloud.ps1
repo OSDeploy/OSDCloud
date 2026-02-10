@@ -1,4 +1,4 @@
-function Initialize-OSDCloudWorkflow {
+function Initialize-DeployOSDCloud {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false,
@@ -40,7 +40,7 @@ function Initialize-OSDCloudWorkflow {
     # OSDCloudWorkflowDevice
     if (-not ($global:OSDCloudWorkflowDevice)) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Device $ModuleVersion"
-        Initialize-OSDCloudWorkflowDevice
+        Initialize-OSDCloudDevice
     }
     #=================================================
     # OSDCloudWorkflowTasks
@@ -48,7 +48,7 @@ function Initialize-OSDCloudWorkflow {
     Initialize-OSDCloudWorkflowTasks -Name $Name
     # Make sure at least one workflow task is defined
     if (-not $global:OSDCloudWorkflowTasks) {
-        throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-OSDCloudWorkflow requires at least one valid workflow task. Please check your OSDCloud Workflow Tasks."
+        throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-DeployOSDCloud requires at least one valid workflow task. Please check your OSDCloud Workflow Tasks."
     }
     # Update WorkflowObject and WorkflowTaskName in the Init global variable
     $WorkflowObject = $global:OSDCloudWorkflowTasks | Select-Object -First 1
@@ -57,7 +57,7 @@ function Initialize-OSDCloudWorkflow {
     # OSDCloudWorkflowSettingsUser
     #TODO : Remove dependency on User Settings for future releases
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings User"
-    # Initialize-OSDCloudWorkflowSettingsUser -Name $Name
+    # Initialize-OSDCloudSettingsUser -Name $Name
     #=================================================
     # OSDCloud Operating Systems
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Get OSDCloud OperatingSystems"
@@ -73,7 +73,7 @@ function Initialize-OSDCloudWorkflow {
     #=================================================
     # OSDCloudWorkflowSettingsOS
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Workflow Settings OS"
-    Initialize-OSDCloudWorkflowSettingsOS -Name $Name
+    Initialize-OSDCloudSettingsOS -Name $Name
     #=================================================
     # Set initial Operating System
     <#

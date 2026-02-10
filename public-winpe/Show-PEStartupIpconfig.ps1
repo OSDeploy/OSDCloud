@@ -1,4 +1,4 @@
-function Use-PEStartupIpconfig {
+function Show-PEStartupIpconfig {
     [CmdletBinding()]
     param ()
     #=================================================

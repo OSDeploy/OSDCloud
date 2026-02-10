@@ -1,4 +1,4 @@
-function Initialize-OSDCloudWorkflowDevice {
+function Initialize-OSDCloudDevice {
     [CmdletBinding()]
     param ()
     #=================================================

@@ -1,4 +1,4 @@
-function Use-PEStartupHardware {
+function Show-PEStartupHardware {
     [CmdletBinding()]
     param ()
     #=================================================
