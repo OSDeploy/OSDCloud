@@ -42,8 +42,9 @@ function Invoke-OSDCloudWorkflow {
         TimeStart             = [datetime](Get-Date)
     }
     #=================================================
-    # Analytics - PostHog Telemetry
-    function Send-OSDCloudPostHogEvent {
+    #region OSDCloud Live Analytics
+    $eventName = 'osdcloud_deploy_test'
+    function Send-OSDCloudLiveEvent {
         param(
             [Parameter(Mandatory)]
             [string]$EventName,
@@ -73,39 +74,115 @@ function Invoke-OSDCloudWorkflow {
                 -TimeoutSec 2 `
                 -ErrorAction Stop | Out-Null
 
-            Write-Verbose "[$(Get-Date -format s)] [PostHog] Event sent: $EventName"
+            Write-Verbose "[$(Get-Date -format s)] [OSDCloud] Event sent: $EventName"
         } catch {
-            Write-Verbose "[$(Get-Date -format s)] [PostHog] Failed to send event: $($_.Exception.Message)"
+            Write-Verbose "[$(Get-Date -format s)] [OSDCloud] Failed to send event: $($_.Exception.Message)"
         }
     }
-
-    # Send workflow start event to PostHog
-    if (-not $Test) {
-        $postHogApiKey = 'phc_2h7nQJCo41Hc5C64B2SkcEBZOvJ6mHr5xAHZyjPl3ZK'
-        if (-not [string]::IsNullOrWhiteSpace($postHogApiKey)) {
-            [string]$distinctId = $global:OSDCloudWorkflowInvoke.ComputerUUID
-            if ([string]::IsNullOrWhiteSpace($distinctId)) {
-                $distinctId = $global:OSDCloudWorkflowInvoke.ComputerSerialNumber
-            }
-
-            $eventProperties = @{
-                workflow              = [string]$global:OSDCloudWorkflowInit.WorkflowName
-                computerManufacturer  = [string]$global:OSDCloudWorkflowInvoke.ComputerManufacturer
-                computerModel         = [string]$global:OSDCloudWorkflowInvoke.ComputerModel
-                computerProduct       = [string]$global:OSDCloudWorkflowInvoke.ComputerProduct
-                driverPackName        = [string]$global:OSDCloudWorkflowInit.DriverPackName
-                osName                = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSName
-                osVersion             = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSVersion
-                osActivationStatus    = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSActivation
-                osBuild               = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSBuild
-                osBuildVersion        = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSBuildVersion
-                osLanguageCode        = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSLanguageCode
-                osdcloudVersion       = [string]$ModuleVersion
-            }
-
-            Send-OSDCloudPostHogEvent -EventName 'osdcloud_workflow_start' -ApiKey $postHogApiKey -DistinctId $distinctId -Properties $eventProperties
-        }
+    # UUID
+    $deviceUUID = $global:OSDCloudWorkflowInvoke.ComputerUUID
+    # Convert the UUID to a hash value to protect user privacyand ensure a consistent identifier across events
+    $deviceUUIDHash = [System.BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create().ComputeHash([System.Text.Encoding]::UTF8.GetBytes($deviceUUID))).Replace("-", "")
+    [string]$distinctId = $deviceUUIDHash
+    if ([string]::IsNullOrWhiteSpace($distinctId)) {
+        $distinctId = [System.Guid]::NewGuid().ToString()
     }
+    # Device
+    $deviceManufacturer = (Get-CimInstance -ClassName CIM_ComputerSystem -ErrorAction Stop).Manufacturer
+    $deviceManufacturer = $deviceManufacturer -as [string]
+    if ([string]::IsNullOrWhiteSpace($deviceManufacturer)) {
+        $deviceManufacturer = 'OEM'
+    } else {
+        $deviceManufacturer = $deviceManufacturer.Trim()
+    }
+    $deviceModel = ((Get-CimInstance -ClassName CIM_ComputerSystem).Model).Trim()
+    $deviceModel = $deviceModel -as [string]
+    if ([string]::IsNullOrWhiteSpace($deviceModel)) {
+        $deviceModel = 'OEM'
+    } elseif ($deviceModel -match 'OEM|to be filled') {
+        $deviceModel = 'OEM'
+    }
+    $deviceProduct = ((Get-CimInstance -ClassName Win32_BaseBoard).Product).Trim()
+    $deviceSystemSKU = ((Get-CimInstance -ClassName CIM_ComputerSystem).SystemSKUNumber).Trim()
+    $deviceVersion = ((Get-CimInstance -ClassName Win32_ComputerSystemProduct).Version).Trim()
+    if ($deviceManufacturer -match 'Dell') {
+        $deviceManufacturer = 'Dell'
+        $deviceModelId = $deviceSystemSKU
+    }
+    if ($deviceManufacturer -match 'Hewlett|Packard|\bHP\b') {
+        $deviceManufacturer = 'HP'
+        $deviceModelId = $deviceProduct
+    }
+    if ($deviceManufacturer -match 'Lenovo') {
+        $deviceManufacturer = 'Lenovo'
+        $deviceModel = $deviceVersion
+        $deviceModelId = (Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -ExpandProperty Model).SubString(0, 4)
+    }
+    if ($deviceManufacturer -match 'Microsoft') {
+        $deviceManufacturer = 'Microsoft'
+        # Surface_Book or Surface_Pro_3
+        $deviceModelId = $deviceSystemSKU
+        # Surface Book or Surface Pro 3
+        # $deviceProduct
+    }
+    if ($deviceManufacturer -match 'Panasonic') { $deviceManufacturer = 'Panasonic' }
+    if ($deviceManufacturer -match 'OEM|to be filled') { $deviceManufacturer = 'OEM' }
+    # Win32_ComputerSystem
+    $deviceSystemFamily = ((Get-CimInstance -ClassName Win32_ComputerSystem -ErrorAction Ignore).SystemFamily).Trim()
+    # Win32_OperatingSystem
+    # $osCaption = (Get-CimInstance -ClassName Win32_OperatingSystem -ErrorAction Ignore).Caption
+    # $osVersion = (Get-CimInstance -ClassName Win32_OperatingSystem -ErrorAction Ignore).Version
+
+    $computerInfo = Get-ComputerInfo -ErrorAction Ignore
+    if ($env:SystemDrive -eq 'X:') {
+        $deploymentPhase = 'WinPE'
+        $osName = 'Microsoft WindowsPE'
+    }
+    else {
+        $deploymentPhase = 'Windows'
+        $osName = [string]$computerInfo.OsName
+    }
+    $eventProperties = @{
+        deploymentPhase             = [string]$deploymentPhase
+        deviceManufacturer          = [string]$deviceManufacturer
+        deviceModel                 = [string]$deviceModel
+        deviceModelId               = [string]$deviceModelId
+        deviceProduct               = [string]$deviceProduct
+        deviceVersion               = [string]$deviceVersion
+        deviceSystemFamily          = [string]$deviceSystemFamily
+        deviceSystemSKU             = [string]$deviceSystemSKU
+        deviceSystemType            = [string]$computerInfo.CsPCSystemType
+        biosFirmwareType            = [string]$computerInfo.BiosFirmwareType
+        biosReleaseDate             = [string]$computerInfo.BiosReleaseDate
+        biosSMBIOSBIOSVersion       = [string]$computerInfo.BiosSMBIOSBIOSVersion
+        keyboardName                = [string](Get-CimInstance -ClassName Win32_Keyboard | Select-Object -ExpandProperty Name)
+        keyboardLayout              = [string](Get-CimInstance -ClassName Win32_Keyboard | Select-Object -ExpandProperty Layout)
+        winArchitecture             = [string]$env:PROCESSOR_ARCHITECTURE
+        winBuildLabEx               = [string]$computerInfo.WindowsBuildLabEx
+        winBuildNumber              = [string]$computerInfo.OsBuildNumber
+        winCountryCode              = [string]$computerInfo.OsCountryCode
+        winEditionId                = [string]$computerInfo.WindowsEditionId
+        winInstallationType         = [string]$computerInfo.WindowsInstallationType
+        winLanguage                 = [string]$computerInfo.OsLanguage
+        winName                     = [string]$osName
+        winTimeZone                 = [string]$computerInfo.TimeZone
+        winVersion                  = [string]$computerInfo.OsVersion
+        osdcloudModuleVersion       = [string]$ModuleVersion
+        osdcloudName                = [string]$global:OSDCloudWorkflowInit.OSDCloudName
+        osdcloudWorkflow            = [string]$global:OSDCloudWorkflowInit.WorkflowName
+        # computerManufacturer  = [string]$global:OSDCloudWorkflowInvoke.ComputerManufacturer
+        # computerModel         = [string]$global:OSDCloudWorkflowInvoke.ComputerModel
+        # computerProduct       = [string]$global:OSDCloudWorkflowInvoke.ComputerProduct
+        osdcloudDriverPackName      = [string]$global:OSDCloudWorkflowInit.DriverPackName
+        osdcloudOSName              = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSName
+        osdcloudOSVersion           = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSVersion
+        osdcloudOSActivationStatus  = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSActivation
+        osdcloudOSBuild             = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSBuild
+        osdcloudOSBuildVersion      = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSBuildVersion
+        osdcloudOSLanguageCode      = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSLanguageCode
+    }
+    $postApi = 'phc_2h7nQJCo41Hc5C64B2SkcEBZOvJ6mHr5xAHZyjPl3ZK'
+    Send-OSDCloudLiveEvent -EventName $eventName -ApiKey $postApi -DistinctId $distinctId -Properties $eventProperties
     #=================================================
     if ($null -ne $global:OSDCloudWorkflowInit.WorkflowObject) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)]"

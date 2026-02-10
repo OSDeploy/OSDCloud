@@ -179,6 +179,7 @@ function Initialize-OSDCloudWorkflow {
         OSLanguageCodeValues  = $OSLanguageCodeValues
         OSVersion             = $OSVersion
         TimeStart             = $null
+        OSDCloudName          = $Name
         WorkflowName          = $WorkflowName
         WorkflowObject        = $WorkflowObject
     }
