@@ -1,4 +1,4 @@
-function Get-OSDCatalogDriverPacks {
+function Get-DeployOSDCloudDriverPacks {
     <#
     .SYNOPSIS
     Returns the DriverPacks used by OSDCloud

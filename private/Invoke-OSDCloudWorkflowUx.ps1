@@ -6,6 +6,7 @@ function Invoke-OSDCloudWorkflowUx {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
+        [Alias('Name')]
         [System.String]
         $WorkflowName = 'default',
 

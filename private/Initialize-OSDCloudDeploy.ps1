@@ -4,8 +4,9 @@ function Initialize-OSDCloudDeploy {
         [Parameter(Mandatory = $false,
             Position = 0,
             ValueFromPipelineByPropertyName = $true)]
+        [Alias('Name')]
         [System.String]
-        $Name = 'default'
+        $WorkflowName = 'default'
     )
     $ErrorActionPreference = 'Stop'
     #=================================================
@@ -43,37 +44,37 @@ function Initialize-OSDCloudDeploy {
         Initialize-OSDCloudDevice
     }
     #=================================================
-    # OSDCloudTasks
+    # OSDCloudWorkflowTasks
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Tasks"
-    Initialize-OSDCloudWorkflowTasks -WorkflowName $Name
+    Initialize-OSDCloudWorkflowTasks -WorkflowName $WorkflowName
     # Make sure at least one workflow task is defined
-    if (-not $global:OSDCloudTasks) {
+    if (-not $global:OSDCloudWorkflowTasks) {
         throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-OSDCloudDeploy requires at least one valid workflow task. Please check your OSDCloud Workflow Tasks."
     }
     # Update WorkflowTaskObject and WorkflowTaskName in the Init global variable
-    $WorkflowTaskObject = $global:OSDCloudTasks | Select-Object -First 1
+    $WorkflowTaskObject = $global:OSDCloudWorkflowTasks | Select-Object -First 1
     $WorkflowTaskName = $WorkflowTaskObject.name
     #=================================================
     # OSDCloudWorkflowSettingsUser
     #TODO : Remove dependency on User Settings for future releases
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings User"
-    # Initialize-OSDCloudWorkflowSettingsUser -Name $Name
+    # Initialize-OSDCloudWorkflowSettingsUser -WorkflowName $WorkflowName
     #=================================================
     # OSDCloud Operating Systems
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Get OSDCloud OperatingSystems"
 
     # Limit to matching Processor Architecture
     $ProcessorArchitecture = $env:PROCESSOR_ARCHITECTURE
-    $global:PSOSDCloudOperatingSystems = Get-PSOSDCloudOperatingSystems | Where-Object {$_.OSArchitecture -match "$ProcessorArchitecture"}
+    $global:DeployOSDCloudOperatingSystems = Get-DeployOSDCloudOperatingSystems | Where-Object {$_.OSArchitecture -match "$ProcessorArchitecture"}
 
     # Need to fail if no OS found for Architecture
-    if (-not $global:PSOSDCloudOperatingSystems) {
+    if (-not $global:DeployOSDCloudOperatingSystems) {
         throw "No Operating Systems found for Architecture: $ProcessorArchitecture. Please check your OSDCloud OperatingSystems."
     }
     #=================================================
     # OSDCloudWorkflowSettingsOS
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Workflow Settings OS"
-    Initialize-OSDCloudWorkflowSettingsOS -Name $Name
+    Initialize-OSDCloudWorkflowSettingsOS -WorkflowName $WorkflowName
     #=================================================
     # Set initial Operating System
     <#
@@ -106,7 +107,7 @@ function Initialize-OSDCloudDeploy {
     $OSVersion              = ($global:OSDCloudWorkflowSettingsOS."OperatingSystem.default" -split ' ')[2]
     #=================================================
     # OperatingSystemObject
-    $OperatingSystemObject = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
+    $OperatingSystemObject = $global:DeployOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
     if (-not $OperatingSystemObject) {
         throw "No Operating System found for OperatingSystem: $OperatingSystem, OSActivation: $OSActivation, OSLanguageCode: $OSLanguageCode. Please check your OSDCloud OperatingSystems."
     }
@@ -120,16 +121,16 @@ function Initialize-OSDCloudDeploy {
     $ComputerManufacturer  = $global:OSDCloudDevice.ComputerManufacturer
     switch ($ComputerManufacturer) {
         'Dell' {
-            $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' }
         }
         'HP' {
-            $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'HP' }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'HP' }
         }
         'Lenovo' {
-            $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Lenovo' }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Lenovo' }
         }
         Default {
-            $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
         }
     }
 
@@ -142,7 +143,7 @@ function Initialize-OSDCloudDeploy {
     }
 
     $ComputerProduct = $global:OSDCloudDevice.ComputerProduct
-    $DriverPackObject = Get-OSDCatalogDriverPack -Product $ComputerProduct -OSVersion $OSName -OSReleaseID $OSVersion
+    $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $ComputerProduct -OSVersion $OSName -OSReleaseID $OSVersion
     if ($DriverPackObject) {
         $DriverPackName = $DriverPackObject.Name
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
@@ -156,7 +157,7 @@ function Initialize-OSDCloudDeploy {
         ComputerProduct       = $ComputerProduct
         DriverPackName        = $DriverPackName
         DriverPackValues      = [array]$DriverPackValues
-        Flows                 = [array]$global:OSDCloudTasks
+        Flows                 = [array]$global:OSDCloudWorkflowTasks
         Function              = $($MyInvocation.MyCommand.Name)
         ImageFileName         = $ImageFileName
         ImageFileUrl          = $ImageFileUrl
@@ -179,7 +180,7 @@ function Initialize-OSDCloudDeploy {
         OSLanguageCodeValues  = $OSLanguageCodeValues
         OSVersion             = $OSVersion
         TimeStart             = $null
-        WorkflowName          = $Name
+        WorkflowName          = $WorkflowName
         WorkflowTaskName      = $WorkflowTaskName
         WorkflowTaskObject    = $WorkflowTaskObject
     }

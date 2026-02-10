@@ -1,4 +1,4 @@
-function Get-OSDCatalogDriverPack {
+function Get-DeployOSDCloudDriverPack {
     <#
     .SYNOPSIS
     Gets the OSDCloud DriverPack for the current or specified computer model
@@ -22,7 +22,7 @@ function Get-OSDCatalogDriverPack {
         [System.String]
         $OSReleaseID
     )
-    $ProductDriverPacks = Get-OSDCatalogDriverPacks | Where-Object {($_.Product -contains $Product)}
+    $ProductDriverPacks = Get-DeployOSDCloudDriverPacks | Where-Object {($_.Product -contains $Product)}
     #=================================================
     #   Results
     #=================================================

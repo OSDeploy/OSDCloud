@@ -42,9 +42,9 @@ function Invoke-OSDCloudWorkflowTask {
         TimeStart             = [datetime](Get-Date)
     }
     #=================================================
-    #region OSDCloud Live Analytics
+    #region OSDCloud Deployment Analytics
     $eventName = 'osdcloud_deploy_test'
-    function Send-OSDCloudLiveEvent {
+    function Send-OSDCloudDeployEvent {
         param(
             [Parameter(Mandatory)]
             [string]$EventName,
@@ -179,7 +179,7 @@ function Invoke-OSDCloudWorkflowTask {
         osdcloudOSLanguageCode      = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSLanguageCode
     }
     $postApi = 'phc_2h7nQJCo41Hc5C64B2SkcEBZOvJ6mHr5xAHZyjPl3ZK'
-    Send-OSDCloudLiveEvent -EventName $eventName -ApiKey $postApi -DistinctId $distinctId -Properties $eventProperties
+    Send-OSDCloudDeployEvent -EventName $eventName -ApiKey $postApi -DistinctId $distinctId -Properties $eventProperties
     #=================================================
     if ($null -ne $global:OSDCloudDeploy.WorkflowTaskObject) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)]"

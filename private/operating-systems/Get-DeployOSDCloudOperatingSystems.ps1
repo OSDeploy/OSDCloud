@@ -1,4 +1,4 @@
-function Get-PSOSDCloudOperatingSystems {
+function Get-DeployOSDCloudOperatingSystems {
     [CmdletBinding()]
     param ()
     $ErrorActionPreference = 'Stop'

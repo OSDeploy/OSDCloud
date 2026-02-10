@@ -204,7 +204,7 @@ if ($global:OSDCloudDeploy.OperatingSystemValues) {
 }
 # Catalog Configuration
 else {
-	$OperatingSystemValues = $global:PSOSDCloudOperatingSystems.OperatingSystem | Sort-Object -Unique | Sort-Object -Descending
+	$OperatingSystemValues = $global:DeployOSDCloudOperatingSystems.OperatingSystem | Sort-Object -Unique | Sort-Object -Descending
 	Write-Verbose "Catalog OperatingSystemValues = $OperatingSystemValues"
 }
 $OperatingSystemCombo = $window.FindName("OperatingSystemCombo")
@@ -287,7 +287,7 @@ if ($global:OSDCloudDeploy.OSLanguageCodeValues) {
 }
 # Catalog Configuration
 else {
-	$OSLanguageCodeValues = $global:PSOSDCloudOperatingSystems.OSLanguageCode | Sort-Object -Unique | Sort-Object -Descending
+	$OSLanguageCodeValues = $global:DeployOSDCloudOperatingSystems.OSLanguageCode | Sort-Object -Unique | Sort-Object -Descending
 	Write-Verbose "Catalog OSLanguageCodeValues = $OSLanguageCodeValues"
 }
 $OSLanguageCodeCombo = $window.FindName("OSLanguageCodeCombo")
@@ -453,7 +453,7 @@ function Update-OsResults {
 	Write-Verbose "updateOSActivation = $updateOSActivation"
 	Write-Verbose "updateOSLanguageCode = $updateOSLanguageCode"
 
-    $global:OSDCloudDeploy.OperatingSystemObject = $global:PSOSDCloudOperatingSystems | `
+    $global:OSDCloudDeploy.OperatingSystemObject = $global:DeployOSDCloudOperatingSystems | `
 		Where-Object { $_.OperatingSystem -match $updateOperatingSystem } | `
 		Where-Object { $_.OSActivation -eq $updateOSActivation } | `
 		Where-Object { $_.OSLanguageCode -eq $updateOSLanguageCode } | Select-Object -First 1

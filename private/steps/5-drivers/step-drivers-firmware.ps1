@@ -54,7 +54,6 @@ function step-drivers-firmware {
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Firmware Updates will be downloaded from Microsoft Update Catalog to $DestinationDirectory"
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Not all systems support a driver Firmware Update"
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] BIOS or Firmware Settings may need to be enabled for Firmware Updates"
-    # Save-SystemFirmwareUpdate -DestinationDirectory $DestinationDirectory
 
     $SystemFirmwareId = Get-SystemFirmwareResource
     $SystemFirmwareId = $SystemFirmwareId -replace '[{}]',''

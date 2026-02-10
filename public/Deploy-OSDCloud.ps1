@@ -4,20 +4,21 @@ function Deploy-OSDCloud {
         [Parameter(Mandatory = $false,
             Position = 0,
             ValueFromPipelineByPropertyName = $true)]
+        [Alias('Name')]
         [System.String]
-        $Name = 'default',
+        $WorkflowName = 'default',
 
         [System.Management.Automation.SwitchParameter]
         $CLI
     )
     #=================================================
     # Initialize OSDCloudWorkflow
-    Initialize-OSDCloudDeploy -Name $Name
+    Initialize-OSDCloudDeploy -WorkflowName $WorkflowName
     #=================================================
     if ($CLI.IsPresent) {
         #=================================================
         # Initialize OSDCloudWorkflow
-        Initialize-OSDCloudDeploy -Name $Name
+        Initialize-OSDCloudDeploy -WorkflowName $WorkflowName
         #=================================================
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invoke-OSDCloudWorkflowTask"
         $global:OSDCloudDeploy.TimeStart = Get-Date
@@ -30,21 +31,21 @@ function Deploy-OSDCloud {
         $global:OSDCloudDeploy.TimeStart = $null
         #=================================================
         # OSDCloudWorkflowUx
-        Invoke-OSDCloudWorkflowUx -WorkflowName $Name
+        Invoke-OSDCloudWorkflowUx -WorkflowName $WorkflowName
         #=================================================
         # Ensure workflow frontend is triggered before invoking workflow
         if ($null -ne $global:OSDCloudDeploy.TimeStart) {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invoke-OSDCloudWorkflowTask $Name"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invoke-OSDCloudWorkflowTask $WorkflowName"
             $global:OSDCloudDeploy | Out-Host
             try {
                 Invoke-OSDCloudWorkflowTask
             }
             catch {
-                Write-Warning "Failed to invoke OSDCloud Workflow $Name $_"
+                Write-Warning "Failed to invoke OSDCloud Workflow $WorkflowName $_"
                 break
             }
         } else {
-            Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDCloud Workflow $Name was not started."
+            Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDCloud Workflow $WorkflowName was not started."
         }
     }
 }

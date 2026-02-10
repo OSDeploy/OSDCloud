@@ -6,8 +6,9 @@ function Initialize-OSDCloudWorkflowSettingsOS {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
+        [Alias('Name')]
         [System.String]
-        $Name = 'default',
+        $WorkflowName = 'default',
 
         [System.Management.Automation.SwitchParameter]
         $AsJson,
@@ -34,7 +35,7 @@ function Initialize-OSDCloudWorkflowSettingsOS {
         break
     }
 
-    $OSDCloudWorkflowNamedPath = Join-Path $Path $Name
+    $OSDCloudWorkflowNamedPath = Join-Path $Path $WorkflowName
     $OSDCloudWorkflowDefaultPath = Join-Path $Path 'default'
 
     $osamd64Path = "$OSDCloudWorkflowNamedPath\os-amd64.json"

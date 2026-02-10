@@ -73,25 +73,25 @@ function Initialize-OSDCloudWorkflowTasks {
     # Path that is going to be used 
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $WorkflowTasksPath"
 
-    $OSDCloudTasks = foreach ($item in $WorkflowTasksFiles) {
+    $OSDCloudWorkflowTasks = foreach ($item in $WorkflowTasksFiles) {
         Get-Content $item.FullName -Raw | ConvertFrom-Json
     }
 
     if ($Architecture -match 'amd64') {
         Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Filtering amd64 workflows"
-        $OSDCloudTasks = $OSDCloudTasks | Where-Object { $_.amd64 -eq $true }
+        $OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Where-Object { $_.amd64 -eq $true }
     }
     elseif ($Architecture -match 'arm64') {
         Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Filtering arm64 workflows"
-        $OSDCloudTasks = $OSDCloudTasks | Where-Object { $_.arm64 -eq $true }
+        $OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Where-Object { $_.arm64 -eq $true }
     }
 
-    if ($OSDCloudTasks.Count -eq 0) {
+    if ($OSDCloudWorkflowTasks.Count -eq 0) {
         Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] No workflows found for architecture: $Architecture"
         break
     }
 
-    $global:OSDCloudTasks = $OSDCloudTasks | Sort-Object -Property @{Expression='default';Descending=$true}, @{Expression='name';Descending=$false}
+    $global:OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Sort-Object -Property @{Expression='default';Descending=$true}, @{Expression='name';Descending=$false}
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"

@@ -316,7 +316,7 @@ function Set-FormConfigurationCloud {
     $formMainWindowControlOperatingSystemLabel.Content = 'Operating System'
 
     <#
-    $OperatingSystemEditions = $global:PSOSDCloudOperatingSystems | `
+    $OperatingSystemEditions = $global:DeployOSDCloudOperatingSystems | `
         Where-Object {$_.OperatingSystem -eq "$($formMainWindowControlOperatingSystemCombo.SelectedValue)"} | `
         Where-Object {$_.OSLanguageCode -eq "$($formMainWindowControlOSLanguageCodeCombo.SelectedValue)"} | `
         Select-Object -ExpandProperty OSEdition -Unique
@@ -469,7 +469,7 @@ $formMainWindowControlStartButton.add_Click(
             $OSEditionId = $formMainWindowControlOSEditionIdCombo.SelectedValue
             $OSVersion = $OperatingSystem.Split(' ')[2]
             
-            $OperatingSystemObject = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
+            $OperatingSystemObject = $global:DeployOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
             
             $ImageFileUrl = $OperatingSystemObject.FilePath
             $ImageFileName = $OperatingSystemObject.FileName
