@@ -186,7 +186,7 @@ Set-HardwareMenuItems
 #================================================
 # TaskSequence
 $TaskSequenceCombo = $window.FindName("TaskSequenceCombo")
-$TaskSequenceCombo.ItemsSource = $global:OSDCloudWorkflowInit.Flows.Name
+$TaskSequenceCombo.ItemsSource = $global:OSDCloudInitialize.Flows.Name
 $TaskSequenceCombo.SelectedIndex = 0
 $TaskSequenceCombo.Add_SelectionChanged({
 	if ($SummaryTaskSequenceText) {
@@ -198,8 +198,8 @@ $TaskSequenceCombo.Add_SelectionChanged({
 # GlobalVariable Configuration
 # Environment Configuration
 # Workflow Configuration
-if ($global:OSDCloudWorkflowInit.OperatingSystemValues) {
-	$OperatingSystemValues = $global:OSDCloudWorkflowInit.OperatingSystemValues
+if ($global:OSDCloudInitialize.OperatingSystemValues) {
+	$OperatingSystemValues = $global:OSDCloudInitialize.OperatingSystemValues
 	Write-Verbose "Workflow OperatingSystemValues = $OperatingSystemValues"
 }
 # Catalog Configuration
@@ -211,8 +211,8 @@ $OperatingSystemCombo = $window.FindName("OperatingSystemCombo")
 $OperatingSystemCombo.ItemsSource = $OperatingSystemValues
 #================================================
 # OperatingSystemDefault
-if ($global:OSDCloudWorkflowInit.OperatingSystem) {
-	$OperatingSystemDefault = $global:OSDCloudWorkflowInit.OperatingSystem
+if ($global:OSDCloudInitialize.OperatingSystem) {
+	$OperatingSystemDefault = $global:OSDCloudInitialize.OperatingSystem
 	Write-Verbose "Workflow OperatingSystem = $OperatingSystemDefault"
 }
 if ($OperatingSystemDefault -and ($OperatingSystemValues -contains $OperatingSystemDefault)) {
@@ -227,8 +227,8 @@ if ($OperatingSystemDefault -and ($OperatingSystemValues -contains $OperatingSys
 # GlobalVariable Configuration
 # Environment Configuration
 # Workflow Configuration
-if ($global:OSDCloudWorkflowInit.OSEditionValues.Edition) {
-	$OSEditionValues = $global:OSDCloudWorkflowInit.OSEditionValues.Edition
+if ($global:OSDCloudInitialize.OSEditionValues.Edition) {
+	$OSEditionValues = $global:OSDCloudInitialize.OSEditionValues.Edition
 	Write-Verbose "Workflow OSEditionValues = $OSEditionValues"
 }
 else {
@@ -238,8 +238,8 @@ $OSEditionCombo = $window.FindName("OSEditionCombo")
 $OSEditionCombo.ItemsSource = $OSEditionValues
 #================================================
 # OSEditionDefault
-if ($global:OSDCloudWorkflowInit.OSEdition) {
-	$OSEditionDefault = $global:OSDCloudWorkflowInit.OSEdition
+if ($global:OSDCloudInitialize.OSEdition) {
+	$OSEditionDefault = $global:OSDCloudInitialize.OSEdition
 	Write-Verbose "Workflow OSEdition = $OSEditionDefault"
 }
 if ($OSEditionDefault) {
@@ -254,8 +254,8 @@ if ($OSEditionDefault) {
 # GlobalVariable Configuration
 # Environment Configuration
 # Workflow Configuration
-if ($global:OSDCloudWorkflowInit.OSActivationValues) {
-	$OSActivationValues = $global:OSDCloudWorkflowInit.OSActivationValues
+if ($global:OSDCloudInitialize.OSActivationValues) {
+	$OSActivationValues = $global:OSDCloudInitialize.OSActivationValues
 	Write-Verbose "Workflow OSActivationValues = $OSActivationValues"
 }
 else {
@@ -265,8 +265,8 @@ $OSActivationCombo = $window.FindName("OSActivationCombo")
 $OSActivationCombo.ItemsSource = $OSActivationValues
 #================================================
 # OSActivationDefault
-if ($global:OSDCloudWorkflowInit.OSActivation) {
-	$OSActivationDefault = $global:OSDCloudWorkflowInit.OSActivation
+if ($global:OSDCloudInitialize.OSActivation) {
+	$OSActivationDefault = $global:OSDCloudInitialize.OSActivation
 	Write-Verbose "Workflow OSActivation = $OSActivationDefault"
 }
 if ($OSActivationDefault -and ($OSActivationValues -contains $OSActivationDefault)) {
@@ -281,8 +281,8 @@ if ($OSActivationDefault -and ($OSActivationValues -contains $OSActivationDefaul
 # GlobalVariable Configuration
 # Environment Configuration
 # Workflow Configuration
-if ($global:OSDCloudWorkflowInit.OSLanguageCodeValues) {
-	$OSLanguageCodeValues = $global:OSDCloudWorkflowInit.OSLanguageCodeValues
+if ($global:OSDCloudInitialize.OSLanguageCodeValues) {
+	$OSLanguageCodeValues = $global:OSDCloudInitialize.OSLanguageCodeValues
 	Write-Verbose "Workflow OSLanguageCodeValues = $OSLanguageCodeValues"
 }
 # Catalog Configuration
@@ -294,8 +294,8 @@ $OSLanguageCodeCombo = $window.FindName("OSLanguageCodeCombo")
 $OSLanguageCodeCombo.ItemsSource = $OSLanguageCodeValues
 #================================================
 # OSLanguageCodeDefault
-if ($global:OSDCloudWorkflowInit.OSLanguageCode) {
-	$OSLanguageCodeDefault = $global:OSDCloudWorkflowInit.OSLanguageCode
+if ($global:OSDCloudInitialize.OSLanguageCode) {
+	$OSLanguageCodeDefault = $global:OSDCloudInitialize.OSLanguageCode
 	Write-Verbose "Workflow OSLanguage = $OSLanguageCodeDefault"
 }
 if ($OSLanguageCodeDefault -and ($OSLanguageCodeValues -contains $OSLanguageCodeDefault)) {
@@ -313,13 +313,13 @@ if ($OSLanguageCodeDefault -and ($OSLanguageCodeValues -contains $OSLanguageCode
 #================================================
 # Import the DriverPack Catalog
 $DriverPackCatalog = @('None','Microsoft Update Catalog')
-if ($global:OSDCloudWorkflowInit.DriverPackValues) {
-	$DriverPackCatalog += $global:OSDCloudWorkflowInit.DriverPackValues | ForEach-Object { $_.Name }
+if ($global:OSDCloudInitialize.DriverPackValues) {
+	$DriverPackCatalog += $global:OSDCloudInitialize.DriverPackValues | ForEach-Object { $_.Name }
 }
 $DriverPackCombo = $window.FindName("DriverPackCombo")
 $DriverPackCombo.ItemsSource = $DriverPackCatalog
-if ($global:OSDCloudWorkflowInit.DriverPackName) {
-	$DriverPackCombo.SelectedValue = $global:OSDCloudWorkflowInit.DriverPackName
+if ($global:OSDCloudInitialize.DriverPackName) {
+	$DriverPackCombo.SelectedValue = $global:OSDCloudInitialize.DriverPackName
 }
 else {
 	$DriverPackCombo.SelectedIndex = 0
@@ -331,8 +331,8 @@ $PostActionCombo = $window.FindName("PostActionCombo")
 $PostActionOptions = @('Quit','Restart','Shutdown')
 $PostActionCombo.ItemsSource = $PostActionOptions
 
-$PostActionDefault = if ($global:OSDCloudWorkflowInit.PostAction) {
-	$global:OSDCloudWorkflowInit.PostAction
+$PostActionDefault = if ($global:OSDCloudInitialize.PostAction) {
+	$global:OSDCloudInitialize.PostAction
 } else {
 	'Exit'
 }
@@ -375,7 +375,7 @@ $deviceTotalMemoryText.Text = if ($global:OSDCloudDevice.TotalPhysicalMemoryGB) 
 #>
 
 $SetupCompleteTextBox = $window.FindName("SetupCompleteTextBox")
-$setupCompleteValue = [string]$global:OSDCloudWorkflowInit.SetupCompleteCmd
+$setupCompleteValue = [string]$global:OSDCloudInitialize.SetupCompleteCmd
 if ($SetupCompleteTextBox) {
 	$SetupCompleteTextBox.Text = if (-not [string]::IsNullOrWhiteSpace($setupCompleteValue)) {
 		$setupCompleteValue
@@ -388,7 +388,7 @@ $SelectedOSLanguageText = $window.FindName("SelectedOSLanguageText")
 $SelectedIdText = $window.FindName("SelectedIdText")
 $SelectedFileNameText = $window.FindName("SelectedFileNameText")
 $DriverPackUrlText = $window.FindName("DriverPackUrlText")
-$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
+$DriverPackUrlText.Text = [string]$global:OSDCloudInitialize.DriverPackObject.Url
 $StartButton = $window.FindName("StartButton")
 $StartButton.IsEnabled = $false
 
@@ -412,7 +412,7 @@ function Get-ComboValue {
 }
 
 function Set-StartButtonState {
-	$StartButton.IsEnabled = ($null -ne $global:OSDCloudWorkflowInit.OperatingSystemObject)
+	$StartButton.IsEnabled = ($null -ne $global:OSDCloudInitialize.OperatingSystemObject)
 }
 
 function Update-SelectedDetails {
@@ -453,16 +453,16 @@ function Update-OsResults {
 	Write-Verbose "updateOSActivation = $updateOSActivation"
 	Write-Verbose "updateOSLanguageCode = $updateOSLanguageCode"
 
-    $global:OSDCloudWorkflowInit.OperatingSystemObject = $global:PSOSDCloudOperatingSystems | `
+    $global:OSDCloudInitialize.OperatingSystemObject = $global:PSOSDCloudOperatingSystems | `
 		Where-Object { $_.OperatingSystem -match $updateOperatingSystem } | `
 		Where-Object { $_.OSActivation -eq $updateOSActivation } | `
 		Where-Object { $_.OSLanguageCode -eq $updateOSLanguageCode } | Select-Object -First 1
 	
-    if (-not $global:OSDCloudWorkflowInit.OperatingSystemObject) {
+    if (-not $global:OSDCloudInitialize.OperatingSystemObject) {
         throw "No Operating System found for OperatingSystem: $updateOperatingSystem, OSActivation: $updateOSActivation, OSLanguageCode: $updateOSLanguageCode. Please check your OSDCloud OperatingSystems."
     }
 
-	$script:SelectedImage = $global:OSDCloudWorkflowInit.OperatingSystemObject
+	$script:SelectedImage = $global:OSDCloudInitialize.OperatingSystemObject
 
 	if ($updateOSEdition -match 'Home') {
 		$OSActivationCombo.SelectedValue = 'Retail'
@@ -486,9 +486,9 @@ function Update-OsResults {
 
 function Update-DriverPackResults {
 	$DriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
-	$global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
-	$global:OSDCloudWorkflowInit.DriverPackObject = $global:OSDCloudWorkflowInit.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
-	$DriverPackUrlText.Text = [string]$global:OSDCloudWorkflowInit.DriverPackObject.Url
+	$global:OSDCloudInitialize.DriverPackName = $DriverPackName
+	$global:OSDCloudInitialize.DriverPackObject = $global:OSDCloudInitialize.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+	$DriverPackUrlText.Text = [string]$global:OSDCloudInitialize.DriverPackObject.Url
 }
 
 $OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
@@ -520,50 +520,50 @@ if ($script:SelectionConfirmed) {
 	#================================================
 	# Local Variables
 	$OSDCloudWorkflowTaskName = $TaskSequenceCombo.SelectedValue
-	$OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowTaskName } | Select-Object -First 1
-	$OperatingSystemObject = $global:OSDCloudWorkflowInit.OperatingSystemObject
-	$OSEditionId = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
+	$OSDCloudWorkflowTaskObject = $global:OSDCloudInitialize.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowTaskName } | Select-Object -First 1
+	$OperatingSystemObject = $global:OSDCloudInitialize.OperatingSystemObject
+	$OSEditionId = $global:OSDCloudInitialize.OSEditionValues | Where-Object { $_.Edition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
 	#================================================
 	# Global Variables
-	$global:OSDCloudWorkflowInit.WorkflowTaskName = $OSDCloudWorkflowTaskName
-	$global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
-	# $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
-	# $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject
+	$global:OSDCloudInitialize.WorkflowTaskName = $OSDCloudWorkflowTaskName
+	$global:OSDCloudInitialize.WorkflowTaskObject = $OSDCloudWorkflowTaskObject
+	# $global:OSDCloudInitialize.DriverPackName = $DriverPackName
+	# $global:OSDCloudInitialize.DriverPackObject = $DriverPackObject
 	# DriverPackValues
 	# Flows
 	# Function
-	$global:OSDCloudWorkflowInit.ImageFileName = $OperatingSystemObject.FileName
-	$global:OSDCloudWorkflowInit.ImageFileUrl = $OperatingSystemObject.FilePath
+	$global:OSDCloudInitialize.ImageFileName = $OperatingSystemObject.FileName
+	$global:OSDCloudInitialize.ImageFileUrl = $OperatingSystemObject.FilePath
 	# LaunchMethod
 	# Module
-	$global:OSDCloudWorkflowInit.OperatingSystemObject = $OperatingSystemObject
-	$global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystemObject.OSName
-	$global:OSDCloudWorkflowInit.OSActivation = $OperatingSystemObject.OSActivation
+	$global:OSDCloudInitialize.OperatingSystemObject = $OperatingSystemObject
+	$global:OSDCloudInitialize.OperatingSystem = $OperatingSystemObject.OSName
+	$global:OSDCloudInitialize.OSActivation = $OperatingSystemObject.OSActivation
 	# OSActivationValues
 	# OSArchitecture
-	$global:OSDCloudWorkflowInit.OSBuild = $OperatingSystemObject.OSBuild
+	$global:OSDCloudInitialize.OSBuild = $OperatingSystemObject.OSBuild
 	# OSBuildVersion
-	$global:OSDCloudWorkflowInit.OSEdition = Get-ComboValue -ComboBox $OSEditionCombo
-	$global:OSDCloudWorkflowInit.OSEditionId = $OSEditionId
+	$global:OSDCloudInitialize.OSEdition = Get-ComboValue -ComboBox $OSEditionCombo
+	$global:OSDCloudInitialize.OSEditionId = $OSEditionId
 	# OSEditionValues
-	$global:OSDCloudWorkflowInit.OSLanguageCode = $OperatingSystemObject.OSLanguageCode
+	$global:OSDCloudInitialize.OSLanguageCode = $OperatingSystemObject.OSLanguageCode
 	# OSLanguageValues
-	$global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystemObject.OperatingSystem
+	$global:OSDCloudInitialize.OperatingSystem = $OperatingSystemObject.OperatingSystem
 	# OperatingSystemValues
-	$global:OSDCloudWorkflowInit.OSVersion = $OperatingSystemObject.OSVersion
-	$global:OSDCloudWorkflowInit.TimeStart = (Get-Date)
-	$global:OSDCloudWorkflowInit.LocalImageFileInfo = $LocalImageFileInfo
-	$global:OSDCloudWorkflowInit.LocalImageFilePath = $LocalImageFilePath
-	$global:OSDCloudWorkflowInit.LocalImageName = $LocalImageName
-	$global:OSDCloudWorkflowInit.PostAction = Get-ComboValue -ComboBox $PostActionCombo
+	$global:OSDCloudInitialize.OSVersion = $OperatingSystemObject.OSVersion
+	$global:OSDCloudInitialize.TimeStart = (Get-Date)
+	$global:OSDCloudInitialize.LocalImageFileInfo = $LocalImageFileInfo
+	$global:OSDCloudInitialize.LocalImageFilePath = $LocalImageFilePath
+	$global:OSDCloudInitialize.LocalImageName = $LocalImageName
+	$global:OSDCloudInitialize.PostAction = Get-ComboValue -ComboBox $PostActionCombo
 
 	if ($SetupCompleteTextBox) {
-		$global:OSDCloudWorkflowInit.SetupCompleteCmd = $SetupCompleteTextBox.Text
+		$global:OSDCloudInitialize.SetupCompleteCmd = $SetupCompleteTextBox.Text
 	}
 
     $LogsPath = "$env:TEMP\osdcloud-logs"
     if (-not (Test-Path -Path $LogsPath)) {
         New-Item -Path $LogsPath -ItemType Directory -Force | Out-Null
     }
-	$global:OSDCloudWorkflowInit | Out-File -FilePath "$LogsPath\OSDCloudWorkflowInit.txt" -Force
+	$global:OSDCloudInitialize | Out-File -FilePath "$LogsPath\OSDCloudInitialize.txt" -Force
 }

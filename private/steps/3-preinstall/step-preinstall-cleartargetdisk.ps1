@@ -11,7 +11,7 @@ function step-preinstall-cleartargetdisk {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudTaskCurrentStep
     #=================================================
     #region Main
     # If Confirm is set to false, we need to check if there are multiple disks

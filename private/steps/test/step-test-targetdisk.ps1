@@ -7,7 +7,7 @@ function step-test-targetdisk {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudTaskCurrentStep
     #=================================================
     #region Main
     $global:OSDCloudWorkflowInvoke.GetDiskFixed = Get-DeviceLocalDisk | Where-Object { $_.IsBoot -eq $false } | Sort-Object Number

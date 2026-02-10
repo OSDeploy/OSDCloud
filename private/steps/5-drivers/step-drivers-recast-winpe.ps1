@@ -7,7 +7,7 @@ function step-drivers-recast-winpe {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudTaskCurrentStep
     #=================================================
     # Output Path
     $OutputPath = "C:\Windows\Temp\osdcloud-drivers-recast"

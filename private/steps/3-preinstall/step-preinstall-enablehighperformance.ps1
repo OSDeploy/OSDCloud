@@ -7,7 +7,7 @@ function step-preinstall-enablehighperformance {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudTaskCurrentStep
     #=================================================
     #region Main
     if ($IsOnBattery -eq $true) {

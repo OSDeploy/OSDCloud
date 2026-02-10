@@ -7,7 +7,7 @@ function step-update-setupdisplayedeula {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudTaskCurrentStep
     #=================================================
     #region Main
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Updating the OOBE SetupDisplayedEula value in the registry. OK."

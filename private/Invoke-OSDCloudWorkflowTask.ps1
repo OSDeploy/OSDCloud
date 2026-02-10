@@ -29,14 +29,14 @@ function Invoke-OSDCloudWorkflowTask {
         ComputerProduct       = $OSDCloudDevice.ComputerProduct
         ComputerSerialNumber  = $OSDCloudDevice.SerialNumber
         ComputerUUID          = (Get-WmiObject -Class Win32_ComputerSystemProduct).UUID
-        DriverPackName        = $OSDCloudWorkflowInit.DriverPackName
-        DriverPackObject      = $OSDCloudWorkflowInit.DriverPackObject
+        DriverPackName        = $OSDCloudInitialize.DriverPackName
+        DriverPackObject      = $OSDCloudInitialize.DriverPackObject
         IsOnBattery           = $global:IsOnBattery
         IsVM                  = $global:IsVM
         IsWinPE               = $global:IsWinPE
         LogsPath              = "$env:TEMP\osdcloud-logs"
-        OperatingSystem       = $OSDCloudWorkflowInit.OperatingSystem
-        OperatingSystemObject = $OSDCloudWorkflowInit.OperatingSystemObject
+        OperatingSystem       = $OSDCloudInitialize.OperatingSystem
+        OperatingSystemObject = $OSDCloudInitialize.OperatingSystemObject
         TimeEnd               = $null
         TimeSpan              = $null
         TimeStart             = [datetime](Get-Date)
@@ -168,25 +168,25 @@ function Invoke-OSDCloudWorkflowTask {
         winTimeZone                 = [string]$computerInfo.TimeZone
         winVersion                  = [string]$computerInfo.OsVersion
         osdcloudModuleVersion       = [string]$ModuleVersion
-        osdcloudWorkflowName        = [string]$global:OSDCloudWorkflowInit.WorkflowName
-        osdcloudWorkflowTaskName    = [string]$global:OSDCloudWorkflowInit.WorkflowTaskName
-        osdcloudDriverPackName      = [string]$global:OSDCloudWorkflowInit.DriverPackName
-        osdcloudOSName              = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSName
-        osdcloudOSVersion           = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSVersion
-        osdcloudOSActivationStatus  = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSActivation
-        osdcloudOSBuild             = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSBuild
-        osdcloudOSBuildVersion      = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSBuildVersion
-        osdcloudOSLanguageCode      = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSLanguageCode
+        osdcloudWorkflowName        = [string]$global:OSDCloudInitialize.WorkflowName
+        osdcloudWorkflowTaskName    = [string]$global:OSDCloudInitialize.WorkflowTaskName
+        osdcloudDriverPackName      = [string]$global:OSDCloudInitialize.DriverPackName
+        osdcloudOSName              = [string]$global:OSDCloudInitialize.OperatingSystemObject.OSName
+        osdcloudOSVersion           = [string]$global:OSDCloudInitialize.OperatingSystemObject.OSVersion
+        osdcloudOSActivationStatus  = [string]$global:OSDCloudInitialize.OperatingSystemObject.OSActivation
+        osdcloudOSBuild             = [string]$global:OSDCloudInitialize.OperatingSystemObject.OSBuild
+        osdcloudOSBuildVersion      = [string]$global:OSDCloudInitialize.OperatingSystemObject.OSBuildVersion
+        osdcloudOSLanguageCode      = [string]$global:OSDCloudInitialize.OperatingSystemObject.OSLanguageCode
     }
     $postApi = 'phc_2h7nQJCo41Hc5C64B2SkcEBZOvJ6mHr5xAHZyjPl3ZK'
     Send-OSDCloudLiveEvent -EventName $eventName -ApiKey $postApi -DistinctId $distinctId -Properties $eventProperties
     #=================================================
-    if ($null -ne $global:OSDCloudWorkflowInit.WorkflowObject) {
+    if ($null -ne $global:OSDCloudInitialize.WorkflowTaskObject) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)]"
         
-        foreach ($step in $global:OSDCloudWorkflowInit.WorkflowObject.steps) {
+        foreach ($step in $global:OSDCloudInitialize.WorkflowTaskObject.steps) {
             # Set the current step in the global variable
-            $global:OSDCloudWorkflowCurrentStep = $step
+            $global:OSDCloudTaskCurrentStep = $step
             #=================================================
             # Should we skip this step? (support both 'skip' and legacy 'disable')
             if (($step.skip -eq $true) -or ($step.disable -eq $true)) {

@@ -16,7 +16,7 @@ function Invoke-OSDCloudWorkflowUx {
     $ModuleBase = $($MyInvocation.MyCommand.Module.ModuleBase)
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
     #=================================================
-    if (-not ($global:OSDCloudWorkflowInit)) {
+    if (-not ($global:OSDCloudInitialize)) {
         Initialize-DeployOSDCloud
     }
 

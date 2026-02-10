@@ -7,13 +7,13 @@ function step-drivers-msupdate {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudTaskCurrentStep
     #=================================================
     # Gather Variables
-    $ComputerManufacturer = $global:OSDCloudWorkflowInit.ComputerManufacturer
+    $ComputerManufacturer = $global:OSDCloudInitialize.ComputerManufacturer
     #=================================================
     # Step Variables
-    $DriverPackName = $global:OSDCloudWorkflowInit.DriverPackName
+    $DriverPackName = $global:OSDCloudInitialize.DriverPackName
     #=================================================
     # Exclusions
     if ($PSVersionTable.PSVersion.Major -ne 5) {
