@@ -14,7 +14,7 @@
             "command": "step-initialize-osdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud Autopilot"
+                "WorkflowTaskName": "OSDCloud Autopilot"
             },
             "rules": {
                 "testinfullos": true,

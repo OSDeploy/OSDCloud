@@ -490,8 +490,8 @@ $formMainWindowControlStartButton.add_Click(
         #================================================
         #   Workflow
         #================================================
-        $OSDCloudWorkflowName = $formMainWindowControlTaskComboBox.SelectedValue
-        $OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
+        $OSDCloudWorkflowTaskName = $formMainWindowControlTaskComboBox.SelectedValue
+        $OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowTaskName } | Select-Object -First 1
         #================================================
         #   DriverPack
         #================================================
@@ -502,7 +502,7 @@ $formMainWindowControlStartButton.add_Click(
         #================================================
         #   Global Variables
         #================================================
-        $global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName
+        $global:OSDCloudWorkflowInit.WorkflowTaskName = $OSDCloudWorkflowTaskName
         $global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
         $global:OSDCloudWorkflowInit.OperatingSystem = $OperatingSystem
         $global:OSDCloudWorkflowInit.OSActivation = $OSActivation

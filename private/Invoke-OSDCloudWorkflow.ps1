@@ -168,11 +168,8 @@ function Invoke-OSDCloudWorkflow {
         winTimeZone                 = [string]$computerInfo.TimeZone
         winVersion                  = [string]$computerInfo.OsVersion
         osdcloudModuleVersion       = [string]$ModuleVersion
-        osdcloudName                = [string]$global:OSDCloudWorkflowInit.OSDCloudName
-        osdcloudWorkflow            = [string]$global:OSDCloudWorkflowInit.WorkflowName
-        # computerManufacturer  = [string]$global:OSDCloudWorkflowInvoke.ComputerManufacturer
-        # computerModel         = [string]$global:OSDCloudWorkflowInvoke.ComputerModel
-        # computerProduct       = [string]$global:OSDCloudWorkflowInvoke.ComputerProduct
+        osdcloudWorkflowName        = [string]$global:OSDCloudWorkflowInit.WorkflowName
+        osdcloudWorkflowTaskName    = [string]$global:OSDCloudWorkflowInit.WorkflowTaskName
         osdcloudDriverPackName      = [string]$global:OSDCloudWorkflowInit.DriverPackName
         osdcloudOSName              = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSName
         osdcloudOSVersion           = [string]$global:OSDCloudWorkflowInit.OperatingSystemObject.OSVersion

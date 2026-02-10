@@ -12,7 +12,7 @@
             "name": "Initialize OSDCloud Workflow",
             "command": "step-initialize-osdcloudworkflow",
             "parameters": {
-                "WorkflowName": "OSDCloud"
+                "WorkflowTaskName": "OSDCloud"
             },
             "pause": false,
             "skip": false,

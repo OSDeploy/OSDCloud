@@ -609,13 +609,13 @@ $null = $window.ShowDialog()
 if ($script:SelectionConfirmed) {
 	#================================================
 	# Local Variables
-	$OSDCloudWorkflowName = $TaskSequenceCombo.SelectedValue
-	$OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowName } | Select-Object -First 1
+	$OSDCloudWorkflowTaskName = $TaskSequenceCombo.SelectedValue
+	$OSDCloudWorkflowObject = $global:OSDCloudWorkflowInit.Flows | Where-Object { $_.Name -eq $OSDCloudWorkflowTaskName } | Select-Object -First 1
 	$OperatingSystemObject = $global:OSDCloudWorkflowInit.OperatingSystemObject
 	$OSEditionId = $global:OSDCloudWorkflowInit.OSEditionValues | Where-Object { $_.Edition -eq $OSEditionCombo.SelectedValue } | Select-Object -ExpandProperty EditionId
 	#================================================
 	# Global Variables
-	$global:OSDCloudWorkflowInit.WorkflowName = $OSDCloudWorkflowName
+	$global:OSDCloudWorkflowInit.WorkflowTaskName = $OSDCloudWorkflowTaskName
 	$global:OSDCloudWorkflowInit.WorkflowObject = $OSDCloudWorkflowObject
 	# $global:OSDCloudWorkflowInit.DriverPackName = $DriverPackName
 	# $global:OSDCloudWorkflowInit.DriverPackObject = $DriverPackObject

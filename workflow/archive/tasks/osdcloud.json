@@ -14,7 +14,7 @@
             "command": "step-initialize-osdcloudworkflow",
             "args": [],
             "parameters": {
-                "WorkflowName": "OSDCloud"
+                "WorkflowTaskName": "OSDCloud"
             },
             "rules": {
                 "testinfullos": true,

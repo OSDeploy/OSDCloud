@@ -12,7 +12,7 @@
             "name": "Initialize OSDCloud Workflow",
             "command": "step-initialize-osdcloudworkflow",
             "parameters": {
-                "WorkflowName": "OSDCloud [No Firmware Update]"
+                "WorkflowTaskName": "OSDCloud [No Firmware Update]"
             },
             "pause": false,
             "skip": false,

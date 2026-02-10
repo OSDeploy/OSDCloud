@@ -50,9 +50,9 @@ function Initialize-OSDCloudWorkflow {
     if (-not $global:OSDCloudWorkflowTasks) {
         throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-OSDCloudWorkflow requires at least one valid workflow task. Please check your OSDCloud Workflow Tasks."
     }
-    # Update WorkflowObject and WorkflowName in the Init global variable
+    # Update WorkflowObject and WorkflowTaskName in the Init global variable
     $WorkflowObject = $global:OSDCloudWorkflowTasks | Select-Object -First 1
-    $WorkflowName = $WorkflowObject.name
+    $WorkflowTaskName = $WorkflowObject.name
     #=================================================
     # OSDCloudWorkflowSettingsUser
     #TODO : Remove dependency on User Settings for future releases
@@ -179,8 +179,8 @@ function Initialize-OSDCloudWorkflow {
         OSLanguageCodeValues  = $OSLanguageCodeValues
         OSVersion             = $OSVersion
         TimeStart             = $null
-        OSDCloudName          = $Name
-        WorkflowName          = $WorkflowName
+        WorkflowName          = $Name
+        WorkflowTaskName      = $WorkflowTaskName
         WorkflowObject        = $WorkflowObject
     }
     #=================================================

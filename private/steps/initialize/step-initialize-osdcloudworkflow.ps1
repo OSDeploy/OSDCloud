@@ -2,7 +2,7 @@ function step-initialize-osdcloudworkflow {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false)]
-        [string]$WorkflowName = "OSDCloud Workflow"
+        [string]$WorkflowTaskName = "OSDCloud Workflow"
     )
     #=================================================
     # Start the step
@@ -13,7 +13,7 @@ function step-initialize-osdcloudworkflow {
     $Step = $global:OSDCloudWorkflowCurrentStep
     #=================================================
     # Delay Start
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Starting $WorkflowName in 5 seconds..."
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Starting $WorkflowTaskName in 5 seconds..."
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Press CTRL+C to cancel"
     Start-Sleep -Seconds 5
     #=================================================
