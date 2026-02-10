@@ -37,8 +37,8 @@ function Initialize-DeployOSDCloud {
     # Limit to the first disk found
     $DeploymentDiskObject = $DeploymentDiskObject | Select-Object -First 1
     #=================================================
-    # OSDCloudWorkflowDevice
-    if (-not ($global:OSDCloudWorkflowDevice)) {
+    # OSDCloudDevice
+    if (-not ($global:OSDCloudDevice)) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Device $ModuleVersion"
         Initialize-OSDCloudDevice
     }
@@ -117,7 +117,7 @@ function Initialize-DeployOSDCloud {
     $ImageFileUrl       = $OperatingSystemObject.FilePath
     #=================================================
     # DriverPack
-    $ComputerManufacturer  = $global:OSDCloudWorkflowDevice.ComputerManufacturer
+    $ComputerManufacturer  = $global:OSDCloudDevice.ComputerManufacturer
     switch ($ComputerManufacturer) {
         'Dell' {
             $DriverPackValues = Get-OSDCatalogDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' }
@@ -136,12 +136,12 @@ function Initialize-DeployOSDCloud {
     # Remove Windows 10 DriverPacks
     $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
 
-    $ComputerModel = $global:OSDCloudWorkflowDevice.ComputerModel
+    $ComputerModel = $global:OSDCloudDevice.ComputerModel
     if ($ComputerModel -match 'Surface') {
         $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
     }
 
-    $ComputerProduct = $global:OSDCloudWorkflowDevice.ComputerProduct
+    $ComputerProduct = $global:OSDCloudDevice.ComputerProduct
     $DriverPackObject = Get-OSDCatalogDriverPack -Product $ComputerProduct -OSVersion $OSName -OSReleaseID $OSVersion
     if ($DriverPackObject) {
         $DriverPackName = $DriverPackObject.Name

@@ -1,12 +1,13 @@
-function Export-OSDWindowsDriversWinPE {
+function Export-WinpeDriversFromOS {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false,
             Position = 0,
             ValueFromPipelineByPropertyName = $true)]
         [System.String]
-        $Path = "$env:Temp\enum-drivers"
+        $Path = "$env:Temp\winpe-drivers"
     )
+    Write-Host "[$(Get-Date -format s)] Exporting Drivers from the current OS to $Path"
     $PnputilXml = & pnputil.exe /enum-devices /connected /format xml
     $PnputilXmlObject = [xml]$PnputilXml
     $PnputilDevices = $PnputilXmlObject.PnpUtil.Device | Where-Object {$_.DriverName -match 'oem'} | Sort-Object DriverName -Unique | Sort-Object ClassName

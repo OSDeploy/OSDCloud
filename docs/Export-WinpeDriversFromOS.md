@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Export-OSDWindowsDriversWinPE
+# Export-WinpeDriversFromOS
 
 ## SYNOPSIS
 {{ Fill in the Synopsis }}
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Export-OSDWindowsDriversWinPE [[-Path] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Export-WinpeDriversFromOS [[-Path] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

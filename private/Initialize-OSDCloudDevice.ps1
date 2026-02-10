@@ -247,10 +247,10 @@ function Initialize-OSDCloudDevice {
     }
     catch {}
     #=================================================
-    #   Pass Variables to OSDCloudWorkflowDevice
+    #   Pass Variables to OSDCloudDevice
     #=================================================
-    $global:OSDCloudWorkflowDevice = $null
-    $global:OSDCloudWorkflowDevice = [ordered]@{
+    $global:OSDCloudDevice = $null
+    $global:OSDCloudDevice = [ordered]@{
         BiosReleaseDate         = $Win32BIOS.ReleaseDate
         BiosVersion             = $Win32BIOS.SMBIOSBIOSVersion
         ChassisType             = $ChassisType
@@ -304,8 +304,8 @@ function Initialize-OSDCloudDevice {
             Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Autopilot is not supported on this device."
         }
         else {
-            $global:OSDCloudWorkflowDevice.IsAutopilotReady = $true
-            $global:OSDCloudWorkflowDevice.IsTpmReady = $true
+            $global:OSDCloudDevice.IsAutopilotReady = $true
+            $global:OSDCloudDevice.IsTpmReady = $true
             Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TPM 2.0 is supported on this device."
             Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Autopilot is supported on this device."
         }

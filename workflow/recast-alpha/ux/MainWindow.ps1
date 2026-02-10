@@ -8,17 +8,17 @@ param()
 Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
 #================================================
 # Variables
-$deviceBiosVersion = $global:OSDCloudWorkflowDevice.BiosVersion
-$deviceBiosReleaseDate = $global:OSDCloudWorkflowDevice.BiosReleaseDate
-$deviceComputerManufacturer = $global:OSDCloudWorkflowDevice.ComputerManufacturer
-$deviceUUID = $global:OSDCloudWorkflowDevice.UUID
-$deviceComputerModel = $global:OSDCloudWorkflowDevice.ComputerModel
-$deviceComputerProduct = $global:OSDCloudWorkflowDevice.ComputerProduct
-$deviceComputerSystemSKUNumber = $global:OSDCloudWorkflowDevice.ComputerSystemSKUNumber
-$deviceSerialNumber = $global:OSDCloudWorkflowDevice.SerialNumber
+$deviceBiosVersion = $global:OSDCloudDevice.BiosVersion
+$deviceBiosReleaseDate = $global:OSDCloudDevice.BiosReleaseDate
+$deviceComputerManufacturer = $global:OSDCloudDevice.ComputerManufacturer
+$deviceUUID = $global:OSDCloudDevice.UUID
+$deviceComputerModel = $global:OSDCloudDevice.ComputerModel
+$deviceComputerProduct = $global:OSDCloudDevice.ComputerProduct
+$deviceComputerSystemSKUNumber = $global:OSDCloudDevice.ComputerSystemSKUNumber
+$deviceSerialNumber = $global:OSDCloudDevice.SerialNumber
 $getOSDCloudModuleVersion = Get-OSDCloudModuleVersion
-$deviceIsAutopilotReady = $global:OSDCloudWorkflowDevice.IsAutopilotReady
-$deviceIsTPMReady = $global:OSDCloudWorkflowDevice.IsTPMReady
+$deviceIsAutopilotReady = $global:OSDCloudDevice.IsAutopilotReady
+$deviceIsTPMReady = $global:OSDCloudDevice.IsTPMReady
 #================================================
 # XAML
 $xamlfile = Get-Item -Path "$PSScriptRoot\MainWindow.xaml"
@@ -394,8 +394,8 @@ $deviceUUIDText.Text = $deviceUUID
 
 <#
 $deviceTotalMemoryText = $window.FindName("deviceTotalMemoryText")
-$deviceTotalMemoryText.Text = if ($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) {
-	"$($global:OSDCloudWorkflowDevice.TotalPhysicalMemoryGB) GB"
+$deviceTotalMemoryText.Text = if ($global:OSDCloudDevice.TotalPhysicalMemoryGB) {
+	"$($global:OSDCloudDevice.TotalPhysicalMemoryGB) GB"
 } else {
 	'Unknown'
 }

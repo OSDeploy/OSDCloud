@@ -334,9 +334,9 @@
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
-      <command:name>Export-OSDWindowsDriversWinPE</command:name>
+      <command:name>Export-WinpeDriversFromOS</command:name>
       <command:verb>Export</command:verb>
-      <command:noun>OSDWindowsDriversWinPE</command:noun>
+      <command:noun>WinpeDriversFromOS</command:noun>
       <maml:description>
         <maml:para>{{ Fill in the Synopsis }}</maml:para>
       </maml:description>
@@ -346,7 +346,7 @@
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
-        <maml:name>Export-OSDWindowsDriversWinPE</maml:name>
+        <maml:name>Export-WinpeDriversFromOS</maml:name>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="0" aliases="none">
           <maml:name>Path</maml:name>
           <maml:description>

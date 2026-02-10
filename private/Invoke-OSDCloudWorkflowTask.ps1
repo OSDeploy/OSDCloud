@@ -15,19 +15,19 @@ function Invoke-OSDCloudWorkflowTask {
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
     # Set global variables
-    [System.String]$global:Architecture = $OSDCloudWorkflowDevice.ProcessorArchitecture
-    [System.Boolean]$global:IsOnBattery = $OSDCloudWorkflowDevice.IsOnBattery
-    [System.Boolean]$global:IsVM = $OSDCloudWorkflowDevice.IsVM
+    [System.String]$global:Architecture = $OSDCloudDevice.ProcessorArchitecture
+    [System.Boolean]$global:IsOnBattery = $OSDCloudDevice.IsOnBattery
+    [System.Boolean]$global:IsVM = $OSDCloudDevice.IsVM
     [System.Boolean]$global:IsWinPE = $($env:SystemDrive -eq 'X:')
     #=================================================
     $global:OSDCloudWorkflowInvoke = $null
     $global:OSDCloudWorkflowInvoke = [ordered]@{
         Architecture          = $global:Architecture
-        ComputerChassisType   = $OSDCloudWorkflowDevice.ChassisType
-        ComputerManufacturer  = $OSDCloudWorkflowDevice.ComputerManufacturer
-        ComputerModel         = $OSDCloudWorkflowDevice.ComputerModel
-        ComputerProduct       = $OSDCloudWorkflowDevice.ComputerProduct
-        ComputerSerialNumber  = $OSDCloudWorkflowDevice.SerialNumber
+        ComputerChassisType   = $OSDCloudDevice.ChassisType
+        ComputerManufacturer  = $OSDCloudDevice.ComputerManufacturer
+        ComputerModel         = $OSDCloudDevice.ComputerModel
+        ComputerProduct       = $OSDCloudDevice.ComputerProduct
+        ComputerSerialNumber  = $OSDCloudDevice.SerialNumber
         ComputerUUID          = (Get-WmiObject -Class Win32_ComputerSystemProduct).UUID
         DriverPackName        = $OSDCloudWorkflowInit.DriverPackName
         DriverPackObject      = $OSDCloudWorkflowInit.DriverPackObject
