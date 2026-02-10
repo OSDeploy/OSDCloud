@@ -7,7 +7,7 @@ function step-postaction-removeosdcloudlogs {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudTaskCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     # Stop Transcript at this point as this file is locked and will cause issues with cleanup
     $null = Stop-Transcript -ErrorAction SilentlyContinue

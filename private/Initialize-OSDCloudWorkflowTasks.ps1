@@ -7,12 +7,13 @@ function Initialize-OSDCloudWorkflowTasks {
             ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
         [System.String]
-        $Name = 'default',
+        $WorkflowName = 'default',
 
         [System.String]
         $Architecture = $env:PROCESSOR_ARCHITECTURE,
 
-        $Path = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow"
+        [System.String]
+        $WorkflowsRootPath = "$($MyInvocation.MyCommand.Module.ModuleBase)\workflow"
     )
     #=================================================
     $Error.Clear()
@@ -24,34 +25,34 @@ function Initialize-OSDCloudWorkflowTasks {
     $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ModuleVersion: $ModuleVersion"
     #=================================================
-    # Workflow Path must exist, there is no fallback
-    if (-not (Test-Path $Path)) {
-        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] The specified Path does not exist"
-        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $Path"
-        break
+    # Workflows Root Path must exist, there is no fallback
+    if (-not (Test-Path $WorkflowsRootPath)) {
+        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find OSDCloud Workflows Root Path"
+        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $WorkflowsRootPath"
+        throw
     }
-
-    # Is the name not default?
-    if ($Name -ne 'default') {
-        $WorkflowTasksPath = Join-Path $Path (Join-Path $Name 'tasks')
+    #=================================================
+    # Is the Workflow Name not default?
+    if ($WorkflowName -ne 'default') {
+        $WorkflowTasksPath = Join-Path $WorkflowsRootPath (Join-Path $WorkflowName 'tasks')
 
         # Gather the Json files
         try {
             $WorkflowTasksFiles = Get-ChildItem -Path $WorkflowTasksPath -Filter '*.json' -Recurse -ErrorAction Stop
         }
         catch {
-            $Name = 'default'
+            $WorkflowName = 'default'
         }
 
         # Are there Json files that can be used?
         if (-not ($WorkflowTasksFiles)) {
-            $Name = 'default'
+            $WorkflowName = 'default'
         }
     }
-
+    #=================================================
     # Use the default path
-    if ($Name -eq 'default') {
-        $WorkflowTasksPath = Join-Path $Path (Join-Path $Name 'tasks')
+    if ($WorkflowName -eq 'default') {
+        $WorkflowTasksPath = Join-Path $WorkflowsRootPath (Join-Path $WorkflowName 'tasks')
 
         try {
             $WorkflowTasksFiles = Get-ChildItem -Path $WorkflowTasksPath -Filter '*.json' -Recurse -ErrorAction Stop
@@ -62,35 +63,35 @@ function Initialize-OSDCloudWorkflowTasks {
             break
         }
     }
-
+    #=================================================
     if (-not ($WorkflowTasksFiles)) {
         Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDCloud Workflows do not exist in the specified Path"
         Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $WorkflowTasksPath"
         break
     }
-
+    #=================================================
     # Path that is going to be used 
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $WorkflowTasksPath"
 
-    $OSDCloudWorkflowTasks = foreach ($item in $WorkflowTasksFiles) {
+    $OSDCloudTasks = foreach ($item in $WorkflowTasksFiles) {
         Get-Content $item.FullName -Raw | ConvertFrom-Json
     }
 
     if ($Architecture -match 'amd64') {
         Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Filtering amd64 workflows"
-        $OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Where-Object { $_.amd64 -eq $true }
+        $OSDCloudTasks = $OSDCloudTasks | Where-Object { $_.amd64 -eq $true }
     }
     elseif ($Architecture -match 'arm64') {
         Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Filtering arm64 workflows"
-        $OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Where-Object { $_.arm64 -eq $true }
+        $OSDCloudTasks = $OSDCloudTasks | Where-Object { $_.arm64 -eq $true }
     }
 
-    if ($OSDCloudWorkflowTasks.Count -eq 0) {
+    if ($OSDCloudTasks.Count -eq 0) {
         Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] No workflows found for architecture: $Architecture"
         break
     }
 
-    $global:OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Sort-Object -Property @{Expression='default';Descending=$true}, @{Expression='name';Descending=$false}
+    $global:OSDCloudTasks = $OSDCloudTasks | Sort-Object -Property @{Expression='default';Descending=$true}, @{Expression='name';Descending=$false}
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"

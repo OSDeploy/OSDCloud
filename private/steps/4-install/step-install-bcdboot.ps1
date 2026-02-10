@@ -7,13 +7,13 @@ function step-install-bcdboot {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudTaskCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
     # Check what architecture we are using
-    if ($global:OSDCloudInitialize.OSArchitecture -match 'ARM64') {
+    if ($global:DeployOSDCloud.OSArchitecture -match 'ARM64') {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] X:\Windows\System32\bcdboot.exe C:\Windows /c /v"
         $BCDBootOutput = & X:\Windows\System32\bcdboot.exe C:\Windows /c /v
         $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force

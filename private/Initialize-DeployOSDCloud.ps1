@@ -43,21 +43,21 @@ function Initialize-DeployOSDCloud {
         Initialize-OSDCloudDevice
     }
     #=================================================
-    # OSDCloudWorkflowTasks
+    # OSDCloudTasks
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Tasks"
-    Initialize-OSDCloudWorkflowTasks -Name $Name
+    Initialize-OSDCloudWorkflowTasks -WorkflowName $Name
     # Make sure at least one workflow task is defined
-    if (-not $global:OSDCloudWorkflowTasks) {
+    if (-not $global:OSDCloudTasks) {
         throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize-DeployOSDCloud requires at least one valid workflow task. Please check your OSDCloud Workflow Tasks."
     }
     # Update WorkflowTaskObject and WorkflowTaskName in the Init global variable
-    $WorkflowTaskObject = $global:OSDCloudWorkflowTasks | Select-Object -First 1
+    $WorkflowTaskObject = $global:OSDCloudTasks | Select-Object -First 1
     $WorkflowTaskName = $WorkflowTaskObject.name
     #=================================================
-    # OSDCloudSettingsUser
+    # OSDCloudWorkflowSettingsUser
     #TODO : Remove dependency on User Settings for future releases
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Settings User"
-    # Initialize-OSDCloudSettingsUser -Name $Name
+    # Initialize-OSDCloudWorkflowSettingsUser -Name $Name
     #=================================================
     # OSDCloud Operating Systems
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Get OSDCloud OperatingSystems"
@@ -71,9 +71,9 @@ function Initialize-DeployOSDCloud {
         throw "No Operating Systems found for Architecture: $ProcessorArchitecture. Please check your OSDCloud OperatingSystems."
     }
     #=================================================
-    # OSDCloudSettingsOS
+    # OSDCloudWorkflowSettingsOS
     # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialize OSDCloud Workflow Settings OS"
-    Initialize-OSDCloudSettingsOS -Name $Name
+    Initialize-OSDCloudWorkflowSettingsOS -Name $Name
     #=================================================
     # Set initial Operating System
     <#
@@ -93,17 +93,17 @@ function Initialize-DeployOSDCloud {
         FileName        : 26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-gb.esd
         FilePath        : http://dl.delivery.mp.microsoft.com/filestreamingservice/files/79a3f5e0-d04d-4689-a5d4-3ea35f8b189a/26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-gb.esd
     #>
-    $OperatingSystem        = $global:OSDCloudSettingsOS."OperatingSystem.default"
-    $OperatingSystemValues  = [array]$global:OSDCloudSettingsOS."OperatingSystem.values"
-    $OSActivation           = $global:OSDCloudSettingsOS."OSActivation.default"
-    $OSActivationValues     = [array]$global:OSDCloudSettingsOS."OSActivation.values"
+    $OperatingSystem        = $global:OSDCloudWorkflowSettingsOS."OperatingSystem.default"
+    $OperatingSystemValues  = [array]$global:OSDCloudWorkflowSettingsOS."OperatingSystem.values"
+    $OSActivation           = $global:OSDCloudWorkflowSettingsOS."OSActivation.default"
+    $OSActivationValues     = [array]$global:OSDCloudWorkflowSettingsOS."OSActivation.values"
     $OSArchitecture         = $ProcessorArchitecture
-    $OSEdition              = $global:OSDCloudSettingsOS."OSEdition.default"
-    $OSEditionId            = $global:OSDCloudSettingsOS."OSEditionId.default"
-    $OSEditionValues        = [array]$global:OSDCloudSettingsOS."OSEdition.values"
-    $OSLanguageCode         = $global:OSDCloudSettingsOS."OSLanguageCode.default"
-    $OSLanguageCodeValues   = [array]$global:OSDCloudSettingsOS."OSLanguageCode.values"
-    $OSVersion              = ($global:OSDCloudSettingsOS."OperatingSystem.default" -split ' ')[2]
+    $OSEdition              = $global:OSDCloudWorkflowSettingsOS."OSEdition.default"
+    $OSEditionId            = $global:OSDCloudWorkflowSettingsOS."OSEditionId.default"
+    $OSEditionValues        = [array]$global:OSDCloudWorkflowSettingsOS."OSEdition.values"
+    $OSLanguageCode         = $global:OSDCloudWorkflowSettingsOS."OSLanguageCode.default"
+    $OSLanguageCodeValues   = [array]$global:OSDCloudWorkflowSettingsOS."OSLanguageCode.values"
+    $OSVersion              = ($global:OSDCloudWorkflowSettingsOS."OperatingSystem.default" -split ' ')[2]
     #=================================================
     # OperatingSystemObject
     $OperatingSystemObject = $global:PSOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
@@ -149,14 +149,14 @@ function Initialize-DeployOSDCloud {
     }
     #=================================================
     # Main
-    $global:OSDCloudInitialize = $null
-    $global:OSDCloudInitialize = [ordered]@{
+    $global:DeployOSDCloud = $null
+    $global:DeployOSDCloud = [ordered]@{
         ComputerManufacturer  = $ComputerManufacturer
         ComputerModel         = $ComputerModel
         ComputerProduct       = $ComputerProduct
         DriverPackName        = $DriverPackName
         DriverPackValues      = [array]$DriverPackValues
-        Flows                 = [array]$global:OSDCloudWorkflowTasks
+        Flows                 = [array]$global:OSDCloudTasks
         Function              = $($MyInvocation.MyCommand.Name)
         ImageFileName         = $ImageFileName
         ImageFileUrl          = $ImageFileUrl
@@ -181,7 +181,7 @@ function Initialize-DeployOSDCloud {
         TimeStart             = $null
         WorkflowName          = $Name
         WorkflowTaskName      = $WorkflowTaskName
-        WorkflowTaskObject        = $WorkflowTaskObject
+        WorkflowTaskObject    = $WorkflowTaskObject
     }
     #=================================================
 }

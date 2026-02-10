@@ -7,7 +7,7 @@ function step-install-restartosdcloudlogs {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudTaskCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
     $LogsPath = "C:\Windows\Temp\osdcloud-logs"

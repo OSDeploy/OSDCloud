@@ -7,7 +7,7 @@ function step-finalize-stoposdcloudworkflow {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudTaskCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
     $global:OSDCloudWorkflowInvoke.TimeEnd = Get-Date

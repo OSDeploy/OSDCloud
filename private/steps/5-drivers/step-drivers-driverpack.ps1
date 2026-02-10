@@ -15,7 +15,7 @@ function step-drivers-driverpack {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudTaskCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     # Is DriverPackName set to None?
     if ($DriverPackName -eq 'None') {

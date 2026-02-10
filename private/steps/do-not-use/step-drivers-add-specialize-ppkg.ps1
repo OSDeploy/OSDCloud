@@ -7,7 +7,7 @@ function step-drivers-add-specialize-ppkg {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudTaskCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
     Write-Host -ForegroundColor DarkGray 'Add Windows Driver with Offline Servicing (Add-OfflineServicingWindowsDriver)'
