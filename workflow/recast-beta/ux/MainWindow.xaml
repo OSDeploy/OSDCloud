@@ -22,7 +22,7 @@
                     <MenuItem x:Name="RunPowerShell" Header="Windows PowerShell" />
                     <MenuItem x:Name="RunPwsh" Header="PowerShell 7" Visibility="Collapsed" />
                 </MenuItem>
-                <MenuItem x:Name="AboutMenuItem" Header="About" Padding="4" />
+                <MenuItem x:Name="PrivacyMenuItem" Header="Privacy" Padding="4" />
             </Menu>
         </Grid>
         <Border Grid.Row="1" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">

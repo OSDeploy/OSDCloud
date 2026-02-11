@@ -48,7 +48,7 @@ if ($logoImage) {
 $RunCmdPrompt = $window.FindName("RunCmdPrompt")
 $RunPowerShell = $window.FindName("RunPowerShell")
 $RunPwsh = $window.FindName("RunPwsh")
-$AboutMenuItem = $window.FindName("AboutMenuItem")
+$PrivacyMenuItem = $window.FindName("PrivacyMenuItem")
 $LogsMenuItem = $window.FindName("LogsMenuItem")
 $HardwareMenuItem = $window.FindName("HardwareMenuItem")
 
@@ -85,12 +85,17 @@ if ($RunPwsh) {
 	}
 }
 
-$AboutMenuItem.Add_Click({
-	$aboutMessage = @"
-OSDCloud - Community Edition
-Placeholder help content will go here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in turpis nec leo fermentum interdum.
+$PrivacyMenuItem.Add_Click({
+	$privacyMessage = @"
+OSDCloud collects analytic data during the deployment process to identify issues, enhance performance, and improve the overall user experience.
+No personally identifiable information (PII) is collected, and all data is anonymized to protect user privacy.
+
+Collected data includes information about the deployment environment and system configuration.
+By using OSDCloud, you consent to the collection of analytic data as outlined in the privacy policy
+
+https://github.com/OSDeploy/OSDCloud/blob/main/PRIVACY.md
 "@
-	[System.Windows.MessageBox]::Show($aboutMessage, "About OSDCloud", "OK", "Information") | Out-Null
+	[System.Windows.MessageBox]::Show($privacyMessage, "OSDCloud Privacy Statement", "OK", "Information") | Out-Null
 })
 
 function Add-NoLogsMenuEntry {

@@ -19,18 +19,6 @@ function Save-MicrosoftUpdateCatalogDriver {
             New-Item -Path $DestinationDirectory -ItemType Directory -Force | Out-Null
         }
     }
-    #Grab OSDCloud USB Flash Drive Info
-    $OSDCloudUSB = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
-    if ($OSDCloudUSB){
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] USB Drive Detected: $($OSDCloudUSB.DriveLetter):\ $($OSDCloudUSB.FileSystemLabel) Size: $($OSDCloudUSB.SizeGB) GB Free: $($OSDCloudUSB.SizeRemainingGB) GB"
-        $MicrosoftUpdateCatalogDriverOSDCloudUSBPath =  "$($OSDCloudUSB.DriveLetter):\OSDCloud\drivers-msupdatecatalog"
-        if (-not (Test-Path $MicrosoftUpdateCatalogDriverOSDCloudUSBPath)) {
-            New-Item -Path $MicrosoftUpdateCatalogDriverOSDCloudUSBPath -ItemType Directory -Force | Out-Null
-        }
-    }
-    else {
-        # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] No OSDCloud USB Drive Detected"
-    }
     #=================================================
     #	MSCatalog PowerShell Module
     #   Ryan-Jan

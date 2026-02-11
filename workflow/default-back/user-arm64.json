@@ -1,0 +1,68 @@
+{
+    "StartWorkflow": {
+        "Debug": false,
+        "Skip": false,
+        "Verbose": false
+    },
+    "InitializeLogs": {
+        "Debug": false,
+        "Skip": false,
+        "Verbose": false
+    },
+    "TestWindowsImage": {
+        "Debug": false,
+        "Skip": false,
+        "Verbose": false
+    },
+    "TestDriverPack": {
+        "Debug": false,
+        "Skip": false,
+        "Verbose": false
+    },
+    "ClearDisk": {
+        "Confirm": true,
+        "Debug": true,
+        "Skip": false,
+        "ToolTip": "Skip clearing the Local Disk.&#x0a;Skip this step will also skip Clear-Disk.&#x0a;This will also skip the New-OSDCloudDisk step.",
+        "Verbose": false
+    },
+    "PartitionDisk": {
+        "Confirm": false,
+        "Debug": false,
+        "Skip": false,
+        "ToolTip": "Skip initializing and creating GPT partitions on the Local Disk.&#x0a;This will also skip the Clear-Disk step.",
+        "UseDiskPart": false,
+        "Verbose": false
+    },
+    "MSUpdateDriver": {
+        "Debug": false,
+        "Skip": false,
+        "Verbose": false
+    },
+    "MSUpdateFirmware": {
+        "Debug": false,
+        "Skip": true,
+        "Verbose": false
+    },
+    "IsTpmReady": {
+        "Error": "Device is not fully TPM 2.0 compatible.&#x0a;Autopilot will not work.",
+        "Success": "TPM is 2.0 an working as expected.\n Autopilot will work.",
+        "Warning": "Device is not fully TPM 2.0 compatible."
+    },
+    "PSInstallModuleOSD": false,
+    "PSInstallModuleWindowsAutopilotIntune": false,
+    "PSUpdateModulePackageManagement": false,
+    "PSUpdateModulePowershellGet": false,
+    "RecoveryPartition": {
+        "Force": false,
+        "Skip": false,
+        "ToolTip": "Recovery Partition is created by default, except when deploying to a Virtual Machine.&#x0a;Force will always create the Recovery Partition.&#x0a;Skip will never create the Recovery Partition."
+    },
+    "SkipRecoveryPartition": false,
+    "UpdateDiskDrivers": true,
+    "UpdateNetworkDrivers": true,
+    "UpdateScsiDrivers": true,
+    "UpdateSystemFirmware": false,
+    "WinpeRestart": false,
+    "WinpeShutdown": false
+}

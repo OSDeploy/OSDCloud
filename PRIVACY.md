@@ -9,7 +9,7 @@ OSDCloud is a PowerShell module that runs locally. Some workflows send deploymen
 
 Deployment analytics
 --------------
-During workflow task execution, OSDCloud sends a deployment event to PostHog at https://us.i.posthog.com/capture/. The event includes:
+During workflow task execution, OSDCloud sends a deployment event to PostHog. The event includes:
 - A hashed device identifier derived from the device UUID
 - Device details (manufacturer, model, SKU, system family)
 - BIOS details (firmware type, release date, SMBIOS version)
