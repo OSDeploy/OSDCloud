@@ -1,18 +1,18 @@
 {
-    "id": "2bc42a9c-3ce1-44a6-847d-593c47d362c5",
-    "name": "OSDCloud [Zero Touch]",
-    "description": "OSDCloud [Zero Touch]",
+    "id": "160fafbe-5e98-47bf-b152-e9295644b6a0",
+    "name": "OSDCloud",
+    "description": "OSDCloud",
     "author": "osdcloud@recastsoftware.com",
     "version": "26.2.12",
     "amd64": true,
     "arm64": true,
-    "default": true,
+    "default": false,
     "steps": [
         {
             "name": "Initialize OSDCloud Workflow",
             "command": "step-initialize-osdcloudworkflowtask",
             "parameters": {
-                "WorkflowTaskName": "OSDCloud [Zero Touch]"
+                "WorkflowTaskName": "OSDCloud"
             },
             "pause": false,
             "skip": false,
@@ -46,7 +46,10 @@
         },
         {
             "name": "Clear Local Disk",
-            "command": "step-preinstall-cleartargetdisk"
+            "command": "step-preinstall-cleartargetdisk",
+            "parameters": {
+                "confirm": false
+            }
         },
         {
             "name": "Partition Local Disk",

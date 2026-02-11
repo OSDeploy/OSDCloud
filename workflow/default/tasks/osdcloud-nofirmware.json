@@ -3,10 +3,10 @@
     "name": "OSDCloud [No Firmware Update]",
     "description": "OSDCloud [No Firmware Update]",
     "author": "osdcloud@recastsoftware.com",
-    "version": "2026.2.5.1",
+    "version": "26.2.12",
     "amd64": true,
     "arm64": true,
-    "default": true,
+    "default": false,
     "steps": [
         {
             "name": "Initialize OSDCloud Workflow",
