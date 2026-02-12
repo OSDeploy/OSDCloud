@@ -65,7 +65,7 @@ function New-OSDCloudPartitionWindows {
     #	PartitionStyle
     #=================================================
     if (-NOT ($PartitionStyle)) {
-        if ($global:OSDCloudWorkflowDevice.IsUEFI -eq $true) {
+        if ($global:OSDCloudDevice.IsUEFI -eq $true) {
             $PartitionStyle = 'GPT'
         } else {
             $PartitionStyle = 'MBR'

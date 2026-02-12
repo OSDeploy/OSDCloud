@@ -16,7 +16,7 @@ function step-preinstall-partitiontargetdisk {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
     # Mental Math
@@ -28,9 +28,9 @@ function step-preinstall-partitiontargetdisk {
     if ($RecoveryPartition -eq $false) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Recovery Partition will not be created. OK."
         New-OSDCloudDisk -PartitionStyle GPT -NoRecoveryPartition -Force -ErrorAction Stop
-        Write-Host "=========================================================================" -ForegroundColor Cyan
-        Write-Host "| SYSTEM | MSR |                    WINDOWS                             |" -ForegroundColor Cyan
-        Write-Host "=========================================================================" -ForegroundColor Cyan
+        Write-Host "=========================================================================" -ForegroundColor DarkCyan
+        Write-Host "| SYSTEM | MSR |                    WINDOWS                             |" -ForegroundColor DarkCyan
+        Write-Host "=========================================================================" -ForegroundColor DarkCyan
     }
     else {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] 2GB Recovery Partition will be created. OK."
@@ -40,9 +40,9 @@ function step-preinstall-partitiontargetdisk {
         else {
             New-OSDCloudDisk -PartitionStyle GPT -SizeRecovery 2000MB -Force -ErrorAction Stop
         }
-        Write-Host "=========================================================================" -ForegroundColor Cyan
-        Write-Host "| SYSTEM | MSR |                    WINDOWS                  | RECOVERY |" -ForegroundColor Cyan
-        Write-Host "=========================================================================" -ForegroundColor Cyan
+        Write-Host "=========================================================================" -ForegroundColor DarkCyan
+        Write-Host "| SYSTEM | MSR |                    WINDOWS                  | RECOVERY |" -ForegroundColor DarkCyan
+        Write-Host "=========================================================================" -ForegroundColor DarkCyan
     }
     Start-Sleep -Seconds 5
 

@@ -8,9 +8,9 @@
     "arm64": true,
     "steps": [
         {
-            "name": "Validate Local Disk Availability",
+            "name": "Test TargetDisk",
             "description": "Tests the local disk for readiness",
-            "command": "step-validate-targetdisk",
+            "command": "step-test-targetdisk",
             "args": [],
             "parameters": {},
             "rules": {

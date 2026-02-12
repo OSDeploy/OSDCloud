@@ -151,11 +151,12 @@ function Get-DeploymentDiskObject {
     #=================================================
     # if no disks found, throw
     if ($GetDisk.Count -eq 0) {
-        Throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Get-DeploymentDiskObject did not find any disks matching the specified criteria"
+        Throw "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] No disks were found that could be used for OSDCloud."
     }
     # if more than 1, then need to warn
     if ($GetDisk.Count -gt 1) {
-        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Get-DeploymentDiskObject found more than one disk matching the specified criteria. Returning all matching disks."
+        # Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] More than one disk is in this device."
+        # Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] You will be prompted to clean one or more disks during OSDCloud."
     }
 
     return $GetDisk

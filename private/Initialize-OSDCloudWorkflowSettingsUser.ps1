@@ -6,8 +6,9 @@ function Initialize-OSDCloudWorkflowSettingsUser {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
+        [Alias('Name')]
         [System.String]
-        $Name = 'default',
+        $WorkflowName = 'default',
 
         [System.Management.Automation.SwitchParameter]
         $AsJson,
@@ -34,47 +35,47 @@ function Initialize-OSDCloudWorkflowSettingsUser {
         break
     }
 
-    $WorkflowSettingsUserPath = Join-Path $Path $Name
-    $WorkflowSettingsUserDefaultPath = Join-Path $Path 'default'
+    $OSDCloudWorkflowNamedPath = Join-Path $Path $WorkflowName
+    $OSDCloudWorkflowDefaultPath = Join-Path $Path 'default'
 
-    $PathAmd64 = "$WorkflowSettingsUserPath\user-amd64.json"
-    $PathArm64 = "$WorkflowSettingsUserPath\user-arm64.json"
+    $useramd64Path = "$OSDCloudWorkflowNamedPath\user-amd64.json"
+    $userarm64Path = "$OSDCloudWorkflowNamedPath\user-arm64.json"
 
-    if (-not ($WorkflowSettingsUserPath -eq $WorkflowSettingsUserDefaultPath)) {
-        if (-not (Test-Path $PathAmd64)) {
-            $PathAmd64 = "$WorkflowSettingsUserDefaultPath\user-amd64.json"
+    if (-not ($OSDCloudWorkflowNamedPath -eq $OSDCloudWorkflowDefaultPath)) {
+        if (-not (Test-Path $useramd64Path)) {
+            $useramd64Path = "$OSDCloudWorkflowDefaultPath\user-amd64.json"
         }
-        if (-not (Test-Path $PathArm64)) {
-            $PathArm64 = "$WorkflowSettingsUserDefaultPath\user-arm64.json"
+        if (-not (Test-Path $userarm64Path)) {
+            $userarm64Path = "$OSDCloudWorkflowDefaultPath\user-arm64.json"
         }
     }
 
     # Import the RAW content of the JSON file
     if ($Architecture -eq 'AMD64') {
-        if (-not (Test-Path $PathAmd64)) {
-            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathAmd64"
+        if (-not (Test-Path $useramd64Path)) {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $useramd64Path"
             break
         }
         else {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathAmd64"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $useramd64Path"
         }
-        $SettingsUserPath = $PathAmd64
+        $OSDCloudWorkflowSettingsUserFile = $useramd64Path
     }
     elseif ($Architecture -eq 'ARM64') {
-        if (-not (Test-Path $PathArm64)) {
-            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathArm64"
+        if (-not (Test-Path $userarm64Path)) {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $userarm64Path"
             break
         }
         else {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathArm64"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $userarm64Path"
         }
-        $SettingsUserPath = $PathArm64
+        $OSDCloudWorkflowSettingsUserFile = $userarm64Path
     }
     else {
         Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
         break
     }
-    $rawJsonContent = Get-Content -Path $SettingsUserPath -Raw
+    $rawJsonContent = Get-Content -Path $OSDCloudWorkflowSettingsUserFile -Raw
 
     if ($AsJson) {
         return $rawJsonContent
@@ -86,7 +87,7 @@ function Initialize-OSDCloudWorkflowSettingsUser {
     $hashtable = [ordered]@{}
     (ConvertFrom-Json $JsonContent).psobject.properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
 
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowSettingsUser: $SettingsUserPath"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowSettingsUser: $OSDCloudWorkflowSettingsUserFile"
     $global:OSDCloudWorkflowSettingsUser = $hashtable
     #=================================================
     # End the function

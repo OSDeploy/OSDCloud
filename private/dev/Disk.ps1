@@ -53,7 +53,7 @@ function Clear-DeviceLocalDisk {
     #	-PartitionStyle
     #=================================================
     if (-NOT ($PSBoundParameters.ContainsKey('PartitionStyle'))) {
-        if ($global:OSDCloudWorkflowDevice.IsUEFI -eq $true) {
+        if ($global:OSDCloudDevice.IsUEFI -eq $true) {
             Write-Verbose "IsUEFI = $true"
             $PartitionStyle = 'GPT'
         } else {
@@ -996,7 +996,7 @@ function New-OSDCloudDisk {
     #	-PartitionStyle
     #=================================================
     if (-NOT ($PSBoundParameters.ContainsKey('PartitionStyle'))) {
-        if ($global:OSDCloudWorkflowDevice.IsUEFI -eq $true) {
+        if ($global:OSDCloudDevice.IsUEFI -eq $true) {
             Write-Verbose "IsUEFI = $true"
             $PartitionStyle = 'GPT'
         } else {

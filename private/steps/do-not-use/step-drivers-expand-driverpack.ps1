@@ -7,7 +7,7 @@ function step-drivers-expand-driverpack {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
     if ($global:OSDCloudWorkflowInvoke.DriverPackExpand) {
@@ -16,7 +16,7 @@ function step-drivers-expand-driverpack {
         foreach ($Item in $DriverPacks) {
             $SaveMyDriverPack = $Item.FullName
             $ExpandFile = $Item.FullName
-            Write-Verbose -Verbose "DriverPack: $ExpandFile"
+            Write-Verbose -Verbose "[$(Get-Date -format s)] DriverPack: $ExpandFile"
             #=================================================
             #   Cab
             #=================================================
@@ -25,7 +25,7 @@ function step-drivers-expand-driverpack {
         
                 if (-not (Test-Path "$DestinationPath")) {
                     New-Item $DestinationPath -ItemType Directory -Force -ErrorAction Ignore | Out-Null
-                    Write-Host -ForegroundColor DarkGray "DriverPack CAB is being expanded to $DestinationPath"
+                    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DriverPack CAB is being expanded to $DestinationPath"
                     Expand -R "$ExpandFile" -F:* "$DestinationPath" | Out-Null
                 }
                 Continue
@@ -37,7 +37,7 @@ function step-drivers-expand-driverpack {
                 $DestinationPath = Join-Path $Item.Directory $Item.BaseName
     
                 if (-not (Test-Path "$DestinationPath")) {
-                    Write-Host -ForegroundColor DarkGray "DriverPack ZIP is being expanded to $DestinationPath"
+                    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DriverPack ZIP is being expanded to $DestinationPath"
                     Expand-Archive -Path $ExpandFile -DestinationPath $DestinationPath -Force
                 }
                 Continue
@@ -48,7 +48,7 @@ function step-drivers-expand-driverpack {
             if ($Item.Extension -eq '.exe' -and $global:OSDCloudWorkflowInvoke.Manufacturer -eq 'Dell') {
                 $DestinationPath = Join-Path $Item.Directory $Item.BaseName
                 if (-not (Test-Path "$DestinationPath")) {
-                    Write-Host -ForegroundColor DarkGray "Dell Update Package is being expanded to $DestinationPath"
+                    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Dell Update Package is being expanded to $DestinationPath"
                     Start-Process -FilePath $ExpandFile -ArgumentList "/s /e=$DestinationPath" -Wait
                 }
                 Continue
@@ -62,15 +62,15 @@ function step-drivers-expand-driverpack {
                     #If found an EXE in c:\drivers
                     if (Test-Path -Path $env:windir\System32\7za.exe) {
                         #If 7zip is found
-                        Write-Host -ForegroundColor Cyan 'Found 7zip, using to Expand HP Softpaq'
-                        Write-Host "SaveMyDriverPack: $SaveMyDriverPack"
-                        Write-Host "SaveMyDriverPack.FullName: $($SaveMyDriverPack.FullName)"
+                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Found 7zip, using to Expand HP Softpaq"
+                        Write-Host "[$(Get-Date -format s)] SaveMyDriverPack: $SaveMyDriverPack"
+                        Write-Host "[$(Get-Date -format s)] SaveMyDriverPack.FullName: $($SaveMyDriverPack.FullName)"
                         $DestinationPath = Join-Path $Item.Directory $Item.BaseName
                         if (-not (Test-Path "$DestinationPath")) {
                             #If DestinationPath does not exist already
-                            Write-Host "HP Driver Pack $ExpandFile is being expanded to $DestinationPath"
+                            Write-Host "[$(Get-Date -format s)] HP Driver Pack $ExpandFile is being expanded to $DestinationPath"
                             Start-Process -FilePath $env:windir\System32\7za.exe -ArgumentList "x $ExpandFile -o$DestinationPath -y" -Wait -NoNewWindow -PassThru
-                            Write-Host "7zip has expanded the HP Driver Pack to $DestinationPath"
+                            Write-Host "[$(Get-Date -format s)] 7zip has expanded the HP Driver Pack to $DestinationPath"
                             #$global:OSDCloudWorkflowInvoke.OSDCloudUnattend = $true
                             $DriverPPKGNeeded = $false #Disable PPKG for HP Driver Pack during Specialize
                             $global:OSDCloudWorkflowInvoke.DriverPackName = 'None' #Skips adding MS Update Catalog drivers into Process
@@ -78,8 +78,8 @@ function step-drivers-expand-driverpack {
                         Continue
                     }
                     else {
-                        Write-Host -ForegroundColor DarkGray '7zip not found, unable to expand HP Softpaq'
-                        Write-Host -ForegroundColor DarkGray 'Please add 7zip your OSDCloud Boot Media to use this feature'
+                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] 7zip not found, unable to expand HP Softpaq"
+                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Please add 7zip your OSDCloud Boot Media to use this feature"
                     }
                 }
             }

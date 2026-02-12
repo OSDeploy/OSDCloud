@@ -26,17 +26,6 @@ function Get-OSDCloudInfo {
     Write-Host -ForegroundColor DarkGray "Michael Escamilla $($OSDCloudModule.links.michael)"
     Write-Host
 
-    # Display upcoming events
-    Write-Host -ForegroundColor DarkCyan 'MMSMOA: OSDCloud and OSDWorkspace'
-    Write-Host -ForegroundColor DarkGray "May 5-8 2025 $($OSDCloudModule.links.mmsmoa)"
-    Write-Host
-    Write-Host -ForegroundColor DarkCyan 'WPNinjasUK: OSDCloud and OSDWorkspace'
-    Write-Host -ForegroundColor DarkGray "June 16-17 2025 $($OSDCloudModule.links.wpninjasuk)"
-    Write-Host
-    Write-Host -ForegroundColor DarkCyan 'WPNinjas: OSDCloud and OSDWorkspace'
-    Write-Host -ForegroundColor DarkGray "September 22-25, 2025 | $($OSDCloudModule.links.wpninjasch)"
-    Write-Host
-
     # Display additional resources
     Write-Host -ForegroundColor DarkCyan 'GitHub: OSDCloud'
     Write-Host -ForegroundColor DarkGray $($OSDCloudModule.module.project)

@@ -7,7 +7,7 @@ function step-install-expandwindowsimage {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] C:\"
@@ -24,15 +24,15 @@ function step-install-expandwindowsimage {
     }
     #=================================================
     # Build the Params
-    if ($global:OSDCloudWorkflowInit.LocalImageFileDestination.FullName -match '.swm') {
+    if ($global:OSDCloudDeploy.LocalImageFileDestination.FullName -match '.swm') {
         #TODO - Add support for multiple SWM files
         $Params = @{
             ApplyPath             = 'C:\'
             ErrorAction           = 'Stop'
-            ImagePath             = $global:OSDCloudWorkflowInit.LocalImageFileDestination.FullName
-            Name                  = (Get-WindowsImage -ImagePath $global:OSDCloudWorkflowInit.LocalImageFileDestination.FullName).ImageName
+            ImagePath             = $global:OSDCloudDeploy.LocalImageFileDestination.FullName
+            Name                  = (Get-WindowsImage -ImagePath $global:OSDCloudDeploy.LocalImageFileDestination.FullName).ImageName
             ScratchDirectory      = 'C:\OSDCloud\Temp'
-            SplitImageFilePattern = ($global:OSDCloudWorkflowInit.LocalImageFileDestination.FullName).replace('install.swm', 'install*.swm')
+            SplitImageFilePattern = ($global:OSDCloudDeploy.LocalImageFileDestination.FullName).replace('install.swm', 'install*.swm')
         }
     }
     else {

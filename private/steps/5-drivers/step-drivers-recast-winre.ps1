@@ -7,7 +7,7 @@ function step-drivers-recast-winre {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 

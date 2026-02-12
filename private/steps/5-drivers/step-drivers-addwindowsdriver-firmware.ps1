@@ -7,7 +7,7 @@ function step-drivers-addwindowsdriver-firmware {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
@@ -17,7 +17,7 @@ function step-drivers-addwindowsdriver-firmware {
         if (-not (Test-Path -Path $LogPath)) {
             New-Item -ItemType Directory -Path $LogPath -Force | Out-Null
         }
-        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-firmware.log" -ErrorAction SilentlyContinue | Out-Null
+        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-firmware.log" -ErrorAction SilentlyContinue
     }
     #=================================================
     # End the function

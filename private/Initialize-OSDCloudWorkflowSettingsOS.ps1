@@ -6,8 +6,9 @@ function Initialize-OSDCloudWorkflowSettingsOS {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
+        [Alias('Name')]
         [System.String]
-        $Name = 'default',
+        $WorkflowName = 'default',
 
         [System.Management.Automation.SwitchParameter]
         $AsJson,
@@ -34,49 +35,49 @@ function Initialize-OSDCloudWorkflowSettingsOS {
         break
     }
 
-    $WorkflowSettingsOSPath = Join-Path $Path $Name
-    $WorkflowSettingsOSDefaultPath = Join-Path $Path 'default'
+    $OSDCloudWorkflowNamedPath = Join-Path $Path $WorkflowName
+    $OSDCloudWorkflowDefaultPath = Join-Path $Path 'default'
 
-    $PathAmd64 = "$WorkflowSettingsOSPath\os-amd64.json"
-    $PathArm64 = "$WorkflowSettingsOSPath\os-arm64.json"
+    $osamd64Path = "$OSDCloudWorkflowNamedPath\os-amd64.json"
+    $osarm64Path = "$OSDCloudWorkflowNamedPath\os-arm64.json"
 
-    if (-not ($WorkflowSettingsOSPath -eq $WorkflowSettingsOSDefaultPath)) {
-        if (-not (Test-Path $PathAmd64)) {
-            $PathAmd64 = "$WorkflowSettingsOSDefaultPath\os-amd64.json"
+    if (-not ($OSDCloudWorkflowNamedPath -eq $OSDCloudWorkflowDefaultPath)) {
+        if (-not (Test-Path $osamd64Path)) {
+            $osamd64Path = "$OSDCloudWorkflowDefaultPath\os-amd64.json"
         }
-        if (-not (Test-Path $PathArm64)) {
-            $PathArm64 = "$WorkflowSettingsOSDefaultPath\os-arm64.json"
+        if (-not (Test-Path $osarm64Path)) {
+            $osarm64Path = "$OSDCloudWorkflowDefaultPath\os-arm64.json"
         }
     }
 
     # Import the RAW content of the JSON file
     if ($Architecture -eq 'AMD64') {
-        if (-not (Test-Path $PathAmd64)) {
-            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathAmd64"
+        if (-not (Test-Path $osamd64Path)) {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $osamd64Path"
             break
         }
         else {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathAmd64"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $osamd64Path"
         }
-        $SettingsOSPath = $PathAmd64
+        $OSDCloudWorkflowSettingsOSFile = $osamd64Path
     }
     elseif ($Architecture -eq 'ARM64') {
-        if (-not (Test-Path $PathArm64)) {
-            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $PathArm64"
+        if (-not (Test-Path $osarm64Path)) {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to find $osarm64Path"
             break
         }
         else {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $PathArm64"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] $osarm64Path"
         }
-        $SettingsOSPath = $PathArm64
+        $OSDCloudWorkflowSettingsOSFile = $osarm64Path
     }
     else {
         Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Invalid Architecture: $Architecture"
         break
     }
     
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Importing settings from $SettingsOSPath"
-    $rawJsonContent = Get-Content -Path $SettingsOSPath -Raw
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Importing settings from $OSDCloudWorkflowSettingsOSFile"
+    $rawJsonContent = Get-Content -Path $OSDCloudWorkflowSettingsOSFile -Raw
 
     if ($AsJson) {
         return $rawJsonContent

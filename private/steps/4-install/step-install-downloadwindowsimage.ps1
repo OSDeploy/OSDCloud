@@ -9,7 +9,7 @@ function step-install-downloadwindowsimage {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     # Do we have a URL to download the Windows Image from?
     if (-not ($OperatingSystemObject.FilePath)) {

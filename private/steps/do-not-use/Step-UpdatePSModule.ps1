@@ -7,7 +7,7 @@ function Step-UpdatePSModule {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
 
     # Get the configuration of the step
-    $Step = $global:OSDCloudWorkflowCurrentStep
+    $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
     Write-Host -ForegroundColor DarkGray "Saving PowerShell Modules and Scripts"
@@ -24,7 +24,7 @@ function Step-UpdatePSModule {
             New-Item -Path "$PowerShellSavePath\Scripts" -ItemType Directory -Force | Out-Null
         }
         
-        if (Test-WebConnection -Uri "https://www.powershellgallery.com") {
+        if (Test-OSDCloudInternetConnection -Uri "https://www.powershellgallery.com") {
             Copy-PSModuleToFolder -Name OSD -Destination "$PowerShellSavePath\Modules"
             try {
                 Save-Script -Name Get-WindowsAutopilotInfo -Path "$PowerShellSavePath\Scripts" -ErrorAction Stop
@@ -55,7 +55,7 @@ function Step-UpdatePSModule {
         
             foreach ($Item in $StepOfflinePath) {
                 if (Test-Path "$($Item.FullName)\PowerShell\Required") {
-                    Write-Host -ForegroundColor Cyan "Applying PowerShell Modules and Scripts in $($Item.FullName)\PowerShell\Required"
+                    Write-Host -ForegroundColor DarkGray "Apply PowerShell Modules and Scripts in $($Item.FullName)\PowerShell\Required"
                     robocopy "$($Item.FullName)\PowerShell\Required" "$PowerShellSavePath" *.* /s /ndl /njh /njs
                 }
             }
