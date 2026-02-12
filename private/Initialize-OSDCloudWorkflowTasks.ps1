@@ -90,7 +90,7 @@ function Initialize-OSDCloudWorkflowTasks {
         Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] No workflows found for architecture: $Architecture"
         break
     }
-    $global:OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Sort-Object -Property @{Expression='default';Descending=$false}, @{Expression='name';Descending=$false}
+    $global:OSDCloudWorkflowTasks = $OSDCloudWorkflowTasks | Sort-Object -Property @{Expression='default';Descending=$true}, @{Expression='name';Descending=$false}
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
