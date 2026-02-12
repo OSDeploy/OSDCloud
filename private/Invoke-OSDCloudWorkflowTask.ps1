@@ -43,7 +43,7 @@ function Invoke-OSDCloudWorkflowTask {
     }
     #=================================================
     #region OSDCloud Deployment Analytics
-    $eventName = 'osdcloud_deploy_test'
+    $eventName = 'osdcloud_deploy'
     function Send-OSDCloudDeployEvent {
         param(
             [Parameter(Mandatory)]
