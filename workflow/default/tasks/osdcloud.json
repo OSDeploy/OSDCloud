@@ -6,7 +6,7 @@
     "version": "26.2.12",
     "amd64": true,
     "arm64": true,
-    "default": false,
+    "default": true,
     "steps": [
         {
             "name": "Initialize OSDCloud Workflow",
