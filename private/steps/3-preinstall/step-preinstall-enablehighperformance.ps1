@@ -11,9 +11,9 @@ function step-preinstall-enablehighperformance {
     #=================================================
     #region Main
     if ($IsOnBattery -eq $true) {
-        $Win32Battery = (Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue | Select-Object -Property *)
-        if ($Win32Battery.BatteryStatus -eq 1) {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Device has $($Win32Battery.EstimatedChargeRemaining)% battery remaining"
+        $classWin32Battery = (Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue | Select-Object -Property *)
+        if ($classWin32Battery.BatteryStatus -eq 1) {
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Device has $($classWin32Battery.EstimatedChargeRemaining)% battery remaining"
         }
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] High Performance will not be enabled while on battery"
     }

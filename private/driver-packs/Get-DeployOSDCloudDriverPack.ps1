@@ -12,8 +12,7 @@ function Get-DeployOSDCloudDriverPack {
     [CmdletBinding()]
     param (
         [System.String]
-        #Product is determined automatically by Get-MyDeviceProduct
-        $Product = (Get-MyDeviceProduct),
+        $Product = $global:OSDCloudDevice.ComputerProductAlias,
 
         [System.String]
         [ValidateSet('Windows 11','Windows 10')]
@@ -50,7 +49,7 @@ function Get-DeployOSDCloudDriverPack {
         $Results[0]
     }
     else {
-        Write-Verbose "Product $Product is not supported"
+        Write-Verbose "ProductAlias $Product is not supported"
     }
     #=================================================
 }

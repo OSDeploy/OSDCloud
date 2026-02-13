@@ -22,24 +22,29 @@ function Invoke-OSDCloudWorkflowTask {
     #=================================================
     $global:OSDCloudWorkflowInvoke = $null
     $global:OSDCloudWorkflowInvoke = [ordered]@{
-        Architecture          = $global:Architecture
-        ComputerChassisType   = $OSDCloudDevice.ChassisType
-        ComputerManufacturer  = $OSDCloudDevice.ComputerManufacturer
-        ComputerModel         = $OSDCloudDevice.ComputerModel
-        ComputerProduct       = $OSDCloudDevice.ComputerProduct
-        ComputerSerialNumber  = $OSDCloudDevice.SerialNumber
-        ComputerUUID          = (Get-WmiObject -Class Win32_ComputerSystemProduct).UUID
-        DriverPackName        = $global:OSDCloudDeploy.DriverPackName
-        DriverPackObject      = $global:OSDCloudDeploy.DriverPackObject
-        IsOnBattery           = $global:IsOnBattery
-        IsVM                  = $global:IsVM
-        IsWinPE               = $global:IsWinPE
-        LogsPath              = "$env:TEMP\osdcloud-logs"
-        OperatingSystem       = $global:OSDCloudDeploy.OperatingSystem
-        OperatingSystemObject = $global:OSDCloudDeploy.OperatingSystemObject
-        TimeEnd               = $null
-        TimeSpan              = $null
-        TimeStart             = [datetime](Get-Date)
+        Architecture              = $global:Architecture
+        ChassisType       = $OSDCloudDevice.ChassisType
+        ComputerManufacturer      = $OSDCloudDevice.ComputerManufacturer
+        ComputerManufacturerAlias = $OSDCloudDevice.ComputerManufacturerAlias
+        ComputerModel             = $OSDCloudDevice.ComputerModel
+        ComputerModelAlias        = $OSDCloudDevice.ComputerModelAlias
+        ComputerProduct           = $OSDCloudDevice.ComputerProduct
+        ComputerProductAlias      = $OSDCloudDevice.ComputerProductAlias
+        ComputerSerialNumber      = $OSDCloudDevice.SerialNumber
+        ComputerSystemFamily      = $OSDCloudDevice.ComputerSystemFamily
+        ComputerSystemSKU         = $OSDCloudDevice.ComputerSystemSKU
+        ComputerUUID              = $OSDCloudDevice.UUID
+        DriverPackName            = $global:OSDCloudDeploy.DriverPackName
+        DriverPackObject          = $global:OSDCloudDeploy.DriverPackObject
+        IsOnBattery               = $global:IsOnBattery
+        IsVM                      = $global:IsVM
+        IsWinPE                   = $global:IsWinPE
+        LogsPath                  = "$env:TEMP\osdcloud-logs"
+        OperatingSystem           = $global:OSDCloudDeploy.OperatingSystem
+        OperatingSystemObject     = $global:OSDCloudDeploy.OperatingSystemObject
+        TimeEnd                   = $null
+        TimeSpan                  = $null
+        TimeStart                 = [datetime](Get-Date)
     }
     #=================================================
     #region OSDCloud Deployment Analytics
@@ -58,12 +63,12 @@ function Invoke-OSDCloudWorkflowTask {
 
         try {
             $payload = [ordered]@{
-                api_key     = $ApiKey
-                event       = $EventName
-                properties  = $Properties + @{
+                api_key    = $ApiKey
+                event      = $EventName
+                properties = $Properties + @{
                     distinct_id = $DistinctId
                 }
-                timestamp   = (Get-Date).ToString('o')
+                timestamp  = (Get-Date).ToString('o')
             }
 
             $body = $payload | ConvertTo-Json -Depth 4 -Compress
@@ -75,63 +80,19 @@ function Invoke-OSDCloudWorkflowTask {
                 -ErrorAction Stop | Out-Null
 
             Write-Verbose "[$(Get-Date -format s)] [OSDCloud] Event sent: $EventName"
-        } catch {
+        }
+        catch {
             Write-Verbose "[$(Get-Date -format s)] [OSDCloud] Failed to send event: $($_.Exception.Message)"
         }
     }
     # UUID
-    $deviceUUID = $global:OSDCloudWorkflowInvoke.ComputerUUID
+    $deviceUUID = $global:OSDCloudDevice.UUID
     # Convert the UUID to a hash value to protect user privacyand ensure a consistent identifier across events
     $deviceUUIDHash = [System.BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create().ComputeHash([System.Text.Encoding]::UTF8.GetBytes($deviceUUID))).Replace("-", "")
     [string]$distinctId = $deviceUUIDHash
     if ([string]::IsNullOrWhiteSpace($distinctId)) {
         $distinctId = [System.Guid]::NewGuid().ToString()
     }
-    # Device
-    $deviceManufacturer = (Get-CimInstance -ClassName CIM_ComputerSystem -ErrorAction Stop).Manufacturer
-    $deviceManufacturer = $deviceManufacturer -as [string]
-    if ([string]::IsNullOrWhiteSpace($deviceManufacturer)) {
-        $deviceManufacturer = 'OEM'
-    } else {
-        $deviceManufacturer = $deviceManufacturer.Trim()
-    }
-    $deviceModel = ((Get-CimInstance -ClassName CIM_ComputerSystem).Model).Trim()
-    $deviceModel = $deviceModel -as [string]
-    if ([string]::IsNullOrWhiteSpace($deviceModel)) {
-        $deviceModel = 'OEM'
-    } elseif ($deviceModel -match 'OEM|to be filled') {
-        $deviceModel = 'OEM'
-    }
-    $deviceProduct = ((Get-CimInstance -ClassName Win32_BaseBoard).Product).Trim()
-    $deviceSystemSKU = ((Get-CimInstance -ClassName CIM_ComputerSystem).SystemSKUNumber).Trim()
-    $deviceVersion = ((Get-CimInstance -ClassName Win32_ComputerSystemProduct).Version).Trim()
-    if ($deviceManufacturer -match 'Dell') {
-        $deviceManufacturer = 'Dell'
-        $deviceModelId = $deviceSystemSKU
-    }
-    if ($deviceManufacturer -match 'Hewlett|Packard|\bHP\b') {
-        $deviceManufacturer = 'HP'
-        $deviceModelId = $deviceProduct
-    }
-    if ($deviceManufacturer -match 'Lenovo') {
-        $deviceManufacturer = 'Lenovo'
-        $deviceModel = $deviceVersion
-        $deviceModelId = (Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -ExpandProperty Model).SubString(0, 4)
-    }
-    if ($deviceManufacturer -match 'Microsoft') {
-        $deviceManufacturer = 'Microsoft'
-        # Surface_Book or Surface_Pro_3
-        $deviceModelId = $deviceSystemSKU
-        # Surface Book or Surface Pro 3
-        # $deviceProduct
-    }
-    if ($deviceManufacturer -match 'Panasonic') { $deviceManufacturer = 'Panasonic' }
-    if ($deviceManufacturer -match 'OEM|to be filled') { $deviceManufacturer = 'OEM' }
-    # Win32_ComputerSystem
-    $deviceSystemFamily = ((Get-CimInstance -ClassName Win32_ComputerSystem -ErrorAction Ignore).SystemFamily).Trim()
-    # Win32_OperatingSystem
-    # $osCaption = (Get-CimInstance -ClassName Win32_OperatingSystem -ErrorAction Ignore).Caption
-    # $osVersion = (Get-CimInstance -ClassName Win32_OperatingSystem -ErrorAction Ignore).Version
 
     $computerInfo = Get-ComputerInfo -ErrorAction Ignore
     if ($env:SystemDrive -eq 'X:') {
@@ -143,40 +104,40 @@ function Invoke-OSDCloudWorkflowTask {
         $osName = [string]$computerInfo.OsName
     }
     $eventProperties = @{
-        deploymentPhase             = [string]$deploymentPhase
-        deviceManufacturer          = [string]$deviceManufacturer
-        deviceModel                 = [string]$deviceModel
-        deviceModelId               = [string]$deviceModelId
-        deviceProduct               = [string]$deviceProduct
-        deviceVersion               = [string]$deviceVersion
-        deviceSystemFamily          = [string]$deviceSystemFamily
-        deviceSystemSKU             = [string]$deviceSystemSKU
-        deviceSystemType            = [string]$computerInfo.CsPCSystemType
-        biosFirmwareType            = [string]$computerInfo.BiosFirmwareType
-        biosReleaseDate             = [string]$computerInfo.BiosReleaseDate
-        biosSMBIOSBIOSVersion       = [string]$computerInfo.BiosSMBIOSBIOSVersion
-        keyboardName                = [string](Get-CimInstance -ClassName Win32_Keyboard | Select-Object -ExpandProperty Name)
-        keyboardLayout              = [string](Get-CimInstance -ClassName Win32_Keyboard | Select-Object -ExpandProperty Layout)
-        winArchitecture             = [string]$env:PROCESSOR_ARCHITECTURE
-        winBuildLabEx               = [string]$computerInfo.WindowsBuildLabEx
-        winBuildNumber              = [string]$computerInfo.OsBuildNumber
-        winCountryCode              = [string]$computerInfo.OsCountryCode
-        winEditionId                = [string]$computerInfo.WindowsEditionId
-        winInstallationType         = [string]$computerInfo.WindowsInstallationType
-        winLanguage                 = [string]$computerInfo.OsLanguage
-        winName                     = [string]$osName
-        winTimeZone                 = [string]$computerInfo.TimeZone
-        winVersion                  = [string]$computerInfo.OsVersion
-        osdcloudModuleVersion       = [string]$ModuleVersion
-        osdcloudWorkflowName        = [string]$global:OSDCloudDeploy.WorkflowName
-        osdcloudWorkflowTaskName    = [string]$global:OSDCloudDeploy.WorkflowTaskName
-        osdcloudDriverPackName      = [string]$global:OSDCloudDeploy.DriverPackName
-        osdcloudOSName              = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSName
-        osdcloudOSVersion           = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSVersion
-        osdcloudOSActivationStatus  = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSActivation
-        osdcloudOSBuild             = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSBuild
-        osdcloudOSBuildVersion      = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSBuildVersion
-        osdcloudOSLanguageCode      = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSLanguageCode
+        deploymentPhase            = [string]$deploymentPhase
+        deviceManufacturer         = $OSDCloudDevice.ComputerManufacturer
+        deviceManufacturerAlias    = $OSDCloudDevice.ComputerManufacturerAlias
+        deviceModel                = $OSDCloudDevice.ComputerModel
+        deviceModelAlias           = $OSDCloudDevice.ComputerModelAlias
+        deviceProduct              = $OSDCloudDevice.ComputerProduct
+        deviceProductAlias         = $OSDCloudDevice.ComputerProductAlias
+        deviceSystemFamily         = $OSDCloudDevice.ComputerSystemFamily
+        deviceSystemSKU            = $OSDCloudDevice.ComputerSystemSKU
+        deviceSystemType           = $OSDCloudDevice.ChassisType
+        biosReleaseDate            = $OSDCloudDevice.BiosReleaseDate
+        biosSMBIOSBIOSVersion      = $OSDCloudDevice.BiosSMBIOSBIOSVersion
+        keyboardName               = [string](Get-CimInstance -ClassName Win32_Keyboard | Select-Object -ExpandProperty Name)
+        keyboardLayout             = [string](Get-CimInstance -ClassName Win32_Keyboard | Select-Object -ExpandProperty Layout)
+        winArchitecture            = [string]$env:PROCESSOR_ARCHITECTURE
+        winBuildLabEx              = [string]$computerInfo.WindowsBuildLabEx
+        winBuildNumber             = [string]$computerInfo.OsBuildNumber
+        winCountryCode             = [string]$computerInfo.OsCountryCode
+        winEditionId               = [string]$computerInfo.WindowsEditionId
+        winInstallationType        = [string]$computerInfo.WindowsInstallationType
+        winLanguage                = [string]$computerInfo.OsLanguage
+        winName                    = [string]$osName
+        winTimeZone                = [string]$computerInfo.TimeZone
+        winVersion                 = [string]$computerInfo.OsVersion
+        osdcloudModuleVersion      = [string]$ModuleVersion
+        osdcloudWorkflowName       = [string]$global:OSDCloudDeploy.WorkflowName
+        osdcloudWorkflowTaskName   = [string]$global:OSDCloudDeploy.WorkflowTaskName
+        osdcloudDriverPackName     = [string]$global:OSDCloudDeploy.DriverPackName
+        osdcloudOSName             = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSName
+        osdcloudOSVersion          = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSVersion
+        osdcloudOSActivationStatus = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSActivation
+        osdcloudOSBuild            = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSBuild
+        osdcloudOSBuildVersion     = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSBuildVersion
+        osdcloudOSLanguageCode     = [string]$global:OSDCloudDeploy.OperatingSystemObject.OSLanguageCode
     }
     $postApi = 'phc_2h7nQJCo41Hc5C64B2SkcEBZOvJ6mHr5xAHZyjPl3ZK'
     Send-OSDCloudDeployEvent -EventName $eventName -ApiKey $postApi -DistinctId $distinctId -Properties $eventProperties
@@ -256,7 +217,8 @@ function Invoke-OSDCloudWorkflowTask {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name) [ScriptBlock:$($step.scriptblock)]"
                 if ($Test) { continue }
                 & $command
-            } elseif ($commandline) {
+            }
+            elseif ($commandline) {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name)"
                 if ($Test) { continue }
                 # Parse the command line into a command and arguments to avoid Invoke-Expression
@@ -290,25 +252,30 @@ function Invoke-OSDCloudWorkflowTask {
                 }
 
                 & $exe @cmdArgs
-            } elseif ($command -and ($arguments.Count -ge 1) -and ($parameters.Count -ge 1)) {
+            }
+            elseif ($command -and ($arguments.Count -ge 1) -and ($parameters.Count -ge 1)) {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name) [Arguments:$arguments]"
                 ($parameters | Out-String).Trim()
                 if ($Test) { continue }
                 & $command @parameters @arguments
-            } elseif ($command -and ($arguments.Count -ge 1)) {
+            }
+            elseif ($command -and ($arguments.Count -ge 1)) {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name) [Arguments:$arguments]"
                 if ($Test) { continue }
                 & $command @arguments
-            } elseif ($command -and ($parameters.Count -ge 1)) {
+            }
+            elseif ($command -and ($parameters.Count -ge 1)) {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name)"
                 ($parameters | Out-String).Trim()
                 if ($Test) { continue }
                 & $command @parameters
-            } elseif ($command) {
+            }
+            elseif ($command) {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] $($step.name)"
                 if ($Test) { continue }
                 & $command
-            } else {
+            }
+            else {
                 Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] No command to execute."
                 continue
             }

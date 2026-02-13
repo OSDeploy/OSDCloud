@@ -8,17 +8,17 @@ param()
 Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
 #================================================
 # Variables
-$deviceBiosVersion = $global:OSDCloudDevice.BiosVersion
 $deviceBiosReleaseDate = $global:OSDCloudDevice.BiosReleaseDate
-$deviceComputerManufacturer = $global:OSDCloudDevice.ComputerManufacturer
-$deviceUUID = $global:OSDCloudDevice.UUID
-$deviceComputerModel = $global:OSDCloudDevice.ComputerModel
-$deviceComputerProduct = $global:OSDCloudDevice.ComputerProduct
-$deviceComputerSystemSKUNumber = $global:OSDCloudDevice.ComputerSystemSKUNumber
-$deviceSerialNumber = $global:OSDCloudDevice.SerialNumber
-$getOSDCloudModuleVersion = Get-OSDCloudModuleVersion
+$deviceBiosVersion = $global:OSDCloudDevice.BiosVersion
+$deviceComputerManufacturerAlias = $global:OSDCloudDevice.ComputerManufacturerAlias
+$deviceComputerModelAlias = $global:OSDCloudDevice.ComputerModelAlias
+$deviceComputerProductAlias = $global:OSDCloudDevice.ComputerProductAlias
+$deviceComputerSystemSKU = $global:OSDCloudDevice.ComputerSystemSKU
 $deviceIsAutopilotReady = $global:OSDCloudDevice.IsAutopilotReady
 $deviceIsTPMReady = $global:OSDCloudDevice.IsTPMReady
+$deviceSerialNumber = $global:OSDCloudDevice.SerialNumber
+$deviceUUID = $global:OSDCloudDevice.UUID
+$getOSDCloudModuleVersion = Get-OSDCloudModuleVersion
 #================================================
 # XAML
 $xamlfile = Get-Item -Path "$PSScriptRoot\MainWindow.xaml"
@@ -53,20 +53,22 @@ $LogsMenuItem = $window.FindName("LogsMenuItem")
 $HardwareMenuItem = $window.FindName("HardwareMenuItem")
 
 $RunCmdPrompt.Add_Click({
-	try {
-		Start-Process -FilePath "cmd.exe"
-	} catch {
-		[System.Windows.MessageBox]::Show("Failed to open CMD Prompt: $($_.Exception.Message)", "Error", "OK", "Error") | Out-Null
-	}
-})
+		try {
+			Start-Process -FilePath "cmd.exe"
+		}
+		catch {
+			[System.Windows.MessageBox]::Show("Failed to open CMD Prompt: $($_.Exception.Message)", "Error", "OK", "Error") | Out-Null
+		}
+	})
 
 $RunPowerShell.Add_Click({
-	try {
-		Start-Process -FilePath "powershell.exe"
-	} catch {
-		[System.Windows.MessageBox]::Show("Failed to open PowerShell: $($_.Exception.Message)", "Error", "OK", "Error") | Out-Null
-	}
-})
+		try {
+			Start-Process -FilePath "powershell.exe"
+		}
+		catch {
+			[System.Windows.MessageBox]::Show("Failed to open PowerShell: $($_.Exception.Message)", "Error", "OK", "Error") | Out-Null
+		}
+	})
 
 if ($RunPwsh) {
 	$pwshCommand = Get-Command -Name 'pwsh.exe' -ErrorAction SilentlyContinue
@@ -74,19 +76,21 @@ if ($RunPwsh) {
 		$script:PwshPath = $pwshCommand.Source
 		$RunPwsh.Visibility = [System.Windows.Visibility]::Visible
 		$RunPwsh.Add_Click({
-			try {
-				Start-Process -FilePath $script:PwshPath
-			} catch {
-				[System.Windows.MessageBox]::Show("Failed to open PowerShell 7: $($_.Exception.Message)", "Error", "OK", "Error") | Out-Null
-			}
-		})
-	} else {
+				try {
+					Start-Process -FilePath $script:PwshPath
+				}
+				catch {
+					[System.Windows.MessageBox]::Show("Failed to open PowerShell 7: $($_.Exception.Message)", "Error", "OK", "Error") | Out-Null
+				}
+			})
+	}
+ else {
 		$RunPwsh.Visibility = [System.Windows.Visibility]::Collapsed
 	}
 }
 
 $PrivacyMenuItem.Add_Click({
-	$privacyMessage = @"
+		$privacyMessage = @"
 OSDCloud collects analytic data during the deployment process to identify issues, enhance performance, and improve the overall user experience.
 No personally identifiable information (PII) is collected, and all data is anonymized to protect user privacy.
 
@@ -95,8 +99,8 @@ By using OSDCloud, you consent to the collection of analytic data as outlined in
 
 https://github.com/OSDeploy/OSDCloud/blob/main/PRIVACY.md
 "@
-	[System.Windows.MessageBox]::Show($privacyMessage, "OSDCloud Privacy Statement", "OK", "Information") | Out-Null
-})
+		[System.Windows.MessageBox]::Show($privacyMessage, "OSDCloud Privacy Statement", "OK", "Information") | Out-Null
+	})
 
 function Add-NoLogsMenuEntry {
 	param(
@@ -131,19 +135,20 @@ function Set-LogsMenuItems {
 		$logMenuItem.Tag = $logFile.FullName
 
 		$logMenuItem.Add_Click({
-			param($sender, $args)
-			$logPath = [string]$sender.Tag
-			if (-not (Test-Path -LiteralPath $logPath)) {
-				[System.Windows.MessageBox]::Show('Log file not found.', 'Open Log', 'OK', 'Warning') | Out-Null
-				return
-			}
+				param($sender, $args)
+				$logPath = [string]$sender.Tag
+				if (-not (Test-Path -LiteralPath $logPath)) {
+					[System.Windows.MessageBox]::Show('Log file not found.', 'Open Log', 'OK', 'Warning') | Out-Null
+					return
+				}
 
-			try {
-				Start-Process -FilePath 'notepad.exe' -ArgumentList @("`"$logPath`"") -ErrorAction Stop
-			} catch {
-				[System.Windows.MessageBox]::Show("Failed to open log: $($_.Exception.Message)", 'Open Log', 'OK', 'Error') | Out-Null
-			}
-		})
+				try {
+					Start-Process -FilePath 'notepad.exe' -ArgumentList @("`"$logPath`"") -ErrorAction Stop
+				}
+				catch {
+					[System.Windows.MessageBox]::Show("Failed to open log: $($_.Exception.Message)", 'Open Log', 'OK', 'Error') | Out-Null
+				}
+			})
 
 		$LogsMenuItem.Items.Add($logMenuItem) | Out-Null
 	}
@@ -171,19 +176,20 @@ function Set-HardwareMenuItems {
 		$logMenuItem.Tag = $logFile.FullName
 
 		$logMenuItem.Add_Click({
-			param($sender, $args)
-			$logPath = [string]$sender.Tag
-			if (-not (Test-Path -LiteralPath $logPath)) {
-				[System.Windows.MessageBox]::Show('Log file not found.', 'Open Log', 'OK', 'Warning') | Out-Null
-				return
-			}
+				param($sender, $args)
+				$logPath = [string]$sender.Tag
+				if (-not (Test-Path -LiteralPath $logPath)) {
+					[System.Windows.MessageBox]::Show('Log file not found.', 'Open Log', 'OK', 'Warning') | Out-Null
+					return
+				}
 
-			try {
-				Start-Process -FilePath 'notepad.exe' -ArgumentList @("`"$logPath`"") -ErrorAction Stop
-			} catch {
-				[System.Windows.MessageBox]::Show("Failed to open log: $($_.Exception.Message)", 'Open Log', 'OK', 'Error') | Out-Null
-			}
-		})
+				try {
+					Start-Process -FilePath 'notepad.exe' -ArgumentList @("`"$logPath`"") -ErrorAction Stop
+				}
+				catch {
+					[System.Windows.MessageBox]::Show("Failed to open log: $($_.Exception.Message)", 'Open Log', 'OK', 'Error') | Out-Null
+				}
+			})
 
 		$HardwareMenuItem.Items.Add($logMenuItem) | Out-Null
 	}
@@ -195,11 +201,11 @@ $TaskSequenceCombo = $window.FindName("TaskSequenceCombo")
 $TaskSequenceCombo.ItemsSource = $global:OSDCloudDeploy.Flows.Name
 $TaskSequenceCombo.SelectedIndex = 0
 $TaskSequenceCombo.Add_SelectionChanged({
-	if ($SummaryTaskSequenceText) {
-		$value = [string]$TaskSequenceCombo.SelectedItem
-		$SummaryTaskSequenceText.Text = if (-not [string]::IsNullOrWhiteSpace($value)) { $value } else { 'Not selected' }
-	}
-})
+		if ($SummaryTaskSequenceText) {
+			$value = [string]$TaskSequenceCombo.SelectedItem
+			$SummaryTaskSequenceText.Text = if (-not [string]::IsNullOrWhiteSpace($value)) { $value } else { 'Not selected' }
+		}
+	})
 #================================================
 # Disk
 try {
@@ -213,7 +219,8 @@ try {
 			}
 		}
 	}
-} catch {
+}
+catch {
 	Write-Verbose "Error populating Disk combo: $_"
 }
 #================================================
@@ -239,9 +246,11 @@ if ($global:OSDCloudDeploy.OperatingSystem) {
 }
 if ($OperatingSystemDefault -and ($OperatingSystemValues -contains $OperatingSystemDefault)) {
 	$OperatingSystemCombo.SelectedItem = $OperatingSystemDefault
-} elseif ($OperatingSystemValues) {
+}
+elseif ($OperatingSystemValues) {
 	$OperatingSystemCombo.SelectedIndex = 0
-} else {
+}
+else {
 	$OperatingSystemCombo.SelectedIndex = -1
 }
 #================================================
@@ -266,9 +275,11 @@ if ($global:OSDCloudDeploy.OSEdition) {
 }
 if ($OSEditionDefault) {
 	$OSEditionCombo.SelectedItem = $OSEditionDefault
-} elseif ($OperatingSystemValues) {
+}
+elseif ($OperatingSystemValues) {
 	$OSEditionCombo.SelectedIndex = 0
-} else {
+}
+else {
 	$OSEditionCombo.SelectedIndex = -1
 }
 #================================================
@@ -293,9 +304,11 @@ if ($global:OSDCloudDeploy.OSActivation) {
 }
 if ($OSActivationDefault -and ($OSActivationValues -contains $OSActivationDefault)) {
 	$OSActivationCombo.SelectedItem = $OSActivationDefault
-} elseif ($OSActivationValues) {
+}
+elseif ($OSActivationValues) {
 	$OSActivationCombo.SelectedIndex = 0
-} else {
+}
+else {
 	$OSActivationCombo.SelectedIndex = -1
 }
 #================================================
@@ -322,9 +335,11 @@ if ($global:OSDCloudDeploy.OSLanguageCode) {
 }
 if ($OSLanguageCodeDefault -and ($OSLanguageCodeValues -contains $OSLanguageCodeDefault)) {
 	$OSLanguageCodeCombo.SelectedItem = $OSLanguageCodeDefault
-} elseif ($OSLanguageCodeValues) {
+}
+elseif ($OSLanguageCodeValues) {
 	$OSLanguageCodeCombo.SelectedIndex = 0
-} else {
+}
+else {
 	$OSLanguageCodeCombo.SelectedIndex = -1
 }
 #================================================
@@ -334,7 +349,7 @@ if ($OSLanguageCodeDefault -and ($OSLanguageCodeValues -contains $OSLanguageCode
 # Workflow Configuration
 #================================================
 # Import the DriverPack Catalog
-$DriverPackCatalog = @('None','Microsoft Update Catalog')
+$DriverPackCatalog = @('None', 'Microsoft Update Catalog')
 if ($global:OSDCloudDeploy.DriverPackValues) {
 	$DriverPackCatalog += $global:OSDCloudDeploy.DriverPackValues | ForEach-Object { $_.Name }
 }
@@ -352,25 +367,28 @@ else {
 $PostActionCombo = $window.FindName("PostActionCombo")
 $AWZoneTextBox = $window.FindName("AWZoneTextBox")
 
-$PostActionOptions = @('Quit','Restart','Shutdown')
+$PostActionOptions = @('Quit', 'Restart', 'Shutdown')
 $PostActionCombo.ItemsSource = $PostActionOptions
 
 $PostActionDefault = if ($global:OSDCloudDeploy.PostAction) {
 	$global:OSDCloudDeploy.PostAction
-} else {
+}
+else {
 	'Exit'
 }
 
 if ($PostActionDefault -and ($PostActionOptions -contains $PostActionDefault)) {
 	$PostActionCombo.SelectedItem = $PostActionDefault
-} else {
+}
+else {
 	$PostActionCombo.SelectedIndex = 0
 }
 
 if ($AWZoneTextBox) {
 	$AWZoneTextBox.Text = if ($global:OSDCloudDeploy.ApplicationWorkspaceZone) {
 		[string]$global:OSDCloudDeploy.ApplicationWorkspaceZone
-	} else {
+	}
+ else {
 		[string]::Empty
 	}
 }
@@ -381,13 +399,13 @@ $deviceBiosVersionText.Text = $deviceBiosVersion
 $deviceBiosReleaseDateText = $window.FindName("deviceBiosReleaseDateText")
 $deviceBiosReleaseDateText.Text = $deviceBiosReleaseDate
 $deviceManufacturerText = $window.FindName("deviceManufacturerText")
-$deviceManufacturerText.Text = $deviceComputerManufacturer
+$deviceManufacturerText.Text = $deviceComputerManufacturerAlias
 $deviceModelText = $window.FindName("deviceModelText")
-$deviceModelText.Text = $deviceComputerModel
+$deviceModelText.Text = $deviceComputerModelAlias
 $deviceProductText = $window.FindName("deviceProductText")
-$deviceProductText.Text = $deviceComputerProduct
+$deviceProductText.Text = $deviceComputerProductAlias
 $deviceSystemSKUText = $window.FindName("deviceSystemSKUText")
-$deviceSystemSKUText.Text = $deviceComputerSystemSKUNumber
+$deviceSystemSKUText.Text = $deviceComputerSystemSKU
 $deviceSerialNumberText = $window.FindName("deviceSerialNumberText")
 $deviceSerialNumberText.Text = $deviceSerialNumber
 $deviceIsAutopilotReadyText = $window.FindName("deviceIsAutopilotReadyText")
@@ -411,7 +429,8 @@ $setupCompleteValue = [string]$global:OSDCloudDeploy.SetupCompleteCmd
 if ($SetupCompleteTextBox) {
 	$SetupCompleteTextBox.Text = if (-not [string]::IsNullOrWhiteSpace($setupCompleteValue)) {
 		$setupCompleteValue
-	} else {
+	}
+ else {
 		[string]"REM CMD content in this block will be executed at the end of SetupComplete.cmd before OOBE starts"
 	}
 }
@@ -486,14 +505,14 @@ function Update-OsResults {
 	Write-Verbose "updateOSActivation = $updateOSActivation"
 	Write-Verbose "updateOSLanguageCode = $updateOSLanguageCode"
 
-    $global:OSDCloudDeploy.OperatingSystemObject = $global:DeployOSDCloudOperatingSystems | `
+	$global:OSDCloudDeploy.OperatingSystemObject = $global:DeployOSDCloudOperatingSystems | `
 		Where-Object { $_.OperatingSystem -match $updateOperatingSystem } | `
 		Where-Object { $_.OSActivation -eq $updateOSActivation } | `
 		Where-Object { $_.OSLanguageCode -eq $updateOSLanguageCode } | Select-Object -First 1
 	
-    if (-not $global:OSDCloudDeploy.OperatingSystemObject) {
-        throw "No Operating System found for OperatingSystem: $updateOperatingSystem, OSActivation: $updateOSActivation, OSLanguageCode: $updateOSLanguageCode. Please check your OSDCloud OperatingSystems."
-    }
+	if (-not $global:OSDCloudDeploy.OperatingSystemObject) {
+		throw "No Operating System found for OperatingSystem: $updateOperatingSystem, OSActivation: $updateOSActivation, OSLanguageCode: $updateOSLanguageCode. Please check your OSDCloud OperatingSystems."
+	}
 
 	$script:SelectedImage = $global:OSDCloudDeploy.OperatingSystemObject
 
@@ -534,10 +553,10 @@ $DriverPackCombo.Add_SelectionChanged({ Update-DriverPackResults })
 $script:SelectionConfirmed = $false
 
 $StartButton.Add_Click({
-	$script:SelectionConfirmed = $true
-	$window.DialogResult = $true
-	$window.Close()
-})
+		$script:SelectionConfirmed = $true
+		$window.DialogResult = $true
+		$window.Close()
+	})
 
 Update-OsResults
 
@@ -593,14 +612,16 @@ if ($script:SelectionConfirmed) {
 	if ([string]::IsNullOrWhiteSpace($AWDeploymentTextBox.Text)) {
 		$global:OSDCloudDeploy.ApplicationWorkspaceDeployment = $null
 		$global:OSDCloudDeploy.ApplicationWorkspaceZone = $null
-	} else {
+	}
+ else {
 		$global:OSDCloudDeploy.ApplicationWorkspaceDeployment = $AWDeploymentTextBox.Text.Trim()
 	}
 
 	if ([string]::IsNullOrWhiteSpace($AWZoneTextBox.Text)) {
 		$global:OSDCloudDeploy.ApplicationWorkspaceDeployment = $null
 		$global:OSDCloudDeploy.ApplicationWorkspaceZone = $null
-	} else {
+	}
+ else {
 		$global:OSDCloudDeploy.ApplicationWorkspaceZone = $AWZoneTextBox.Text.Trim()
 	}
 
@@ -608,9 +629,9 @@ if ($script:SelectionConfirmed) {
 		$global:OSDCloudDeploy.SetupCompleteCmd = $SetupCompleteTextBox.Text
 	}
 
-    $LogsPath = "$env:TEMP\osdcloud-logs"
-    if (-not (Test-Path -Path $LogsPath)) {
-        New-Item -Path $LogsPath -ItemType Directory -Force | Out-Null
-    }
+	$LogsPath = "$env:TEMP\osdcloud-logs"
+	if (-not (Test-Path -Path $LogsPath)) {
+		New-Item -Path $LogsPath -ItemType Directory -Force | Out-Null
+	}
 	$global:OSDCloudDeploy | Out-File -FilePath "$LogsPath\OSDCloudDeploy.txt" -Force
 }

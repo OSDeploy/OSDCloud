@@ -18,19 +18,19 @@ function Show-PEStartupDeviceInfo {
     #=================================================
     # Export Hardware Information
     # Write-Host -ForegroundColor DarkCyan "Gathering Device Information"
-    $Win32BaseBoard = Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property *
-    $Win32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
-    $Win32ComputerSystem = Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -Property *
-    $Win32OperatingSystem = Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -Property *
-    $Win32Processor = Get-CimInstance -ClassName Win32_Processor | Select-Object -Property *
+    $classWin32BaseBoard = Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property *
+    $classWin32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
+    $classWin32ComputerSystem = Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -Property *
+    $classWin32OperatingSystem = Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -Property *
+    $classWin32Processor = Get-CimInstance -ClassName Win32_Processor | Select-Object -Property *
     #=================================================
     # Device Details
-    Write-Host -ForegroundColor DarkGray "WinPE" $Win32OperatingSystem.Version $Win32OperatingSystem.OSArchitecture
-    Write-Host -ForegroundColor DarkGray "WinPE ComputerName:" $Win32ComputerSystem.Name
+    Write-Host -ForegroundColor DarkGray "WinPE" $classWin32OperatingSystem.Version $classWin32OperatingSystem.OSArchitecture
+    Write-Host -ForegroundColor DarkGray "WinPE ComputerName:" $classWin32ComputerSystem.Name
 
-    Write-Host -ForegroundColor Green "Manufacturer:" $Win32ComputerSystem.Manufacturer
-    Write-Host -ForegroundColor Green "Model:" $Win32ComputerSystem.Model
-    Write-Host -ForegroundColor Green "SerialNumber:" $Win32BIOS.SerialNumber
+    Write-Host -ForegroundColor Green "Manufacturer:" $classWin32ComputerSystem.Manufacturer
+    Write-Host -ForegroundColor Green "Model:" $classWin32ComputerSystem.Model
+    Write-Host -ForegroundColor Green "SerialNumber:" $classWin32BIOS.SerialNumber
     # TPM
     try {
         $Win32Tpm = Get-CimInstance -Namespace 'ROOT\cimv2\Security\MicrosoftTpm' -ClassName Win32_Tpm | Select-Object -Property *
@@ -73,18 +73,18 @@ function Show-PEStartupDeviceInfo {
     catch {
     }
 
-    #Write-Host -ForegroundColor DarkGray 'SystemFamily:' $Win32ComputerSystem.SystemFamily
-    Write-Host -ForegroundColor DarkGray "BIOS:" $Win32BIOS.SMBIOSBIOSVersion $Win32BIOS.ReleaseDate
-    Write-Host -ForegroundColor DarkGray "BaseBoard Product:" $Win32BaseBoard.Product
-    if (($Win32ComputerSystem.SystemSKUNumber) -and ($Win32ComputerSystem.SystemSKUNumber -ne 'None')) {
-        Write-Host -ForegroundColor DarkGray "ComputerSystem SystemSKUNumber:" $Win32ComputerSystem.SystemSKUNumber
+    #Write-Host -ForegroundColor DarkGray 'SystemFamily:' $classWin32ComputerSystem.SystemFamily
+    Write-Host -ForegroundColor DarkGray "BIOS:" $classWin32BIOS.SMBIOSBIOSVersion $classWin32BIOS.ReleaseDate
+    Write-Host -ForegroundColor DarkGray "BaseBoard Product:" $BaseBoardProduct
+    if (($classWin32ComputerSystem.SystemSKUNumber) -and ($classWin32ComputerSystem.SystemSKUNumber -ne 'None')) {
+        Write-Host -ForegroundColor DarkGray "ComputerSystem SystemSKUNumber:" $classWin32ComputerSystem.SystemSKUNumber
     }
 
     # Win32_Processor
-    foreach ($Item in $Win32Processor) {
+    foreach ($Item in $classWin32Processor) {
         Write-Host -ForegroundColor DarkGray "Processor:" $($Item.Name) "[$($Item.NumberOfLogicalProcessors) Logical]"
     }
-    $TotalMemory = $([math]::Round($Win32ComputerSystem.TotalPhysicalMemory / 1024 / 1024 / 1024))
+    $TotalMemory = $([math]::Round($classWin32ComputerSystem.TotalPhysicalMemory / 1024 / 1024 / 1024))
     Write-Host -ForegroundColor DarkGray "Memory:" $TotalMemory 'GB'
     if ($TotalMemory -lt 6) {
         Write-Warning "OSDCloud WinPE requires at least 6 GB of memory to function properly. Errors are expected."

@@ -65,7 +65,7 @@ function Initialize-OSDCloudDeploy {
 
     # Limit to matching Processor Architecture
     $ProcessorArchitecture = $env:PROCESSOR_ARCHITECTURE
-    $global:DeployOSDCloudOperatingSystems = Get-DeployOSDCloudOperatingSystems | Where-Object {$_.OSArchitecture -match "$ProcessorArchitecture"}
+    $global:DeployOSDCloudOperatingSystems = Get-DeployOSDCloudOperatingSystems | Where-Object { $_.OSArchitecture -match "$ProcessorArchitecture" }
 
     # Need to fail if no OS found for Architecture
     if (-not $global:DeployOSDCloudOperatingSystems) {
@@ -94,40 +94,45 @@ function Initialize-OSDCloudDeploy {
         FileName        : 26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-gb.esd
         FilePath        : http://dl.delivery.mp.microsoft.com/filestreamingservice/files/79a3f5e0-d04d-4689-a5d4-3ea35f8b189a/26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-gb.esd
     #>
-    $OperatingSystem        = $global:OSDCloudWorkflowSettingsOS.OperatingSystem.default
-    $OperatingSystemValues  = [array]$global:OSDCloudWorkflowSettingsOS.OperatingSystem.values
-    $OSActivation           = $global:OSDCloudWorkflowSettingsOS.OSActivation.default
-    $OSActivationValues     = [array]$global:OSDCloudWorkflowSettingsOS.OSActivation.values
-    $OSArchitecture         = $ProcessorArchitecture
-    $OSEdition              = $global:OSDCloudWorkflowSettingsOS.OSEdition.default
-    $OSEditionValues        = [array]$global:OSDCloudWorkflowSettingsOS.OSEdition.values
-    $OSEditionId            = ($OSEditionValues | Where-Object { $_.Edition -eq $OSEdition }).EditionId
-    $OSLanguageCode         = $global:OSDCloudWorkflowSettingsOS.OSLanguageCode.default
-    $OSLanguageCodeValues   = [array]$global:OSDCloudWorkflowSettingsOS.OSLanguageCode.values
-    $OSVersion              = ($global:OSDCloudWorkflowSettingsOS.OperatingSystem.default -split ' ')[2]
+    $OperatingSystem = $global:OSDCloudWorkflowSettingsOS.OperatingSystem.default
+    $OperatingSystemValues = [array]$global:OSDCloudWorkflowSettingsOS.OperatingSystem.values
+    $OSActivation = $global:OSDCloudWorkflowSettingsOS.OSActivation.default
+    $OSActivationValues = [array]$global:OSDCloudWorkflowSettingsOS.OSActivation.values
+    $OSArchitecture = $ProcessorArchitecture
+    $OSEdition = $global:OSDCloudWorkflowSettingsOS.OSEdition.default
+    $OSEditionValues = [array]$global:OSDCloudWorkflowSettingsOS.OSEdition.values
+    $OSEditionId = ($OSEditionValues | Where-Object { $_.Edition -eq $OSEdition }).EditionId
+    $OSLanguageCode = $global:OSDCloudWorkflowSettingsOS.OSLanguageCode.default
+    $OSLanguageCodeValues = [array]$global:OSDCloudWorkflowSettingsOS.OSLanguageCode.values
+    $OSVersion = ($global:OSDCloudWorkflowSettingsOS.OperatingSystem.default -split ' ')[2]
     #=================================================
     # OperatingSystemObject
     $OperatingSystemObject = $global:DeployOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
     if (-not $OperatingSystemObject) {
         throw "No Operating System found for OperatingSystem: $OperatingSystem, OSActivation: $OSActivation, OSLanguageCode: $OSLanguageCode. Please check your OSDCloud OperatingSystems."
     }
-    $OSName             = $OperatingSystemObject.OSName
-    $OSBuild            = $OperatingSystemObject.OSBuild
-    $OSBuildVersion     = $OperatingSystemObject.OSBuildVersion
-    $ImageFileName      = $OperatingSystemObject.FileName
-    $ImageFileUrl       = $OperatingSystemObject.FilePath
+    $OSName = $OperatingSystemObject.OSName
+    $OSBuild = $OperatingSystemObject.OSBuild
+    $OSBuildVersion = $OperatingSystemObject.OSBuildVersion
+    $ImageFileName = $OperatingSystemObject.FileName
+    $ImageFileUrl = $OperatingSystemObject.FilePath
     #=================================================
     # DriverPack
-    $ComputerManufacturer  = $global:OSDCloudDevice.ComputerManufacturer
-    switch ($ComputerManufacturer) {
+    $ComputerManufacturer = $global:OSDCloudDevice.ComputerManufacturer
+    $ComputerManufacturerAlias = $global:OSDCloudDevice.ComputerManufacturerAlias
+    $ComputerModel = $global:OSDCloudDevice.ComputerModel
+    $ComputerModelAlias = $global:OSDCloudDevice.ComputerModelAlias
+    $ComputerProductAlias = $global:OSDCloudDevice.ComputerProductAlias
+
+    switch ($ComputerManufacturerAlias) {
         'Dell' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' -and $_.Product -match $ComputerProductAlias }
         }
         'HP' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'HP' }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'HP' -and $_.Product -match $ComputerProductAlias }
         }
         'Lenovo' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Lenovo' }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Lenovo' -and $_.Product -match $ComputerProductAlias }
         }
         Default {
             $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
@@ -137,13 +142,11 @@ function Initialize-OSDCloudDeploy {
     # Remove Windows 10 DriverPacks
     $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
 
-    $ComputerModel = $global:OSDCloudDevice.ComputerModel
-    if ($ComputerModel -match 'Surface') {
+    if ($ComputerModelAlias -match 'Surface') {
         $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
     }
 
-    $ComputerProduct = $global:OSDCloudDevice.ComputerProduct
-    $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $ComputerProduct -OSVersion $OSName -OSReleaseID $OSVersion
+    $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $ComputerProductAlias -OSVersion $OSName -OSReleaseID $OSVersion
     if ($DriverPackObject) {
         $DriverPackName = $DriverPackObject.Name
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
@@ -152,37 +155,39 @@ function Initialize-OSDCloudDeploy {
     # Main
     $global:OSDCloudDeploy = $null
     $global:OSDCloudDeploy = [ordered]@{
-        ComputerManufacturer  = $ComputerManufacturer
-        ComputerModel         = $ComputerModel
-        ComputerProduct       = $ComputerProduct
-        DriverPackName        = $DriverPackName
-        DriverPackValues      = [array]$DriverPackValues
-        Flows                 = [array]$global:OSDCloudWorkflowTasks
-        Function              = $($MyInvocation.MyCommand.Name)
-        ImageFileName         = $ImageFileName
-        ImageFileUrl          = $ImageFileUrl
-        LaunchMethod          = 'OSDCloudWorkflow'
-        Module                = $($MyInvocation.MyCommand.Module.Name)
-        DeploymentDiskObject  = $DeploymentDiskObject
-        DriverPackObject      = $DriverPackObject
-        OperatingSystemObject = $OperatingSystemObject
-        OperatingSystem       = $OperatingSystem
-        OperatingSystemValues = $OperatingSystemValues
-        OSActivation          = $OSActivation
-        OSActivationValues    = $OSActivationValues
-        OSArchitecture        = $OSArchitecture
-        OSBuild               = $OSBuild
-        OSBuildVersion        = $OSBuildVersion
-        OSEdition             = $OSEdition
-        OSEditionId           = $OSEditionId
-        OSEditionValues       = $OSEditionValues
-        OSLanguageCode        = $OSLanguageCode
-        OSLanguageCodeValues  = $OSLanguageCodeValues
-        OSVersion             = $OSVersion
-        TimeStart             = $null
-        WorkflowName          = $WorkflowName
-        WorkflowTaskName      = $WorkflowTaskName
-        WorkflowTaskObject    = $WorkflowTaskObject
+        ComputerManufacturer      = $ComputerManufacturer
+        ComputerManufacturerAlias = $ComputerManufacturerAlias
+        ComputerModel             = $ComputerModel
+        ComputerModelAlias        = $ComputerModelAlias
+        ComputerProductAlias      = $ComputerProductAlias
+        DriverPackName            = $DriverPackName
+        DriverPackValues          = [array]$DriverPackValues
+        Flows                     = [array]$global:OSDCloudWorkflowTasks
+        Function                  = $($MyInvocation.MyCommand.Name)
+        ImageFileName             = $ImageFileName
+        ImageFileUrl              = $ImageFileUrl
+        LaunchMethod              = 'OSDCloudWorkflow'
+        Module                    = $($MyInvocation.MyCommand.Module.Name)
+        DeploymentDiskObject      = $DeploymentDiskObject
+        DriverPackObject          = $DriverPackObject
+        OperatingSystemObject     = $OperatingSystemObject
+        OperatingSystem           = $OperatingSystem
+        OperatingSystemValues     = $OperatingSystemValues
+        OSActivation              = $OSActivation
+        OSActivationValues        = $OSActivationValues
+        OSArchitecture            = $OSArchitecture
+        OSBuild                   = $OSBuild
+        OSBuildVersion            = $OSBuildVersion
+        OSEdition                 = $OSEdition
+        OSEditionId               = $OSEditionId
+        OSEditionValues           = $OSEditionValues
+        OSLanguageCode            = $OSLanguageCode
+        OSLanguageCodeValues      = $OSLanguageCodeValues
+        OSVersion                 = $OSVersion
+        TimeStart                 = $null
+        WorkflowName              = $WorkflowName
+        WorkflowTaskName          = $WorkflowTaskName
+        WorkflowTaskObject        = $WorkflowTaskObject
     }
     #=================================================
 }
