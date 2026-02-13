@@ -10,7 +10,7 @@ function step-preinstall-enablehighperformance {
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
-    if ($IsOnBattery -eq $true) {
+    if ($global:OSDCloudDevice.IsOnBattery -eq $true) {
         $classWin32Battery = (Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue | Select-Object -Property *)
         if ($classWin32Battery.BatteryStatus -eq 1) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Device has $($classWin32Battery.EstimatedChargeRemaining)% battery remaining"

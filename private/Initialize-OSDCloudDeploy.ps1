@@ -118,21 +118,19 @@ function Initialize-OSDCloudDeploy {
     $ImageFileUrl = $OperatingSystemObject.FilePath
     #=================================================
     # DriverPack
-    $ComputerManufacturer = $global:OSDCloudDevice.ComputerManufacturer
-    $ComputerManufacturerAlias = $global:OSDCloudDevice.ComputerManufacturerAlias
-    $ComputerModel = $global:OSDCloudDevice.ComputerModel
-    $ComputerModelAlias = $global:OSDCloudDevice.ComputerModelAlias
-    $ComputerProductAlias = $global:OSDCloudDevice.ComputerProductAlias
+    $OSDManufacturer = $global:OSDCloudDevice.OSDManufacturer
+    $OSDModel = $global:OSDCloudDevice.OSDModel
+    $OSDProduct = $global:OSDCloudDevice.OSDProduct
 
-    switch ($ComputerManufacturerAlias) {
+    switch ($OSDManufacturer) {
         'Dell' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' -and $_.Product -match $ComputerProductAlias }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' }
         }
         'HP' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'HP' -and $_.Product -match $ComputerProductAlias }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'HP' }
         }
         'Lenovo' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Lenovo' -and $_.Product -match $ComputerProductAlias }
+            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Lenovo' }
         }
         Default {
             $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
@@ -142,11 +140,11 @@ function Initialize-OSDCloudDeploy {
     # Remove Windows 10 DriverPacks
     $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
 
-    if ($ComputerModelAlias -match 'Surface') {
+    if ($OSDModel -match 'Surface') {
         $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
     }
 
-    $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $ComputerProductAlias -OSVersion $OSName -OSReleaseID $OSVersion
+    $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
     if ($DriverPackObject) {
         $DriverPackName = $DriverPackObject.Name
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
@@ -155,11 +153,6 @@ function Initialize-OSDCloudDeploy {
     # Main
     $global:OSDCloudDeploy = $null
     $global:OSDCloudDeploy = [ordered]@{
-        ComputerManufacturer      = $ComputerManufacturer
-        ComputerManufacturerAlias = $ComputerManufacturerAlias
-        ComputerModel             = $ComputerModel
-        ComputerModelAlias        = $ComputerModelAlias
-        ComputerProductAlias      = $ComputerProductAlias
         DriverPackName            = $DriverPackName
         DriverPackValues          = [array]$DriverPackValues
         Flows                     = [array]$global:OSDCloudWorkflowTasks

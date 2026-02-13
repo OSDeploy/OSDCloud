@@ -17,7 +17,7 @@ function step-drivers-msupdate {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] PowerShell 5.1 is required to run this step. Skip."
         return
     }
-    if (($IsVM -eq $true) -and ($global:OSDCloudDevice.ComputerManufacturerAlias -match 'Microsoft')) {
+    if (($IsVM -eq $true) -and ($global:OSDCloudDevice.OSDManufacturer -match 'Microsoft')) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Microsoft Update Drivers is not enabled for Microsoft Hyper-V. Skip."
         return
     }

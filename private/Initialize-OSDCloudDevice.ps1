@@ -48,52 +48,52 @@ function Initialize-OSDCloudDevice {
     $ComputerSystemSKU = $classCimComputerSystem.SystemSKUNumber
     $ComputerSystemFamily = $classWin32ComputerSystem.SystemFamily.Trim()
     $ComputerManufacturer = $classWin32ComputerSystem.Manufacturer.Trim()
-    $ComputerManufacturerAlias = $classWin32ComputerSystem.Manufacturer.Trim()
+    $OSDManufacturer = $classWin32ComputerSystem.Manufacturer.Trim()
     $ComputerModel = $classWin32ComputerSystem.Model.Trim()
-    $ComputerModelAlias = $classWin32ComputerSystem.Model.Trim()
-    $ComputerProduct = $classWin32ComputerSystemProduct.Version.Trim()
-    $ComputerProductAlias = $classWin32ComputerSystemProduct.Version.Trim()
+    $OSDModel = $classWin32ComputerSystem.Model.Trim()
+    $ComputerSystemProduct = $classWin32ComputerSystemProduct.Version.Trim()
+    $OSDProduct = $classWin32ComputerSystemProduct.Version.Trim()
     #=================================================
     # Normalize Aliases for Known Manufacturers and Models
-    switch -Regex ($ComputerManufacturerAlias) {
+    switch -Regex ($OSDManufacturer) {
         'Dell' {
-            $ComputerManufacturerAlias = 'Dell'
-            $ComputerProductAlias = $ComputerSystemSKU
+            $OSDManufacturer = 'Dell'
+            $OSDProduct = $ComputerSystemSKU
             break
         }
         'Lenovo' {
-            $ComputerManufacturerAlias = 'Lenovo'
-            $ComputerModelAlias = $ComputerProduct
+            $OSDManufacturer = 'Lenovo'
+            $OSDModel = $ComputerSystemProduct
             if (-not [string]::IsNullOrWhiteSpace($ComputerModel) -and $ComputerModel.Length -ge 4) {
-                $ComputerProductAlias = $ComputerModel.Substring(0, 4)
+                $OSDProduct = $ComputerModel.Substring(0, 4)
             }
             else {
-                $ComputerProductAlias = $ComputerModel
+                $OSDProduct = $ComputerModel
             }
             break
         }
         'Hewlett|Packard|^HP$' {
-            $ComputerManufacturerAlias = 'HP'
-            $ComputerProductAlias = $BaseBoardProduct
+            $OSDManufacturer = 'HP'
+            $OSDProduct = $BaseBoardProduct
             break
         }
         'Microsoft' {
-            $ComputerManufacturerAlias = 'Microsoft'
-            $ComputerProductAlias = $ComputerSystemSKU
+            $OSDManufacturer = 'Microsoft'
+            $OSDProduct = $ComputerSystemSKU
             break
         }
-        'Panasonic' { $ComputerManufacturerAlias = 'Panasonic'; break }
-        'to be filled' { $ComputerManufacturerAlias = 'OEM'; break }
+        'Panasonic' { $OSDManufacturer = 'Panasonic'; break }
+        'to be filled' { $OSDManufacturer = 'OEM'; break }
     }
 
-    if ([string]::IsNullOrWhiteSpace($ComputerManufacturerAlias) -or $ComputerManufacturerAlias -match '^to be filled$') {
-        $ComputerManufacturerAlias = 'OEM'
+    if ([string]::IsNullOrWhiteSpace($OSDManufacturer) -or $OSDManufacturer -match '^to be filled$') {
+        $OSDManufacturer = 'OEM'
     }
-    if ([string]::IsNullOrWhiteSpace($ComputerModelAlias) -or $ComputerModelAlias -match '^to be filled$') {
-        $ComputerModelAlias = 'OEM'
+    if ([string]::IsNullOrWhiteSpace($OSDModel) -or $OSDModel -match '^to be filled$') {
+        $OSDModel = 'OEM'
     }
-    if ([string]::IsNullOrWhiteSpace($ComputerProductAlias)) {
-        $ComputerProductAlias = 'Unknown'
+    if ([string]::IsNullOrWhiteSpace($OSDProduct)) {
+        $OSDProduct = 'Unknown'
     }
     #=================================================
     # Disk Information
@@ -107,6 +107,10 @@ function Initialize-OSDCloudDevice {
     # Win32_Environment
     $Win32Environment = Get-CimInstance -ClassName Win32_Environment | Select-Object -Property * | Sort-Object Name
     $Win32Environment | Where-Object { $_.SystemVariable -eq $true } | Select-Object -Property Name, VariableValue | Out-File $WmiLogsPath\Win32_Environment-System.txt -Width 4096 -Force
+    #=================================================
+    # Win32_Keyboard
+    $classWin32Keyboard = Get-CimInstance -ClassName Win32_Keyboard | Select-Object -Property *
+    $classWin32Keyboard | Out-File $WmiLogsPath\Win32_Keyboard.txt -Width 4096 -Force
     #=================================================
     # Win32_NetworkAdapter
     $Win32NetworkAdapter = Get-CimInstance -ClassName Win32_NetworkAdapter | Select-Object -Property *
@@ -140,8 +144,19 @@ function Initialize-OSDCloudDevice {
     $Win32OperatingSystem | Out-File $WmiLogsPath\Win32_OperatingSystem.txt -Width 4096 -Force
     #=================================================
     # Win32_PnPEntityError
-    $Win32PnPEntityError = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object -Property * | Where-Object { $_.Status -eq 'Error' } | Sort-Object HardwareID -Unique | Sort-Object Name
+    $classWin32PnPEntity = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object -Property *
+    $Win32PnPEntityError = $classWin32PnPEntity | Where-Object { $_.Status -eq 'Error' } | Sort-Object HardwareID -Unique | Sort-Object Name
     $Win32PnPEntityError | Out-File $WmiLogsPath\Win32_PnPEntityError.txt -Width 4096 -Force
+
+    $SystemFirmwareDevice = $classWin32PnPEntity | Where-Object ClassGuid -eq '{f2e7dd72-6468-4e36-b6f1-6488f42c1b52}' | Where-Object Caption -match 'System'
+    if ($SystemFirmwareDevice) {
+        $SystemFirmwareResource = Convert-PNPDeviceIDtoGuid -PNPDeviceID $SystemFirmwareDevice.PNPDeviceID
+        $SystemFirmwareHardwareId = $SystemFirmwareResource -replace '[{}]',''
+    }
+    else {
+        $SystemFirmwareResource = $null
+        $SystemFirmwareHardwareId = $null
+    }
     #=================================================
     # Win32_Processor
     $Win32Processor = Get-CimInstance -ClassName Win32_Processor | Select-Object -Property *
@@ -202,7 +217,7 @@ function Initialize-OSDCloudDevice {
     $vmPattern = '(?i)(virtual machine|vmware|hyper-v|hyperv|kvm|qemu|xen|virtualbox|bhyve|parallels|gce|google compute engine|amazon ec2|azure|bochs|openstack|ovirt|rhev|kubevirt|ahv|nutanix)'
     [System.Boolean]$IsVM = ($vmDetectionSources -join ' ') -match $vmPattern
     #=================================================
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerProductAlias: $ComputerProductAlias"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDProduct: $OSDProduct"
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerSystemSKU: $($classWin32ComputerSystem.SystemSKUNumber)"
     #=================================================
     # ChassisType
@@ -249,18 +264,18 @@ function Initialize-OSDCloudDevice {
     #=================================================
     $global:OSDCloudDevice = $null
     $global:OSDCloudDevice = [ordered]@{
+        OSDManufacturer           = [System.String]$OSDManufacturer
+        OSDModel                  = [System.String]$OSDModel
+        OSDProduct                = [System.String]$OSDProduct
         ComputerName              = $classWin32ComputerSystem.Name
         BaseBoardProduct          = [System.String]$BaseBoardProduct
         BiosReleaseDate           = [System.String]$classWin32BIOS.ReleaseDate
         BiosVersion               = [System.String]$classWin32BIOS.SMBIOSBIOSVersion
         ChassisType               = [System.String]$ChassisType
         ComputerManufacturer      = [System.String]$ComputerManufacturer
-        ComputerManufacturerAlias = [System.String]$ComputerManufacturerAlias
         ComputerModel             = [System.String]$ComputerModel
-        ComputerModelAlias        = [System.String]$ComputerModelAlias
-        ComputerProduct           = [System.String]$ComputerProduct
-        ComputerProductAlias      = [System.String]$ComputerProductAlias
         ComputerSystemFamily      = [System.String]$ComputerSystemFamily
+        ComputerSystemProduct     = [System.String]$ComputerSystemProduct
         ComputerSystemSKU         = [System.String]$ComputerSystemSKU
         IsAutopilotReady          = [System.Boolean]$false
         IsDesktop                 = [System.Boolean]$IsDesktop
@@ -272,6 +287,8 @@ function Initialize-OSDCloudDevice {
         IsTpmReady                = [System.Boolean]$false
         IsVM                      = [System.Boolean]$IsVM
         IsUEFI                    = [System.Boolean]$IsUEFI
+        keyboardLayout            = [System.String]$classWin32Keyboard.Layout
+        keyboardName              = [System.String]$classWin32Keyboard.Name
         NetGateways               = $NetGateways
         NetIPAddress              = $NetIPAddress
         NetMacAddress             = $NetMacAddress
@@ -279,6 +296,9 @@ function Initialize-OSDCloudDevice {
         OSVersion                 = $Win32OperatingSystem.Version
         ProcessorArchitecture     = $env:PROCESSOR_ARCHITECTURE
         SerialNumber              = ($classWin32BIOS.SerialNumber).Trim()
+        # SystemFirmwareDevice      = $SystemFirmwareDevice
+        # SystemFirmwareResource    = $SystemFirmwareResource
+        SystemFirmwareHardwareId  = $SystemFirmwareHardwareId
         TimeZone                  = $Win32TimeZone.StandardName
         TotalPhysicalMemoryGB     = $TotalPhysicalMemoryGB
         TpmIsActivated            = $DeviceTpmIsActivated

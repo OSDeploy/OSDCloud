@@ -42,14 +42,14 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Manufacturer" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="deviceManufacturerText" x:Name="deviceManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="deviceOSDManufacturerText" x:Name="deviceOSDManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
                 <TextBlock Grid.Row="0" Grid.Column="3" Text="Model" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="0" Grid.Column="4" Text="deviceModelText" x:Name="deviceModelText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="deviceOSDModelText" x:Name="deviceOSDModelText" Foreground="DarkGray" FontWeight="Bold" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Product" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceProductText" x:Name="deviceProductText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceOSDProductText" x:Name="deviceOSDProductText" Foreground="DarkGray" FontWeight="Bold" />
                 <TextBlock Grid.Row="1" Grid.Column="3" Text="System SKU" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="1" Grid.Column="4" Text="deviceSystemSKUText" x:Name="deviceSystemSKUText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="1" Grid.Column="4" Text="deviceComputerSystemSKUText" x:Name="deviceComputerSystemSKUText" Foreground="DarkGray" FontWeight="Bold" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Serial Number" Margin="8,0" FontWeight="Bold" />
                 <TextBlock Grid.Row="2" Grid.Column="1" Text="deviceSerialNumberText" x:Name="deviceSerialNumberText" Foreground="Blue" FontWeight="Bold"/>

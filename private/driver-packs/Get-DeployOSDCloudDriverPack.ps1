@@ -12,7 +12,7 @@ function Get-DeployOSDCloudDriverPack {
     [CmdletBinding()]
     param (
         [System.String]
-        $Product = $global:OSDCloudDevice.ComputerProductAlias,
+        $Product = $global:OSDCloudDevice.OSDProduct,
 
         [System.String]
         [ValidateSet('Windows 11','Windows 10')]
