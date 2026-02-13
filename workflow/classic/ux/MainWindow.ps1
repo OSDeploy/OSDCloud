@@ -536,7 +536,7 @@ $formMainWindowControlStartButton.add_Click(
 #region Customizations
 #TODO fix the Version since this is not a Module function it doesn't give a version
 $ModuleVersion = $($MyInvocation.MyCommand.Module.Version)
-$formMainWindow.Title = "OSDCloud on $($global:OSDCloudDeploy.ComputerManufacturer) $($global:OSDCloudDeploy.ComputerModel)"
+$formMainWindow.Title = "OSDCloud on $($global:OSDCloudDevice.ComputerManufacturerAlias) $($global:OSDCloudDevice.ComputerModelAlias)"
 #endregion
 #================================================
 #region Branding
