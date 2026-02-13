@@ -1,7 +1,7 @@
 {
   "OperatingSystem": {
     "default": "Windows 11 25H2",
-    "values": ["Windows 11 25H2", "Windows 11 24H2", "Windows 11 23H2"]
+    "values": ["Windows 11 25H2"]
   },
   "OSActivation": {
     "default": "Retail",
@@ -15,12 +15,32 @@
         "EditionId": "Core"
       },
       {
+        "Edition": "Home N",
+        "EditionId": "CoreN"
+      },
+      {
+        "Edition": "Education",
+        "EditionId": "Education"
+      },
+      {
+        "Edition": "Education N",
+        "EditionId": "EducationN"
+      },
+      {
         "Edition": "Pro",
         "EditionId": "Professional"
       },
       {
+        "Edition": "Pro N",
+        "EditionId": "ProfessionalN"
+      },
+      {
         "Edition": "Enterprise",
         "EditionId": "Enterprise"
+      },
+      {
+        "Edition": "Enterprise N",
+        "EditionId": "EnterpriseN"
       }
     ]
   },
