@@ -94,17 +94,17 @@ function Initialize-OSDCloudDeploy {
         FileName        : 26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-gb.esd
         FilePath        : http://dl.delivery.mp.microsoft.com/filestreamingservice/files/79a3f5e0-d04d-4689-a5d4-3ea35f8b189a/26200.7462.251207-0044.25h2_ge_release_svc_refresh_CLIENTCONSUMER_RET_x64FRE_en-gb.esd
     #>
-    $OperatingSystem        = $global:OSDCloudWorkflowSettingsOS."OperatingSystem.default"
-    $OperatingSystemValues  = [array]$global:OSDCloudWorkflowSettingsOS."OperatingSystem.values"
-    $OSActivation           = $global:OSDCloudWorkflowSettingsOS."OSActivation.default"
-    $OSActivationValues     = [array]$global:OSDCloudWorkflowSettingsOS."OSActivation.values"
+    $OperatingSystem        = $global:OSDCloudWorkflowSettingsOS.OperatingSystem.default
+    $OperatingSystemValues  = [array]$global:OSDCloudWorkflowSettingsOS.OperatingSystem.values
+    $OSActivation           = $global:OSDCloudWorkflowSettingsOS.OSActivation.default
+    $OSActivationValues     = [array]$global:OSDCloudWorkflowSettingsOS.OSActivation.values
     $OSArchitecture         = $ProcessorArchitecture
-    $OSEdition              = $global:OSDCloudWorkflowSettingsOS."OSEdition.default"
-    $OSEditionId            = $global:OSDCloudWorkflowSettingsOS."OSEditionId.default"
-    $OSEditionValues        = [array]$global:OSDCloudWorkflowSettingsOS."OSEdition.values"
-    $OSLanguageCode         = $global:OSDCloudWorkflowSettingsOS."OSLanguageCode.default"
-    $OSLanguageCodeValues   = [array]$global:OSDCloudWorkflowSettingsOS."OSLanguageCode.values"
-    $OSVersion              = ($global:OSDCloudWorkflowSettingsOS."OperatingSystem.default" -split ' ')[2]
+    $OSEdition              = $global:OSDCloudWorkflowSettingsOS.OSEdition.default
+    $OSEditionValues        = [array]$global:OSDCloudWorkflowSettingsOS.OSEdition.values
+    $OSEditionId            = ($OSEditionValues | Where-Object { $_.Edition -eq $OSEdition }).EditionId
+    $OSLanguageCode         = $global:OSDCloudWorkflowSettingsOS.OSLanguageCode.default
+    $OSLanguageCodeValues   = [array]$global:OSDCloudWorkflowSettingsOS.OSLanguageCode.values
+    $OSVersion              = ($global:OSDCloudWorkflowSettingsOS.OperatingSystem.default -split ' ')[2]
     #=================================================
     # OperatingSystemObject
     $OperatingSystemObject = $global:DeployOSDCloudOperatingSystems | Where-Object { $_.OperatingSystem -match $OperatingSystem } | Where-Object { $_.OSActivation -eq $OSActivation } | Where-Object { $_.OSLanguageCode -eq $OSLanguageCode }
