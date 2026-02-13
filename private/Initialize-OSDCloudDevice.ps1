@@ -273,12 +273,12 @@ function Initialize-OSDCloudDevice {
         BaseBoardProduct          = [System.String]$BaseBoardProduct
         BiosReleaseDate           = [System.String]$classWin32BIOS.ReleaseDate
         BiosVersion               = [System.String]$classWin32BIOS.SMBIOSBIOSVersion
-        ChassisType               = [System.String]$ChassisType
         ComputerManufacturer      = [System.String]$ComputerManufacturer
         ComputerModel             = [System.String]$ComputerModel
         ComputerSystemFamily      = [System.String]$ComputerSystemFamily
         ComputerSystemProduct     = [System.String]$ComputerSystemProduct
         ComputerSystemSKU         = [System.String]$ComputerSystemSKU
+        ComputerSystemType        = [System.String]$ComputerSystemType
         IsAutopilotReady          = [System.Boolean]$false
         IsDesktop                 = [System.Boolean]$IsDesktop
         IsLaptop                  = [System.Boolean]$IsLaptop

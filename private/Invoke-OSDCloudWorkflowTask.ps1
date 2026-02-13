@@ -105,7 +105,7 @@ function Invoke-OSDCloudWorkflowTask {
         deviceSystemFamily         = $OSDCloudDevice.ComputerSystemFamily
         deviceSystemProduct        = $OSDCloudDevice.ComputerSystemProduct
         deviceSystemSKU            = $OSDCloudDevice.ComputerSystemSKU
-        deviceSystemType           = $OSDCloudDevice.ChassisType
+        deviceSystemType           = $OSDCloudDevice.ComputerSystemType
         biosReleaseDate            = $OSDCloudDevice.BiosReleaseDate
         biosSMBIOSBIOSVersion      = $OSDCloudDevice.BiosSMBIOSBIOSVersion
         keyboardName               = $OSDCloudDevice.KeyboardName
