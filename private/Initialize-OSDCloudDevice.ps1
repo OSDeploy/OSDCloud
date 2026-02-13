@@ -150,10 +150,12 @@ function Initialize-OSDCloudDevice {
 
     $SystemFirmwareDevice = $classWin32PnPEntity | Where-Object ClassGuid -eq '{f2e7dd72-6468-4e36-b6f1-6488f42c1b52}' | Where-Object Caption -match 'System'
     if ($SystemFirmwareDevice) {
-        $SystemFirmwareResource = Convert-PNPDeviceIDtoGuid -PNPDeviceID $SystemFirmwareDevice.PNPDeviceID
+        $GuidPattern = '\{?(([0-9a-f]){8}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){12})\}?'
+        $SystemFirmwareResource = ($SystemFirmwareDevice.PNPDeviceID | Select-String -Pattern $GuidPattern -AllMatches | Select-Object -ExpandProperty Matches | Select-Object -ExpandProperty Value)
         $SystemFirmwareHardwareId = $SystemFirmwareResource -replace '[{}]',''
     }
     else {
+        $SystemFirmwareDevice = $null
         $SystemFirmwareResource = $null
         $SystemFirmwareHardwareId = $null
     }
