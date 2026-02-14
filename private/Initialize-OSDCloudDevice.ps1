@@ -228,14 +228,14 @@ function Initialize-OSDCloudDevice {
     $IsServer = $false
     $IsSFF = $false
     $IsTablet = $false
-    $ChassisType = $Win32SystemEnclosure | ForEach-Object {
+    $ComputerSystemType = $Win32SystemEnclosure | ForEach-Object {
         if ($_.ChassisTypes[0] -in "8", "9", "10", "11", "12", "14", "18", "21") { $IsLaptop = $true; "Laptop" }
         if ($_.ChassisTypes[0] -in "3", "4", "5", "6", "7", "15", "16") { $IsDesktop = $true; "Desktop" }
         if ($_.ChassisTypes[0] -in "23") { $IsServer = $true; "Server" }
         if ($_.ChassisTypes[0] -in "34", "35", "36") { $IsSFF = $true; "Small Form Factor" }
         if ($_.ChassisTypes[0] -in "13", "31", "32", "30") { $IsTablet = $true; "Tablet" }
     }
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ChassisType: $($ChassisType)"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerSystemType: $($ComputerSystemType)"
     #=================================================
     # TotalPhysicalMemoryGB
     $TotalPhysicalMemoryGB = [math]::Round(
