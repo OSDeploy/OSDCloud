@@ -22,8 +22,8 @@ function step-install-bcdboot {
         $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
     }
     else {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] C:\Windows\System32\bcdboot.exe C:\Windows /c /bootex /v"
-        $BCDBootOutput = & C:\Windows\System32\bcdboot.exe C:\Windows /c /v
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] C:\Windows\System32\bcdboot.exe C:\Windows /c /bootex"
+        $BCDBootOutput = & C:\Windows\System32\bcdboot.exe C:\Windows /c /bootex
         $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
     }
     Pop-Location
