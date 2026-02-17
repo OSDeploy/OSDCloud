@@ -17,6 +17,22 @@ function Initialize-OSDCloudDevice {
         New-Item -Path $WmiLogsPath -ItemType Directory -Force | Out-Null
     }
     #=================================================
+    # Win32_BIOS
+    $classWin32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
+    [System.String]$SerialNumber = ($classWin32BIOS.SerialNumber).Trim()
+    
+    <#
+    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+    if ($USBDrive) {
+        $WmiLogsPath = "$($USBDrive.DriveLetter):\OSDCloudLogs\$SerialNumber\osdcloud-logs-wmi"
+        if (-not (Test-Path -Path $WmiLogsPath)) {
+            New-Item -Path $WmiLogsPath -ItemType Directory -Force | Out-Null
+        }
+    }
+    #>
+
+    $classWin32BIOS | Out-File $WmiLogsPath\Win32_BIOS.txt -Width 4096 -Force
+    #=================================================
     # Win32_BaseBoard
     $classWin32BaseBoard = Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property *
     $classWin32BaseBoard | Out-File $WmiLogsPath\Win32_BaseBoard.txt -Width 4096 -Force
@@ -26,10 +42,6 @@ function Initialize-OSDCloudDevice {
     if ($classWin32Battery) {
         $classWin32Battery | Out-File $WmiLogsPath\Win32_Battery.txt -Width 4096 -Force
     }
-    #=================================================
-    # Win32_BIOS
-    $classWin32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
-    $classWin32BIOS | Out-File $WmiLogsPath\Win32_BIOS.txt -Width 4096 -Force
     #=================================================
     # CIM_ComputerSystem
     $classCimComputerSystem = Get-CimInstance -ClassName Cim_ComputerSystem | Select-Object -Property *
@@ -262,6 +274,36 @@ function Initialize-OSDCloudDevice {
     }
     catch {}
     #=================================================
+    $HardwareHash = $null
+    <#
+    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+
+    if ((Get-Command -Name 'oa3tool.exe' -ErrorAction SilentlyContinue) -and (Test-Path "$env:SystemDrive\OA30\input.xml") -and (Test-Path "$env:SystemDrive\OA30\OA3.cfg")) {
+        # Write-Host -ForegroundColor Green "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Building OA3 Hardware Hash to $env:SystemDrive\OA30\OA3.xml"
+        $null = oa3tool.exe /Report /ConfigFile=$env:SystemDrive\OA30\OA3.cfg /LogTrace=$env:SystemDrive\OA30\OA3Report.xml /NoKeyCheck
+        if (Test-Path "$env:SystemDrive\OA30\OA3.xml") {
+            $HardwareHash = Get-Content "$env:SystemDrive\OA30\OA3.xml" -Raw | Select-String -Pattern '<HardwareHash>(.*?)</HardwareHash>' -AllMatches | ForEach-Object { $_.Matches } | ForEach-Object { $_.Groups[1].Value }
+            if ($HardwareHash) {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OA3 results output to $env:SystemDrive\OA30"
+                $null = oa3tool.exe /DecodeHwHash="$HardwareHash" /LogTrace=$env:SystemDrive\OA30\DecodeHwHash.xml
+                $null = oa3tool.exe /ValidateHwHash="$HardwareHash" /LogTrace=$env:SystemDrive\OA30\ValidateHwHash.xml
+
+                if ($USBDrive) {
+                    $USBPath = "$($USBDrive.DriveLetter):\OSDCloudLogs\$SerialNumber\OA30"
+                    if (-not (Test-Path -Path $USBPath)) {
+                        New-Item -Path $USBPath -ItemType Directory -Force | Out-Null
+                    }
+                    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OA3 results copied to $USBPath"
+                    Copy-Item -Path "$env:SystemDrive\OA30\OA3.xml" -Destination $USBPath -Force -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$env:SystemDrive\OA30\OA3Report.xml" -Destination $USBPath -Force -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$env:SystemDrive\OA30\DecodeHwHash.xml" -Destination $USBPath -Force -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$env:SystemDrive\OA30\ValidateHwHash.xml" -Destination $USBPath -Force -ErrorAction SilentlyContinue
+                }
+            }
+        }
+    }
+    #>
+    #=================================================
     #   Pass Variables to OSDCloudDevice
     #=================================================
     $global:OSDCloudDevice = $null
@@ -279,6 +321,7 @@ function Initialize-OSDCloudDevice {
         ComputerSystemProduct     = [System.String]$ComputerSystemProduct
         ComputerSystemSKU         = [System.String]$ComputerSystemSKU
         ComputerSystemType        = [System.String]$ComputerSystemType
+        HardwareHash              = [System.String]$HardwareHash
         IsAutopilotReady          = [System.Boolean]$false
         IsDesktop                 = [System.Boolean]$IsDesktop
         IsLaptop                  = [System.Boolean]$IsLaptop
@@ -289,15 +332,15 @@ function Initialize-OSDCloudDevice {
         IsTpmReady                = [System.Boolean]$false
         IsVM                      = [System.Boolean]$IsVM
         IsUEFI                    = [System.Boolean]$IsUEFI
-        keyboardLayout            = [System.String]$classWin32Keyboard.Layout
-        keyboardName              = [System.String]$classWin32Keyboard.Name
+        KeyboardLayout            = [System.String]$classWin32Keyboard.Layout
+        KeyboardName              = [System.String]$classWin32Keyboard.Name
         NetGateways               = $NetGateways
         NetIPAddress              = $NetIPAddress
         NetMacAddress             = $NetMacAddress
         OSArchitecture            = $Win32OperatingSystem.OSArchitecture
         OSVersion                 = $Win32OperatingSystem.Version
         ProcessorArchitecture     = $env:PROCESSOR_ARCHITECTURE
-        SerialNumber              = ($classWin32BIOS.SerialNumber).Trim()
+        SerialNumber              = $SerialNumber
         # SystemFirmwareDevice      = $SystemFirmwareDevice
         # SystemFirmwareResource    = $SystemFirmwareResource
         SystemFirmwareHardwareId  = $SystemFirmwareHardwareId
@@ -311,6 +354,15 @@ function Initialize-OSDCloudDevice {
         TpmSpecVersion            = $DeviceTpmSpecVersion
         UUID                      = $classWin32ComputerSystemProduct.UUID
     }
+    <#
+    if ($USBDrive) {
+        $USBPath = "$($USBDrive.DriveLetter):\OSDCloudLogs\$SerialNumber"
+        if (-not (Test-Path -Path $USBPath)) {
+            New-Item -Path $USBPath -ItemType Directory -Force | Out-Null
+        }
+        $global:OSDCloudDevice | ConvertTo-Json -Depth 10 | Out-File "$USBPath\OSDCloudDevice.json" -Force -Encoding UTF8
+    }
+    #>
     #=================================================
     if ($null -eq $Win32Tpm) {
         Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TPM is not supported on this device."
