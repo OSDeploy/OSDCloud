@@ -8,17 +8,17 @@ param()
 Add-Type -AssemblyName PresentationCore, PresentationFramework, WindowsBase
 #================================================
 # Variables
-$deviceBiosVersion = $global:OSDCloudDevice.BiosVersion
 $deviceBiosReleaseDate = $global:OSDCloudDevice.BiosReleaseDate
-$deviceComputerManufacturer = $global:OSDCloudDevice.ComputerManufacturer
-$deviceUUID = $global:OSDCloudDevice.UUID
-$deviceComputerModel = $global:OSDCloudDevice.ComputerModel
-$deviceComputerProduct = $global:OSDCloudDevice.ComputerProduct
-$deviceComputerSystemSKUNumber = $global:OSDCloudDevice.ComputerSystemSKUNumber
-$deviceSerialNumber = $global:OSDCloudDevice.SerialNumber
-$getOSDCloudModuleVersion = Get-OSDCloudModuleVersion
+$deviceBiosVersion = $global:OSDCloudDevice.BiosVersion
+$deviceOSDManufacturer = $global:OSDCloudDevice.OSDManufacturer
+$deviceOSDModel = $global:OSDCloudDevice.OSDModel
+$deviceOSDProduct = $global:OSDCloudDevice.OSDProduct
+$deviceComputerSystemSKU = $global:OSDCloudDevice.ComputerSystemSKU
 $deviceIsAutopilotReady = $global:OSDCloudDevice.IsAutopilotReady
 $deviceIsTPMReady = $global:OSDCloudDevice.IsTPMReady
+$deviceSerialNumber = $global:OSDCloudDevice.SerialNumber
+$deviceUUID = $global:OSDCloudDevice.UUID
+$getOSDCloudModuleVersion = Get-OSDCloudModuleVersion
 #================================================
 # XAML
 $xamlfile = Get-Item -Path "$PSScriptRoot\MainWindow.xaml"
@@ -332,18 +332,18 @@ else {
 }
 #================================================
 # Other Settings
-$deviceBiosVersionText = $window.FindName("deviceBiosVersionText")
-$deviceBiosVersionText.Text = $deviceBiosVersion
 $deviceBiosReleaseDateText = $window.FindName("deviceBiosReleaseDateText")
 $deviceBiosReleaseDateText.Text = $deviceBiosReleaseDate
-$deviceManufacturerText = $window.FindName("deviceManufacturerText")
-$deviceManufacturerText.Text = $deviceComputerManufacturer
-$deviceModelText = $window.FindName("deviceModelText")
-$deviceModelText.Text = $deviceComputerModel
-$deviceProductText = $window.FindName("deviceProductText")
-$deviceProductText.Text = $deviceComputerProduct
-$deviceSystemSKUText = $window.FindName("deviceSystemSKUText")
-$deviceSystemSKUText.Text = $deviceComputerSystemSKUNumber
+$deviceBiosVersionText = $window.FindName("deviceBiosVersionText")
+$deviceBiosVersionText.Text = $deviceBiosVersion
+$deviceOSDManufacturerText = $window.FindName("deviceOSDManufacturerText")
+$deviceOSDManufacturerText.Text = $deviceOSDManufacturer
+$deviceOSDModelText = $window.FindName("deviceOSDModelText")
+$deviceOSDModelText.Text = $deviceOSDModel
+$deviceOSDProductText = $window.FindName("deviceOSDProductText")
+$deviceOSDProductText.Text = $deviceOSDProduct
+$deviceComputerSystemSKUText = $window.FindName("deviceComputerSystemSKUText")
+$deviceComputerSystemSKUText.Text = $deviceComputerSystemSKU
 $deviceSerialNumberText = $window.FindName("deviceSerialNumberText")
 $deviceSerialNumberText.Text = $deviceSerialNumber
 $deviceIsAutopilotReadyText = $window.FindName("deviceIsAutopilotReadyText")

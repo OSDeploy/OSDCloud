@@ -17,83 +17,95 @@ function Initialize-OSDCloudDevice {
         New-Item -Path $WmiLogsPath -ItemType Directory -Force | Out-Null
     }
     #=================================================
+    # Win32_BIOS
+    $classWin32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
+    [System.String]$SerialNumber = ($classWin32BIOS.SerialNumber).Trim()
+    
+    <#
+    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+    if ($USBDrive) {
+        $WmiLogsPath = "$($USBDrive.DriveLetter):\OSDCloudLogs\$SerialNumber\osdcloud-logs-wmi"
+        if (-not (Test-Path -Path $WmiLogsPath)) {
+            New-Item -Path $WmiLogsPath -ItemType Directory -Force | Out-Null
+        }
+    }
+    #>
+
+    $classWin32BIOS | Out-File $WmiLogsPath\Win32_BIOS.txt -Width 4096 -Force
+    #=================================================
     # Win32_BaseBoard
-    $Win32BaseBoard = Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property *
-    $Win32BaseBoard | Out-File $WmiLogsPath\Win32_BaseBoard.txt -Width 4096 -Force
+    $classWin32BaseBoard = Get-CimInstance -ClassName Win32_BaseBoard | Select-Object -Property *
+    $classWin32BaseBoard | Out-File $WmiLogsPath\Win32_BaseBoard.txt -Width 4096 -Force
     #=================================================
     # Win32_Battery
-    $Win32Battery = Get-CimInstance -ClassName Win32_Battery | Select-Object -Property *
-    if ($Win32Battery) {
-        $Win32Battery | Out-File $WmiLogsPath\Win32_Battery.txt -Width 4096 -Force
+    $classWin32Battery = Get-CimInstance -ClassName Win32_Battery | Select-Object -Property *
+    if ($classWin32Battery) {
+        $classWin32Battery | Out-File $WmiLogsPath\Win32_Battery.txt -Width 4096 -Force
     }
-    #=================================================
-    # Win32_BIOS
-    $Win32BIOS = Get-CimInstance -ClassName Win32_BIOS | Select-Object -Property *
-    $Win32BIOS | Out-File $WmiLogsPath\Win32_BIOS.txt -Width 4096 -Force
     #=================================================
     # CIM_ComputerSystem
-    $CimComputerSystem = Get-CimInstance -ClassName Cim_ComputerSystem | Select-Object -Property *
-    $CimComputerSystem | Out-File $WmiLogsPath\Cim_ComputerSystem.txt -Width 4096 -Force
+    $classCimComputerSystem = Get-CimInstance -ClassName Cim_ComputerSystem | Select-Object -Property *
+    $classCimComputerSystem | Out-File $WmiLogsPath\Cim_ComputerSystem.txt -Width 4096 -Force
     #=================================================
     # Win32_ComputerSystem
-    $Win32ComputerSystem = Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -Property *
-    $Win32ComputerSystem | Out-File $WmiLogsPath\Win32_ComputerSystem.txt -Width 4096 -Force
-
-    $ComputerManufacturer = ($Win32ComputerSystem.Manufacturer).Trim()
-    # Normalize manufacturer names for consistency
-    # Vendors sometimes use variations (e.g., Dell vs Dell Inc., HP vs Hewlett Packard)
-    switch -Regex ($ComputerManufacturer) {
-        'Dell' { $ComputerManufacturer = 'Dell'; break }
-        'Lenovo' { $ComputerManufacturer = 'Lenovo'; break }
-        'Hewlett|Packard|^HP$' { $ComputerManufacturer = 'HP'; break }
-        'Microsoft' { $ComputerManufacturer = 'Microsoft'; break }
-        'Panasonic' { $ComputerManufacturer = 'Panasonic'; break }
-        'to be filled' { $ComputerManufacturer = 'OEM'; break }
-        default {
-            if ([string]::IsNullOrWhiteSpace($ComputerManufacturer)) {
-                $ComputerManufacturer = 'OEM'
-            }
-        }
-    }
+    $classWin32ComputerSystem = Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -Property *
+    $classWin32ComputerSystem | Out-File $WmiLogsPath\Win32_ComputerSystem.txt -Width 4096 -Force
     #=================================================
     # Win32_ComputerSystemProduct
-    $Win32ComputerSystemProduct = Get-CimInstance -ClassName Win32_ComputerSystemProduct | Select-Object -Property *
-    $Win32ComputerSystemProduct | Out-File $WmiLogsPath\Win32_ComputerSystemProduct.txt -Width 4096 -Force
-
-    # Get model based on manufacturer
-    $ComputerModel = if ($ComputerManufacturer -eq 'Lenovo') {
-        ($Win32ComputerSystemProduct.Version).Trim()
-    }
-    else {
-        ($Win32ComputerSystem.Model).Trim()
-    }
-
-    # Normalize model to OEM if empty, null, or invalid
-    if ([string]::IsNullOrWhiteSpace($ComputerModel) -or $ComputerModel -match '^to be filled$') {
-        $ComputerModel = 'OEM'
-    }
-
-    # Derive product per OEM quirks and normalize
-    $ComputerProduct = switch ($ComputerManufacturer) {
-        'Dell' { $CimComputerSystem.SystemSKUNumber }
-        'HP' { $Win32BaseBoard.Product }
+    $classWin32ComputerSystemProduct = Get-CimInstance -ClassName Win32_ComputerSystemProduct | Select-Object -Property *
+    $classWin32ComputerSystemProduct | Out-File $WmiLogsPath\Win32_ComputerSystemProduct.txt -Width 4096 -Force
+    #=================================================
+    # Details
+    $BaseBoardProduct = $classWin32BaseBoard.Product.Trim()
+    $ComputerSystemSKU = $classCimComputerSystem.SystemSKUNumber
+    $ComputerSystemFamily = $classWin32ComputerSystem.SystemFamily.Trim()
+    $ComputerManufacturer = $classWin32ComputerSystem.Manufacturer.Trim()
+    $OSDManufacturer = $classWin32ComputerSystem.Manufacturer.Trim()
+    $ComputerModel = $classWin32ComputerSystem.Model.Trim()
+    $OSDModel = $classWin32ComputerSystem.Model.Trim()
+    $ComputerSystemProduct = $classWin32ComputerSystemProduct.Version.Trim()
+    $OSDProduct = $classWin32ComputerSystemProduct.Version.Trim()
+    #=================================================
+    # Normalize Aliases for Known Manufacturers and Models
+    switch -Regex ($OSDManufacturer) {
+        'Dell' {
+            $OSDManufacturer = 'Dell'
+            $OSDProduct = $ComputerSystemSKU
+            break
+        }
         'Lenovo' {
-            if (-not [string]::IsNullOrWhiteSpace($Win32ComputerSystem.Model) -and $Win32ComputerSystem.Model.Length -ge 4) {
-                $Win32ComputerSystem.Model.Substring(0, 4)
+            $OSDManufacturer = 'Lenovo'
+            $OSDModel = $ComputerSystemProduct
+            if (-not [string]::IsNullOrWhiteSpace($ComputerModel) -and $ComputerModel.Length -ge 4) {
+                $OSDProduct = $ComputerModel.Substring(0, 4)
             }
             else {
-                $Win32ComputerSystem.Model
+                $OSDProduct = $ComputerModel
             }
+            break
         }
-        'Microsoft' { $CimComputerSystem.SystemSKUNumber }
-        default { $Win32ComputerSystemProduct.Version }
+        'Hewlett|Packard|^HP$' {
+            $OSDManufacturer = 'HP'
+            $OSDProduct = $BaseBoardProduct
+            break
+        }
+        'Microsoft' {
+            $OSDManufacturer = 'Microsoft'
+            $OSDProduct = $ComputerSystemSKU
+            break
+        }
+        'Panasonic' { $OSDManufacturer = 'Panasonic'; break }
+        'to be filled' { $OSDManufacturer = 'OEM'; break }
     }
 
-    if ([string]::IsNullOrWhiteSpace($ComputerProduct)) {
-        $ComputerProduct = 'Unknown'
+    if ([string]::IsNullOrWhiteSpace($OSDManufacturer) -or $OSDManufacturer -match '^to be filled$') {
+        $OSDManufacturer = 'OEM'
     }
-    else {
-        $ComputerProduct = $ComputerProduct.Trim()
+    if ([string]::IsNullOrWhiteSpace($OSDModel) -or $OSDModel -match '^to be filled$') {
+        $OSDModel = 'OEM'
+    }
+    if ([string]::IsNullOrWhiteSpace($OSDProduct)) {
+        $OSDProduct = 'Unknown'
     }
     #=================================================
     # Disk Information
@@ -107,6 +119,10 @@ function Initialize-OSDCloudDevice {
     # Win32_Environment
     $Win32Environment = Get-CimInstance -ClassName Win32_Environment | Select-Object -Property * | Sort-Object Name
     $Win32Environment | Where-Object { $_.SystemVariable -eq $true } | Select-Object -Property Name, VariableValue | Out-File $WmiLogsPath\Win32_Environment-System.txt -Width 4096 -Force
+    #=================================================
+    # Win32_Keyboard
+    $classWin32Keyboard = Get-CimInstance -ClassName Win32_Keyboard | Select-Object -Property *
+    $classWin32Keyboard | Out-File $WmiLogsPath\Win32_Keyboard.txt -Width 4096 -Force
     #=================================================
     # Win32_NetworkAdapter
     $Win32NetworkAdapter = Get-CimInstance -ClassName Win32_NetworkAdapter | Select-Object -Property *
@@ -140,8 +156,21 @@ function Initialize-OSDCloudDevice {
     $Win32OperatingSystem | Out-File $WmiLogsPath\Win32_OperatingSystem.txt -Width 4096 -Force
     #=================================================
     # Win32_PnPEntityError
-    $Win32PnPEntityError = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object -Property * | Where-Object { $_.Status -eq 'Error' } | Sort-Object HardwareID -Unique | Sort-Object Name
+    $classWin32PnPEntity = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object -Property *
+    $Win32PnPEntityError = $classWin32PnPEntity | Where-Object { $_.Status -eq 'Error' } | Sort-Object HardwareID -Unique | Sort-Object Name
     $Win32PnPEntityError | Out-File $WmiLogsPath\Win32_PnPEntityError.txt -Width 4096 -Force
+
+    $SystemFirmwareDevice = $classWin32PnPEntity | Where-Object ClassGuid -eq '{f2e7dd72-6468-4e36-b6f1-6488f42c1b52}' | Where-Object Caption -match 'System'
+    if ($SystemFirmwareDevice) {
+        $GuidPattern = '\{?(([0-9a-f]){8}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){12})\}?'
+        $SystemFirmwareResource = ($SystemFirmwareDevice.PNPDeviceID | Select-String -Pattern $GuidPattern -AllMatches | Select-Object -ExpandProperty Matches | Select-Object -ExpandProperty Value)
+        $SystemFirmwareHardwareId = $SystemFirmwareResource -replace '[{}]',''
+    }
+    else {
+        $SystemFirmwareDevice = $null
+        $SystemFirmwareResource = $null
+        $SystemFirmwareHardwareId = $null
+    }
     #=================================================
     # Win32_Processor
     $Win32Processor = Get-CimInstance -ClassName Win32_Processor | Select-Object -Property *
@@ -163,7 +192,7 @@ function Initialize-OSDCloudDevice {
     $Win32TimeZone | Out-File $WmiLogsPath\Win32_TimeZone.txt -Width 4096 -Force
     #=================================================
     # IsOnBattery
-    [System.Boolean]$IsOnBattery = ($Win32Battery.BatteryStatus -contains 1)
+    [System.Boolean]$IsOnBattery = ($classWin32Battery.BatteryStatus -contains 1)
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IsOnBattery: $IsOnBattery"
     #=================================================
     # IsUEFI
@@ -181,7 +210,8 @@ function Initialize-OSDCloudDevice {
     else {
         if ($null -eq (Get-ItemProperty HKLM:\System\CurrentControlSet\Control\SecureBoot\State -ErrorAction SilentlyContinue)) {
             $IsUEFI = $false
-        } else {
+        }
+        else {
             $IsUEFI = $true
         }
     }
@@ -190,22 +220,19 @@ function Initialize-OSDCloudDevice {
     # IsVM
     [System.Boolean]$IsVM = $false
     $vmDetectionSources = @(
-        $Win32ComputerSystem.Model,
-        $Win32ComputerSystem.Manufacturer,
-        $Win32ComputerSystem.SystemFamily,
-        $Win32ComputerSystemProduct.Name,
-        $Win32ComputerSystemProduct.Vendor,
-        $Win32ComputerSystemProduct.Version
+        $classWin32ComputerSystem.Model,
+        $classWin32ComputerSystem.Manufacturer,
+        $classWin32ComputerSystem.SystemFamily,
+        $classWin32ComputerSystemProduct.Name,
+        $classWin32ComputerSystemProduct.Vendor,
+        $classWin32ComputerSystemProduct.Version
     ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
 
     $vmPattern = '(?i)(virtual machine|vmware|hyper-v|hyperv|kvm|qemu|xen|virtualbox|bhyve|parallels|gce|google compute engine|amazon ec2|azure|bochs|openstack|ovirt|rhev|kubevirt|ahv|nutanix)'
     [System.Boolean]$IsVM = ($vmDetectionSources -join ' ') -match $vmPattern
     #=================================================
-    if (!($ComputerProduct)) {
-        $ComputerProduct = Get-MyDeviceProduct
-    }
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerProduct: $ComputerProduct"
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerSystemSKU: $($Win32ComputerSystem.SystemSKUNumber)"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDProduct: $OSDProduct"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerSystemSKU: $($classWin32ComputerSystem.SystemSKUNumber)"
     #=================================================
     # ChassisType
     $IsDesktop = $false
@@ -213,18 +240,18 @@ function Initialize-OSDCloudDevice {
     $IsServer = $false
     $IsSFF = $false
     $IsTablet = $false
-    $ChassisType = $Win32SystemEnclosure | ForEach-Object {
+    $ComputerSystemType = $Win32SystemEnclosure | ForEach-Object {
         if ($_.ChassisTypes[0] -in "8", "9", "10", "11", "12", "14", "18", "21") { $IsLaptop = $true; "Laptop" }
         if ($_.ChassisTypes[0] -in "3", "4", "5", "6", "7", "15", "16") { $IsDesktop = $true; "Desktop" }
         if ($_.ChassisTypes[0] -in "23") { $IsServer = $true; "Server" }
         if ($_.ChassisTypes[0] -in "34", "35", "36") { $IsSFF = $true; "Small Form Factor" }
         if ($_.ChassisTypes[0] -in "13", "31", "32", "30") { $IsTablet = $true; "Tablet" }
     }
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ChassisType: $($ChassisType)"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] ComputerSystemType: $($ComputerSystemType)"
     #=================================================
     # TotalPhysicalMemoryGB
     $TotalPhysicalMemoryGB = [math]::Round(
-        $Win32ComputerSystem.TotalPhysicalMemory / 1GB,
+        $classWin32ComputerSystem.TotalPhysicalMemory / 1GB,
         0,
         [System.MidpointRounding]::AwayFromZero
     )
@@ -247,46 +274,95 @@ function Initialize-OSDCloudDevice {
     }
     catch {}
     #=================================================
+    $HardwareHash = $null
+    <#
+    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+
+    if ((Get-Command -Name 'oa3tool.exe' -ErrorAction SilentlyContinue) -and (Test-Path "$env:SystemDrive\OA30\input.xml") -and (Test-Path "$env:SystemDrive\OA30\OA3.cfg")) {
+        # Write-Host -ForegroundColor Green "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Building OA3 Hardware Hash to $env:SystemDrive\OA30\OA3.xml"
+        $null = oa3tool.exe /Report /ConfigFile=$env:SystemDrive\OA30\OA3.cfg /LogTrace=$env:SystemDrive\OA30\OA3Report.xml /NoKeyCheck
+        if (Test-Path "$env:SystemDrive\OA30\OA3.xml") {
+            $HardwareHash = Get-Content "$env:SystemDrive\OA30\OA3.xml" -Raw | Select-String -Pattern '<HardwareHash>(.*?)</HardwareHash>' -AllMatches | ForEach-Object { $_.Matches } | ForEach-Object { $_.Groups[1].Value }
+            if ($HardwareHash) {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OA3 results output to $env:SystemDrive\OA30"
+                $null = oa3tool.exe /DecodeHwHash="$HardwareHash" /LogTrace=$env:SystemDrive\OA30\DecodeHwHash.xml
+                $null = oa3tool.exe /ValidateHwHash="$HardwareHash" /LogTrace=$env:SystemDrive\OA30\ValidateHwHash.xml
+
+                if ($USBDrive) {
+                    $USBPath = "$($USBDrive.DriveLetter):\OSDCloudLogs\$SerialNumber\OA30"
+                    if (-not (Test-Path -Path $USBPath)) {
+                        New-Item -Path $USBPath -ItemType Directory -Force | Out-Null
+                    }
+                    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OA3 results copied to $USBPath"
+                    Copy-Item -Path "$env:SystemDrive\OA30\OA3.xml" -Destination $USBPath -Force -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$env:SystemDrive\OA30\OA3Report.xml" -Destination $USBPath -Force -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$env:SystemDrive\OA30\DecodeHwHash.xml" -Destination $USBPath -Force -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$env:SystemDrive\OA30\ValidateHwHash.xml" -Destination $USBPath -Force -ErrorAction SilentlyContinue
+                }
+            }
+        }
+    }
+    #>
+    #=================================================
     #   Pass Variables to OSDCloudDevice
     #=================================================
     $global:OSDCloudDevice = $null
     $global:OSDCloudDevice = [ordered]@{
-        BiosReleaseDate         = $Win32BIOS.ReleaseDate
-        BiosVersion             = $Win32BIOS.SMBIOSBIOSVersion
-        ChassisType             = $ChassisType
-        ComputerManufacturer    = [System.String]$ComputerManufacturer
-        ComputerModel           = [System.String]$ComputerModel
-        ComputerName            = $Win32ComputerSystem.Name
-        ComputerProduct         = [System.String]$ComputerProduct
-        ComputerSystemSKUNumber = $Win32ComputerSystem.SystemSKUNumber
-        IdentifyingNumber       = $Win32ComputerSystemProduct.IdentifyingNumber
-        IsAutopilotReady        = [System.Boolean]$false
-        IsDesktop               = [System.Boolean]$IsDesktop
-        IsLaptop                = [System.Boolean]$IsLaptop
-        IsOnBattery             = [System.Boolean]$IsOnBattery
-        IsServer                = [System.Boolean]$IsServer
-        IsSFF                   = [System.Boolean]$IsSFF
-        IsTablet                = [System.Boolean]$IsTablet
-        IsTpmReady              = [System.Boolean]$false
-        IsVM                    = [System.Boolean]$IsVM
-        IsUEFI                  = [System.Boolean]$IsUEFI
-        NetGateways             = $NetGateways
-        NetIPAddress            = $NetIPAddress
-        NetMacAddress           = $NetMacAddress
-        OSArchitecture          = $Win32OperatingSystem.OSArchitecture
-        OSVersion               = $Win32OperatingSystem.Version
-        ProcessorArchitecture   = $env:PROCESSOR_ARCHITECTURE
-        SerialNumber            = ($Win32BIOS.SerialNumber).Trim()
-        TimeZone                = $Win32TimeZone.StandardName
-        TotalPhysicalMemoryGB   = $TotalPhysicalMemoryGB
-        TpmIsActivated          = $DeviceTpmIsActivated
-        TpmIsEnabled            = $DeviceTpmIsEnabled
-        TpmIsOwned              = $DeviceTpmIsOwned
-        TpmManufacturerIdTxt    = $DeviceTpmManufacturerIdTxt
-        TpmManufacturerVersion  = $DeviceTpmManufacturerVersion
-        TpmSpecVersion          = $DeviceTpmSpecVersion
-        UUID                    = $Win32ComputerSystemProduct.UUID
+        OSDManufacturer           = [System.String]$OSDManufacturer
+        OSDModel                  = [System.String]$OSDModel
+        OSDProduct                = [System.String]$OSDProduct
+        ComputerName              = $classWin32ComputerSystem.Name
+        BaseBoardProduct          = [System.String]$BaseBoardProduct
+        BiosReleaseDate           = [System.String]$classWin32BIOS.ReleaseDate
+        BiosVersion               = [System.String]$classWin32BIOS.SMBIOSBIOSVersion
+        ComputerManufacturer      = [System.String]$ComputerManufacturer
+        ComputerModel             = [System.String]$ComputerModel
+        ComputerSystemFamily      = [System.String]$ComputerSystemFamily
+        ComputerSystemProduct     = [System.String]$ComputerSystemProduct
+        ComputerSystemSKU         = [System.String]$ComputerSystemSKU
+        ComputerSystemType        = [System.String]$ComputerSystemType
+        HardwareHash              = [System.String]$HardwareHash
+        IsAutopilotReady          = [System.Boolean]$false
+        IsDesktop                 = [System.Boolean]$IsDesktop
+        IsLaptop                  = [System.Boolean]$IsLaptop
+        IsOnBattery               = [System.Boolean]$IsOnBattery
+        IsServer                  = [System.Boolean]$IsServer
+        IsSFF                     = [System.Boolean]$IsSFF
+        IsTablet                  = [System.Boolean]$IsTablet
+        IsTpmReady                = [System.Boolean]$false
+        IsVM                      = [System.Boolean]$IsVM
+        IsUEFI                    = [System.Boolean]$IsUEFI
+        KeyboardLayout            = [System.String]$classWin32Keyboard.Layout
+        KeyboardName              = [System.String]$classWin32Keyboard.Name
+        NetGateways               = $NetGateways
+        NetIPAddress              = $NetIPAddress
+        NetMacAddress             = $NetMacAddress
+        OSArchitecture            = $Win32OperatingSystem.OSArchitecture
+        OSVersion                 = $Win32OperatingSystem.Version
+        ProcessorArchitecture     = $env:PROCESSOR_ARCHITECTURE
+        SerialNumber              = $SerialNumber
+        # SystemFirmwareDevice      = $SystemFirmwareDevice
+        # SystemFirmwareResource    = $SystemFirmwareResource
+        SystemFirmwareHardwareId  = $SystemFirmwareHardwareId
+        TimeZone                  = $Win32TimeZone.StandardName
+        TotalPhysicalMemoryGB     = $TotalPhysicalMemoryGB
+        TpmIsActivated            = $DeviceTpmIsActivated
+        TpmIsEnabled              = $DeviceTpmIsEnabled
+        TpmIsOwned                = $DeviceTpmIsOwned
+        TpmManufacturerIdTxt      = $DeviceTpmManufacturerIdTxt
+        TpmManufacturerVersion    = $DeviceTpmManufacturerVersion
+        TpmSpecVersion            = $DeviceTpmSpecVersion
+        UUID                      = $classWin32ComputerSystemProduct.UUID
     }
+    <#
+    if ($USBDrive) {
+        $USBPath = "$($USBDrive.DriveLetter):\OSDCloudLogs\$SerialNumber"
+        if (-not (Test-Path -Path $USBPath)) {
+            New-Item -Path $USBPath -ItemType Directory -Force | Out-Null
+        }
+        $global:OSDCloudDevice | ConvertTo-Json -Depth 10 | Out-File "$USBPath\OSDCloudDevice.json" -Force -Encoding UTF8
+    }
+    #>
     #=================================================
     if ($null -eq $Win32Tpm) {
         Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TPM is not supported on this device."

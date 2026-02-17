@@ -12,21 +12,21 @@ function step-install-bcdboot {
     #region Main
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
-    # Check what architecture we are using
-    if ($global:OSDCloudDeploy.OSArchitecture -match 'ARM64') {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] X:\Windows\System32\bcdboot.exe C:\Windows /c /v"
-        $BCDBootOutput = & X:\Windows\System32\bcdboot.exe C:\Windows /c /v
-        $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
-    }
-    else {
+    # https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/bcdboot-command-line-options-techref-di?view=windows-11
+    # https://support.microsoft.com/en-us/topic/how-to-manage-the-windows-boot-manager-revocations-for-secure-boot-changes-associated-with-cve-2023-24932-41a975df-beb2-40c1-99a3-b3ff139f832d
+
+    Push-Location -Path "C:\Windows\System32"
+    if ($global:OSDCloudDeploy.OSBuild -lt 26200) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] C:\Windows\System32\bcdboot.exe C:\Windows /c /v"
         $BCDBootOutput = & C:\Windows\System32\bcdboot.exe C:\Windows /c /v
         $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
     }
-
-    #TODO What is "Updated configuration that should clear existing UEFI Boot entires and fix the Dell issue"
-    # https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/bcdboot-command-line-options-techref-di?view=windows-11
-
+    else {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] C:\Windows\System32\bcdboot.exe C:\Windows /c /bootex"
+        $BCDBootOutput = & C:\Windows\System32\bcdboot.exe C:\Windows /c /bootex
+        $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
+    }
+    Pop-Location
     #endregion
     #=================================================
     # End the function

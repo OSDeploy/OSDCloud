@@ -17,7 +17,7 @@ function step-drivers-firmware {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Microsoft Update Firmware is not enabled for Virtual Machines. Skip."
         return
     }
-    if ($IsOnBattery -eq $true) {
+    if ($global:OSDCloudDevice.IsOnBattery -eq $true) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Microsoft Update Firmware is not enabled for devices on battery power"
         return
     }
@@ -55,21 +55,10 @@ function step-drivers-firmware {
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Not all systems support a driver Firmware Update"
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] BIOS or Firmware Settings may need to be enabled for Firmware Updates"
 
-    $SystemFirmwareId = Get-SystemFirmwareResource
-    $SystemFirmwareId = $SystemFirmwareId -replace '[{}]',''
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] System Firmware Hardware ID: $SystemFirmwareId"
+    $SystemFirmwareHardwareId = $global:OSDCloudDevice.SystemFirmwareHardwareId
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] System Firmware Hardware ID: $SystemFirmwareHardwareId"
 
-    <#
-        Try {
-            Get-MicrosoftUpdateCatalogResult -Search $SystemFirmwareId -SortBy Date -Descending | Select-Object LastUpdated,Title,Version,Size,Guid -First 1
-        }
-        Catch {
-            #Do nothing
-        }
-
-    #>
-
-    Save-MicrosoftUpdateCatalogDriver -DestinationDirectory $DestinationDirectory -HardwareID $SystemFirmwareId
+    Save-MicrosoftUpdateCatalogDriver -DestinationDirectory $DestinationDirectory -HardwareID $SystemFirmwareHardwareId
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
