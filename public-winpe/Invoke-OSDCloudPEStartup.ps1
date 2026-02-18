@@ -17,7 +17,7 @@ function Invoke-OSDCloudPEStartup {
         [System.String]
         $Value
     )
-    Start-Transcript -Path "$($env:Temp)\OSDCloudPEStartup.log" -Append -Force -ErrorAction SilentlyContinue
+    # Start-Transcript -Path "$($env:Temp)\OSDCloudPEStartup.log" -Append -Force -ErrorAction SilentlyContinue
     # Write-Host "Processing $Id with value $Value"
 
     switch ($Id) {
