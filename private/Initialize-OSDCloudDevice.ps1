@@ -55,7 +55,7 @@ function Initialize-OSDCloudDevice {
     $ComputerManufacturer = $classWin32ComputerSystem.Manufacturer | ConvertTo-TrimmedString
     $ComputerModel = $classWin32ComputerSystem.Model | ConvertTo-TrimmedString
     $ComputerSystemFamily = $classWin32ComputerSystem.SystemFamily | ConvertTo-TrimmedString
-    $ComputerSystemSKU = $classWin32ComputerSystem.SystemSKUNumber
+    $ComputerSystemSKU = $classWin32ComputerSystem.SystemSKUNumber | ConvertTo-TrimmedString
     #=================================================
     # Win32_ComputerSystemProduct
     $classWin32ComputerSystemProduct = Get-CimInstance -ClassName Win32_ComputerSystemProduct | Select-Object -Property *
@@ -151,6 +151,7 @@ function Initialize-OSDCloudDevice {
     #=================================================
     # Win32_TimeZone
     $classWin32TimeZone = Get-CimInstance -ClassName Win32_TimeZone | Select-Object -Property *
+    $classWin32TimeZone | Out-File (Join-Path -Path $LogsPath -ChildPath 'Win32_TimeZone.txt') -Width 4096 -Force
     #=================================================
     # TPM
     $IsAutopilotSpec = $false
