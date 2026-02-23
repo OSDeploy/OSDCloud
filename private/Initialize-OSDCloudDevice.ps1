@@ -347,7 +347,12 @@ function Initialize-OSDCloudDevice {
         }
         'Microsoft' {
             $OSDManufacturer = 'Microsoft'
-            $OSDProduct = $ComputerSystemSKU
+            if ($OSDModel -match 'Virtual') {
+                $OSDProduct = $ComputerSystemProduct
+            }
+            else {
+                $OSDProduct = $ComputerSystemSKU
+            }
             break
         }
         'Panasonic' { $OSDManufacturer = 'Panasonic'; break }
