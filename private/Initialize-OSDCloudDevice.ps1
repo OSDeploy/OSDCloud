@@ -77,9 +77,13 @@ function Initialize-OSDCloudDevice {
     try {
         $classWin32Keyboard = Get-CimInstance -ClassName Win32_Keyboard -ErrorAction Stop | Select-Object -Property *
         $classWin32Keyboard | Out-File (Join-Path -Path $LogsPath -ChildPath 'Win32_Keyboard.txt') -Width 4096 -Force
+        $KeyboardLayout = [System.String]$classWin32Keyboard.Layout
+        $KeyboardName = [System.String]$classWin32Keyboard.Name
     }
     catch {
         $classWin32Keyboard = $null
+        $KeyboardLayout = $null
+        $KeyboardName = $null
     }
     #=================================================
     # Win32_NetworkAdapter
@@ -397,8 +401,8 @@ function Initialize-OSDCloudDevice {
         IsTpmSpec                 = [System.Boolean]$IsTpmSpec
         IsVM                      = [System.Boolean]$IsVM
         IsUEFI                    = [System.Boolean]$IsUEFI
-        KeyboardLayout            = [System.String]$classWin32Keyboard.Layout
-        KeyboardName              = [System.String]$classWin32Keyboard.Name
+        KeyboardLayout            = $KeyboardLayout
+        KeyboardName              = $KeyboardName
         NetGateways               = $NetGateways
         NetIPAddress              = $NetIPAddress
         NetMacAddress             = $NetMacAddress
@@ -406,8 +410,6 @@ function Initialize-OSDCloudDevice {
         OSVersion                 = $classWin32OperatingSystem.Version
         ProcessorArchitecture     = $env:PROCESSOR_ARCHITECTURE
         SerialNumber              = $SerialNumber
-        # SystemFirmwareDevice      = $SystemFirmwareDevice
-        # SystemFirmwareResource    = $SystemFirmwareResource
         SystemFirmwareHardwareId  = $SystemFirmwareHardwareId
         TimeZone                  = $classWin32TimeZone.StandardName
         TotalPhysicalMemoryGB     = $TotalPhysicalMemoryGB
