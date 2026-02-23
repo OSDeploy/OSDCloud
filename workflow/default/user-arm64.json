@@ -44,7 +44,7 @@
         "Skip": true,
         "Verbose": false
     },
-    "IsTpmReady": {
+    "IsTpmSpec": {
         "Error": "Device is not fully TPM 2.0 compatible.&#x0a;Autopilot will not work.",
         "Success": "TPM is 2.0 an working as expected.\n Autopilot will work.",
         "Warning": "Device is not fully TPM 2.0 compatible."

@@ -124,11 +124,11 @@
     </Window.Background>
     <DockPanel>
         <Menu x:Name="MenuBar" DockPanel.Dock="Top" Background="#FFFFFFFF">
-            <MenuItem Name="IsTpmReady"
+            <MenuItem Name="IsTpmSpec"
                               Header="TPM"
                               Foreground="Black" FontWeight="Bold" IsTabStop="False" Focusable="False"
                               IsCheckable="False" />
-            <MenuItem Name="IsAutopilotReady"
+            <MenuItem Name="IsAutopilotSpec"
                               Header="Autopilot"
                               Foreground="Black"
                               FontWeight="Bold" IsTabStop="False" Focusable="False" IsCheckable="False" />

@@ -14,8 +14,8 @@ $deviceOSDManufacturer = $global:OSDCloudDevice.OSDManufacturer
 $deviceOSDModel = $global:OSDCloudDevice.OSDModel
 $deviceOSDProduct = $global:OSDCloudDevice.OSDProduct
 $deviceComputerSystemSKU = $global:OSDCloudDevice.ComputerSystemSKU
-$deviceIsAutopilotReady = $global:OSDCloudDevice.IsAutopilotReady
-$deviceIsTPMReady = $global:OSDCloudDevice.IsTPMReady
+$deviceIsAutopilotSpec = $global:OSDCloudDevice.IsAutopilotSpec
+$deviceIsTpmSpec = $global:OSDCloudDevice.IsTpmSpec
 $deviceSerialNumber = $global:OSDCloudDevice.SerialNumber
 $deviceUUID = $global:OSDCloudDevice.UUID
 $getOSDCloudModuleVersion = Get-OSDCloudModuleVersion
@@ -50,7 +50,7 @@ $RunPowerShell = $window.FindName("RunPowerShell")
 $RunPwsh = $window.FindName("RunPwsh")
 $PrivacyMenuItem = $window.FindName("PrivacyMenuItem")
 $LogsMenuItem = $window.FindName("LogsMenuItem")
-$HardwareMenuItem = $window.FindName("HardwareMenuItem")
+$WMIMenuItem = $window.FindName("WMIMenuItem")
 
 $RunCmdPrompt.Add_Click({
 	try {
@@ -119,6 +119,7 @@ function Set-LogsMenuItems {
 	}
 
 	$logFiles = Get-ChildItem -LiteralPath $logsRoot -File -ErrorAction SilentlyContinue | Sort-Object -Property Name
+	$logFiles = $logFiles | Where-Object { $_.Name -NotLike "Win32_*.txt"}
 	if (-not $logFiles) {
 		Add-NoLogsMenuEntry -MenuItem $LogsMenuItem
 		return
@@ -149,18 +150,19 @@ function Set-LogsMenuItems {
 	}
 }
 Set-LogsMenuItems
-function Set-HardwareMenuItems {
-	$HardwareMenuItem.Items.Clear()
+function Set-WMIMenuItems {
+	$WMIMenuItem.Items.Clear()
 
-	$logsRoot = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'osdcloud-logs-wmi'
+	$logsRoot = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath 'osdcloud-logs'
 	if (-not (Test-Path -LiteralPath $logsRoot)) {
-		Add-NoLogsMenuEntry -MenuItem $HardwareMenuItem
+		Add-NoLogsMenuEntry -MenuItem $WMIMenuItem
 		return
 	}
 
 	$logFiles = Get-ChildItem -LiteralPath $logsRoot -File -ErrorAction SilentlyContinue | Sort-Object -Property Name
+	$logFiles = $logFiles | Where-Object { $_.Name -Like "Win32_*.txt"}
 	if (-not $logFiles) {
-		Add-NoLogsMenuEntry -MenuItem $HardwareMenuItem
+		Add-NoLogsMenuEntry -MenuItem $WMIMenuItem
 		return
 	}
 
@@ -185,10 +187,10 @@ function Set-HardwareMenuItems {
 			}
 		})
 
-		$HardwareMenuItem.Items.Add($logMenuItem) | Out-Null
+		$WMIMenuItem.Items.Add($logMenuItem) | Out-Null
 	}
 }
-Set-HardwareMenuItems
+Set-WMIMenuItems
 #================================================
 # TaskSequence
 $TaskSequenceCombo = $window.FindName("TaskSequenceCombo")
@@ -346,10 +348,10 @@ $deviceComputerSystemSKUText = $window.FindName("deviceComputerSystemSKUText")
 $deviceComputerSystemSKUText.Text = $deviceComputerSystemSKU
 $deviceSerialNumberText = $window.FindName("deviceSerialNumberText")
 $deviceSerialNumberText.Text = $deviceSerialNumber
-$deviceIsAutopilotReadyText = $window.FindName("deviceIsAutopilotReadyText")
-$deviceIsAutopilotReadyText.Text = $deviceIsAutopilotReady
-$deviceIsTpmReadyText = $window.FindName("deviceIsTpmReadyText")
-$deviceIsTpmReadyText.Text = $deviceIsTPMReady
+$deviceIsAutopilotSpecText = $window.FindName("deviceIsAutopilotSpecText")
+$deviceIsAutopilotSpecText.Text = $deviceIsAutopilotSpec
+$deviceIsTpmSpecText = $window.FindName("deviceIsTpmSpecText")
+$deviceIsTpmSpecText.Text = $deviceIsTpmSpec
 $deviceUUIDText = $window.FindName("deviceUUIDText")
 $deviceUUIDText.Text = $deviceUUID
 $SelectedOSLanguageText = $window.FindName("SelectedOSLanguageText")
