@@ -25,7 +25,7 @@ namespace OSDCloud
             InitializeComponent();
         }
 
-        private void IsAutopilotReady_Click()
+        private void IsAutopilotSpec_Click()
         {
 
         }

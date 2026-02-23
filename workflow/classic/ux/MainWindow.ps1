@@ -249,19 +249,19 @@ function Show-PowershellWindow() {
 #endregion
 #=================================================
 # Tpm
-if ($global:OSDCloudDevice.IsTpmReady -eq $true) {
-    $formMainWindowControlIsTpmReady.Foreground = 'Green'
+if ($global:OSDCloudDevice.IsTpmSpec -eq $true) {
+    $formMainWindowControlIsTpmSpec.Foreground = 'Green'
 }
 else {
-    $formMainWindowControlIsTpmReady.Foreground = 'Red'
+    $formMainWindowControlIsTpmSpec.Foreground = 'Red'
 }
 
 # Autopilot
-if ($global:OSDCloudDevice.IsAutopilotReady -eq $true) {
-    $formMainWindowControlIsAutopilotReady.Foreground = 'Green'
+if ($global:OSDCloudDevice.IsAutopilotSpec -eq $true) {
+    $formMainWindowControlIsAutopilotSpec.Foreground = 'Green'
 }
 else {
-    $formMainWindowControlIsAutopilotReady.Foreground = 'Red'
+    $formMainWindowControlIsAutopilotSpec.Foreground = 'Red'
 }
 #endregion
 #=================================================

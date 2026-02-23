@@ -15,8 +15,8 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu Background="White" BorderBrush="#DDE5F5" BorderThickness="0" FontWeight="Bold" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <MenuItem x:Name="HardwareMenuItem" Header="Hardware" Padding="4" />
                 <MenuItem x:Name="LogsMenuItem" Header="Logs" Padding="4" />
+                <MenuItem x:Name="WMIMenuItem" Header="WMI" Padding="4" />
                 <MenuItem Header="Shell" Padding="4" ScrollViewer.CanContentScroll="True" UseLayoutRounding="False">
                     <MenuItem x:Name="RunCmdPrompt" Header="CMD Prompt" />
                     <MenuItem x:Name="RunPowerShell" Header="Windows PowerShell" />
@@ -62,9 +62,9 @@
                 <TextBlock Grid.Row="3" Grid.Column="4" Text="deviceBiosReleaseDateText" x:Name="deviceBiosReleaseDateText" Foreground="DarkGray" FontWeight="Bold" />
 
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="TPM 2.0" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="4" Grid.Column="1" Text="deviceIsTpmReadyText" x:Name="deviceIsTpmReadyText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="deviceIsTpmSpecText" x:Name="deviceIsTpmSpecText" Foreground="DarkGray" FontWeight="Bold" />
                 <TextBlock Grid.Row="4" Grid.Column="3" Text="Autopilot" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="4" Grid.Column="4" Text="deviceIsAutopilotReadyText" x:Name="deviceIsAutopilotReadyText" Foreground="DarkGray" FontWeight="Bold" />
+                <TextBlock Grid.Row="4" Grid.Column="4" Text="deviceIsAutopilotSpecText" x:Name="deviceIsAutopilotSpecText" Foreground="DarkGray" FontWeight="Bold" />
             </Grid>
         </Border>
         <TabControl Grid.Row="3" Grid.RowSpan="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
