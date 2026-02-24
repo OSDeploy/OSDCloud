@@ -124,27 +124,44 @@ function Initialize-OSDCloudDeploy {
 
     switch ($OSDManufacturer) {
         'Dell' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' }
+            if ($OSArchitecture -match 'arm64') {
+                $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
+                $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
+            }
+            else {
+                $DriverPackValues = Get-OSDCloudCatalogDell
+                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -eq $OSDProduct }
+            }
         }
         'HP' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'HP' }
+            if ($OSArchitecture -match 'arm64') {
+                $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
+                $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
+            }
+            else {
+                $DriverPackValues = Get-OSDCloudCatalogHp
+                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -eq $OSDProduct }
+            }
         }
         'Lenovo' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Lenovo' }
+            if ($OSArchitecture -match 'arm64') {
+                $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
+                $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
+            }
+            else {
+                $DriverPackValues = Get-OSDCloudCatalogLenovo
+                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -eq $OSDProduct }
+            }
         }
         Default {
             $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
+            if ($OSDModel -match 'Surface') {
+                $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
+            }
+            $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
         }
     }
 
-    # Remove Windows 10 DriverPacks
-    $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
-
-    if ($OSDModel -match 'Surface') {
-        $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
-    }
-
-    $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
     if ($DriverPackObject) {
         $DriverPackName = $DriverPackObject.Name
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"
