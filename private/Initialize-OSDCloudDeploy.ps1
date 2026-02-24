@@ -130,7 +130,7 @@ function Initialize-OSDCloudDeploy {
             }
             else {
                 $DriverPackValues = Get-OSDCloudCatalogDell
-                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -eq $OSDProduct }
+                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -match $OSDProduct }
             }
         }
         'HP' {
@@ -140,7 +140,7 @@ function Initialize-OSDCloudDeploy {
             }
             else {
                 $DriverPackValues = Get-OSDCloudCatalogHp
-                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -eq $OSDProduct }
+                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -match $OSDProduct }
             }
         }
         'Lenovo' {
@@ -150,7 +150,7 @@ function Initialize-OSDCloudDeploy {
             }
             else {
                 $DriverPackValues = Get-OSDCloudCatalogLenovo
-                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -eq $OSDProduct }
+                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -match $OSDProduct }
             }
         }
         Default {
