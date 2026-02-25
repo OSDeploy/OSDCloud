@@ -122,45 +122,8 @@ function Initialize-OSDCloudDeploy {
     $OSDModel = $global:OSDCloudDevice.OSDModel
     $OSDProduct = $global:OSDCloudDevice.OSDProduct
 
-    switch ($OSDManufacturer) {
-        'Dell' {
-            if ($OSArchitecture -match 'arm64') {
-                $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
-                $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
-            }
-            else {
-                $DriverPackValues = Get-OSDCloudCatalogDell
-                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -match $OSDProduct }
-            }
-        }
-        'HP' {
-            if ($OSArchitecture -match 'arm64') {
-                $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
-                $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
-            }
-            else {
-                $DriverPackValues = Get-OSDCloudCatalogHp
-                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -match $OSDProduct }
-            }
-        }
-        'Lenovo' {
-            if ($OSArchitecture -match 'arm64') {
-                $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
-                $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
-            }
-            else {
-                $DriverPackValues = Get-OSDCloudCatalogLenovo
-                $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -match $OSDProduct }
-            }
-        }
-        Default {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
-            if ($OSDModel -match 'Surface') {
-                $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
-            }
-            $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
-        }
-    }
+    $DriverPackValues = Get-DeployOSDCloudDriverPacks
+    $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -match $OSDProduct } | Select-Object -First 1
 
     if ($DriverPackObject) {
         $DriverPackName = $DriverPackObject.Name
