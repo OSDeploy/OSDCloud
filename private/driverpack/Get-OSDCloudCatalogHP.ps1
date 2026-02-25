@@ -39,12 +39,13 @@ function Get-OSDCloudCatalogHp {
         Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] Start"
         #=================================================
         # Catalogs
-        $localCatalogPath = "$(Get-OSDCloudModulePath)\catalogs\driverpack\osdcloud-hp.xml"
+        $localCatalogPath = "$(Get-OSDCloudModulePath)\catalogs\driverpack\hp.xml"
         $originCatalogPath = 'https://hpia.hpcloud.hp.com/downloads/driverpackcatalog/HPClientDriverPackCatalog.cab'
         $repositoryCatalogPath = 'https://raw.githubusercontent.com/OSDeploy/osdcloud-cache/refs/heads/master/driverpack/hp.xml'
         $tempCatalogPackagePath = "$($env:TEMP)\HPClientDriverPackCatalog.cab"
-        $tempCatalogPath = "$($env:TEMP)\osdcloud-hp.xml"
+        $tempCatalogPath = "$($env:TEMP)\osdcloud-driverpack-hp.xml"
         #=================================================
+        <#
         # Build realtime catalog from online source, if fails fallback to offline catalog
         try {
             if ($Force -or -not (Test-Path $tempCatalogPath)) {
@@ -66,6 +67,7 @@ function Get-OSDCloudCatalogHp {
             Write-Warning "Failed to download catalog: $($_.Exception.Message)"
             Write-Verbose "Falling back to offline catalog"
         }
+        #>
         
         # Load catalog content
         if (Test-Path $tempCatalogPath) {
