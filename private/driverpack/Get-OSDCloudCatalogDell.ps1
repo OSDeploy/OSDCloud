@@ -39,13 +39,14 @@ function Get-OSDCloudCatalogDell {
         Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] Start"
         #=================================================
         # Catalogs
-        $localCatalogPath = "$(Get-OSDCloudModulePath)\catalogs\driverpack\osdcloud-dell.xml"
+        $localCatalogPath = "$(Get-OSDCloudModulePath)\catalogs\driverpack\dell.xml"
         $originCatalogPath = 'https://downloads.dell.com/catalog/DriverPackCatalog.cab'
         $repositoryCatalogPath = 'https://raw.githubusercontent.com/OSDeploy/osdcloud-cache/refs/heads/master/driverpack/dell.xml'
         $tempCatalogPackagePath = "$($env:TEMP)\DriverPackCatalog.cab"
-        $tempCatalogPath = "$($env:TEMP)\osdcloud-dell.xml"
+        $tempCatalogPath = "$($env:TEMP)\osdcloud-driverpack-dell.xml"
         #=================================================
         # Build realtime catalog from online source, if fails fallback to offline catalog
+        <#
         try {
             if ($Force -or -not (Test-Path $tempCatalogPath)) {
                 Write-Verbose "Downloading Dell driver pack catalog from $originCatalogPath"
@@ -66,6 +67,7 @@ function Get-OSDCloudCatalogDell {
             Write-Warning "Failed to download catalog: $($_.Exception.Message)"
             Write-Verbose "Falling back to offline catalog"
         }
+        #>
         
         # Load catalog content
         if (Test-Path $tempCatalogPath) {
@@ -155,6 +157,7 @@ function Get-OSDCloudCatalogDell {
         # Sort Results
         #=================================================
         $Results = $Results | Sort-Object -Property Name
+        $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-dell.json" -Encoding utf8
         Write-Verbose "Found $($Results.Count) Windows 11 driver packs"
         $Results
     }
@@ -168,8 +171,8 @@ function Get-OSDCloudCatalogDell {
             Remove-Item -Path $tempCatalogPackagePath -Force -ErrorAction SilentlyContinue
         }
         if (Test-Path $tempCatalogPath) {
-            Write-Verbose "Removing temporary catalog file"
-            Remove-Item -Path $tempCatalogPath -Force -ErrorAction SilentlyContinue
+            # Write-Verbose "Removing temporary catalog file"
+            # Remove-Item -Path $tempCatalogPath -Force -ErrorAction SilentlyContinue
         }
         #=================================================
         Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] End"
