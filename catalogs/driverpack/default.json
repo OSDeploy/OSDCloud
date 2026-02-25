@@ -14,18 +14,32 @@
         "HashMD5":  "5A2658C0BC7E985E39C20E216DDE41DB"
     },
     {
-        "CatalogVersion":  "25.04.26",
-        "ReleaseDate":  "25.04.11",
-        "Name":  "HP OmniBook X Laptop 14-fe1xxx sp157879 [25.04.11]",
+        "CatalogVersion":  "",
+        "ReleaseDate":  "26.01.30",
+        "Name":  "HP EliteBook 6 G1q 14 inch Notebook Next Gen AI PC sp168873 [26.01.30]",
+        "Manufacturer":  "HP",
+        "Model":  "HP EliteBook 6 G1q 14 inch Notebook Next Gen AI PC",
+        "SystemId":  "8E06",
+        "FileName":  "sp168873.exe",
+        "Url":  "https://ftp.hp.com/pub/softpaq/sp168501-169000/sp168873.exe",
+        "OperatingSystem":  "Windows 11",
+        "OSArchitecture":  "arm64",
+        "OSVersion":  "25H2",
+        "HashMD5":  ""
+    },
+    {
+        "CatalogVersion":  "25.08.20",
+        "ReleaseDate":  "25.08.20",
+        "Name":  "HP OmniBook X Laptop 14-fe1xxx sp157879 [25.08.20]",
         "Manufacturer":  "HP",
         "Model":  "HP OmniBook X Laptop 14-fe1xxx",
         "SystemId":  "8CCF",
-        "FileName":  "sp157879.exe",
-        "Url":  "https://ftp.hp.com/pub/softpaq/sp157501-158000/sp157879.exe",
+        "FileName":  "sp162865.exe",
+        "Url":  "https://ftp.hp.com/pub/softpaq/sp162501-163000/sp162865.exe",
         "OperatingSystem":  "Windows 11",
         "OSArchitecture":  "arm64",
         "OSVersion":  "24H2",
-        "HashMD5":  "5A4E38FB8983C64EA819FDB65EA04511"
+        "HashMD5":  "5A2658C0BC7E985E39C20E216DDE41DB"
     },
     {
         "CatalogVersion":  "25.10.19",
