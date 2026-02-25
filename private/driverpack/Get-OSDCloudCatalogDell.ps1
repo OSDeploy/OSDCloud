@@ -150,13 +150,12 @@ function Get-OSDCloudCatalogDell {
     
     end {
         #=================================================
-        # Cleanup temporary files
-        #=================================================
-        if (Test-Path $tempCatalogPackagePath) {
-            Write-Verbose "Removing temporary CAB file"
         if ($VerbosePreference -eq 'Continue' -or $DebugPreference -eq 'Continue') {
             $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-dell.json" -Encoding utf8
         }
+        if (Test-Path $tempCatalogPackagePath) {
+            Write-Verbose "Removing temporary CAB file"
+            Remove-Item -Path $tempCatalogPackagePath -Force -ErrorAction SilentlyContinue
         }
         if (Test-Path $tempCatalogPath) {
             Write-Verbose "Removing temporary catalog file"

@@ -146,8 +146,9 @@ function Get-OSDCloudCatalogLenovo {
     
     end {
         #=================================================
-        # Cleanup temporary files
-        #=================================================
+        if ($VerbosePreference -eq 'Continue' -or $DebugPreference -eq 'Continue') {
+            $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-hp.json" -Encoding utf8
+        }
         if (Test-Path $tempCatalogPath) {
             Write-Verbose "Removing temporary catalog file"
             Remove-Item -Path $tempCatalogPath -Force -ErrorAction SilentlyContinue
