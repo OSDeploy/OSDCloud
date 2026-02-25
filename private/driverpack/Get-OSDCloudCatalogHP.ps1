@@ -8,18 +8,10 @@ function Get-OSDCloudCatalogHp {
         extracts and parses it to create a catalog of available Windows 11 driver packs.
         Falls back to offline catalog if download fails.
 
-    .PARAMETER Force
-        Forces download of the latest catalog even if a cached version exists.
-
     .EXAMPLE
         Get-OSDCloudCatalogHp
         
         Retrieves the HP driver pack catalog for Windows 11.
-
-    .EXAMPLE
-        Get-OSDCloudCatalogHp -Force
-        
-        Forces a fresh download of the HP driver pack catalog.
 
     .OUTPUTS
         PSCustomObject[]
@@ -30,10 +22,7 @@ function Get-OSDCloudCatalogHp {
         Catalog is downloaded from https://hpia.hpcloud.hp.com/downloads/driverpackcatalog/HPClientDriverPackCatalog.cab
     #>
     [CmdletBinding()]
-    param (
-        [Parameter()]
-        [switch]$Force
-    )
+    param ()
     
     begin {
         Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] Start"
@@ -127,7 +116,7 @@ function Get-OSDCloudCatalogHp {
                 Name            = "$($Item.SystemName) $($Item.SoftPaqId) [$ReleaseDate]"
                 Manufacturer    = 'HP'
                 Model           = $Item.SystemName
-                SystemId        = [System.String]$Item.SystemId.split(',').Trim()
+                SystemId        = $Item.SystemId.split(',').ForEach({$_.Trim()})
                 FileName        = $HpSoftPaq.Url | Split-Path -Leaf
                 Url             = $HpSoftPaq.Url
                 OperatingSystem = $OperatingSystem

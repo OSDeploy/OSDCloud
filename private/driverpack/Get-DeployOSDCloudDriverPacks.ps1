@@ -11,8 +11,8 @@ Supports Dell, HP, Lenovo, Microsoft (Surface), and generic devices.
 The device manufacturer name. Defaults to the value from $global:OSDCloudDevice.OSDManufacturer.
 Supported values: Dell, HP, Lenovo, Microsoft, or any other value will use the Default catalog.
 
-.PARAMETER Architecture
-The operating system architecture. Defaults to the value from $global:OSDCloudDevice.OSArchitecture.
+.PARAMETER ProcessorArchitecture
+The operating system architecture. Defaults to the value from $global:OSDCloudDevice.ProcessorArchitecture.
 Typically 'amd64' or 'arm64'.
 
 .OUTPUTS
@@ -24,7 +24,7 @@ PS> Get-DeployOSDCloudDriverPacks
 Returns driver packs for the current device's manufacturer and architecture.
 
 .EXAMPLE
-PS> Get-DeployOSDCloudDriverPacks -Manufacturer 'Dell' -Architecture 'amd64'
+PS> Get-DeployOSDCloudDriverPacks -Manufacturer 'Dell' -ProcessorArchitecture 'amd64'
 Returns driver packs for Dell devices with AMD64 architecture.
 
 .NOTES

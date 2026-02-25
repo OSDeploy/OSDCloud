@@ -8,18 +8,10 @@ function Get-OSDCloudCatalogDell {
         extracts and parses it to create a catalog of available Windows 11 driver packs.
         Falls back to offline catalog if download fails.
 
-    .PARAMETER Force
-        Forces download of the latest catalog even if a cached version exists.
-
     .EXAMPLE
         Get-OSDCloudCatalogDell
         
         Retrieves the Dell driver pack catalog for Windows 11.
-
-    .EXAMPLE
-        Get-OSDCloudCatalogDell -Force
-        
-        Forces a fresh download of the Dell driver pack catalog.
 
     .OUTPUTS
         PSCustomObject[]
@@ -30,10 +22,7 @@ function Get-OSDCloudCatalogDell {
         Catalog is downloaded from https://downloads.dell.com/catalog/DriverPackCatalog.cab
     #>
     [CmdletBinding()]
-    param (
-        [Parameter()]
-        [switch]$Force
-    )
+    param ()
     
     begin {
         Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] Start"
@@ -95,7 +84,7 @@ function Get-OSDCloudCatalogDell {
         # Build Catalog
         #=================================================
         Write-Verbose "Building driver pack catalog"
-        $OnlineBaseUri = 'http://downloads.dell.com/'
+        $OnlineBaseUri = 'https://downloads.dell.com/'
 
         #$CatalogVersion = (Get-Date $XmlCatalogContent.DriverPackManifest.version).ToString('yy.MM.dd')
         $RawCatalogVersion = $XmlCatalogContent.DriverPackManifest.version -replace '.00','.01'
@@ -139,7 +128,7 @@ function Get-OSDCloudCatalogDell {
                 Name                = "$Name $DriverPackVersion [$ReleaseDate]"
                 Manufacturer        = 'Dell'
                 Model               = $Model
-                SystemId            = [System.String]($Item.SupportedSystems.Brand.Model.systemID | Select-Object -Unique)
+                SystemId            = [string[]]@($Item.SupportedSystems.Brand.Model.systemID | Select-Object -Unique)
                 FileName            = (Split-Path -Leaf $Item.path)
                 Url                 = -join ($OnlineBaseUri, $Item.path)
                 OperatingSystem     = $OperatingSystem
@@ -149,15 +138,12 @@ function Get-OSDCloudCatalogDell {
             New-Object -TypeName PSObject -Property $ObjectProperties
         }
         #=================================================
-        # Cleanup Catalog
-        #=================================================
-        Write-Verbose "Filtering to latest driver packs per model"
-        $Results = $Results | Sort-Object ReleaseDate -Descending | Group-Object Name | ForEach-Object {$_.Group | Select-Object -First 1}
-        #=================================================
         # Sort Results
         #=================================================
         $Results = $Results | Sort-Object -Property Name
-        $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-dell.json" -Encoding utf8
+        if ($VerbosePreference -eq 'Continue' -or $DebugPreference -eq 'Continue') {
+            $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-dell.json" -Encoding utf8
+        }
         Write-Verbose "Found $($Results.Count) Windows 11 driver packs"
         $Results
     }
@@ -168,11 +154,13 @@ function Get-OSDCloudCatalogDell {
         #=================================================
         if (Test-Path $tempCatalogPackagePath) {
             Write-Verbose "Removing temporary CAB file"
-            Remove-Item -Path $tempCatalogPackagePath -Force -ErrorAction SilentlyContinue
+        if ($VerbosePreference -eq 'Continue' -or $DebugPreference -eq 'Continue') {
+            $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-dell.json" -Encoding utf8
+        }
         }
         if (Test-Path $tempCatalogPath) {
-            # Write-Verbose "Removing temporary catalog file"
-            # Remove-Item -Path $tempCatalogPath -Force -ErrorAction SilentlyContinue
+            Write-Verbose "Removing temporary catalog file"
+            Remove-Item -Path $tempCatalogPath -Force -ErrorAction SilentlyContinue
         }
         #=================================================
         Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] End"

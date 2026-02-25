@@ -8,18 +8,10 @@ function Get-OSDCloudCatalogLenovo {
         parses the XML to create a catalog of available Windows 11 driver packs.
         Falls back to offline catalog if download fails.
 
-    .PARAMETER Force
-        Forces download of the latest catalog even if a cached version exists.
-
     .EXAMPLE
         Get-OSDCloudCatalogLenovo
         
         Retrieves the Lenovo driver pack catalog for Windows 11.
-
-    .EXAMPLE
-        Get-OSDCloudCatalogLenovo -Force
-        
-        Forces a fresh download of the Lenovo driver pack catalog.
 
     .OUTPUTS
         PSCustomObject[]
@@ -30,10 +22,7 @@ function Get-OSDCloudCatalogLenovo {
         Catalog is downloaded from https://download.lenovo.com/cdrt/td/catalogv2.xml
     #>
     [CmdletBinding()]
-    param (
-        [Parameter()]
-        [switch]$Force
-    )
+    param ()
     
     begin {
         Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] Start"
@@ -130,7 +119,7 @@ function Get-OSDCloudCatalogLenovo {
                     Name            = $NewName
                     Manufacturer    = 'Lenovo'
                     Model           = $Model.name
-                    SystemId        = [System.String]$Model.Types.Type.split(',').Trim()
+                    SystemId        = $Model.Types.Type.split(',').ForEach({$_.Trim()})
                     FileName        = $DownloadUrl | Split-Path -Leaf
                     Url             = $DownloadUrl
                     OperatingSystem = $OperatingSystem
