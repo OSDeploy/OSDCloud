@@ -122,29 +122,9 @@ function Initialize-OSDCloudDeploy {
     $OSDModel = $global:OSDCloudDevice.OSDModel
     $OSDProduct = $global:OSDCloudDevice.OSDProduct
 
-    switch ($OSDManufacturer) {
-        'Dell' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Dell' }
-        }
-        'HP' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'HP' }
-        }
-        'Lenovo' {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture -and $_.Manufacturer -eq 'Lenovo' }
-        }
-        Default {
-            $DriverPackValues = Get-DeployOSDCloudDriverPacks | Where-Object { $_.OSArchitecture -match $OSArchitecture }
-        }
-    }
+    $DriverPackValues = Get-DeployOSDCloudDriverPacks
+    $DriverPackObject = $DriverPackValues | Where-Object { $_.SystemId -match $OSDProduct } | Select-Object -First 1
 
-    # Remove Windows 10 DriverPacks
-    $DriverPackValues = $DriverPackValues | Where-Object { $_.OS -match 'Windows 11' }
-
-    if ($OSDModel -match 'Surface') {
-        $DriverPackValues = $DriverPackValues | Where-Object { $_.Manufacturer -eq 'Microsoft' }
-    }
-
-    $DriverPackObject = Get-DeployOSDCloudDriverPack -Product $OSDProduct -OSVersion $OSName -OSReleaseID $OSVersion
     if ($DriverPackObject) {
         $DriverPackName = $DriverPackObject.Name
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DriverPackName: $DriverPackName"

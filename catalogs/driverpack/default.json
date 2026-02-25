@@ -1,0 +1,44 @@
+[
+    {
+        "CatalogVersion":  "25.08.20",
+        "ReleaseDate":  "25.08.20",
+        "Name":  "HP EliteBook Ultra G1q 14 inch Notebook AI PC sp162865 [25.08.20]",
+        "Manufacturer":  "HP",
+        "Model":  "HP EliteBook Ultra G1q 14 inch Notebook AI PC",
+        "SystemId":  "8CBE",
+        "FileName":  "sp162865.exe",
+        "Url":  "https://ftp.hp.com/pub/softpaq/sp162501-163000/sp162865.exe",
+        "OperatingSystem":  "Windows 11",
+        "OSArchitecture":  "arm64",
+        "OSVersion":  "24H2",
+        "HashMD5":  "5A2658C0BC7E985E39C20E216DDE41DB"
+    },
+    {
+        "CatalogVersion":  "25.04.26",
+        "ReleaseDate":  "25.04.11",
+        "Name":  "HP OmniBook X Laptop 14-fe1xxx sp157879 [25.04.11]",
+        "Manufacturer":  "HP",
+        "Model":  "HP OmniBook X Laptop 14-fe1xxx",
+        "SystemId":  "8CCF",
+        "FileName":  "sp157879.exe",
+        "Url":  "https://ftp.hp.com/pub/softpaq/sp157501-158000/sp157879.exe",
+        "OperatingSystem":  "Windows 11",
+        "OSArchitecture":  "arm64",
+        "OSVersion":  "24H2",
+        "HashMD5":  "5A4E38FB8983C64EA819FDB65EA04511"
+    },
+    {
+        "CatalogVersion":  "25.10.19",
+        "ReleaseDate":  "25.08.26",
+        "Name":  "ThinkCentre Neo 50q QC [25.08.26]",
+        "Manufacturer":  "Lenovo",
+        "Model":  "ThinkCentre Neo 50q QC",
+        "SystemId":  "13C8",
+        "FileName":  "tc_n50q_qc_w11_24_202507.exe",
+        "Url":  "https://download.lenovo.com/pccbbs/thinkcentre_drivers/tc_n50q_qc_w11_24_202507.exe",
+        "OperatingSystem":  "Windows 11",
+        "OSArchitecture":  "arm64",
+        "OSVersion":  "24H2",
+        "HashMD5":  "5bd0fedcef0a73a418b2f36ece881ada"
+    }
+]

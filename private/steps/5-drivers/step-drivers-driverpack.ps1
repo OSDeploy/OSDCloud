@@ -4,9 +4,6 @@ function step-drivers-driverpack {
         [System.String]
         $DriverPackName = $global:OSDCloudWorkflowInvoke.DriverPackName,
 
-        [System.String]
-        $DriverPackGuid = $global:OSDCloudWorkflowInvoke.DriverPackObject.Guid,
-
         $DriverPackObject = $global:OSDCloudWorkflowInvoke.DriverPackObject
     )
     #=================================================
@@ -32,12 +29,6 @@ function step-drivers-driverpack {
     # Is there a DriverPack Object?
     if (-not ($DriverPackObject)) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DriverPackObject is not set. OK."
-        return
-    }
-    #=================================================
-    # Is there a DriverPack Guid?
-    if (-not ($DriverPackGuid)) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DriverPackObject.GUID is not set. OK."
         return
     }
     #=================================================
