@@ -455,9 +455,9 @@ function Update-OsResults {
 }
 
 function Update-DriverPackResults {
-	$DriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
-	$global:OSDCloudDeploy.DriverPackName = $DriverPackName
-	$global:OSDCloudDeploy.DriverPackObject = $global:OSDCloudDeploy.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+	$UxDriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
+	$global:OSDCloudDeploy.DriverPackName = $UxDriverPackName
+	$global:OSDCloudDeploy.DriverPackObject = $global:OSDCloudDeploy.DriverPackValues | Where-Object { $_.Name -eq $UxDriverPackName }
 	$DriverPackUrlText.Text = [string]$global:OSDCloudDeploy.DriverPackObject.Url
 }
 
@@ -495,8 +495,8 @@ if ($script:SelectionConfirmed) {
 	# Global Variables
 	$global:OSDCloudDeploy.WorkflowTaskName = $OSDCloudWorkflowTaskName
 	$global:OSDCloudDeploy.WorkflowTaskObject = $OSDCloudWorkflowTaskObject
-	$global:OSDCloudDeploy.DriverPackName = $DriverPackName
-	$global:OSDCloudDeploy.DriverPackObject = $DriverPackObject
+	# $global:OSDCloudDeploy.DriverPackName = $DriverPackName
+	# $global:OSDCloudDeploy.DriverPackObject = $DriverPackObject
 	# DriverPackValues
 	# Flows
 	# Function
