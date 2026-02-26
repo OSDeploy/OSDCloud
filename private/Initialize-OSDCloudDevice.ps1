@@ -19,7 +19,7 @@ function Initialize-OSDCloudDevice {
     #=================================================
     # Evaluate the current DateTime
     try {
-        $googleResponse = Invoke-WebRequest -Uri "https://www.google.com" -Method Head -ErrorAction Stop
+        $googleResponse = Invoke-WebRequest -Uri "http://www.google.com" -UseBasicParsing -Method Head -ErrorAction Stop
         $googleDateHeader = $googleResponse.Headers["Date"]
         if ($googleDateHeader) {
             # Get LocalDateTime in UTC for accurate comparison with Google Date header which is in UTC
@@ -28,13 +28,13 @@ function Initialize-OSDCloudDevice {
         }
     }
     catch {
-        Write-Verbose "Failed to retrieve current datetime from Google. Using local system time. Error: $($_.Exception.Message)"
+        Write-Verbose "Failed to retrieve current DateTime from Google. Using local system time. Error: $($_.Exception.Message)"
     }
     if ($CloudDateTime -and $LocalDateTime) {
         $timeDifference = [math]::Round([math]::Abs(($CloudDateTime - $LocalDateTime).TotalMinutes))
         if ($timeDifference -gt 60) {
-            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Local DateTime: $LocalDateTime, Cloud DateTime: $CloudDateTime, Difference: $timeDifference minutes."
-            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Adjusting time to prevent certificate issues caused by inaccurate Local DateTime."
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Local DateTime: $LocalDateTime, Cloud DateTime: $CloudDateTime, Difference: $timeDifference minutes."
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Adjusting the Local DateTime to prevent HTTPS issues."
             Set-Date -Date $CloudDateTime -Confirm:$false
         }
     }
