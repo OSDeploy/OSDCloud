@@ -50,7 +50,7 @@ function Get-OSDCloudCatalogDell {
                     }
                 }
             } else {
-                Write-Verbose "Using cached catalog (use -Force to download latest)"
+                Write-Verbose "Using cached catalog"
             }
         } catch {
             Write-Warning "Failed to download catalog: $($_.Exception.Message)"

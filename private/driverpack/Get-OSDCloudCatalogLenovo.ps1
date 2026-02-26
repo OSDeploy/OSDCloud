@@ -48,7 +48,7 @@ function Get-OSDCloudCatalogLenovo {
                     [xml]$XmlCatalogContent = $catalogContent
                 }
             } else {
-                Write-Verbose "Using cached catalog (use -Force to download latest)"
+                Write-Verbose "Using cached catalog"
                 if (Test-Path $tempCatalogPath) {
                     Write-Verbose "Loading online catalog from $tempCatalogPath"
                     [xml]$XmlCatalogContent = Get-Content -Path $tempCatalogPath -Raw
