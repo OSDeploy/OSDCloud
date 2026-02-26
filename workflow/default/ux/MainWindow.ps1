@@ -194,7 +194,7 @@ Set-WMIMenuItems
 #================================================
 # TaskSequence
 $TaskSequenceCombo = $window.FindName("TaskSequenceCombo")
-$TaskSequenceCombo.ItemsSource = $global:OSDCloudDeploy.Flows.Name
+$TaskSequenceCombo.ItemsSource = @($global:OSDCloudDeploy.Flows.Name)
 $TaskSequenceCombo.SelectedIndex = 0
 $TaskSequenceCombo.Add_SelectionChanged({
 	if ($SummaryTaskSequenceText) {
@@ -460,7 +460,6 @@ function Update-DriverPackResults {
 	$global:OSDCloudDeploy.DriverPackObject = $global:OSDCloudDeploy.DriverPackValues | Where-Object { $_.Name -eq $UxDriverPackName }
 	$DriverPackUrlText.Text = [string]$global:OSDCloudDeploy.DriverPackObject.Url
 }
-
 $DriverPackCombo.Add_SelectionChanged({ Update-DriverPackResults })
 $OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
 $OSActivationCombo.Add_SelectionChanged({ Update-OsResults })

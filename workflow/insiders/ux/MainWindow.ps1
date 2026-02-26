@@ -461,10 +461,10 @@ else {
 }
 #================================================
 # Other Settings
-$deviceBiosVersionText = $window.FindName("deviceBiosVersionText")
-$deviceBiosVersionText.Text = $deviceBiosVersion
 $deviceBiosReleaseDateText = $window.FindName("deviceBiosReleaseDateText")
 $deviceBiosReleaseDateText.Text = $deviceBiosReleaseDate
+$deviceBiosVersionText = $window.FindName("deviceBiosVersionText")
+$deviceBiosVersionText.Text = $deviceBiosVersion
 $deviceOSDManufacturerText = $window.FindName("deviceOSDManufacturerText")
 $deviceOSDManufacturerText.Text = $deviceOSDManufacturer
 $deviceOSDModelText = $window.FindName("deviceOSDModelText")
@@ -582,19 +582,16 @@ function Update-OsResults {
 }
 
 function Update-DriverPackResults {
-	$DriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
-	$global:OSDCloudDeploy.DriverPackName = $DriverPackName
-	$global:OSDCloudDeploy.DriverPackObject = $global:OSDCloudDeploy.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+	$UxDriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
+	$global:OSDCloudDeploy.DriverPackName = $UxDriverPackName
+	$global:OSDCloudDeploy.DriverPackObject = $global:OSDCloudDeploy.DriverPackValues | Where-Object { $_.Name -eq $UxDriverPackName }
 	$DriverPackUrlText.Text = [string]$global:OSDCloudDeploy.DriverPackObject.Url
 }
-
-$OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
-$OSEditionCombo.Add_SelectionChanged({ Update-OsResults })
-$OSActivationCombo.Add_SelectionChanged({ Update-OsResults })
-$OSLanguageCodeCombo.Add_SelectionChanged({ Update-OsResults })
-
 $DriverPackCombo.Add_SelectionChanged({ Update-DriverPackResults })
-
+$OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
+$OSActivationCombo.Add_SelectionChanged({ Update-OsResults })
+$OSEditionCombo.Add_SelectionChanged({ Update-OsResults })
+$OSLanguageCodeCombo.Add_SelectionChanged({ Update-OsResults })
 $script:SelectionConfirmed = $false
 
 $StartButton.Add_Click({
