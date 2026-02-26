@@ -461,13 +461,11 @@ function Update-DriverPackResults {
 	$DriverPackUrlText.Text = [string]$global:OSDCloudDeploy.DriverPackObject.Url
 }
 
-$OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
-$OSEditionCombo.Add_SelectionChanged({ Update-OsResults })
-$OSActivationCombo.Add_SelectionChanged({ Update-OsResults })
-$OSLanguageCodeCombo.Add_SelectionChanged({ Update-OsResults })
-
 $DriverPackCombo.Add_SelectionChanged({ Update-DriverPackResults })
-
+$OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
+$OSActivationCombo.Add_SelectionChanged({ Update-OsResults })
+$OSEditionCombo.Add_SelectionChanged({ Update-OsResults })
+$OSLanguageCodeCombo.Add_SelectionChanged({ Update-OsResults })
 $script:SelectionConfirmed = $false
 
 $StartButton.Add_Click({
@@ -497,8 +495,8 @@ if ($script:SelectionConfirmed) {
 	# Global Variables
 	$global:OSDCloudDeploy.WorkflowTaskName = $OSDCloudWorkflowTaskName
 	$global:OSDCloudDeploy.WorkflowTaskObject = $OSDCloudWorkflowTaskObject
-	# $global:OSDCloudDeploy.DriverPackName = $DriverPackName
-	# $global:OSDCloudDeploy.DriverPackObject = $DriverPackObject
+	$global:OSDCloudDeploy.DriverPackName = $DriverPackName
+	$global:OSDCloudDeploy.DriverPackObject = $DriverPackObject
 	# DriverPackValues
 	# Flows
 	# Function

@@ -1,20 +1,6 @@
 [
     {
-        "CatalogVersion":  "25.08.20",
-        "ReleaseDate":  "25.08.20",
-        "Name":  "HP EliteBook Ultra G1q 14 inch Notebook AI PC sp162865 [25.08.20]",
-        "Manufacturer":  "HP",
-        "Model":  "HP EliteBook Ultra G1q 14 inch Notebook AI PC",
-        "SystemId":  "8CBE",
-        "FileName":  "sp162865.exe",
-        "Url":  "https://ftp.hp.com/pub/softpaq/sp162501-163000/sp162865.exe",
-        "OperatingSystem":  "Windows 11",
-        "OSArchitecture":  "arm64",
-        "OSVersion":  "24H2",
-        "HashMD5":  "5A2658C0BC7E985E39C20E216DDE41DB"
-    },
-    {
-        "CatalogVersion":  "",
+        "CatalogVersion":  "26.2.25",
         "ReleaseDate":  "26.01.30",
         "Name":  "HP EliteBook 6 G1q 14 inch Notebook Next Gen AI PC sp168873 [26.01.30]",
         "Manufacturer":  "HP",
@@ -28,7 +14,21 @@
         "HashMD5":  ""
     },
     {
-        "CatalogVersion":  "25.08.20",
+        "CatalogVersion":  "26.2.25",
+        "ReleaseDate":  "25.08.20",
+        "Name":  "HP EliteBook Ultra G1q 14 inch Notebook AI PC sp162865 [25.08.20]",
+        "Manufacturer":  "HP",
+        "Model":  "HP EliteBook Ultra G1q 14 inch Notebook AI PC",
+        "SystemId":  "8CBE",
+        "FileName":  "sp162865.exe",
+        "Url":  "https://ftp.hp.com/pub/softpaq/sp162501-163000/sp162865.exe",
+        "OperatingSystem":  "Windows 11",
+        "OSArchitecture":  "arm64",
+        "OSVersion":  "24H2",
+        "HashMD5":  "5A2658C0BC7E985E39C20E216DDE41DB"
+    },
+    {
+        "CatalogVersion":  "26.2.25",
         "ReleaseDate":  "25.08.20",
         "Name":  "HP OmniBook X Laptop 14-fe1xxx sp157879 [25.08.20]",
         "Manufacturer":  "HP",
@@ -42,9 +42,9 @@
         "HashMD5":  "5A2658C0BC7E985E39C20E216DDE41DB"
     },
     {
-        "CatalogVersion":  "25.10.19",
+        "CatalogVersion":  "26.2.25",
         "ReleaseDate":  "25.08.26",
-        "Name":  "ThinkCentre Neo 50q QC [25.08.26]",
+        "Name":  "Lenovo ThinkCentre Neo 50q QC [25.08.26]",
         "Manufacturer":  "Lenovo",
         "Model":  "ThinkCentre Neo 50q QC",
         "SystemId":  "13C8",
