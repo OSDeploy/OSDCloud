@@ -41,6 +41,7 @@ function step-test-targetdriverpack {
     }
     #=================================================
     # Is it reachable online?
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $($DriverPackObject.Url)"
     try {
         $WebRequest = Invoke-WebRequest -Uri $DriverPackObject.Url -UseBasicParsing -Method Head
         if ($WebRequest.StatusCode -eq 200) {
@@ -58,8 +59,8 @@ function step-test-targetdriverpack {
     $MatchingFiles = Get-PSDrive -PSProvider FileSystem | ForEach-Object {
         Get-ChildItem "$($_.Name):\OSDCloud\DriverPacks\" -Include "$FileName" -File -Recurse -Force -ErrorAction Ignore
     }
-    
     if ($MatchingFiles) {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $($MatchingFiles[0].FullName)"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DriverPack is available offline. OK."
         return
     }
