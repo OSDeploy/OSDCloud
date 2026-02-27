@@ -1,3 +1,48 @@
+<#
+.SYNOPSIS
+Invokes various startup utilities and commands in Windows PE environment.
+
+.DESCRIPTION
+Executes predefined startup actions within WinPE, including hardware detection, network configuration, module updates, and system information display. This function provides a centralized way to trigger common PE startup tasks with appropriate validation and error handling.
+
+.PARAMETER Id
+Specifies the startup action to invoke. Valid values are:
+- 'OSK': Launches the On-Screen Keyboard if no physical keyboard is detected
+- 'DeviceHardware': Displays hardware information and hardware errors
+- 'Info': Shows comprehensive device information
+- 'IPConfig': Displays network configuration in a minimized window
+- 'UpdateModule': Updates a PowerShell module from the PowerShell Gallery (requires -Value parameter)
+- 'WiFi': Launches WiFi connection utility if no network is detected
+
+.PARAMETER Value
+Optional parameter used by the UpdateModule action to specify the name of the module to update. Required when Id is 'UpdateModule'.
+
+.EXAMPLE
+Invoke-OSDCloudPEStartup -Id OSK
+Launches the On-Screen Keyboard if no physical keyboard is present.
+
+.EXAMPLE
+Invoke-OSDCloudPEStartup -Id DeviceHardware
+Displays device hardware information and any hardware errors.
+
+.EXAMPLE
+Invoke-OSDCloudPEStartup -Id UpdateModule -Value 'OSDCloud'
+Updates the OSDCloud module from the PowerShell Gallery.
+
+.EXAMPLE
+Invoke-OSDCloudPEStartup -Id WiFi
+Launches the WiFi connection utility if network connectivity is unavailable.
+
+.EXAMPLE
+Invoke-OSDCloudPEStartup -Id IPConfig
+Displays IP configuration information in a minimized window.
+
+.OUTPUTS
+None. This function performs startup actions and displays output to the console but does not return objects.
+
+.NOTES
+This function is designed for use in WinPE environments during the OS deployment process. Some features like osk.exe may not be available in all WinPE versions.
+#>
 function Invoke-OSDCloudPEStartup {
     [CmdletBinding()]
     param (
@@ -17,12 +62,9 @@ function Invoke-OSDCloudPEStartup {
         [System.String]
         $Value
     )
-    # Start-Transcript -Path "$($env:Temp)\OSDCloudPEStartup.log" -Append -Force -ErrorAction SilentlyContinue
-    # Write-Host "Processing $Id with value $Value"
-
     switch ($Id) {
         'OSK' {
-            # OSK should not be launched if a physical keyboard is detected. This is common on tablets and some laptops that may be running WinPE without a keyboard attached
+            # OSK should not be launched if a physical keyboard is detected
             if (Get-CimInstance -ClassName Win32_Keyboard -ErrorAction SilentlyContinue) {
                 Write-Host "OSDCloud OSK: Keyboard detected. Not launching On-Screen Keyboard."
             }
@@ -31,7 +73,6 @@ function Invoke-OSDCloudPEStartup {
                 if (Get-Command -Name 'osk.exe' -ErrorAction SilentlyContinue) {
                     Write-Host "OSDCloud OSK: Keyboard not detected. Launching On-Screen Keyboard."
                     Start-Process -FilePath 'osk.exe' -WindowStyle Minimized
-                    # Invoke-PEStartupCommand Invoke-PEStartupOSK -WindowStyle Hidden
                 }
                 else {
                     Write-Host "OSDCloud OSK: Unable to launch On-Screen Keyboard due to osk.exe not found."

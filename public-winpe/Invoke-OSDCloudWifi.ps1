@@ -1,3 +1,54 @@
+<#
+.SYNOPSIS
+Establishes WiFi connectivity in WinPE environment during OS deployment.
+
+.DESCRIPTION
+Manages WiFi connection in Windows PE by testing for adapter availability, configuring wireless services, and connecting to available networks. Supports both automated connection via saved WiFi profiles and interactive WiFi network selection. Includes comprehensive checks for required WinPE components, wireless adapter detection, and connection validation with retry logic.
+
+.PARAMETER wifiProfile
+Specifies the path to a WiFi profile XML file for unattended WiFi connection. If provided and valid, the function attempts to connect using this profile without user interaction. If not provided or invalid, the function presents an interactive WiFi network selection menu.
+
+.PARAMETER WirelessConnect
+Switch parameter to use the built-in WirelessConnect.exe utility for interactive WiFi connection when available in WinPE. If not specified or unavailable, uses the Get-OSDCloudWifi menu for network selection.
+
+.EXAMPLE
+Invoke-OSDCloudWifi
+Starts the WiFi connection process interactively, displaying available WiFi networks for selection.
+
+.EXAMPLE
+Invoke-OSDCloudWifi -wifiProfile 'C:\Temp\WiFiProfile.xml'
+Attempts to connect to WiFi using the specified profile XML file without user interaction.
+
+.EXAMPLE
+Invoke-OSDCloudWifi -WirelessConnect
+Uses the WirelessConnect.exe utility for interactive WiFi connection if it exists in the WinPE environment.
+
+.OUTPUTS
+None. This function performs WiFi connection setup and writes status messages to the host but does not return objects.
+
+.NOTES
+This function is designed specifically for Windows PE environments during OS deployment. It performs the following operations:
+
+- Tests internet connectivity via Google.com
+- Validates WinPE required components (DLL files for wireless support)
+- Starts WlanSvc (Wireless LAN Service)
+- Detects wireless network adapters
+- Attempts to retrieve WiFi profile from HP UEFI firmware if available
+- Connects to networks either via stored profile or interactive selection
+- Waits for IP configuration and network availability
+- Creates transcript logs in $env:Temp\transcript-OSDCloudWifi.txt
+
+Required WinPE Components:
+  - dmcmnutils.dll
+  - mdmpostprocessevaluator.dll
+  - mdmregistration.dll
+  - raschap.dll
+  - raschapext.dll
+  - rastls.dll
+  - rastlsext.dll
+
+If wireless adapters are not detected or drivers are missing, the function will report which devices have errors and may require driver additions to WinPE.
+#>
 function Invoke-OSDCloudWifi {
     [CmdletBinding()]
     param (
@@ -9,16 +60,14 @@ function Invoke-OSDCloudWifi {
     )
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     #=================================================
-    #	Transcript
-    #=================================================        
+    # Start-Transcript  
     $TranscriptPath = "$env:Temp"
     if (!(Test-Path -path $TranscriptPath)){
         New-Item -Path $TranscriptPath -ItemType Directory -Force | Out-Null
     }
     $null = Start-Transcript -Path "$TranscriptPath\transcript-OSDCloudWifi.txt" -ErrorAction Ignore
     #=================================================
-    #	Test Internet Connection
-    #=================================================
+    # Test-OSDCloudInternetConnection
     if (Test-OSDCloudInternetConnection -Uri 'google.com') {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Ping google.com success. Device is already connected to the Internet"
         $StartOSDCloudWifi = $false
@@ -28,51 +77,60 @@ function Invoke-OSDCloudWifi {
         $StartOSDCloudWifi = $true
     }
     #=================================================
-    #   Test WinRE
-    #=================================================
+    # Test WinPE Required Components
     if ($StartOSDCloudWifi) {
-        if (!(Test-Path "$ENV:SystemRoot\System32\dmcmnutils.dll")) {
-            $StartOSDCloudWifi = $false
+        $RequiredDlls = @(
+            'dmcmnutils.dll',
+            'mdmpostprocessevaluator.dll',
+            'mdmregistration.dll',
+            'raschap.dll',
+            'raschapext.dll',
+            'rastls.dll',
+            'rastlsext.dll'
+        )
+        
+        $MissingDlls = @()
+        foreach ($Dll in $RequiredDlls) {
+            $DllPath = "$ENV:SystemRoot\System32\$Dll"
+            if (!(Test-Path -Path $DllPath)) {
+                $MissingDlls += $Dll
+                $StartOSDCloudWifi = $false
+            }
         }
-        if (!(Test-Path "$ENV:SystemRoot\System32\mdmpostprocessevaluator.dll")) {
-            $StartOSDCloudWifi = $false
-        }
-        if (!(Test-Path "$ENV:SystemRoot\System32\mdmregistration.dll")) {
-            $StartOSDCloudWifi = $false
-        }
-        if (!(Test-Path "$ENV:SystemRoot\System32\raschap.dll")) {
-            $StartOSDCloudWifi = $false
-        }
-        if (!(Test-Path "$ENV:SystemRoot\System32\raschapext.dll")) {
-            $StartOSDCloudWifi = $false
-        }
-        if (!(Test-Path "$ENV:SystemRoot\System32\rastls.dll")) {
-            $StartOSDCloudWifi = $false
-        }
-        if (!(Test-Path "$ENV:SystemRoot\System32\rastlsext.dll")) {
-            $StartOSDCloudWifi = $false
-        }
-        if ($StartOSDCloudWifi) {
-        }
-        else {
+        
+        if (!$StartOSDCloudWifi) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to enable Wireless Network due to missing components"
-        }
-    }
-    #=================================================
-    #	WlanSvc
-    #=================================================
-    if ($StartOSDCloudWifi) {
-        if (Get-Service -Name WlanSvc) {
-            if ((Get-Service -Name WlanSvc).Status -ne 'Running') {
-                Get-Service -Name WlanSvc | Start-Service
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Waiting for WlanSvc service to start"
-                (Get-Service WlanSvc).WaitForStatus('Running')
+            if ($MissingDlls.Count -gt 0) {
+                Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Missing DLL files: $($MissingDlls -join ', ')"
             }
         }
     }
     #=================================================
-    #	Test Wi-Fi Adapter
+    # Start-Service WlanSvc
+    if ($StartOSDCloudWifi) {
+        try {
+            $WlanService = Get-Service -Name WlanSvc -ErrorAction Stop
+            
+            if ($WlanService.Status -ne 'Running') {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Starting WlanSvc service"
+                $WlanService | Start-Service -ErrorAction Stop
+                
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Waiting for WlanSvc service to start"
+                $WlanService.WaitForStatus('Running', [timespan]::FromSeconds(30))
+                
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] WlanSvc service started successfully"
+            }
+            else {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] WlanSvc service is already running"
+            }
+        }
+        catch {
+            Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to start WlanSvc service: $_"
+            $StartOSDCloudWifi = $false
+        }
+    }
     #=================================================
+    # Test Wi-Fi Adapter
     if ($StartOSDCloudWifi) {
         # Do we have a Wireless Interface? We have to search for different names as this will vary depending on the WinPE Language
         $SmbClientNetworkInterface = Get-SmbClientNetworkInterface | Where-Object { ($_.'FriendlyName' -match 'WiFi|Wi-Fi|Wireless|WLAN') } | Sort-Object -Property InterfaceIndex | Select-Object -First 1
@@ -102,8 +160,7 @@ function Invoke-OSDCloudWifi {
         }
     }
     #=================================================
-    #   Test UEFI WiFi Profile
-    #=================================================
+    # Test UEFI WiFi Profile
     if ($StartOSDCloudWifi){
         $Module = Import-Module UEFIv2 -PassThru -ErrorAction SilentlyContinue
         if ($Module) {
@@ -129,8 +186,7 @@ function Invoke-OSDCloudWifi {
         }
     }
     #=================================================
-    #	Test Wi-Fi Connection
-    #=================================================
+    # Test Wi-Fi Connection
     #TODO Test on ARM64
     if ($StartOSDCloudWifi) {
         if ($WirelessNetworkAdapter.NetEnabled -eq $true) {
@@ -143,8 +199,7 @@ function Invoke-OSDCloudWifi {
         }
     }
     #=================================================
-    #   Connect
-    #=================================================
+    # Connect
     if ($StartOSDCloudWifi) {
             if ($wifiProfile -and (Test-Path $wifiProfile)) {
                 Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Starting unattended Wi-Fi connection "
