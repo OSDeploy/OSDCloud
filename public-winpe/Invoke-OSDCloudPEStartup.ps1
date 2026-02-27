@@ -62,6 +62,10 @@ function Invoke-OSDCloudPEStartup {
         [System.String]
         $Value
     )
+    #=================================================
+    $Error.Clear()
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
+    #=================================================
     switch ($Id) {
         'OSK' {
             # OSK should not be launched if a physical keyboard is detected
@@ -117,4 +121,7 @@ function Invoke-OSDCloudPEStartup {
             Invoke-PEStartupCommand Show-PEStartupDeviceInfo -NoExit -Wait
         }
     }
+    #=================================================
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
+    #=================================================
 }

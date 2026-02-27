@@ -1,10 +1,49 @@
+<#
+.SYNOPSIS
+Establishes and validates WiFi connectivity in Windows PE startup environment.
+
+.DESCRIPTION
+Manages WiFi network connectivity during WinPE startup by detecting available wireless interfaces and initiating connection. Supports three connection modes: WirelessConnect.exe, custom WiFi profile, or interactive WiFi selection. After establishing a connection, validates IP address assignment with automatic DHCP lease renewal if necessary. Includes timeout and retry logic to ensure network availability before returning.
+
+.PARAMETER None
+This function does not accept any parameters.
+
+.EXAMPLE
+Show-PEStartupWifi
+Initiates WiFi connectivity startup, checking for wireless capability and establishing a network connection with IP validation.
+
+.OUTPUTS
+None. This function manages WiFi connectivity and displays status messages to the console but does not return objects.
+
+.NOTES
+This function is designed for use in Windows PE startup environments. It performs the following operations:
+
+Prerequisites:
+- Checks for dmcmnutils.dll in System32 (required for WiFi functionality)
+
+Connection Modes (attempted in order):
+1. WirelessConnect.exe: If $WirelessConnect variable is set
+2. WiFi Profile: If $WifiProfile variable is set, searches removable drives for WiFiProfile.xml in OSDCloud\Config\Scripts
+3. Interactive WiFi: Standard Invoke-OSDCloudWifi for manual network selection
+
+Network Initialization:
+- Validates IP addresses are properly assigned
+- Detects APIPA addresses (169.254.x.x) indicating DHCP failure
+- Automatically renews DHCP leases when necessary
+- Retries with 5-second intervals up to 20 seconds total
+- Updates window title throughout process
+
+If dmcmnutils.dll is not found, the function skips WiFi connection and proceeds directly to network initialization.
+
+The window title is updated to '[OSDCloud] - Wireless Connectivity' to show the current operation status.
+#>
 function Show-PEStartupWifi {
     [CmdletBinding()]
     param ()
     #=================================================
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     $Error.Clear()
     $host.ui.RawUI.WindowTitle = '[OSDCloud] Wireless Connectivity'
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     #=================================================
     if (Test-Path "$env:SystemRoot\System32\dmcmnutils.dll") {
         if ($WirelessConnect) {
@@ -47,6 +86,6 @@ function Show-PEStartupWifi {
         }
     }
     #=================================================
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     #=================================================
 }

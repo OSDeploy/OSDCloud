@@ -58,7 +58,9 @@ function Invoke-OSDCloudWifi {
         [System.Management.Automation.SwitchParameter]
         $WirelessConnect
     )
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
+    #=================================================
+    $Error.Clear()
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     #=================================================
     # Start-Transcript  
     $TranscriptPath = "$env:Temp"

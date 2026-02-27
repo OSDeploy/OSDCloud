@@ -78,6 +78,6 @@ $Unattend = @"
 		Start-Process -FilePath wpeinit -ArgumentList "-unattend:$env:Temp\$Command.xml"
 	}
     #=================================================
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     #=================================================
 }

@@ -2,9 +2,9 @@ function Show-PEStartupHardwareErrors {
     [CmdletBinding()]
     param ()
     #=================================================
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     $Error.Clear()
-    $host.ui.RawUI.WindowTitle = '[OSDCloud] WinPE Device Hardware Errors (automatically close in 5 seconds)'
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
+    $host.ui.RawUI.WindowTitle = "[$(Get-Date -format s)] OSDCloud - WinPE Device Hardware Errors (automatically close in 5 seconds)"
     #=================================================
     $Results = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object Status, PNPClass, DeviceID, Name, Manufacturer | Where-Object Status -ne 'OK' | Sort-Object PNPClass, DeviceID
 
@@ -30,6 +30,6 @@ function Show-PEStartupHardwareErrors {
     }
     exit 0
     #=================================================
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     #=================================================
 }
