@@ -935,11 +935,11 @@ function New-OSDCloudDisk {
 
         [Alias('SSG','Efi','SystemG')]
         [ValidateRange(100MB,3000MB)]
-        [uint64]$SizeSystemGpt = 260MB,
+        [uint64]$SizeSystemGpt = 500MB,
 
         [Alias('SSM','Mbr','SystemM')]
         [ValidateRange(100MB,3000MB)]
-        [uint64]$SizeSystemMbr = 260MB,
+        [uint64]$SizeSystemMbr = 500MB,
 
         [Alias('MSR')]
         [ValidateRange(16MB,128MB)]
