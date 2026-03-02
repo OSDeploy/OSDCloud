@@ -103,8 +103,7 @@ function Show-PEStartupWifi {
             Write-Verbose "[$(Get-Date -format s)] Starting Wi-Fi"
             # Start-Process PowerShell Invoke-OSDCloudWifi -Wait
             Invoke-OSDCloudWifi
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Greenfish"
-            Start-Sleep -Seconds 5
+            Start-Sleep -Seconds 2
         }
     }
     #=================================================
@@ -118,25 +117,21 @@ function Show-PEStartupWifi {
         $IP = Test-Connection -ComputerName $(HOSTNAME) -Count 1 | Select-Object -ExpandProperty IPV4Address
         if ($null -eq $IP) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Network adapter error. This should not happen!"
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Redfish"
-            Start-Sleep -Seconds 5
+            Start-Sleep -Seconds 2
         }
         elseif ($IP.IPAddressToString.StartsWith('169.254') -or $IP.IPAddressToString.Equals('127.0.0.1')) {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IP address not yet assigned by DHCP. Trying to get a new DHCP lease."
             ipconfig /release | Out-Null
             ipconfig /renew | Out-Null
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Bluefish"
-            Start-Sleep -Seconds 5
+            Start-Sleep -Seconds 2
         }
         else {
             Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Network configuration renewed with IP: $($IP.IPAddressToString)"
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Catfish"
-            Start-Sleep -Seconds 5
+            Start-Sleep -Seconds 2
             break
         }
     }
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Starfish"
-    Start-Sleep -Seconds 5
+    Start-Sleep -Seconds 2
     #=================================================
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     #=================================================

@@ -33,9 +33,10 @@ function Initialize-OSDCloudDevice {
     if ($CloudDateTime -and $LocalDateTime) {
         $timeDifference = [math]::Round([math]::Abs(($CloudDateTime - $LocalDateTime).TotalMinutes))
         if ($timeDifference -gt 60) {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Local DateTime: $LocalDateTime, Cloud DateTime: $CloudDateTime, Difference: $timeDifference minutes."
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Adjusting the Local DateTime to prevent HTTPS issues."
-            Set-Date -Date $CloudDateTime -Confirm:$false
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Local DateTime: $LocalDateTime"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Internet DateTime: $CloudDateTime, Difference: $timeDifference minutes."
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDCloud will fail if you do not synchronize your system clock. Please synchronize your system clock and try again."
+            # Set-Date -Date $CloudDateTime -Confirm:$false
         }
     }
     #=================================================

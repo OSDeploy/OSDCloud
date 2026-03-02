@@ -35,7 +35,7 @@ function Get-OSDCloudCatalogLenovo {
         #=================================================
         # Build realtime catalog from online source, if fails fallback to offline catalog
         try {
-            if ($Force -or -not (Test-Path $tempCatalogPath)) {
+            if (-not (Test-Path $tempCatalogPath)) {
                 Write-Verbose "Downloading Lenovo driver pack catalog from $originCatalogPath"
                 $sourceContent = Invoke-RestMethod -Uri $originCatalogPath -UseBasicParsing -ErrorAction Stop
                 
