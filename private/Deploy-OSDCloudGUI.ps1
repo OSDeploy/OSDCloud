@@ -12,7 +12,7 @@ function Deploy-OSDCloudGUI {
     # Initialize OSDCloudWorkflow
     Initialize-OSDCloudDeploy -WorkflowName $WorkflowName
     #=================================================
-    # Prevents the workflow from starting unless the Start button is clicked in the Ux
+    # Prevents the workflow from starting unless the Start button is clicked in the GUI
     $global:OSDCloudDeploy.TimeStart = $null
     #=================================================
     # OSDCloudWorkflowUx

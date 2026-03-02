@@ -17,6 +17,29 @@ function Initialize-OSDCloudDevice {
     #=================================================
     $Error.Clear()
     #=================================================
+    # Evaluate the current DateTime
+    try {
+        $googleResponse = Invoke-WebRequest -Uri "http://www.google.com" -UseBasicParsing -Method Head -ErrorAction Stop
+        $googleDateHeader = $googleResponse.Headers["Date"]
+        if ($googleDateHeader) {
+            # Get LocalDateTime in UTC for accurate comparison with Google Date header which is in UTC
+            $LocalDateTime = Get-Date
+            $CloudDateTime = Get-Date $googleDateHeader
+        }
+    }
+    catch {
+        Write-Verbose "Failed to retrieve current DateTime from Google. Using local system time. Error: $($_.Exception.Message)"
+    }
+    if ($CloudDateTime -and $LocalDateTime) {
+        $timeDifference = [math]::Round([math]::Abs(($CloudDateTime - $LocalDateTime).TotalMinutes))
+        if ($timeDifference -gt 60) {
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Local DateTime: $LocalDateTime"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Internet DateTime: $CloudDateTime, Difference: $timeDifference minutes."
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] OSDCloud will fail if you do not synchronize your system clock. Please synchronize your system clock and try again."
+            # Set-Date -Date $CloudDateTime -Confirm:$false
+        }
+    }
+    #=================================================
     # Set the osdcloud-logs Path
     $LogsPath = "$env:TEMP\osdcloud-logs"
     if (-not (Test-Path -Path $LogsPath)) {

@@ -1,10 +1,55 @@
+<#
+.SYNOPSIS
+Displays comprehensive WinPE and device hardware information during OS deployment startup.
+
+.DESCRIPTION
+Gathers and displays detailed hardware and environment information in Windows PE including system specifications, device identifiers, processor details, memory configuration, disk drives, and network adapters. Initializes the OSDCloud device environment and exports hardware WMI information to log files in the temporary directory. Validates system memory requirements and provides warnings if minimum specifications are not met.
+
+.PARAMETER None
+This function does not accept any parameters.
+
+.EXAMPLE
+Show-PEStartupDeviceInfo
+Displays comprehensive WinPE and device information including hardware specifications and device identifiers.
+
+.OUTPUTS
+None. This function displays system information to the console and exports hardware data to log files but does not return objects.
+
+.NOTES
+This function is designed for use in Windows PE startup environments and performs the following operations:
+
+Information Displayed:
+- OSDCloud PowerShell Module version
+- WinPE version, architecture, and computer name
+- Device manufacturer, model, and serial number
+- UUID and BIOS information
+- Processor name and logical core count
+- Total physical memory in GB
+- Disk drive models and device IDs
+- Network adapter names and MAC addresses
+
+System Requirements:
+- Minimum 6 GB of physical memory recommended
+- Issues warning if memory is less than 6 GB
+
+Log Files Created:
+- Stores device information in $env:TEMP\osdcloud-logs directory
+- Win32_DiskDrive.txt: Complete disk drive information
+- Win32_NetworkAdapter.txt: Complete network adapter information
+
+Functions Called:
+- Get-OSDCloudModuleVersion: Retrieves current OSDCloud module version
+- Initialize-OSDCloudDevice: Populates $global:OSDCloudDevice with hardware details
+
+The function updates the window title to '[OSDCloud] - WinPE and Device Information' to indicate the current operation status.
+#>
 function Show-PEStartupDeviceInfo {
     [CmdletBinding()]
     param ()
     #=================================================
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     $Error.Clear()
     $host.ui.RawUI.WindowTitle = "[$(Get-Date -format s)] OSDCloud WinPE and Device Information"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     #=================================================
     # Modules
     $OSDCloudModuleVersion = (Get-OSDCloudModuleVersion).ToString()

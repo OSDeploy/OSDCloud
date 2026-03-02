@@ -34,9 +34,8 @@ function Get-OSDCloudCatalogLenovo {
         $tempCatalogPath = "$($env:TEMP)\osdcloud-driverpack-lenovo.xml"
         #=================================================
         # Build realtime catalog from online source, if fails fallback to offline catalog
-        <#
         try {
-            if ($Force -or -not (Test-Path $tempCatalogPath)) {
+            if (-not (Test-Path $tempCatalogPath)) {
                 Write-Verbose "Downloading Lenovo driver pack catalog from $originCatalogPath"
                 $sourceContent = Invoke-RestMethod -Uri $originCatalogPath -UseBasicParsing -ErrorAction Stop
                 
@@ -48,7 +47,7 @@ function Get-OSDCloudCatalogLenovo {
                     [xml]$XmlCatalogContent = $catalogContent
                 }
             } else {
-                Write-Verbose "Using cached catalog (use -Force to download latest)"
+                Write-Verbose "Using cached catalog"
                 if (Test-Path $tempCatalogPath) {
                     Write-Verbose "Loading online catalog from $tempCatalogPath"
                     [xml]$XmlCatalogContent = Get-Content -Path $tempCatalogPath -Raw
@@ -58,7 +57,6 @@ function Get-OSDCloudCatalogLenovo {
             Write-Warning "Failed to download catalog: $($_.Exception.Message)"
             Write-Verbose "Falling back to offline catalog"
         }
-        #>
         
         # Load offline catalog if online catalog failed
         if (-not $XmlCatalogContent) {

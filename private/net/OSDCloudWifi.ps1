@@ -10,7 +10,7 @@ function Connect-OSDCloudWifi {
     $password = ""
 
     if ($network.Authentication -ne "Open") {
-        $cred = Get-Credential -Message "Enter password for WIFI network '$SSID'" -UserName $SSID
+        $cred = Get-Credential -Message "Enter password for Wi-Fi network '$SSID'" -UserName $SSID
         $password = $cred.GetNetworkCredential().password
     }
 
@@ -46,7 +46,7 @@ function Connect-OSDCloudWifi {
     # connect to network
     $result = Netsh WLAN connect name="$SSID"
     if ($result -ne "Connection request was completed successfully.") {
-        throw "Connection to WIFI wasn't successful. Error was $result"
+        throw "Connection to Wi-Fi wasn't successful. Error was $result"
     }
 }
 function Connect-OSDCloudWifiByXMLProfile {
@@ -75,13 +75,13 @@ function Connect-OSDCloudWifiByXMLProfile {
     # just for sure
     $null = Netsh WLAN delete profile "$SSID"
 
-    # import wifi profile
+    # import wi-fi profile
     $null = Netsh WLAN add profile filename="$wifiProfile"
 
     # connect to network
     $result = Netsh WLAN connect name="$SSID"
     if ($result -ne "Connection request was completed successfully.") {
-        throw "Connection to WIFI wasn't successful. Error was $result"
+        throw "Connection to Wi-Fi wasn't successful. Error was $result"
     }
 }
 function Get-OSDCloudWifi {
@@ -197,6 +197,6 @@ $XMLProfile = @"
     $result = Netsh WLAN add profile filename=$WlanConfig
     Remove-Item $WlanConfig -ErrorAction SilentlyContinue
     if ($result -notmatch "is added on interface") {
-        throw "There was en error when setting up WIFI $WLanName connection profile. Error was $result"
+        throw "There was en error when setting up Wi-Fi $WLanName connection profile. Error was $result"
     }
 }

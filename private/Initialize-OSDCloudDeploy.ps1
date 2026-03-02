@@ -133,7 +133,9 @@ function Initialize-OSDCloudDeploy {
     # Main
     $global:OSDCloudDeploy = $null
     $global:OSDCloudDeploy = [ordered]@{
+        DeploymentDiskObject      = $DeploymentDiskObject
         DriverPackName            = $DriverPackName
+        DriverPackObject          = $DriverPackObject
         DriverPackValues          = [array]$DriverPackValues
         Flows                     = [array]$global:OSDCloudWorkflowTasks
         Function                  = $($MyInvocation.MyCommand.Name)
@@ -141,10 +143,8 @@ function Initialize-OSDCloudDeploy {
         ImageFileUrl              = $ImageFileUrl
         LaunchMethod              = 'OSDCloudWorkflow'
         Module                    = $($MyInvocation.MyCommand.Module.Name)
-        DeploymentDiskObject      = $DeploymentDiskObject
-        DriverPackObject          = $DriverPackObject
-        OperatingSystemObject     = $OperatingSystemObject
         OperatingSystem           = $OperatingSystem
+        OperatingSystemObject     = $OperatingSystemObject
         OperatingSystemValues     = $OperatingSystemValues
         OSActivation              = $OSActivation
         OSActivationValues        = $OSActivationValues

@@ -34,10 +34,9 @@ function Get-OSDCloudCatalogHp {
         $tempCatalogPackagePath = "$($env:TEMP)\HPClientDriverPackCatalog.cab"
         $tempCatalogPath = "$($env:TEMP)\osdcloud-driverpack-hp.xml"
         #=================================================
-        <#
         # Build realtime catalog from online source, if fails fallback to offline catalog
         try {
-            if ($Force -or -not (Test-Path $tempCatalogPath)) {
+            if (-not (Test-Path $tempCatalogPath)) {
                 Write-Verbose "Downloading HP driver pack catalog from $originCatalogPath"
                 $null = Invoke-WebRequest -Uri $originCatalogPath -OutFile $tempCatalogPackagePath -ErrorAction Stop
                 
@@ -50,13 +49,12 @@ function Get-OSDCloudCatalogHp {
                     }
                 }
             } else {
-                Write-Verbose "Using cached catalog (use -Force to download latest)"
+                Write-Verbose "Using cached catalog"
             }
         } catch {
             Write-Warning "Failed to download catalog: $($_.Exception.Message)"
             Write-Verbose "Falling back to offline catalog"
         }
-        #>
         
         # Load catalog content
         if (Test-Path $tempCatalogPath) {

@@ -35,7 +35,6 @@ function Get-OSDCloudCatalogDell {
         $tempCatalogPath = "$($env:TEMP)\osdcloud-driverpack-dell.xml"
         #=================================================
         # Build realtime catalog from online source, if fails fallback to offline catalog
-        <#
         try {
             if ($Force -or -not (Test-Path $tempCatalogPath)) {
                 Write-Verbose "Downloading Dell driver pack catalog from $originCatalogPath"
@@ -50,13 +49,12 @@ function Get-OSDCloudCatalogDell {
                     }
                 }
             } else {
-                Write-Verbose "Using cached catalog (use -Force to download latest)"
+                Write-Verbose "Using cached catalog"
             }
         } catch {
             Write-Warning "Failed to download catalog: $($_.Exception.Message)"
             Write-Verbose "Falling back to offline catalog"
         }
-        #>
         
         # Load catalog content
         if (Test-Path $tempCatalogPath) {

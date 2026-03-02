@@ -21,6 +21,7 @@ function step-test-targetwindowsimage {
     }
     #=================================================
     # Is it reachable online?
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $($global:OSDCloudWorkflowInvoke.OperatingSystemObject.FilePath)"
     try {
         $WebRequest = Invoke-WebRequest -Uri $global:OSDCloudWorkflowInvoke.OperatingSystemObject.FilePath -UseBasicParsing -Method Head
         if ($WebRequest.StatusCode -eq 200) {
@@ -38,8 +39,8 @@ function step-test-targetwindowsimage {
     $MatchingFiles = Get-PSDrive -PSProvider FileSystem | ForEach-Object {
         Get-ChildItem "$($_.Name):\OSDCloud\OS\" -Include "$FileName" -File -Recurse -Force -ErrorAction Ignore
     }
-    
     if ($MatchingFiles) {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $($MatchingFiles[0].FullName)"
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] OperatingSystem is available offline. OK."
         return
     }

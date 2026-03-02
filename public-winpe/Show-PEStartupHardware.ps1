@@ -2,9 +2,9 @@ function Show-PEStartupHardware {
     [CmdletBinding()]
     param ()
     #=================================================
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     $Error.Clear()
-    $host.ui.RawUI.WindowTitle = '[OSDCloud] WinPE Device Hardware'
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
+    $host.ui.RawUI.WindowTitle = "[$(Get-Date -format s)] OSDCloud - WinPE Device Hardware"
     #=================================================
     $Results = Get-CimInstance -ClassName Win32_PnPEntity | Select-Object PNPClass, Status, DeviceID, Name, Manufacturer | Sort-Object PNPClass, DeviceID
 
@@ -31,6 +31,6 @@ function Show-PEStartupHardware {
         exit 0
     }
     #=================================================
-    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Done"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     #=================================================
 }

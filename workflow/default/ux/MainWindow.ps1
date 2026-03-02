@@ -194,7 +194,9 @@ Set-WMIMenuItems
 #================================================
 # TaskSequence
 $TaskSequenceCombo = $window.FindName("TaskSequenceCombo")
-$TaskSequenceCombo.ItemsSource = $global:OSDCloudDeploy.Flows.Name
+$taskSequenceFlows = $global:OSDCloudDeploy.Flows.Name
+if ($null -eq $taskSequenceFlows) { $taskSequenceFlows = @() }
+$TaskSequenceCombo.ItemsSource = $taskSequenceFlows
 $TaskSequenceCombo.SelectedIndex = 0
 $TaskSequenceCombo.Add_SelectionChanged({
 	if ($SummaryTaskSequenceText) {
@@ -455,19 +457,16 @@ function Update-OsResults {
 }
 
 function Update-DriverPackResults {
-	$DriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
-	$global:OSDCloudDeploy.DriverPackName = $DriverPackName
-	$global:OSDCloudDeploy.DriverPackObject = $global:OSDCloudDeploy.DriverPackValues | Where-Object { $_.Name -eq $DriverPackName }
+	$selectedDriverPackName = Get-ComboValue -ComboBox $DriverPackCombo
+	$global:OSDCloudDeploy.DriverPackName = $selectedDriverPackName
+	$global:OSDCloudDeploy.DriverPackObject = $global:OSDCloudDeploy.DriverPackValues | Where-Object { $_.Name -eq $selectedDriverPackName }
 	$DriverPackUrlText.Text = [string]$global:OSDCloudDeploy.DriverPackObject.Url
 }
-
-$OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
-$OSEditionCombo.Add_SelectionChanged({ Update-OsResults })
-$OSActivationCombo.Add_SelectionChanged({ Update-OsResults })
-$OSLanguageCodeCombo.Add_SelectionChanged({ Update-OsResults })
-
 $DriverPackCombo.Add_SelectionChanged({ Update-DriverPackResults })
-
+$OperatingSystemCombo.Add_SelectionChanged({ Update-OsResults })
+$OSActivationCombo.Add_SelectionChanged({ Update-OsResults })
+$OSEditionCombo.Add_SelectionChanged({ Update-OsResults })
+$OSLanguageCodeCombo.Add_SelectionChanged({ Update-OsResults })
 $script:SelectionConfirmed = $false
 
 $StartButton.Add_Click({

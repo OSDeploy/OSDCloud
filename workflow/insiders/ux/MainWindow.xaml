@@ -9,9 +9,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="420" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="55" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu Background="White" BorderBrush="#DDE5F5" BorderThickness="0" FontWeight="Bold" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -87,9 +87,7 @@
                                 <RowDefinition Height="32" />
                                 <RowDefinition Height="20" />
                                 <RowDefinition Height="32" />
-                                <RowDefinition Height="32" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="32" />
+                                <RowDefinition Height="52" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120" />
