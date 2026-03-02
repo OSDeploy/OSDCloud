@@ -4,7 +4,7 @@ function step-initialize-osdcloudlogs {
     #=================================================
     # Start the step
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
-    Write-Debug -Message $Message; Write-Verbose -Message $Message
+    Write-Verbose -Message $Message; Write-Debug -Message $Message
 
     # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
@@ -12,21 +12,14 @@ function step-initialize-osdcloudlogs {
     #region Main
     $LogsPath = "$env:TEMP\osdcloud-logs"
 
-    $Params = @{
-        Path        = $LogsPath
-        ItemType    = 'Directory'
-        Force       = $true
-        ErrorAction = 'SilentlyContinue'
-    }
+    # Ensure logs directory exists
+    $null = New-Item -Path $LogsPath -ItemType Directory -Force -ErrorAction SilentlyContinue
 
-    if (-not (Test-Path $Params.Path)) {
-        New-Item @Params | Out-Null
-    }
-
+    # Start transcript logging
     $TranscriptFullName = Join-Path $LogsPath "transcript-$((Get-Date).ToString('yyyy-MM-dd-HHmmss')).log"
-    # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $TranscriptFullName"
-    
-    $null = Start-Transcript -Path $TranscriptFullName -ErrorAction SilentlyContinue
+    if (-not (Start-Transcript -Path $TranscriptFullName -ErrorAction SilentlyContinue)) {
+        Write-Warning "[$(Get-Date -format s)] Failed to start transcript at $TranscriptFullName"
+    }
     #endregion
     #=================================================
     # End the function

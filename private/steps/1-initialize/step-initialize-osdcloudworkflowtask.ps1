@@ -7,15 +7,19 @@ function step-initialize-osdcloudworkflowtask {
     #=================================================
     # Start the step
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
-    Write-Debug -Message $Message; Write-Verbose -Message $Message
+    Write-Verbose -Message $Message; Write-Debug -Message $Message
 
     # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
     #=================================================
-    # Delay Start
+    #region Main
+    
+    # Display delay message to user
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Starting $WorkflowTaskName in 5 seconds..."
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Press CTRL+C to cancel"
     Start-Sleep -Seconds 5
+    
+    #endregion
     #=================================================
     # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"

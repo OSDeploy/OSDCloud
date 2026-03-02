@@ -1,47 +1,62 @@
 <#
 .SYNOPSIS
-Invokes various startup utilities and commands in Windows PE environment.
+    Invokes startup tasks and utilities for OSDCloud Windows PE environments.
 
 .DESCRIPTION
-Executes predefined startup actions within WinPE, including hardware detection, network configuration, module updates, and system information display. This function provides a centralized way to trigger common PE startup tasks with appropriate validation and error handling.
+    Invoke-OSDCloudPEStartup provides quick access to various diagnostic and utility functions
+    within Windows PE. It can launch system information displays, network configuration tools,
+    the on-screen keyboard, hardware detection utilities, and manage module updates.
+    
+    This function is designed to be used in Windows PE startup sequences and automation workflows.
 
 .PARAMETER Id
-Specifies the startup action to invoke. Valid values are:
-- 'OSK': Launches the On-Screen Keyboard if no physical keyboard is detected
-- 'DeviceHardware': Displays hardware information and hardware errors
-- 'Info': Shows comprehensive device information
-- 'IPConfig': Displays network configuration in a minimized window
-- 'UpdateModule': Updates a PowerShell module from the PowerShell Gallery (requires -Value parameter)
-- 'WiFi': Launches WiFi connection utility if no network is detected
+    Specifies the startup task or utility to invoke. Valid values are:
+    - OSK: Launches the On-Screen Keyboard (if keyboard not detected and available)
+    - DeviceHardware: Displays hardware information and errors
+    - Info: Shows comprehensive device information
+    - IPConfig: Launches the IP configuration utility
+    - WiFi: Initiates Wi-Fi connection setup (if network not detected)
+    - UpdateModule: Updates a specified PowerShell module from the PowerShell Gallery
 
 .PARAMETER Value
-Optional parameter used by the UpdateModule action to specify the name of the module to update. Required when Id is 'UpdateModule'.
+    Optional parameter used by the UpdateModule action to specify the module name to update.
+    Required when Id is set to 'UpdateModule'.
 
 .EXAMPLE
-Invoke-OSDCloudPEStartup -Id OSK
-Launches the On-Screen Keyboard if no physical keyboard is present.
+    Invoke-OSDCloudPEStartup -Id OSK
+    Launches the On-Screen Keyboard if a physical keyboard is not detected.
 
 .EXAMPLE
-Invoke-OSDCloudPEStartup -Id DeviceHardware
-Displays device hardware information and any hardware errors.
+    Invoke-OSDCloudPEStartup -Id DeviceHardware
+    Displays hardware information and any hardware errors.
 
 .EXAMPLE
-Invoke-OSDCloudPEStartup -Id UpdateModule -Value 'OSDCloud'
-Updates the OSDCloud module from the PowerShell Gallery.
+    Invoke-OSDCloudPEStartup -Id Info
+    Shows comprehensive device information.
 
 .EXAMPLE
-Invoke-OSDCloudPEStartup -Id WiFi
-Launches the WiFi connection utility if network connectivity is unavailable.
+    Invoke-OSDCloudPEStartup -Id IPConfig
+    Launches the IP configuration utility in a minimized window.
 
 .EXAMPLE
-Invoke-OSDCloudPEStartup -Id IPConfig
-Displays IP configuration information in a minimized window.
+    Invoke-OSDCloudPEStartup -Id WiFi
+    Initiates Wi-Fi connection setup if network connectivity is not detected.
 
-.OUTPUTS
-None. This function performs startup actions and displays output to the console but does not return objects.
+.EXAMPLE
+    Invoke-OSDCloudPEStartup -Id UpdateModule -Value OSDCloud
+    Updates the OSDCloud module from the PowerShell Gallery.
 
 .NOTES
-This function is designed for use in WinPE environments during the OS deployment process. Some features like osk.exe may not be available in all WinPE versions.
+    - The OSK action requires osk.exe to be available in the Windows PE environment
+    - The WiFi action checks for network connectivity by attempting to reach powershellgallery.com
+    - The UpdateModule action requires internet connectivity to reach the PowerShell Gallery
+    - This function uses verbose output for diagnostic logging
+
+.OUTPUTS
+    None. This function does not return objects to the pipeline.
+
+.LINK
+    https://github.com/OSDeploy/OSDCloud
 #>
 function Invoke-OSDCloudPEStartup {
     [CmdletBinding()]
@@ -92,10 +107,10 @@ function Invoke-OSDCloudPEStartup {
             # If we can reach the PowerShell Gallery, we can assume we have a network connection
             try {
                 $null = Invoke-WebRequest -Uri "https://www.powershellgallery.com" -UseBasicParsing -Method Head
-                Write-Host "OSDCloud WiFi: Network connection detected. Not launching WiFi connection."
+                Write-Host "OSDCloud Wi-Fi: Network connection detected. Not launching Wi-Fi connection."
             }
             catch {
-                Write-Host "OSDCloud WiFi: Network connection not detected. Launching WiFi connection."
+                Write-Host "OSDCloud Wi-Fi: Network connection not detected. Launching Wi-Fi connection."
                 Invoke-PEStartupCommand Show-PEStartupWifi -Wait
             }
         }
@@ -111,7 +126,7 @@ function Invoke-OSDCloudPEStartup {
                     $null = Invoke-WebRequest -Uri "https://www.powershellgallery.com/packages/$Value" -UseBasicParsing -Method Head
                 }
                 catch {
-                    Write-Host "UpdateModule: Unable to reach the PowerShell Gallery. Please check your network connection."
+                    Write-Host "OSDCloud UpdateModule: Unable to reach the PowerShell Gallery. Please check your network connection."
                     return
                 }
                 Invoke-PEStartupUpdateModule -Name $Value -Wait

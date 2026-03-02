@@ -27,7 +27,6 @@ function step-install-restartosdcloudlogs {
     $TranscriptFullName = Join-Path $LogsPath "transcript-$((Get-Date).ToString('yyyy-MM-dd-HHmmss')).log"
 
     $null = Start-Transcript -Path $TranscriptFullName -ErrorAction SilentlyContinue
-    # Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $TranscriptFullName"
     #endregion
     #=================================================
     # End the function
