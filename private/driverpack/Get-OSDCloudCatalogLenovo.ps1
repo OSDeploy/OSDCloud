@@ -28,16 +28,15 @@ function Get-OSDCloudCatalogLenovo {
         Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
         #=================================================
         # Catalogs
-        $localCatalogPath = "$(Get-OSDCloudModulePath)\catalogs\driverpack\lenovo.xml"
-        $originCatalogPath = 'https://download.lenovo.com/cdrt/td/catalogv2.xml'
-        $repositoryCatalogPath = 'https://raw.githubusercontent.com/OSDeploy/osdcloud-cache/refs/heads/master/driverpack/lenovo.xml'
+        $localDriverPackCatalog = Join-Path (Get-OSDCloudModulePath) $OSDCloudModule.lenovo.driverpackcataloglocal
+        $oemDriverPackCatalog = $OSDCloudModule.lenovo.driverpackcatalogoem
         $tempCatalogPath = "$($env:TEMP)\osdcloud-driverpack-lenovo.xml"
         #=================================================
         # Build realtime catalog from online source, if fails fallback to offline catalog
         try {
             if (-not (Test-Path $tempCatalogPath)) {
-                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Downloading Lenovo driver pack catalog from $originCatalogPath"
-                $sourceContent = Invoke-RestMethod -Uri $originCatalogPath -UseBasicParsing -ErrorAction Stop
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Downloading Lenovo driver pack catalog from $oemDriverPackCatalog"
+                $sourceContent = Invoke-RestMethod -Uri $oemDriverPackCatalog -UseBasicParsing -ErrorAction Stop
                 
                 if ($sourceContent) {
                     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Processing catalog content"
@@ -47,21 +46,21 @@ function Get-OSDCloudCatalogLenovo {
                     [xml]$XmlCatalogContent = $catalogContent
                 }
             } else {
-                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Using cached catalog"
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Using temp catalog"
                 if (Test-Path $tempCatalogPath) {
-                    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading online catalog from $tempCatalogPath"
+                    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading temp catalog from $tempCatalogPath"
                     [xml]$XmlCatalogContent = Get-Content -Path $tempCatalogPath -Raw
                 }
             }
         } catch {
             Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Failed to download DriverPack catalog: $($_.Exception.Message)"
-            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Falling back to offline catalog"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Falling back to local catalog"
         }
         
         # Load offline catalog if online catalog failed
         if (-not $XmlCatalogContent) {
-            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading offline catalog from $localCatalogPath"
-            [xml]$XmlCatalogContent = Get-Content -Path $localCatalogPath -Raw
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading offline catalog from $localDriverPackCatalog"
+            [xml]$XmlCatalogContent = Get-Content -Path $localDriverPackCatalog -Raw
         }
         
         # Validate catalog content
@@ -145,7 +144,7 @@ function Get-OSDCloudCatalogLenovo {
     end {
         #=================================================
         if ($VerbosePreference -eq 'Continue' -or $DebugPreference -eq 'Continue') {
-            $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-hp.json" -Encoding utf8
+            $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-lenovo.json" -Encoding utf8
         }
         if (Test-Path $tempCatalogPath) {
             Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Removing temporary catalog file"

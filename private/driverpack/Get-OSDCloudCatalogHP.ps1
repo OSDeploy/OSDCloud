@@ -28,17 +28,16 @@ function Get-OSDCloudCatalogHp {
         Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
         #=================================================
         # Catalogs
-        $localCatalogPath = "$(Get-OSDCloudModulePath)\catalogs\driverpack\hp.xml"
-        $originCatalogPath = 'https://hpia.hpcloud.hp.com/downloads/driverpackcatalog/HPClientDriverPackCatalog.cab'
-        $repositoryCatalogPath = 'https://raw.githubusercontent.com/OSDeploy/osdcloud-cache/refs/heads/master/driverpack/hp.xml'
+        $localDriverPackCatalog = Join-Path (Get-OSDCloudModulePath) $OSDCloudModule.hp.driverpackcataloglocal
+        $oemDriverPackCatalog = $OSDCloudModule.hp.driverpackcatalogoem
         $tempCatalogPackagePath = "$($env:TEMP)\HPClientDriverPackCatalog.cab"
         $tempCatalogPath = "$($env:TEMP)\osdcloud-driverpack-hp.xml"
         #=================================================
         # Build realtime catalog from online source, if fails fallback to offline catalog
         try {
             if (-not (Test-Path $tempCatalogPath)) {
-                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Downloading HP driver pack catalog from $originCatalogPath"
-                $null = Invoke-WebRequest -Uri $originCatalogPath -OutFile $tempCatalogPackagePath -ErrorAction Stop
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Downloading HP driver pack catalog from $oemDriverPackCatalog"
+                $null = Invoke-WebRequest -Uri $oemDriverPackCatalog -OutFile $tempCatalogPackagePath -ErrorAction Stop
                 
                 if (Test-Path $tempCatalogPackagePath) {
                     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Extracting catalog from CAB file"
@@ -49,20 +48,20 @@ function Get-OSDCloudCatalogHp {
                     }
                 }
             } else {
-                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Using cached catalog"
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Using temp catalog"
             }
         } catch {
             Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Failed to download DriverPack catalog: $($_.Exception.Message)"
-            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Falling back to offline catalog"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Falling back to local catalog"
         }
         
         # Load catalog content
         if (Test-Path $tempCatalogPath) {
-            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading online catalog from $tempCatalogPath"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading temp catalog from $tempCatalogPath"
             [xml]$XmlCatalogContent = Get-Content -Path $tempCatalogPath -Raw
         } else {
-            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading offline catalog from $localCatalogPath"
-            [xml]$XmlCatalogContent = Get-Content -Path $localCatalogPath -Raw
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading offline catalog from $localDriverPackCatalog"
+            [xml]$XmlCatalogContent = Get-Content -Path $localDriverPackCatalog -Raw
         }
         
         # Validate catalog content

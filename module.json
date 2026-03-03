@@ -1,4 +1,24 @@
 {
+    "dell": {
+        "driverpackcataloglocal": "catalogs\\driverpack\\dell.xml",
+        "driverpackcatalogoem": "https://downloads.dell.com/catalog/DriverPackCatalog.cab",
+        "driverpackcataloggit": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/refs/heads/main/catalogs/driverpack/dell.xml"
+    },
+    "hp": {
+        "driverpackcataloglocal": "catalogs\\driverpack\\hp.xml",
+        "driverpackcatalogoem": "https://hpia.hpcloud.hp.com/downloads/driverpackcatalog/HPClientDriverPackCatalog.cab",
+        "driverpackcataloggit": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/refs/heads/main/catalogs/driverpack/hp.xml"
+    },
+    "lenovo": {
+        "driverpackcataloglocal": "catalogs\\driverpack\\lenovo.xml",
+        "driverpackcatalogoem": "https://download.lenovo.com/cdrt/td/catalogv2.xml",
+        "driverpackcataloggit": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/refs/heads/main/catalogs/driverpack/lenovo.xml"
+    },
+    "panasonic": {
+        "driverpackcataloglocal": "catalogs\\driverpack\\panasonic.json",
+        "driverpackcatalogoem": "https://pna-b2b-storage-mkt.s3.amazonaws.com/computer/software/apps/Panasonic.json",
+        "driverpackcataloggit": "https://raw.githubusercontent.com/OSDeploy/OSDCloud/refs/heads/main/catalogs/driverpack/panasonic.json"
+    },
     "links": {
         "david": "https://linkedin.com/in/davidsegura",
         "michael": "https://linkedin.com/in/michael-a-escamilla",
