@@ -52,7 +52,7 @@ function Get-OSDCloudCatalogDell {
                 Write-Verbose "Using cached catalog"
             }
         } catch {
-            Write-Warning "Failed to download catalog: $($_.Exception.Message)"
+            Write-Verbose "Failed to download DriverPack catalog: $($_.Exception.Message)"
             Write-Verbose "Falling back to offline catalog"
         }
         
