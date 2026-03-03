@@ -75,27 +75,6 @@ function step-drivers-driverpack {
         return
     }
     #=================================================
-    # Example DriverPackObject
-    <#
-        CatalogVersion : 25.04.11
-        Status         :
-        ReleaseDate    : 24.09.23
-        Manufacturer   : HP
-        Model          : ZBook Firefly 16 inch G11 Mobile Workstation PC
-        Legacy         :
-        Product        : 8cd1
-        Name           : HP ZBook Firefly 16 inch G11 Mobile Workstation PC Win11 24H2 sp155206
-        PackageID      : sp155206
-        FileName       : sp155206.exe
-        Url            : https://ftp.hp.com/pub/softpaq/sp155001-155500/sp155206.exe
-        OS             : Windows 11 x64
-        OSReleaseId    : 24H2
-        OSBuild        : 26100
-        OSArchitecture : amd64
-        HashMD5        : 862E812233F66654AFF1A1D2246644A5
-        Guid           : e9ee2f88-5aa5-407b-935e-274b39be7c2b
-    #>
-    #=================================================
     # Variables
     $FileName = $DriverPackObject.FileName
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
