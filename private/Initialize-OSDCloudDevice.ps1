@@ -330,9 +330,29 @@ function Initialize-OSDCloudDevice {
     #=================================================
     # Normalize Aliases for Known Manufacturers and Models
     switch -Regex ($OSDManufacturer) {
+        'Acer' {
+            $OSDManufacturer = 'Acer'
+            $OSDProduct = $BaseBoardProduct
+            break
+        }
+        'ASUS|ASUSTeK' {
+            $OSDManufacturer = 'ASUS'
+            $OSDProduct = $BaseBoardProduct
+            break
+        }
         'Dell' {
             $OSDManufacturer = 'Dell'
             $OSDProduct = $ComputerSystemSKU
+            break
+        }
+        'Fujitsu' {
+            $OSDManufacturer = 'Fujitsu'
+            $OSDProduct = $BaseBoardProduct
+            break
+        }
+        'Gigabyte' {
+            $OSDManufacturer = 'Gigabyte'
+            $OSDProduct = $BaseBoardProduct
             break
         }
         'Lenovo' {
