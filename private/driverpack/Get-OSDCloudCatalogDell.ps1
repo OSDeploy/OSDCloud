@@ -25,7 +25,7 @@ function Get-OSDCloudCatalogDell {
     param ()
     
     begin {
-        Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] Start"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
         #=================================================
         # Catalogs
         $localCatalogPath = "$(Get-OSDCloudModulePath)\catalogs\driverpack\dell.xml"
@@ -37,11 +37,11 @@ function Get-OSDCloudCatalogDell {
         # Build realtime catalog from online source, if fails fallback to offline catalog
         try {
             if ($Force -or -not (Test-Path $tempCatalogPath)) {
-                Write-Verbose "Downloading Dell driver pack catalog from $originCatalogPath"
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Downloading Dell driver pack catalog from $originCatalogPath"
                 $null = Invoke-WebRequest -Uri $originCatalogPath -OutFile $tempCatalogPackagePath -ErrorAction Stop
                 
                 if (Test-Path $tempCatalogPackagePath) {
-                    Write-Verbose "Extracting catalog from CAB file"
+                    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Extracting catalog from CAB file"
                     # expand.exe is used for CAB extraction as Expand-Archive only supports ZIP
                     $expandResult = & expand.exe $tempCatalogPackagePath $tempCatalogPath 2>&1
                     if ($LASTEXITCODE -ne 0) {
@@ -49,19 +49,19 @@ function Get-OSDCloudCatalogDell {
                     }
                 }
             } else {
-                Write-Verbose "Using cached catalog"
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Using cached catalog"
             }
         } catch {
-            Write-Verbose "Failed to download DriverPack catalog: $($_.Exception.Message)"
-            Write-Verbose "Falling back to offline catalog"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Failed to download DriverPack catalog: $($_.Exception.Message)"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Falling back to offline catalog"
         }
         
         # Load catalog content
         if (Test-Path $tempCatalogPath) {
-            Write-Verbose "Loading online catalog from $tempCatalogPath"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading online catalog from $tempCatalogPath"
             [xml]$XmlCatalogContent = Get-Content -Path $tempCatalogPath -Raw
         } else {
-            Write-Verbose "Loading offline catalog from $localCatalogPath"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading offline catalog from $localCatalogPath"
             [xml]$XmlCatalogContent = Get-Content -Path $localCatalogPath -Raw
         }
         
@@ -81,13 +81,13 @@ function Get-OSDCloudCatalogDell {
         #=================================================
         # Build Catalog
         #=================================================
-        Write-Verbose "Building driver pack catalog"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Building driver pack catalog"
         $OnlineBaseUri = 'https://downloads.dell.com/'
 
         #$CatalogVersion = (Get-Date $XmlCatalogContent.DriverPackManifest.version).ToString('yy.MM.dd')
         $RawCatalogVersion = $XmlCatalogContent.DriverPackManifest.version -replace '.00','.01'
         $CatalogVersion = (Get-Date $RawCatalogVersion).ToString('yy.MM.dd')
-        Write-Verbose "Catalog version: $CatalogVersion"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Catalog version: $CatalogVersion"
 
         $DellDriverPackXml = $XmlCatalogContent.DriverPackManifest.DriverPackage
         
@@ -142,7 +142,7 @@ function Get-OSDCloudCatalogDell {
         if ($VerbosePreference -eq 'Continue' -or $DebugPreference -eq 'Continue') {
             $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-dell.json" -Encoding utf8
         }
-        Write-Verbose "Found $($Results.Count) Windows 11 driver packs"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Found $($Results.Count) Windows 11 driver packs"
         $Results
     }
     
@@ -152,15 +152,15 @@ function Get-OSDCloudCatalogDell {
             $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-dell.json" -Encoding utf8
         }
         if (Test-Path $tempCatalogPackagePath) {
-            Write-Verbose "Removing temporary CAB file"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Removing temporary CAB file"
             Remove-Item -Path $tempCatalogPackagePath -Force -ErrorAction SilentlyContinue
         }
         if (Test-Path $tempCatalogPath) {
-            Write-Verbose "Removing temporary catalog file"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Removing temporary catalog file"
             Remove-Item -Path $tempCatalogPath -Force -ErrorAction SilentlyContinue
         }
         #=================================================
-        Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] End"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
         #=================================================
     }
 }

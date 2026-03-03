@@ -18,7 +18,7 @@ function step-test-targetdisk {
     else {
         Write-Warning "[$(Get-Date -format s)] Unable to detect a Fixed Disk."
         Write-Warning "[$(Get-Date -format s)] WinPE may need additional Disk, SCSI or Raid Drivers."
-        Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+        Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
         exit
     }

@@ -136,7 +136,7 @@ function Invoke-OSDCloudWorkflowTask {
     #endregion
     #=================================================
     if ($null -ne $global:OSDCloudDeploy.WorkflowTaskObject) {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)]"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] "
         
         foreach ($step in $global:OSDCloudDeploy.WorkflowTaskObject.steps) {
             # Set the current step in the global variable

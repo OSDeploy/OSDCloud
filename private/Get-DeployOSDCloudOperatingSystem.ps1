@@ -26,7 +26,7 @@ function Get-DeployOSDCloudOperatingSystem {
     # Limit the results based on $env:PROCESSOR_ARCHITECTURE
     $ProcessorArchitecture = $env:PROCESSOR_ARCHITECTURE
     if ($ProcessorArchitecture -and ($records.OSArchitecture -match $ProcessorArchitecture)) {
-        Write-Verbose "Set OSArchitecture from PROCESSOR_ARCHITECTURE environment variable $ProcessorArchitecture"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Set OSArchitecture from PROCESSOR_ARCHITECTURE environment variable $ProcessorArchitecture"
         $records = $records | Where-Object { $_.OSArchitecture -eq $ProcessorArchitecture }
     }
     #=================================================
@@ -42,19 +42,19 @@ function Get-DeployOSDCloudOperatingSystem {
     # 5. Default Json Configuration
 
     if ($LanguageCodeGlobal -and ($records.OSLanguageCode -match $LanguageCodeGlobal)) {
-        Write-Verbose "Set OSLanguageCode from global variable $LanguageCodeGlobal"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Set OSLanguageCode from global variable $LanguageCodeGlobal"
         $records = $records | Where-Object { $_.OSLanguageCode -eq $LanguageCodeGlobal }
     }
     elseif ($LanguageCodeEnvironment -and ($records.OSLanguageCode -match $LanguageCodeEnvironment)) {
-        Write-Verbose "Set OSLanguageCode from environment variable $LanguageCodeEnvironment"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Set OSLanguageCode from environment variable $LanguageCodeEnvironment"
         $records = $records | Where-Object { $_.OSLanguageCode -eq $LanguageCodeEnvironment }
     }
     elseif ($LanguageCodeCulture -and ($records.OSLanguageCode -match $LanguageCodeCulture)) {
-        Write-Verbose "Set OSLanguageCode from Get-Culture value $LanguageCodeCulture"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Set OSLanguageCode from Get-Culture value $LanguageCodeCulture"
         $records = $records | Where-Object { $_.OSLanguageCode -eq $LanguageCodeCulture }
     }
     else {
-        Write-Verbose "No OSLanguageCode preference set, using default records"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] No OSLanguageCode preference set, using default records"
     }
     #=================================================
     return $records | Select-Object -First 1

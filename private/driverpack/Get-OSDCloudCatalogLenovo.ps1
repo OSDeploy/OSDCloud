@@ -25,7 +25,7 @@ function Get-OSDCloudCatalogLenovo {
     param ()
     
     begin {
-        Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] Start"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
         #=================================================
         # Catalogs
         $localCatalogPath = "$(Get-OSDCloudModulePath)\catalogs\driverpack\lenovo.xml"
@@ -36,31 +36,31 @@ function Get-OSDCloudCatalogLenovo {
         # Build realtime catalog from online source, if fails fallback to offline catalog
         try {
             if (-not (Test-Path $tempCatalogPath)) {
-                Write-Verbose "Downloading Lenovo driver pack catalog from $originCatalogPath"
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Downloading Lenovo driver pack catalog from $originCatalogPath"
                 $sourceContent = Invoke-RestMethod -Uri $originCatalogPath -UseBasicParsing -ErrorAction Stop
                 
                 if ($sourceContent) {
-                    Write-Verbose "Processing catalog content"
+                    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Processing catalog content"
                     # Remove BOM (Byte Order Mark) from the beginning of the content
                     $catalogContent = $sourceContent.Substring(3)
                     $catalogContent | Out-File -FilePath $tempCatalogPath -Encoding utf8 -Force
                     [xml]$XmlCatalogContent = $catalogContent
                 }
             } else {
-                Write-Verbose "Using cached catalog"
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Using cached catalog"
                 if (Test-Path $tempCatalogPath) {
-                    Write-Verbose "Loading online catalog from $tempCatalogPath"
+                    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading online catalog from $tempCatalogPath"
                     [xml]$XmlCatalogContent = Get-Content -Path $tempCatalogPath -Raw
                 }
             }
         } catch {
-            Write-Verbose "Failed to download DriverPack catalog: $($_.Exception.Message)"
-            Write-Verbose "Falling back to offline catalog"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Failed to download DriverPack catalog: $($_.Exception.Message)"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Falling back to offline catalog"
         }
         
         # Load offline catalog if online catalog failed
         if (-not $XmlCatalogContent) {
-            Write-Verbose "Loading offline catalog from $localCatalogPath"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading offline catalog from $localCatalogPath"
             [xml]$XmlCatalogContent = Get-Content -Path $localCatalogPath -Raw
         }
         
@@ -80,9 +80,9 @@ function Get-OSDCloudCatalogLenovo {
         #=================================================
         # Build Catalog
         #=================================================
-        Write-Verbose "Building driver pack catalog"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Building driver pack catalog"
         $CatalogVersion = Get-Date -Format yy.MM.dd
-        Write-Verbose "Catalog version: $CatalogVersion"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Catalog version: $CatalogVersion"
         
         $ModelList = $XmlCatalogContent.ModelList.Model
         #=================================================
@@ -131,14 +131,14 @@ function Get-OSDCloudCatalogLenovo {
         #=================================================
         # Cleanup Catalog
         #=================================================
-        Write-Verbose "Filtering to latest driver packs per model"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Filtering to latest driver packs per model"
         $Results = $Results | Sort-Object Model, OSVersion -Descending | Group-Object Model | ForEach-Object {$_.Group | Select-Object -First 1}
         $Results = $Results | Sort-Object Model, OSVersion -Descending | Group-Object HashMD5 | ForEach-Object {$_.Group | Select-Object -First 1}
         #=================================================
         # Sort Results
         #=================================================
         $Results = $Results | Sort-Object Model, OSVersion -Descending
-        Write-Verbose "Found $($Results.Count) Windows 11 driver packs"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Found $($Results.Count) Windows 11 driver packs"
         $Results
     }
     
@@ -148,11 +148,11 @@ function Get-OSDCloudCatalogLenovo {
             $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-hp.json" -Encoding utf8
         }
         if (Test-Path $tempCatalogPath) {
-            Write-Verbose "Removing temporary catalog file"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Removing temporary catalog file"
             Remove-Item -Path $tempCatalogPath -Force -ErrorAction SilentlyContinue
         }
         #=================================================
-        Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] End"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
         #=================================================
     }
 }

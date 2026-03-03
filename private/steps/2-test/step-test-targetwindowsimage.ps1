@@ -15,7 +15,7 @@ function step-test-targetwindowsimage {
     # Is there an Operating System ImageFile URL?
     if (-not ($global:OSDCloudWorkflowInvoke.OperatingSystemObject.FilePath)) {
         Write-Warning "[$(Get-Date -format s)] OperatingSystemObject does not have a Url to validate."
-        Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+        Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
         exit
     }
@@ -50,7 +50,7 @@ function step-test-targetwindowsimage {
     #=================================================
     # Can't access the file so need to bail
     Write-Warning "[$(Get-Date -format s)] Unable to validate if the OperatingSystem is reachable online or offline."
-    Write-Warning "Press Ctrl+C to cancel OSDCloud"
+    Write-Warning 'Press Ctrl+C to exit OSDCloud'
     Start-Sleep -Seconds 86400
     Exit
     #=================================================
@@ -71,7 +71,7 @@ function step-test-targetwindowsimage {
         if (!(Test-Path $global:OSDCloudDeploy.LocalImageFileInfo)) {
             Write-Warning "[$(Get-Date -format s)] OSDCloud failed to find the Operating System Local ImageFile Item"
             Write-Warning $($global:OSDCloudDeploy.LocalImageFileInfo)
-            Write-Warning "Press Ctrl+C to cancel OSDCloud"
+            Write-Warning 'Press Ctrl+C to exit OSDCloud'
             Start-Sleep -Seconds 86400
             Exit
         }
@@ -81,7 +81,7 @@ function step-test-targetwindowsimage {
         if (!(Test-Path $global:OSDCloudWorkflowInvoke.LocalImageFileDestination)) {
             Write-Warning "[$(Get-Date -format s)] OSDCloud failed to find the Operating System Local ImageFile Destination"
             Write-Warning $($global:OSDCloudWorkflowInvoke.LocalImageFileDestination)
-            Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+            Write-Warning 'Press Ctrl+C to exit OSDCloud'
             Start-Sleep -Seconds 86400
             Exit
         }

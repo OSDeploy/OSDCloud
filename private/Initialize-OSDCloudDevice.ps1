@@ -28,7 +28,7 @@ function Initialize-OSDCloudDevice {
         }
     }
     catch {
-        Write-Verbose "Failed to retrieve current DateTime from Google. Using local system time. Error: $($_.Exception.Message)"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Failed to retrieve current DateTime from Google. Using local system time. Error: $($_.Exception.Message)"
     }
     if ($CloudDateTime -and $LocalDateTime) {
         $timeDifference = [math]::Round([math]::Abs(($CloudDateTime - $LocalDateTime).TotalMinutes))

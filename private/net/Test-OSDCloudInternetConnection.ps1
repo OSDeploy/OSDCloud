@@ -24,12 +24,12 @@ function Test-OSDCloudInternetConnection
     }
 
     try {
-        Write-Verbose "Test-OSDCloudInternetConnection OK: $Uri"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Test-OSDCloudInternetConnection OK: $Uri"
         Invoke-WebRequest @Params | Out-Null
         $true
     }
     catch {
-        Write-Verbose "Test-OSDCloudInternetConnection FAIL: $Uri"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Test-OSDCloudInternetConnection FAIL: $Uri"
         $false
     }
     finally {

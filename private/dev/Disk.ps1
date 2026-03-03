@@ -54,14 +54,14 @@ function Clear-DeviceLocalDisk {
     #=================================================
     if (-NOT ($PSBoundParameters.ContainsKey('PartitionStyle'))) {
         if ($global:OSDCloudDevice.IsUEFI -eq $true) {
-            Write-Verbose "IsUEFI = $true"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IsUEFI = $true"
             $PartitionStyle = 'GPT'
         } else {
-            Write-Verbose "IsUEFI = $false"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IsUEFI = $false"
             $PartitionStyle = 'MBR'
         }
     }
-    Write-Verbose "PartitionStyle = $PartitionStyle"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] PartitionStyle = $PartitionStyle"
     #=================================================
     #	Get-Help
     #=================================================
@@ -416,7 +416,7 @@ function Invoke-SelectDeviceDataDisk {
         #	There was only 1 Item, then we will select it automatically
         #=================================================
         if ($PSBoundParameters.ContainsKey('SelectOne')) {
-            Write-Verbose "Automatically select "
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Automatically select "
             if (($Results | Measure-Object).Count -eq 1) {
                 $SelectedItem = $Results
                 Return $SelectedItem
@@ -473,7 +473,7 @@ function Invoke-SelectDeviceLocalDisk {
         #	There was only 1 Item, then we will select it automatically
         #=================================================
         if ($PSBoundParameters.ContainsKey('SelectOne')) {
-            Write-Verbose "Automatically select "
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Automatically select "
             if (($Results | Measure-Object).Count -eq 1) {
                 $SelectedItem = $Results
                 Return $SelectedItem
@@ -543,7 +543,7 @@ function Invoke-SelectDeviceLocalVolume {
         #	There was only 1 Item, then we will select it automatically
         #=================================================
         if ($PSBoundParameters.ContainsKey('SelectOne')) {
-            Write-Verbose "Automatically select "
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Automatically select "
             if (($Results | Measure-Object).Count -eq 1) {
                 $SelectedItem = $Results
                 Return $SelectedItem
@@ -599,7 +599,7 @@ function Invoke-SelectOSDCloudDisk {
         #	There was only 1 Item, then we will select it automatically
         #=================================================
         if ($PSBoundParameters.ContainsKey('SelectOne')) {
-            Write-Verbose "Automatically select "
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Automatically select "
             if (($GetDisk | Measure-Object).Count -eq 1) {
                 $SelectedItem = $GetDisk
                 Return $SelectedItem
@@ -669,7 +669,7 @@ function Invoke-SelectOSDCloudVolume {
         #	There was only 1 Item, then we will select it automatically
         #=================================================
         if ($PSBoundParameters.ContainsKey('SelectOne')) {
-            Write-Verbose "Automatically select "
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Automatically select "
             if (($Results | Measure-Object).Count -eq 1) {
                 $SelectedItem = $Results
                 Return $SelectedItem
@@ -733,7 +733,7 @@ function Invoke-SelectDeviceUSBDisk {
         #	There was only 1 Item, then we will select it automatically
         #=================================================
         if ($PSBoundParameters.ContainsKey('SelectOne')) {
-            Write-Verbose "Automatically select "
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Automatically select "
             if (($Results | Measure-Object).Count -eq 1) {
                 $SelectedItem = $Results
                 Return $SelectedItem
@@ -806,7 +806,7 @@ function Invoke-SelectDeviceUSBVolume {
         #	There was only 1 Item, then we will select it automatically
         #=================================================
         if ($PSBoundParameters.ContainsKey('SelectOne')) {
-            Write-Verbose "Automatically select "
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Automatically select "
             if (($Results | Measure-Object).Count -eq 1) {
                 $SelectedItem = $Results
                 Return $SelectedItem
@@ -997,14 +997,14 @@ function New-OSDCloudDisk {
     #=================================================
     if (-NOT ($PSBoundParameters.ContainsKey('PartitionStyle'))) {
         if ($global:OSDCloudDevice.IsUEFI -eq $true) {
-            Write-Verbose "IsUEFI = $true"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IsUEFI = $true"
             $PartitionStyle = 'GPT'
         } else {
-            Write-Verbose "IsUEFI = $false"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] IsUEFI = $false"
             $PartitionStyle = 'MBR'
         }
     }
-    Write-Verbose "PartitionStyle = $PartitionStyle"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] PartitionStyle = $PartitionStyle"
     #=================================================
     #	Get-Help
     #=================================================
@@ -1058,16 +1058,16 @@ function New-OSDCloudDisk {
     #=================================================
     #Create from RAW Disk
     if (($OSDisk.NumberOfPartitions -eq 0) -and ($OSDisk.PartitionStyle -eq 'RAW')) {
-        Write-Verbose "Initializing Disk $($OSDisk.Number) as $PartitionStyle"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initializing Disk $($OSDisk.Number) as $PartitionStyle"
         $OSDisk | Initialize-Disk -PartitionStyle $PartitionStyle
 
     }
     #Create from unpartitioned Disk
     elseif (($OSDisk.NumberOfPartitions -eq 0) -and ($OSDisk.PartitionStyle -ne $PartitionStyle)) {
-        Write-Verbose "Cleaning Disk $($OSDisk.Number)"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Cleaning Disk $($OSDisk.Number)"
         Invoke-DiskpartClean -DiskNumber $OSDisk.Number
 
-        Write-Verbose "Initializing Disk $($OSDisk.Number) as $PartitionStyle"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initializing Disk $($OSDisk.Number) as $PartitionStyle"
         $OSDisk | Initialize-Disk -PartitionStyle $PartitionStyle
     }
     #Prompt for confirmation to clear the existing disk
@@ -1090,7 +1090,7 @@ function New-OSDCloudDisk {
     $GetVolume = Get-Volume | Where-Object {$_.DriveLetter -eq 'S'}
 
     if ($GetVolume) {
-        Write-Verbose "Reassigning Drive Letter S"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Reassigning Drive Letter S"
         #Get-Partition -DriveLetter 'S' | Set-Partition -NewDriveLetter (Get-LastAvailableDriveLetter)
         Get-Volume -DriveLetter S | Get-Partition | Remove-PartitionAccessPath -AccessPath 'S:\' -ErrorAction SilentlyContinue
     }
@@ -1112,7 +1112,7 @@ function New-OSDCloudDisk {
     $GetVolume = Get-Volume | Where-Object {$_.DriveLetter -eq 'C'}
 
     if ($GetVolume) {
-        Write-Verbose "Reassigning Drive Letter C"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Reassigning Drive Letter C"
         Get-Partition -DriveLetter 'C' | Set-Partition -NewDriveLetter (Get-LastAvailableDriveLetter)
     }
     #=================================================
@@ -1121,7 +1121,7 @@ function New-OSDCloudDisk {
     $GetVolume = Get-Volume | Where-Object {$_.DriveLetter -eq 'R'}
 
     if ($GetVolume) {
-        Write-Verbose "Reassigning Drive Letter R"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Reassigning Drive Letter R"
         #Get-Partition -DriveLetter 'R' | Set-Partition -NewDriveLetter (Get-LastAvailableDriveLetter)
         Get-Volume -DriveLetter R | Get-Partition | Remove-PartitionAccessPath -AccessPath 'R:\' -ErrorAction SilentlyContinue
     }

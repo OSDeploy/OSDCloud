@@ -35,7 +35,7 @@ function step-drivers-driverpack {
     # Is there a URL?
     if (-not $($DriverPackObject.Url)) {
         Write-Warning "[$(Get-Date -format s)] DriverPackObject does not have a Url to validate."
-        Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+        Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
         exit
     }

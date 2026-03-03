@@ -55,7 +55,7 @@ function step-install-expandwindowsimage {
         catch {
             Write-Warning "[$(Get-Date -format s)] Expand-WindowsImage failed."
             Write-Warning "[$(Get-Date -format s)] $_"
-            Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+            Write-Warning 'Press Ctrl+C to exit OSDCloud'
             Start-Sleep -Seconds 86400
             exit
         }

@@ -121,7 +121,7 @@ function Save-MicrosoftUpdateCatalogDriver {
                                 Select-Object LastUpdated, Title, Version, Size, Guid -First 1 -ErrorAction Ignore
                             
                             if ($WindowsUpdateDriver) {
-                                Write-Verbose "Found driver match for version: $Version"
+                                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Found driver match for version: $Version"
                                 break
                             }
                         }
