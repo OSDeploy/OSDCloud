@@ -655,5 +655,5 @@ if ($script:SelectionConfirmed) {
     if (-not (Test-Path -Path $LogsPath)) {
         New-Item -Path $LogsPath -ItemType Directory -Force | Out-Null
     }
-	$global:OSDCloudDeploy | Out-File -FilePath "$LogsPath\OSDCloudDeploy.txt" -Force
+	$global:OSDCloudDeploy | ConvertTo-Json | Out-File -FilePath "$LogsPath\OSDCloudDeploy.json" -Encoding utf8 -Width 2000 -Force -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 }
