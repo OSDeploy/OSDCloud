@@ -10,7 +10,7 @@ function step-drivers-recast-winpe {
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     # Output Path
-    $OutputPath = "C:\Windows\Temp\osdcloud-drivers-recast"
+    $OutputPath = "C:\Windows\Temp\osdcloud-drivers-winpe"
     if (-not (Test-Path -Path $OutputPath)) {
         New-Item -ItemType Directory -Path $OutputPath -Force | Out-Null
     }
