@@ -17,7 +17,7 @@ function step-drivers-addwindowsdriver-driverpack {
         if (-not (Test-Path -Path $LogPath)) {
             New-Item -ItemType Directory -Path $LogPath -Force | Out-Null
         }
-        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-driverpack.log" -ErrorAction SilentlyContinue | Out-Null
+        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\dism-add-windowsdriver-driverpack.log" -ErrorAction SilentlyContinue | Out-Null
     }
     #=================================================
     # End the function

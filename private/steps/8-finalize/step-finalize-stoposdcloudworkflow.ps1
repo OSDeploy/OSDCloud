@@ -12,7 +12,7 @@ function step-finalize-stoposdcloudworkflow {
     #region Main
     $global:OSDCloudWorkflowInvoke.TimeEnd = Get-Date
     $global:OSDCloudWorkflowInvoke.TimeSpan = New-TimeSpan -Start $global:OSDCloudWorkflowInvoke.TimeStart -End $global:OSDCloudWorkflowInvoke.TimeEnd
-    $global:OSDCloudWorkflowInvoke | ConvertTo-Json | Out-File -FilePath 'C:\Windows\Temp\osdcloud-logs\OSDCloud.json' -Encoding ascii -Width 2000 -Force -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+    $global:OSDCloudWorkflowInvoke | ConvertTo-Json | Out-File -FilePath 'C:\Windows\Temp\osdcloud-logs\OSDCloudWorkflowInvoke.json' -Encoding utf8 -Width 2000 -Force -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 
     Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Completed in $($global:OSDCloudWorkflowInvoke.TimeSpan.ToString("mm' minutes 'ss' seconds'"))"
     #=================================================

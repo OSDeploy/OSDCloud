@@ -17,7 +17,7 @@ function step-drivers-addwindowsdriver-msupdate {
         if (-not (Test-Path -Path $LogPath)) {
             New-Item -ItemType Directory -Path $LogPath -Force | Out-Null
         }
-        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-msupdate.log" -ErrorAction SilentlyContinue
+        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\dism-add-windowsdriver-msupdate.log" -ErrorAction SilentlyContinue
     }
     #=================================================
     # End the function

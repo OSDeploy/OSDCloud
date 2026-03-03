@@ -17,7 +17,7 @@ function step-drivers-addwindowsdriver-net {
         if (-not (Test-Path -Path $LogPath)) {
             New-Item -ItemType Directory -Path $LogPath -Force | Out-Null
         }
-        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\drivers-net.log" -ErrorAction SilentlyContinue
+        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\dism-add-windowsdriver-net.log" -ErrorAction SilentlyContinue
     }
     #=================================================
     # End the function

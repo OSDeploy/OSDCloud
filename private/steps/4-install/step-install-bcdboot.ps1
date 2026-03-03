@@ -19,12 +19,12 @@ function step-install-bcdboot {
     if ($global:OSDCloudDeploy.OSBuild -lt 26200) {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] C:\Windows\System32\bcdboot.exe C:\Windows /c /v"
         $BCDBootOutput = & C:\Windows\System32\bcdboot.exe C:\Windows /c /v
-        $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
+        $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.txt" -Force
     }
     else {
         Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] C:\Windows\System32\bcdboot.exe C:\Windows /c /bootex"
         $BCDBootOutput = & C:\Windows\System32\bcdboot.exe C:\Windows /c /bootex
-        $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.log" -Force
+        $BCDBootOutput | Out-File -FilePath "$LogPath\bcdboot.txt" -Force
     }
     Pop-Location
     #endregion
