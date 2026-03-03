@@ -92,8 +92,8 @@
             "command": "step-install-bcdboot"
         },
         {
-            "name": "Export WinPE Drivers to Local Disk",
-            "command": "step-drivers-recast-winpe"
+            "name": "Export WinPE OEM Drivers to Local Disk",
+            "command": "step-Export-WinpeOemDrivers"
         },
         {
             "name": "Apply WinPE Drivers to offline Windows Image",
