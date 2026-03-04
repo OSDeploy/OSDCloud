@@ -7,11 +7,8 @@ function step-Save-WindowsDriver-DriverPack {
         $DriverPackObject = $global:OSDCloudWorkflowInvoke.DriverPackObject
     )
     #=================================================
-    # Start the step
-    $Message = "[$(Get-Date -format s)] Start"
+    $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
-
-    # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     # Is DriverPackName set to None?
@@ -55,7 +52,7 @@ function step-Save-WindowsDriver-DriverPack {
     #=================================================
     # Does the file exist on a Drive?
     $IsOffline = $false
-    $FileName = Split-Path $DriverPackObject.Url -Leaf
+    $FileName = $DriverPackObject.FileName
     $MatchingFiles = @()
     $MatchingFiles = Get-PSDrive -PSProvider FileSystem | ForEach-Object {
         Get-ChildItem "$($_.Name):\OSDCloud\DriverPacks\" -Include "$FileName" -File -Recurse -Force -ErrorAction Ignore
@@ -76,7 +73,6 @@ function step-Save-WindowsDriver-DriverPack {
     }
     #=================================================
     # Variables
-    $FileName = $DriverPackObject.FileName
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
     $Manufacturer = $DriverPackObject.Manufacturer
     $ScriptsPath = "C:\Windows\Setup\Scripts"
@@ -84,7 +80,7 @@ function step-Save-WindowsDriver-DriverPack {
     $SetupSpecializeCmd = "C:\Windows\Temp\osdcloud\SetupSpecialize.cmd"
     $Url = $DriverPackObject.Url
     #=================================================
-    # Create DownloadPath Directory
+    # Create Download Directory
     $DownloadPath = "C:\Windows\Temp\osdcloud-driverpack-download"
     $Params = @{
         ErrorAction = 'SilentlyContinue'
@@ -97,17 +93,16 @@ function step-Save-WindowsDriver-DriverPack {
     }
     #=================================================
     # Is there a USB drive available?
-    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | `
+                Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+    
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $($DriverPackObject.Url)"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] FileName: $FileName"
 
     if ($USBDrive) {
         $USBDownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\DriverPacks\$Manufacturer"
-        $FileName = Split-Path $DriverPackObject.Url -Leaf
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DownloadPath: $USBDownloadPath"
 
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Url: $($DriverPackObject.Url)"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] USBDownloadPath: $USBDownloadPath"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] FileName: $FileName"
-
-        # Download the file
         if (-not (Test-Path $USBDownloadPath)) {
             $null = New-Item -Path $USBDownloadPath -ItemType Directory -Force
         }
@@ -121,9 +116,7 @@ function step-Save-WindowsDriver-DriverPack {
     }
     else {
         # $SaveWebFile is a FileInfo Object, not a path
-        if (-not (Test-Path $DownloadPath)) {
-            $null = New-Item -Path $DownloadPath -ItemType Directory -Force
-        }
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DownloadPath: $DownloadPath"
         $SaveWebFile = OSDCloud-DownloadFile -SourceUrl $DriverPackObject.Url -DestinationDirectory $DownloadPath -ErrorAction Stop
         $FileInfo = $SaveWebFile
     }
@@ -132,12 +125,13 @@ function step-Save-WindowsDriver-DriverPack {
     $OutFileObject = Get-Item $FileInfo.FullName
 
     if (! (Test-Path $OutFileObject)) {
-        Write-Warning "[$(Get-Date -format s)] Unable to download $Url"
+        Write-Warning "[$(Get-Date -format s)] Unable to download the DriverPack from the Internet."
         return
     }
-
+    # Store this as a FileInfo Object
     $DriverPackObject | ConvertTo-Json | Out-File "$($OutFileObject.FullName).json" -Encoding ascii -Width 2000 -Force
-    
+    #=================================================
+    # Expand the DriverPack
     $DownloadedFile = $OutFileObject.FullName
     $ExpandPath = 'C:\Windows\Temp\osdcloud-driverpack-expand'
     if (-not (Test-Path "$ExpandPath")) {
