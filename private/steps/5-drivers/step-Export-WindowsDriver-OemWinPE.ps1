@@ -1,4 +1,4 @@
-function step-Export-WinpeOemDrivers {
+function step-Export-WindowsDriver-OemWinPE {
     [CmdletBinding()]
     param ()
     #=================================================

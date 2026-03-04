@@ -1,4 +1,4 @@
-function step-drivers-recast-winre {
+function step-Add-WindowsDriver-OemWinRE {
     [CmdletBinding()]
     param ()
     #=================================================

@@ -1,4 +1,4 @@
-function step-drivers-addwindowsdriver-disk {
+function step-Add-WindowsDriver-OemWinOS {
     [CmdletBinding()]
     param ()
     #=================================================
@@ -11,13 +11,13 @@ function step-drivers-addwindowsdriver-disk {
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
-    $DriverPath = "C:\Windows\Temp\osdcloud-drivers-disk"
+    $DriverPath = "C:\Windows\Temp\osdcloud-drivers-winpe"
 
     if (Test-Path -Path $DriverPath) {
         if (-not (Test-Path -Path $LogPath)) {
             New-Item -ItemType Directory -Path $LogPath -Force | Out-Null
         }
-        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\dism-add-windowsdriver-disk.log" -ErrorAction SilentlyContinue
+        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\dism-add-windowsdriver-winpe.log" -ErrorAction SilentlyContinue | Out-Null
     }
     #=================================================
     # End the function

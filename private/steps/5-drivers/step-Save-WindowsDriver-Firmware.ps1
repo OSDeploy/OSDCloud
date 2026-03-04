@@ -1,4 +1,4 @@
-function step-drivers-firmware {
+function step-Save-WindowsDriver-Firmware {
     [CmdletBinding()]
     param ()
     #=================================================

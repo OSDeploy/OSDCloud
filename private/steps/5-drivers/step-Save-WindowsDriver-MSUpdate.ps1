@@ -1,4 +1,4 @@
-function step-drivers-msupdate {
+function step-Save-WindowsDriver-MSUpdate {
     [CmdletBinding()]
     param ()
     #=================================================

@@ -1,4 +1,4 @@
-function step-drivers-driverpack {
+function step-Save-WindowsDriver-DriverPack {
     [CmdletBinding()]
     param (
         [System.String]

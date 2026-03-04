@@ -1,4 +1,4 @@
-function step-drivers-addwindowsdriver-scsi {
+function step-Add-WindowsDriver-Firmware {
     [CmdletBinding()]
     param ()
     #=================================================
@@ -11,13 +11,13 @@ function step-drivers-addwindowsdriver-scsi {
     #=================================================
     $LogPath = "C:\Windows\Temp\osdcloud-logs"
 
-    $DriverPath = "C:\Windows\Temp\osdcloud-drivers-scsi"
-
+    $DriverPath = "C:\Windows\Temp\osdcloud-drivers-firmware"
+    
     if (Test-Path -Path $DriverPath) {
         if (-not (Test-Path -Path $LogPath)) {
             New-Item -ItemType Directory -Path $LogPath -Force | Out-Null
         }
-        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\dism-add-windowsdriver-scsi.log" -ErrorAction SilentlyContinue
+        Add-WindowsDriver -Path "C:\" -Driver "$DriverPath" -Recurse -ForceUnsigned -LogPath "$LogPath\dism-add-windowsdriver-firmware.log" -ErrorAction SilentlyContinue
     }
     #=================================================
     # End the function
