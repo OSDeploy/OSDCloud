@@ -8,48 +8,97 @@ function step-install-downloadwindowsimage {
     Write-Debug -Message $Message; Write-Verbose -Message $Message
     $Step = $global:OSDCloudCurrentStep
     #=================================================
-    # Do we have a URL to download the Windows Image from?
-    if (-not ($OperatingSystemObject.FilePath)) {
-        Write-Warning "[$(Get-Date -format s)] OSDCloud failed to download the WindowsImage from the Internet"
+    # Is there an OperatingSystem Object?
+    if (-not ($OperatingSystemObject)) {
+        Write-Warning "[$(Get-Date -format s)] OperatingSystemObject is not set."
         Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
         exit
     }
     #=================================================
-    # Create OS Directory
+    # Is there a FilePath?
+    if (-not ($OperatingSystemObject.FilePath)) {
+        Write-Warning "[$(Get-Date -format s)] OperatingSystemObject does not have a FilePath to validate."
+        Write-Warning 'Press Ctrl+C to exit OSDCloud'
+        Start-Sleep -Seconds 86400
+        exit
+    }
+    #=================================================
+    # Is it reachable online?
+    $IsOnline = $false
+    try {
+        $WebRequest = Invoke-WebRequest -Uri $OperatingSystemObject.FilePath -UseBasicParsing -Method Head
+        if ($WebRequest.StatusCode -eq 200) {
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] OperatingSystemObject FilePath returned a 200 status code. OK."
+            $IsOnline = $true
+        }
+    }
+    catch {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] OperatingSystemObject FilePath is not reachable."
+    }
+    #=================================================
+    # Does the file exist on a Drive?
+    $IsOffline = $false
+    $FileName = $OperatingSystemObject.FileName
+    $MatchingFiles = @()
+    $MatchingFiles = Get-PSDrive -PSProvider FileSystem | ForEach-Object {
+        Get-ChildItem "$($_.Name):\OSDCloud\OS\" -Include "$FileName" -File -Recurse -Force -ErrorAction Ignore
+    }
+    
+    if ($MatchingFiles) {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] OperatingSystemObject is available offline. OK."
+        $IsOffline = $true
+    }
+    else {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] OperatingSystemObject is not available offline."
+    }
+    #=================================================
+    # Nothing to do if it is unavailable online and offline
+    if ($IsOnline -eq $false -and $IsOffline -eq $false) {
+        Write-Warning "[$(Get-Date -format s)] OperatingSystemObject is not available online or offline."
+        Write-Warning 'Press Ctrl+C to exit OSDCloud'
+        Start-Sleep -Seconds 86400
+        exit
+    }
+    #=================================================
+    # Create Download Directory
+    $DownloadPath = "C:\OSDCloud\OS"
     $ItemParams = @{
         ErrorAction = 'SilentlyContinue'
         Force       = $true
         ItemType    = 'Directory'
-        Path        = 'C:\OSDCloud\OS'
+        Path        = $DownloadPath
     }
     if (!(Test-Path $ItemParams.Path -ErrorAction SilentlyContinue)) {
         New-Item @ItemParams | Out-Null
     }
     #=================================================
     # Is there a USB drive available?
-    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | `
+                Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+    
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] $($OperatingSystemObject.FilePath)"
+    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] FileName: $FileName"
 
     if ($USBDrive) {
-        $DownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\OS\$($OperatingSystemObject.OperatingSystem)"
-        $FileName = Split-Path $OperatingSystemObject.FilePath -Leaf
+        $USBDownloadPath = "$($USBDrive.DriveLetter):\OSDCloud\OS\$($OperatingSystemObject.OperatingSystem)"
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DownloadPath: $USBDownloadPath"
 
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Url: $($OperatingSystemObject.FilePath)"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DownloadPath: $DownloadPath"
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] FileName: $FileName"
-
-        # Download the file
-        $SaveWebFile = OSDCloud-DownloadFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory "$DownloadPath" -DestinationName $FileName
+        if (-not (Test-Path $USBDownloadPath)) {
+            $null = New-Item -Path $USBDownloadPath -ItemType Directory -Force
+        }
+        $SaveWebFile = OSDCloud-DownloadFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory "$USBDownloadPath" -DestinationName $FileName
 
         if ($SaveWebFile) {
-            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Copy Offline OS to C:\OSDCloud\OS\$($SaveWebFile.Name)"
-            $null = Copy-Item -Path $SaveWebFile.FullName -Destination 'C:\OSDCloud\OS' -Force
-            $FileInfo = Get-Item "C:\OSDCloud\OS\$($SaveWebFile.Name)"
+            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Copy Offline OS to $DownloadPath"
+            $null = Copy-Item -Path $SaveWebFile.FullName -Destination $DownloadPath -Force
+            $FileInfo = Get-Item "$DownloadPath\$($SaveWebFile.Name)"
         }
     }
     else {
         # $SaveWebFile is a FileInfo Object, not a path
-        $SaveWebFile = OSDCloud-DownloadFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory 'C:\OSDCloud\OS' -ErrorAction Stop
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] DownloadPath: $DownloadPath"
+        $SaveWebFile = OSDCloud-DownloadFile -SourceUrl $OperatingSystemObject.FilePath -DestinationDirectory $DownloadPath -ErrorAction Stop
         $FileInfo = $SaveWebFile
     }
     #=================================================
