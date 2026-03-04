@@ -16,10 +16,10 @@ function Invoke-DiskpartFormatSystemPartition {
     #Write-Warning "Format-Volume FileSystem NTFS NewFileSystemLabel $Label"
     #Format-Volume -ObjectId $PartitionSystem.ObjectId -FileSystem NTFS -NewFileSystemLabel "$Label" -Force -Confirm:$false
 
-    Write-Verbose "DISKPART> select disk $DiskNumber"
-    Write-Verbose "DISKPART> select partition $PartitionNumber"
-    Write-Verbose "DISKPART> format fs=$FileSystem quick label='$LabelSystem'"
-    Write-Verbose "DISKPART> exit"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DISKPART> select disk $DiskNumber"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DISKPART> select partition $PartitionNumber"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DISKPART> format fs=$FileSystem quick label='$LabelSystem'"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DISKPART> exit"
     
     #Abort if not in WinPE
     if ($env:SystemDrive -ne "X:") {Return}

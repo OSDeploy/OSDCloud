@@ -212,7 +212,7 @@ function Get-MicrosoftUpdateCatalogResult {
             $Search
         }
 
-        Write-Verbose "Search query: $searchQuery"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Search query: $searchQuery"
         #endregion Query Building
     }
 

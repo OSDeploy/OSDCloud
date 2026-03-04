@@ -90,7 +90,6 @@ function Initialize-OSDCloudWorkflowSettingsUser {
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Initialized OSDCloudWorkflowSettingsUser: $OSDCloudWorkflowSettingsUserFile"
     $global:OSDCloudWorkflowSettingsUser = $hashtable
     #=================================================
-    # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================

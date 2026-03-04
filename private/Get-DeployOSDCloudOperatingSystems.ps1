@@ -9,7 +9,7 @@ function Get-DeployOSDCloudOperatingSystems {
     $records = @()
 
     foreach ($file in $xmlFiles) {
-        Write-Verbose "Importing $($file.FullName)"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Importing $($file.FullName)"
 
         $xml = [xml](Get-Content -Path $file.FullName -Raw)
         $fileNodes = $xml.MCT.Catalogs.Catalog.PublishedMedia.Files.File

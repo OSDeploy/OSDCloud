@@ -36,7 +36,6 @@ function Get-OSDCloudInfo {
     Write-Host -ForegroundColor DarkCyan 'Discord: WinAdmins os-deployment'
     Write-Host -ForegroundColor DarkGray $($OSDCloudModule.links.discord)
     #=================================================
-    # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================

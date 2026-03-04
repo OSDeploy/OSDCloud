@@ -4,17 +4,14 @@ function step-install-downloadwindowsimage {
         $OperatingSystemObject = $global:OSDCloudWorkflowInvoke.OperatingSystemObject
     )
     #=================================================
-    # Start the step
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
-
-    # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     # Do we have a URL to download the Windows Image from?
     if (-not ($OperatingSystemObject.FilePath)) {
         Write-Warning "[$(Get-Date -format s)] OSDCloud failed to download the WindowsImage from the Internet"
-        Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+        Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
         exit
     }
@@ -59,7 +56,7 @@ function step-install-downloadwindowsimage {
     # Do we have FileInfo for the downloaded file?
     if (-not ($FileInfo)) {
         Write-Warning "[$(Get-Date -format s)] Unable to download the WindowsImage from the Internet."
-        Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+        Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
         exit
     }
@@ -78,7 +75,7 @@ function step-install-downloadwindowsimage {
         if ($OperatingSystemObject.Sha1 -notmatch $FileHash) {
             Write-Warning "[$(Get-Date -format s)] Unable to deploy this Operating System."
             Write-Warning "[$(Get-Date -format s)] Downloaded ESD SHA1 does not match the verified Microsoft ESD SHA1."
-            Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+            Write-Warning 'Press Ctrl+C to exit OSDCloud'
             Start-Sleep -Seconds 86400
         }
         else {
@@ -93,7 +90,7 @@ function step-install-downloadwindowsimage {
         if ($OperatingSystemObject.Sha256 -notmatch $FileHash) {
             Write-Warning "[$(Get-Date -format s)] Unable to deploy this Operating System."
             Write-Warning "[$(Get-Date -format s)] Downloaded ESD SHA256 does not match the verified Microsoft ESD SHA256."
-            Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+            Write-Warning 'Press Ctrl+C to exit OSDCloud'
             Start-Sleep -Seconds 86400
         }
         else {
@@ -101,7 +98,6 @@ function step-install-downloadwindowsimage {
         }
     }
     #=================================================
-    # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================

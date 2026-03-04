@@ -6,11 +6,8 @@ function step-preinstall-cleartargetdisk {
         $Confirm = $true
     )
     #=================================================
-    # Start the step
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
-
-    # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
@@ -23,7 +20,6 @@ function step-preinstall-cleartargetdisk {
     Clear-DeviceLocalDisk -Force -NoResults -Confirm:$Confirm -ErrorAction Stop
     #endregion
     #=================================================
-    # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================

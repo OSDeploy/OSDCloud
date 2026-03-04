@@ -92,57 +92,57 @@
             "command": "step-install-bcdboot"
         },
         {
-            "name": "Export WinPE Drivers to Local Disk",
-            "command": "step-drivers-recast-winpe"
+            "name": "Export WinPE OEM Drivers to Local Disk",
+            "command": "step-Export-WindowsDriver-OemWinPE"
         },
         {
             "name": "Apply WinPE Drivers to offline Windows Image",
-            "command": "step-drivers-recast-winos"
+            "command": "step-Add-WindowsDriver-OemWinOS"
         },
         {
             "name": "Apply WinPE Drivers to offline Windows Recovery Environment",
-            "command": "step-drivers-recast-winre"
+            "command": "step-Add-WindowsDriver-OemWinRE"
         },
         {
             "name": "Firmware: Download from Microsoft Update Catalog",
-            "command": "step-drivers-firmware",
+            "command": "step-Save-WindowsDriver-Firmware",
             "testinfullos": true
         },
         {
             "name": "Firmware: Apply Driver",
-            "command": "step-drivers-addwindowsdriver-firmware",
+            "command": "step-Add-WindowsDriver-Firmware",
             "skip": true
         },
         {
             "name": "OEM DriverPack: Download from OEM",
-            "command": "step-drivers-driverpack",
+            "command": "step-Save-WindowsDriver-DriverPack",
             "testinfullos": true
         },
         {
             "name": "OEM DriverPack: Apply or stage in SetupComplete.cmd",
-            "command": "step-drivers-addwindowsdriver-driverpack"
+            "command": "step-Add-WindowsDriver-DriverPack"
         },
         {
             "name": "Download Drivers from Microsoft Update Catalog",
-            "command": "step-drivers-msupdate",
+            "command": "step-Save-WindowsDriver-MSUpdate",
             "testinfullos": true
         },
         {
             "name": "Apply Microsoft Update Drivers - All",
-            "command": "step-drivers-addwindowsdriver-msupdate"
+            "command": "step-Add-WindowsDriver-MSUpdate"
         },
         {
             "name": "Apply Microsoft Update Drivers - Disk",
-            "command": "step-drivers-addwindowsdriver-disk",
+            "command": "step-Add-WindowsDriver-Disk",
             "skip": true
         },
         {
             "name": "Apply Microsoft Update Drivers - Net",
-            "command": "step-drivers-addwindowsdriver-net"
+            "command": "step-Add-WindowsDriver-Net"
         },
         {
             "name": "Apply Microsoft Update Drivers - Scsi",
-            "command": "step-drivers-addwindowsdriver-scsi",
+            "command": "step-Add-WindowsDriver-Scsi",
             "skip": true
         },
         {

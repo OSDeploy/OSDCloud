@@ -36,11 +36,11 @@ function Save-WebFile {
     #=================================================
     #	Values
     #=================================================
-    Write-Verbose "SourceUrl: $SourceUrl"
-    Write-Verbose "DestinationName: $DestinationName"
-    Write-Verbose "DestinationDirectory: $DestinationDirectory"
-    Write-Verbose "Overwrite: $Overwrite"
-    Write-Verbose "WebClient: $WebClient"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] SourceUrl: $SourceUrl"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DestinationName: $DestinationName"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DestinationDirectory: $DestinationDirectory"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Overwrite: $Overwrite"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] WebClient: $WebClient"
     #=================================================
     #	DestinationDirectory
     #=================================================
@@ -61,7 +61,7 @@ function Save-WebFile {
         Remove-Item -Path $DestinationNewItem.FullName -Force | Out-Null
     }
     else {
-        Write-Warning 'Unable to write to Destination Directory'
+        Write-Warning "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to write to Destination Directory"
         break
     }
     #=================================================
@@ -73,7 +73,7 @@ function Save-WebFile {
         $DestinationNameUri = $SourceUrl -as [System.Uri] # Convert to Uri so we can ignore any query string
         $DestinationName = $DestinationNameUri.AbsolutePath.Split('/')[-1]
     }
-    Write-Verbose "DestinationName: $DestinationName"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DestinationName: $DestinationName"
     #=================================================
     #	WebFileFullName
     #=================================================
@@ -83,7 +83,7 @@ function Save-WebFile {
     #	OverWrite
     #=================================================
     if ((-not ($PSBoundParameters['Overwrite'])) -and (Test-Path $DestinationFullName)) {
-        Write-Verbose 'DestinationFullName already exists'
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DestinationFullName already exists"
         Get-Item $DestinationFullName -Force
     }
     else {
@@ -91,7 +91,7 @@ function Save-WebFile {
         #	Download
         #=================================================
         $SourceUrl = [Uri]::EscapeUriString($SourceUrl.Replace('%', '~')).Replace('~', '%') # Substitute and replace '%' to avoid escaping os Azure SAS tokens
-        Write-Verbose "Testing file at $SourceUrl"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Testing file at $SourceUrl"
         #=================================================
         #	Test for WebClient Proxy
         #=================================================
@@ -113,10 +113,10 @@ function Save-WebFile {
             $WebClient.Dispose()
         }
         else {
-            Write-Verbose "cURL Source: $SourceUrl"
-            Write-Verbose "Destination: $DestinationFullName"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] cURL Source: $SourceUrl"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Destination: $DestinationFullName"
 
-            Write-Verbose 'Requesing HTTP HEAD to get Content-Length and Accept-Ranges header'
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Requesing HTTP HEAD to get Content-Length and Accept-Ranges header"
             try {
                 $remote = Invoke-WebRequest -UseBasicParsing -Method Head -Uri $SourceUrl
             }
@@ -153,7 +153,7 @@ function Save-WebFile {
                     -and $remoteAcceptsRanges `
                     -and ($RetryCount -lt $MaxRetryCount)
             ) {
-                Write-Verbose "Download is incomplete, remote server accepts ranges, will retry in $RetryDelaySeconds second(s)"
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Download is incomplete, remote server accepts ranges, will retry in $RetryDelaySeconds second(s)"
                 Start-Sleep -Seconds $RetryDelaySeconds
                 $RetryDelaySeconds *= 2 # retry with exponential backoff
                 $RetryCount += 1
@@ -169,7 +169,7 @@ function Save-WebFile {
             }
 
             if ($localExists -and ((Get-Item $DestinationFullName).Length -lt $remoteLength)) {
-                Write-Verbose "Download is incomplete after $RetryCount retries."
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Download is incomplete after $RetryCount retries."
                 Write-Warning "Could not download $DestinationFullName"
                 $null
             }

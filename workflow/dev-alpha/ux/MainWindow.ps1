@@ -223,7 +223,7 @@ try {
 	}
 }
 catch {
-	Write-Verbose "Error populating Disk combo: $_"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] Error populating Disk combo: $_"
 }
 #================================================
 # GlobalVariable Configuration
@@ -231,12 +231,12 @@ catch {
 # Workflow Configuration
 if ($global:OSDCloudDeploy.OperatingSystemValues) {
 	$OperatingSystemValues = $global:OSDCloudDeploy.OperatingSystemValues
-	Write-Verbose "Workflow OperatingSystemValues = $OperatingSystemValues"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] OperatingSystemValues = $OperatingSystemValues"
 }
 # Catalog Configuration
 else {
 	$OperatingSystemValues = $global:DeployOSDCloudOperatingSystems.OperatingSystem | Sort-Object -Unique | Sort-Object -Descending
-	Write-Verbose "Catalog OperatingSystemValues = $OperatingSystemValues"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] Catalog OperatingSystemValues = $OperatingSystemValues"
 }
 $OperatingSystemCombo = $window.FindName("OperatingSystemCombo")
 $OperatingSystemCombo.ItemsSource = $OperatingSystemValues
@@ -244,7 +244,7 @@ $OperatingSystemCombo.ItemsSource = $OperatingSystemValues
 # OperatingSystemDefault
 if ($global:OSDCloudDeploy.OperatingSystem) {
 	$OperatingSystemDefault = $global:OSDCloudDeploy.OperatingSystem
-	Write-Verbose "Workflow OperatingSystem = $OperatingSystemDefault"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] OperatingSystem = $OperatingSystemDefault"
 }
 if ($OperatingSystemDefault -and ($OperatingSystemValues -contains $OperatingSystemDefault)) {
 	$OperatingSystemCombo.SelectedItem = $OperatingSystemDefault
@@ -262,7 +262,7 @@ else {
 # Workflow Configuration
 if ($global:OSDCloudDeploy.OSEditionValues.Edition) {
 	$OSEditionValues = $global:OSDCloudDeploy.OSEditionValues.Edition
-	Write-Verbose "Workflow OSEditionValues = $OSEditionValues"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] OSEditionValues = $OSEditionValues"
 }
 else {
 	@()
@@ -273,7 +273,7 @@ $OSEditionCombo.ItemsSource = $OSEditionValues
 # OSEditionDefault
 if ($global:OSDCloudDeploy.OSEdition) {
 	$OSEditionDefault = $global:OSDCloudDeploy.OSEdition
-	Write-Verbose "Workflow OSEdition = $OSEditionDefault"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] OSEdition = $OSEditionDefault"
 }
 if ($OSEditionDefault) {
 	$OSEditionCombo.SelectedItem = $OSEditionDefault
@@ -291,7 +291,7 @@ else {
 # Workflow Configuration
 if ($global:OSDCloudDeploy.OSActivationValues) {
 	$OSActivationValues = $global:OSDCloudDeploy.OSActivationValues
-	Write-Verbose "Workflow OSActivationValues = $OSActivationValues"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] OSActivationValues = $OSActivationValues"
 }
 else {
 	@()
@@ -302,7 +302,7 @@ $OSActivationCombo.ItemsSource = $OSActivationValues
 # OSActivationDefault
 if ($global:OSDCloudDeploy.OSActivation) {
 	$OSActivationDefault = $global:OSDCloudDeploy.OSActivation
-	Write-Verbose "Workflow OSActivation = $OSActivationDefault"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] OSActivation = $OSActivationDefault"
 }
 if ($OSActivationDefault -and ($OSActivationValues -contains $OSActivationDefault)) {
 	$OSActivationCombo.SelectedItem = $OSActivationDefault
@@ -320,12 +320,12 @@ else {
 # Workflow Configuration
 if ($global:OSDCloudDeploy.OSLanguageCodeValues) {
 	$OSLanguageCodeValues = $global:OSDCloudDeploy.OSLanguageCodeValues
-	Write-Verbose "Workflow OSLanguageCodeValues = $OSLanguageCodeValues"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] OSLanguageCodeValues = $OSLanguageCodeValues"
 }
 # Catalog Configuration
 else {
 	$OSLanguageCodeValues = $global:DeployOSDCloudOperatingSystems.OSLanguageCode | Sort-Object -Unique | Sort-Object -Descending
-	Write-Verbose "Catalog OSLanguageCodeValues = $OSLanguageCodeValues"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] Catalog OSLanguageCodeValues = $OSLanguageCodeValues"
 }
 $OSLanguageCodeCombo = $window.FindName("OSLanguageCodeCombo")
 $OSLanguageCodeCombo.ItemsSource = $OSLanguageCodeValues
@@ -333,7 +333,7 @@ $OSLanguageCodeCombo.ItemsSource = $OSLanguageCodeValues
 # OSLanguageCodeDefault
 if ($global:OSDCloudDeploy.OSLanguageCode) {
 	$OSLanguageCodeDefault = $global:OSDCloudDeploy.OSLanguageCode
-	Write-Verbose "Workflow OSLanguage = $OSLanguageCodeDefault"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] OSLanguage = $OSLanguageCodeDefault"
 }
 if ($OSLanguageCodeDefault -and ($OSLanguageCodeValues -contains $OSLanguageCodeDefault)) {
 	$OSLanguageCodeCombo.SelectedItem = $OSLanguageCodeDefault
@@ -502,10 +502,10 @@ function Update-OsResults {
 	$updateOSActivation = Get-ComboValue -ComboBox $OSActivationCombo
 	$updateOSLanguageCode = Get-ComboValue -ComboBox $OSLanguageCodeCombo
 
-	Write-Verbose "updateOperatingSystem = $updateOperatingSystem"
-	Write-Verbose "updateOSEdition = $updateOSEdition"
-	Write-Verbose "updateOSActivation = $updateOSActivation"
-	Write-Verbose "updateOSLanguageCode = $updateOSLanguageCode"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] updateOperatingSystem = $updateOperatingSystem"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] updateOSEdition = $updateOSEdition"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] updateOSActivation = $updateOSActivation"
+	Write-Verbose "[$(Get-Date -format s)] [MainWindow.ps1] updateOSLanguageCode = $updateOSLanguageCode"
 
 	$global:OSDCloudDeploy.OperatingSystemObject = $global:DeployOSDCloudOperatingSystems | `
 		Where-Object { $_.OperatingSystem -match $updateOperatingSystem } | `
@@ -635,5 +635,5 @@ if ($script:SelectionConfirmed) {
 	if (-not (Test-Path -Path $LogsPath)) {
 		New-Item -Path $LogsPath -ItemType Directory -Force | Out-Null
 	}
-	$global:OSDCloudDeploy | Out-File -FilePath "$LogsPath\OSDCloudDeploy.txt" -Force
+	$global:OSDCloudDeploy | ConvertTo-Json | Out-File -FilePath "$LogsPath\OSDCloudDeploy.json" -Encoding utf8 -Width 2000 -Force -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 }

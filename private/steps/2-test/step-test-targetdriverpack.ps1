@@ -7,11 +7,8 @@ function step-test-targetdriverpack {
         $DriverPackObject = $global:OSDCloudWorkflowInvoke.DriverPackObject
     )
     #=================================================
-    # Start the step
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
-
-    # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     # Is DriverPackName set to None?
@@ -35,7 +32,7 @@ function step-test-targetdriverpack {
     # Is there a URL?
     if (-not $($DriverPackObject.Url)) {
         Write-Warning "[$(Get-Date -format s)] DriverPackObject does not have a Url to validate."
-        Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+        Write-Warning 'Press Ctrl+C to exit OSDCloud'
         Start-Sleep -Seconds 86400
         exit
     }
@@ -78,11 +75,10 @@ function step-test-targetdriverpack {
         $global:OSDCloudWorkflowInvoke.DriverPackName = 'None'
     }
     Write-Host -ForegroundColor DarkCyan "[$(Get-Date -format s)] Continuing in 5 seconds..."
-    Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] Press CTRL+C to cancel"
+    Write-Host -ForegroundColor DarkGray "Press Ctrl+C to exit OSDCloud"
     Start-Sleep -Seconds 5
     #endregion
     #=================================================
-    # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================

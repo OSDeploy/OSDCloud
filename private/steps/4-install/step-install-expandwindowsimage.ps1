@@ -2,11 +2,8 @@ function step-install-expandwindowsimage {
     [CmdletBinding()]
     param ()
     #=================================================
-    # Start the step
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
-
-    # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
@@ -55,7 +52,7 @@ function step-install-expandwindowsimage {
         catch {
             Write-Warning "[$(Get-Date -format s)] Expand-WindowsImage failed."
             Write-Warning "[$(Get-Date -format s)] $_"
-            Write-Warning 'Press Ctrl+C to cancel OSDCloud'
+            Write-Warning 'Press Ctrl+C to exit OSDCloud'
             Start-Sleep -Seconds 86400
             exit
         }
@@ -71,7 +68,6 @@ function step-install-expandwindowsimage {
         Remove-Item @Params | Out-Null
     }
     #=================================================
-    # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================

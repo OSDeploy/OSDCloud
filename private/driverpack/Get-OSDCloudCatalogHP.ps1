@@ -25,23 +25,22 @@ function Get-OSDCloudCatalogHp {
     param ()
     
     begin {
-        Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] Start"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
         #=================================================
         # Catalogs
-        $localCatalogPath = "$(Get-OSDCloudModulePath)\catalogs\driverpack\hp.xml"
-        $originCatalogPath = 'https://hpia.hpcloud.hp.com/downloads/driverpackcatalog/HPClientDriverPackCatalog.cab'
-        $repositoryCatalogPath = 'https://raw.githubusercontent.com/OSDeploy/osdcloud-cache/refs/heads/master/driverpack/hp.xml'
+        $localDriverPackCatalog = Join-Path (Get-OSDCloudModulePath) $OSDCloudModule.hp.driverpackcataloglocal
+        $oemDriverPackCatalog = $OSDCloudModule.hp.driverpackcatalogoem
         $tempCatalogPackagePath = "$($env:TEMP)\HPClientDriverPackCatalog.cab"
         $tempCatalogPath = "$($env:TEMP)\osdcloud-driverpack-hp.xml"
         #=================================================
         # Build realtime catalog from online source, if fails fallback to offline catalog
         try {
             if (-not (Test-Path $tempCatalogPath)) {
-                Write-Verbose "Downloading HP driver pack catalog from $originCatalogPath"
-                $null = Invoke-WebRequest -Uri $originCatalogPath -OutFile $tempCatalogPackagePath -ErrorAction Stop
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Downloading HP driver pack catalog from $oemDriverPackCatalog"
+                $null = Invoke-WebRequest -Uri $oemDriverPackCatalog -OutFile $tempCatalogPackagePath -ErrorAction Stop
                 
                 if (Test-Path $tempCatalogPackagePath) {
-                    Write-Verbose "Extracting catalog from CAB file"
+                    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Extracting catalog from CAB file"
                     # expand.exe is used for CAB extraction as Expand-Archive only supports ZIP
                     $expandResult = & expand.exe $tempCatalogPackagePath $tempCatalogPath 2>&1
                     if ($LASTEXITCODE -ne 0) {
@@ -49,20 +48,20 @@ function Get-OSDCloudCatalogHp {
                     }
                 }
             } else {
-                Write-Verbose "Using cached catalog"
+                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Using temp catalog"
             }
         } catch {
-            Write-Warning "Failed to download catalog: $($_.Exception.Message)"
-            Write-Verbose "Falling back to offline catalog"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Failed to download DriverPack catalog: $($_.Exception.Message)"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Falling back to local catalog"
         }
         
         # Load catalog content
         if (Test-Path $tempCatalogPath) {
-            Write-Verbose "Loading online catalog from $tempCatalogPath"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading temp catalog from $tempCatalogPath"
             [xml]$XmlCatalogContent = Get-Content -Path $tempCatalogPath -Raw
         } else {
-            Write-Verbose "Loading offline catalog from $localCatalogPath"
-            [xml]$XmlCatalogContent = Get-Content -Path $localCatalogPath -Raw
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Loading offline catalog from $localDriverPackCatalog"
+            [xml]$XmlCatalogContent = Get-Content -Path $localDriverPackCatalog -Raw
         }
         
         # Validate catalog content
@@ -81,9 +80,9 @@ function Get-OSDCloudCatalogHp {
         #=================================================
         # Build Catalog
         #=================================================
-        Write-Verbose "Building driver pack catalog"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Building driver pack catalog"
         $CatalogVersion = Get-Date -Format yy.MM.dd
-        Write-Verbose "Catalog version: $CatalogVersion"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Catalog version: $CatalogVersion"
         
         $HpSoftPaqList = $XmlCatalogContent.NewDataSet.HPClientDriverPackCatalog.SoftPaqList.SoftPaq
         $HpModelList = $XmlCatalogContent.NewDataSet.HPClientDriverPackCatalog.ProductOSDriverPackList.ProductOSDriverPack
@@ -127,13 +126,13 @@ function Get-OSDCloudCatalogHp {
         #=================================================
         # Cleanup Catalog
         #=================================================
-        Write-Verbose "Filtering to latest driver packs per model"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Filtering to latest driver packs per model"
         $Results = $Results | Sort-Object Model, OSVersion -Descending | Group-Object Model | ForEach-Object {$_.Group | Select-Object -First 1}
         #=================================================
         # Sort Results
         #=================================================
         $Results = $Results | Sort-Object -Property Name
-        Write-Verbose "Found $($Results.Count) Windows 11 driver packs"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Found $($Results.Count) Windows 11 driver packs"
         $Results
     }
     
@@ -143,15 +142,15 @@ function Get-OSDCloudCatalogHp {
             $Results | ConvertTo-Json -Depth 10 | Out-File -FilePath "$env:Temp\osdcloud-driverpack-hp.json" -Encoding utf8
         }
         if (Test-Path $tempCatalogPackagePath) {
-            Write-Verbose "Removing temporary CAB file"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Removing temporary CAB file"
             Remove-Item -Path $tempCatalogPackagePath -Force -ErrorAction SilentlyContinue
         }
         if (Test-Path $tempCatalogPath) {
-            Write-Verbose "Removing temporary catalog file"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Removing temporary catalog file"
             Remove-Item -Path $tempCatalogPath -Force -ErrorAction SilentlyContinue
         }
         #=================================================
-        Write-Verbose "[$((Get-Date).ToString('HH:mm:ss'))][$($MyInvocation.MyCommand.Name)] End"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
         #=================================================
     }
 }

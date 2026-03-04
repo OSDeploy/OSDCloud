@@ -71,21 +71,21 @@ function New-OSDCloudPartitionWindows {
             $PartitionStyle = 'MBR'
         }
     }
-    Write-Verbose "PartitionStyle is set to $PartitionStyle"
+    Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] PartitionStyle is set to $PartitionStyle"
     #=================================================
     #	GPT WINDOWS
     #=================================================
     if ($PartitionStyle -eq 'GPT' -and $NoRecoveryPartition -eq $true) {
-        Write-Verbose "Creating GPT Windows Partition"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Creating GPT Windows Partition"
         $PartitionWindows = New-Partition -DiskNumber $DiskNumber -UseMaximumSize -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -DriveLetter C
 
         #$null = Format-Volume -Partition $PartitionWindows -NewFileSystemLabel "$LabelWindows" -FileSystem NTFS -Force -Confirm:$false
-        Write-Verbose "DISKPART> select disk $DiskNumber"
-        Write-Verbose "DISKPART> select partition $($PartitionWindows.PartitionNumber)"
-        Write-Verbose "DISKPART> format fs=$FileSystem quick label='$LabelWindows'"
-        Write-Verbose "DISKPART> assign letter C"
-        Write-Verbose "DISKPART> exit"
-        Write-Verbose "Formatting GPT Windows Partition NTFS with Label $LabelWindows on Drive Letter C"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DISKPART> select disk $DiskNumber"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DISKPART> select partition $($PartitionWindows.PartitionNumber)"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DISKPART> format fs=$FileSystem quick label='$LabelWindows'"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DISKPART> assign letter C"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] DISKPART> exit"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Formatting GPT Windows Partition NTFS with Label $LabelWindows on Drive Letter C"
         
 $null = @"
 select disk $DiskNumber
@@ -103,10 +103,10 @@ exit
         $SizeWindows = $($GetOSDDisk.LargestFreeExtent) - $SizeRecovery
         $SizeWindowsGB = [math]::Round($SizeWindows / 1GB,1)
 
-        Write-Verbose "Creating GPT Windows Partition"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Creating GPT Windows Partition"
         $PartitionWindows = New-Partition -DiskNumber $DiskNumber -Size $SizeWindows -GptType '{ebd0a0a2-b9e5-4433-87c0-68b6b72699c7}' -DriveLetter C
 
-        Write-Verbose "Formatting GPT Windows Partition NTFS with Label $LabelWindows on Drive Letter C"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Formatting GPT Windows Partition NTFS with Label $LabelWindows on Drive Letter C"
         #$null = Format-Volume -Partition $PartitionWindows -NewFileSystemLabel "$LabelWindows" -FileSystem NTFS -Force -Confirm:$false
 
 $null = @"
@@ -117,12 +117,12 @@ assign letter C
 exit 
 "@ | diskpart.exe
 
-        Write-Verbose "Creating GPT Recovery Partition"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Creating GPT Recovery Partition"
         $PartitionRecovery = New-Partition -DiskNumber $DiskNumber -GptType '{de94bba4-06d1-4d40-a16a-bfd50179d6ac}' -UseMaximumSize
 
-        Write-Verbose "Format-Volume FileSystem NTFS NewFileSystemLabel $LabelRecovery"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Format-Volume FileSystem NTFS NewFileSystemLabel $LabelRecovery"
         #$null = Format-Volume -Partition $PartitionRecovery -NewFileSystemLabel "$LabelRecovery" -FileSystem NTFS -Confirm:$false
-        Write-Verbose "Formatting GPT Recovery Partition NTFS with Label $LabelRecovery on Drive Letter R"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Formatting GPT Recovery Partition NTFS with Label $LabelRecovery on Drive Letter R"
 
 $null = @"
 select disk $DiskNumber
@@ -132,7 +132,7 @@ assign letter R
 exit 
 "@ | diskpart.exe
 
-            Write-Verbose "Set-Partition Attributes 0x8000000000000001"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Set-Partition Attributes 0x8000000000000001"
 $null = @"
 select disk $DiskNumber
 select partition $($PartitionRecovery.PartitionNumber)
@@ -144,12 +144,12 @@ exit
     #	MBR WINDOWS
     #=================================================
     if ($PartitionStyle -eq 'MBR' -and $NoRecoveryPartition -eq $true) {
-        Write-Verbose "Creating MBR Windows Partition"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Creating MBR Windows Partition"
         $PartitionWindows = New-Partition -DiskNumber $DiskNumber -UseMaximumSize -MbrType IFS -DriveLetter C
     
-        Write-Verbose "Format-Volume -DriveLetter C -FileSystem NTFS -NewFileSystemLabel $LabelWindows"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Format-Volume -DriveLetter C -FileSystem NTFS -NewFileSystemLabel $LabelWindows"
         #$null = Format-Volume -Partition $PartitionWindows -NewFileSystemLabel "$LabelWindows" -FileSystem NTFS -Force -Confirm:$false
-        Write-Verbose "Formatting MBR Recovery Partition NTFS with Label $LabelRecovery on Drive Letter R"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Formatting MBR Recovery Partition NTFS with Label $LabelRecovery on Drive Letter R"
 $null = @"
 select disk $DiskNumber
 select partition $($PartitionWindows.PartitionNumber)
@@ -167,12 +167,12 @@ exit
         $SizeWindows = $($OSDDisk.LargestFreeExtent) - $SizeRecovery
         $SizeWindowsGB = [math]::Round($SizeWindows / 1GB,1)
 
-        Write-Verbose "Creating MBR Windows Partition"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Creating MBR Windows Partition"
         $PartitionWindows = New-Partition -DiskNumber $DiskNumber -Size $SizeWindows -MbrType IFS -DriveLetter c
 
-        Write-Verbose "Format-Volume FileSystem NTFS NewFileSystemLabel $LabelWindows"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Format-Volume FileSystem NTFS NewFileSystemLabel $LabelWindows"
         #$null = Format-Volume -Partition $PartitionWindows -NewFileSystemLabel "$LabelWindows" -FileSystem NTFS -Force -Confirm:$false
-        Write-Verbose "Formatting MBR Recovery Partition NTFS with Label $LabelRecovery on Drive Letter R"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Formatting MBR Recovery Partition NTFS with Label $LabelRecovery on Drive Letter R"
 
 $null = @"
 select disk $DiskNumber
@@ -182,10 +182,10 @@ assign letter C
 exit 
 "@ | diskpart.exe
 
-        Write-Verbose "New-Partition -DiskNumber $DiskNumber -UseMaximumSize"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] New-Partition -DiskNumber $DiskNumber -UseMaximumSize"
         $PartitionRecovery = New-Partition -DiskNumber $DiskNumber -UseMaximumSize
 
-        Write-Verbose "Format-Volume -FileSystem NTFS -NewFileSystemLabel $LabelRecovery"
+        Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Format-Volume -FileSystem NTFS -NewFileSystemLabel $LabelRecovery"
         #$null = Format-Volume -Partition $PartitionRecovery -NewFileSystemLabel "$LabelRecovery" -FileSystem NTFS -Confirm:$false
 
 $null = @"
@@ -196,7 +196,7 @@ assign letter R
 exit 
 "@ | diskpart.exe
 
-            Write-Verbose "Set-Partition id 27"
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Set-Partition id 27"
 $null = @"
 select disk $DiskNumber
 select partition $($PartitionRecovery.PartitionNumber)
