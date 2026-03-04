@@ -40,11 +40,8 @@ function step-install-getwindowsimageindex {
         $ImageName = $global:OSDCloudDeploy.LocalImageName
     )
     #=================================================
-    # Start the step
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
-
-    # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Do we have a WindowsImage to test?
@@ -135,7 +132,6 @@ function step-install-getwindowsimageindex {
     Start-Sleep -Seconds 86400
     exit
     #=================================================
-    # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================

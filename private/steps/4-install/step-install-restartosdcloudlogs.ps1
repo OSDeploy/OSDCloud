@@ -2,11 +2,8 @@ function step-install-restartosdcloudlogs {
     [CmdletBinding()]
     param ()
     #=================================================
-    # Start the step
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
-
-    # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     #region Main
@@ -29,7 +26,6 @@ function step-install-restartosdcloudlogs {
     $null = Start-Transcript -Path $TranscriptFullName -ErrorAction SilentlyContinue
     #endregion
     #=================================================
-    # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================

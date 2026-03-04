@@ -5,11 +5,8 @@ function step-test-targetwindowsimage {
         $LaunchMethod = $global:OSDCloudWorkflowInvoke.LaunchMethod
     )
     #=================================================
-    # Start the step
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Start"
     Write-Debug -Message $Message; Write-Verbose -Message $Message
-
-    # Get the configuration of the step
     $Step = $global:OSDCloudCurrentStep
     #=================================================
     # Is there an Operating System ImageFile URL?
@@ -54,7 +51,6 @@ function step-test-targetwindowsimage {
     Start-Sleep -Seconds 86400
     Exit
     #=================================================
-    # End the function
     $Message = "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     Write-Verbose -Message $Message; Write-Debug -Message $Message
     #=================================================
