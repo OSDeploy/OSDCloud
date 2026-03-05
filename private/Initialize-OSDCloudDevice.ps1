@@ -446,17 +446,39 @@ function Initialize-OSDCloudDevice {
     $global:OSDCloudDevice | ConvertTo-Json -Depth 10 | Out-File "$LogsPath\OSDCloudDevice.json" -Force -Encoding utf8
     #=================================================
     # OSDCloudLogs
-    # Requires a USB Drive with at least 1 GB of free space and write permissions for the current user to copy logs.
-    $USBDrive = Get-DeviceUSBVolume | Where-Object { $_.SizeRemainingGB -ge 1 } | Where-Object { Test-Path -Path "$($_.DriveLetter):\OSDCloudLogs" } | Select-Object -First 1
-    if ($USBDrive) {
-        $UsbOSDCloudLogs = "$($USBDrive.DriveLetter):\OSDCloudLogs\$SerialNumber"
-        if (-not (Test-Path -Path $UsbOSDCloudLogs)) {
-            New-Item -Path $UsbOSDCloudLogs -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
+    # Look for available drives (USB, mapped network drives, and local drives) with at least 1 GB of free space and write permissions for the current user to copy logs.
+    $OSDCloudLogsDrive = $null
+
+    foreach ($Drive in (Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Root -match '^[A-Z]:\\$' })) {
+        $DriveLetter = $Drive.Name
+        $OSDCloudLogsCheckPath = "$DriveLetter`:\OSDCloudLogs"
+
+        try {
+            if (Test-Path -Path $OSDCloudLogsCheckPath) {
+                $DriveInfo = New-Object System.IO.DriveInfo($DriveLetter)
+                if ($DriveInfo.AvailableFreeSpace -ge 1GB) {
+                    $OSDCloudLogsDrive = [PSCustomObject]@{
+                        DriveLetter          = $DriveLetter
+                        AvailableFreeSpaceGB = [math]::Round($DriveInfo.AvailableFreeSpace / 1GB, 1)
+                    }
+                    break
+                }
+            }
+        }
+        catch {
+            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Unable to access drive $DriveLetter"
+        }
+    }
+
+    if ($OSDCloudLogsDrive) {
+        $OSDCloudLogsPath = "$($OSDCloudLogsDrive.DriveLetter):\OSDCloudLogs\$SerialNumber"
+        if (-not (Test-Path -Path $OSDCloudLogsPath)) {
+            New-Item -Path $OSDCloudLogsPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
         }
         # If folder doesn't exist, then the drive likely doesn't have write permissions for the current user, so skip copying logs to avoid errors
-        if (Test-Path -Path $UsbOSDCloudLogs) {
+        if (Test-Path -Path $OSDCloudLogsPath) {
             Get-ChildItem -Path $LogsPath -File | ForEach-Object {
-                Copy-Item -Path $_.FullName -Destination $(Join-Path -Path $UsbOSDCloudLogs -ChildPath $_.Name) -Force
+                Copy-Item -Path $_.FullName -Destination $(Join-Path -Path $OSDCloudLogsPath -ChildPath $_.Name) -Force
             }
         }
     }
