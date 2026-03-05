@@ -445,21 +445,18 @@ function Initialize-OSDCloudDevice {
     }
     $global:OSDCloudDevice | ConvertTo-Json -Depth 10 | Out-File "$LogsPath\OSDCloudDevice.json" -Force -Encoding utf8
     #=================================================
-    # USB Debug
-    $USBDrive = Get-DeviceUSBVolume | Where-Object { ($_.FileSystemLabel -match "OSDCloud|USB-DATA") } | Where-Object { $_.SizeGB -ge 16 } | Where-Object { $_.SizeRemainingGB -ge 10 } | Select-Object -First 1
+    # OSDCloudLogs
+    # Requires a USB Drive with at least 1 GB of free space and write permissions for the current user to copy logs.
+    $USBDrive = Get-DeviceUSBVolume | Where-Object { $_.SizeRemainingGB -ge 1 } | Where-Object { Test-Path -Path "$($_.DriveLetter):\OSDCloudLogs" } | Select-Object -First 1
     if ($USBDrive) {
-        $OSDCloudDebugPath = "$($USBDrive.DriveLetter):\osdcloud-debug"
-        if (Test-Path -Path $OSDCloudDebugPath) {
-            $usbLogsRoot = "$($USBDrive.DriveLetter):\osdcloud-debug\$SerialNumber"
-            if (-not (Test-Path -Path $usbLogsRoot)) {
-                New-Item -Path $usbLogsRoot -ItemType Directory -Force | Out-Null
-            }
-            if (Test-Path -Path $usbLogsRoot) {
-                # Copy files from $LogsPath to $usbLogsRoot
-                Get-ChildItem -Path $LogsPath -File | ForEach-Object {
-                    $destination = Join-Path -Path $usbLogsRoot -ChildPath $_.Name
-                    Copy-Item -Path $_.FullName -Destination $destination -Force
-                }
+        $UsbOSDCloudLogs = "$($USBDrive.DriveLetter):\OSDCloudLogs\$SerialNumber"
+        if (-not (Test-Path -Path $UsbOSDCloudLogs)) {
+            New-Item -Path $UsbOSDCloudLogs -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
+        }
+        # If folder doesn't exist, then the drive likely doesn't have write permissions for the current user, so skip copying logs to avoid errors
+        if (Test-Path -Path $UsbOSDCloudLogs) {
+            Get-ChildItem -Path $LogsPath -File | ForEach-Object {
+                Copy-Item -Path $_.FullName -Destination $(Join-Path -Path $UsbOSDCloudLogs -ChildPath $_.Name) -Force
             }
         }
     }
