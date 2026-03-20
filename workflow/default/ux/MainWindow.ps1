@@ -349,13 +349,13 @@ $deviceOSDProductText.Text = $deviceOSDProduct
 $deviceComputerSystemSKUText = $window.FindName("deviceComputerSystemSKUText")
 $deviceComputerSystemSKUText.Text = $deviceComputerSystemSKU
 $deviceSerialNumberText = $window.FindName("deviceSerialNumberText")
-$deviceSerialNumberText.Text = $deviceSerialNumber
+$deviceSerialNumberText.Text = '*' * ($deviceSerialNumber.Length)
 $deviceIsAutopilotSpecText = $window.FindName("deviceIsAutopilotSpecText")
 $deviceIsAutopilotSpecText.Text = $deviceIsAutopilotSpec
 $deviceIsTpmSpecText = $window.FindName("deviceIsTpmSpecText")
 $deviceIsTpmSpecText.Text = $deviceIsTpmSpec
 $deviceUUIDText = $window.FindName("deviceUUIDText")
-$deviceUUIDText.Text = $deviceUUID
+$deviceUUIDText.Text = '*' * ($deviceUUID.Length)
 $SelectedOSLanguageText = $window.FindName("SelectedOSLanguageText")
 $SelectedIdText = $window.FindName("SelectedIdText")
 $SelectedFileNameText = $window.FindName("SelectedFileNameText")
@@ -363,6 +363,22 @@ $DriverPackUrlText = $window.FindName("DriverPackUrlText")
 $DriverPackUrlText.Text = [string]$global:OSDCloudDeploy.DriverPackObject.Url
 $StartButton = $window.FindName("StartButton")
 $StartButton.IsEnabled = $false
+
+$deviceUUIDText.Add_MouseDown({
+	if ($deviceUUIDText.Text -match '\*') {
+		$deviceUUIDText.Text = $deviceUUID
+	} else {
+		$deviceUUIDText.Text = '*' * ($deviceUUID.Length)
+	}
+})
+
+$deviceSerialNumberText.Add_MouseDown({
+	if ($deviceSerialNumberText.Text -match '\*') {
+		$deviceSerialNumberText.Text = $deviceSerialNumber
+	} else {
+		$deviceSerialNumberText.Text = '*' * ($deviceSerialNumber.Length)
+	}
+})
 
 function Get-ComboValue {
 	param(
