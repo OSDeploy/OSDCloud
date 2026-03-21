@@ -474,6 +474,23 @@ $deviceOSDProductText = $window.FindName("deviceOSDProductText")
 $deviceOSDProductText.Text = $deviceOSDProduct
 $deviceComputerSystemSKUText = $window.FindName("deviceComputerSystemSKUText")
 $deviceComputerSystemSKUText.Text = $deviceComputerSystemSKU
+function Set-ClipboardText {
+	param([string]$Text)
+	$maxRetries = 5
+	for ($i = 0; $i -lt $maxRetries; $i++) {
+		try {
+			[System.Windows.Clipboard]::SetText($Text)
+			return
+		} catch {
+			if ($i -lt ($maxRetries - 1)) {
+				Start-Sleep -Milliseconds 100
+			} else {
+				Write-Warning "Failed to copy to clipboard: $_"
+			}
+		}
+	}
+}
+
 $deviceSerialNumberText = $window.FindName("deviceSerialNumberText")
 $deviceSerialNumberText.Text = $deviceSerialNumber
 $deviceSerialNumberText.Add_MouseLeftButtonUp({
@@ -482,7 +499,7 @@ $deviceSerialNumberText.Add_MouseLeftButtonUp({
 		return
 	}
 
-	[System.Windows.Clipboard]::SetText($serialNumberValue)
+	Set-ClipboardText -Text $serialNumberValue
 })
 $deviceIsAutopilotSpecText = $window.FindName("deviceIsAutopilotSpecText")
 $deviceIsAutopilotSpecText.Text = $deviceIsAutopilotSpec
@@ -496,7 +513,7 @@ $deviceUUIDText.Add_MouseLeftButtonUp({
 		return
 	}
 
-	[System.Windows.Clipboard]::SetText($uuidValue)
+	Set-ClipboardText -Text $uuidValue
 })
 $deviceHardwareHashLabelText = $window.FindName("deviceHardwareHashLabelText")
 $deviceHardwareHashText = $window.FindName("deviceHardwareHashText")
@@ -505,7 +522,7 @@ if (-not [string]::IsNullOrWhiteSpace([string]$deviceHardwareHash)) {
 	$deviceHardwareHashText.Text = 'Copy to Clipboard'
 	$deviceHardwareHashText.Visibility = [System.Windows.Visibility]::Visible
 	$deviceHardwareHashText.Add_MouseLeftButtonUp({
-		[System.Windows.Clipboard]::SetText([string]$deviceHardwareHash)
+		Set-ClipboardText -Text ([string]$deviceHardwareHash)
 	})
 }
 $SelectedOSLanguageText = $window.FindName("SelectedOSLanguageText")
