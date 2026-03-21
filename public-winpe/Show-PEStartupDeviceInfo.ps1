@@ -71,8 +71,8 @@ function Show-PEStartupDeviceInfo {
     Write-Host -ForegroundColor DarkGray "WinPE" $classWin32OperatingSystem.Version $classWin32OperatingSystem.OSArchitecture $classWin32ComputerSystem.Name
     Write-Host -ForegroundColor DarkGray "Manufacturer:" $global:OSDCloudDevice.OSDManufacturer
     Write-Host -ForegroundColor DarkGray "Model:" $global:OSDCloudDevice.OSDModel
-    Write-Host -ForegroundColor DarkGray "SN:" $global:OSDCloudDevice.SerialNumber
-    Write-Host -ForegroundColor DarkGray "UUID:" $global:OSDCloudDevice.UUID
+    # Write-Host -ForegroundColor DarkGray "SN:" $global:OSDCloudDevice.SerialNumber
+    # Write-Host -ForegroundColor DarkGray "UUID:" $global:OSDCloudDevice.UUID
     # Write-Host -ForegroundColor DarkGray "OSD Product:" $global:OSDCloudDevice.OSDProduct
     Write-Host -ForegroundColor DarkGray "BIOS:" $global:OSDCloudDevice.BiosVersion
     Write-Host -ForegroundColor DarkGray "BIOS Release Date:" $global:OSDCloudDevice.BiosReleaseDate
@@ -106,6 +106,31 @@ function Show-PEStartupDeviceInfo {
             Write-Host -ForegroundColor DarkGray "NetAdapter: $($Item.Name) [$($Item.MACAddress)]"
         }
     }
+
+    if (Get-Command -Name Get-SecureBootUEFI -ErrorAction SilentlyContinue) {
+        $WinUEFIca2023 = [System.Text.Encoding]::ASCII.GetString((Get-SecureBootUEFI DB).Bytes) -match 'Windows UEFI CA 2023'
+        if ($WinUEFIca2023) {
+            Write-Host -ForegroundColor Green "Windows UEFI CA 2023 is present."
+        }
+        else {
+            Write-Host -ForegroundColor DarkGray "Windows UEFI CA 2023 is not present."
+        }
+        $MsUEFIca2023 = [System.Text.Encoding]::ASCII.GetString((Get-SecureBootUEFI DB).Bytes) -match 'Microsoft UEFI CA 2023'
+        if ($MsUEFIca2023) {
+            Write-Host -ForegroundColor Green "Microsoft UEFI CA 2023 is present."
+        }
+        else {
+            Write-Host -ForegroundColor DarkGray "Microsoft UEFI CA 2023 is not present."
+        }
+        $MsKEKca2023 = [System.Text.Encoding]::ASCII.GetString((Get-SecureBootUEFI KEK).Bytes) -match 'Microsoft Corporation KEK 2K CA 2023'
+        if ($MsKEKca2023) {
+            Write-Host -ForegroundColor Green "Microsoft Corporation KEK 2K CA 2023 is present."
+        }
+        else {
+            Write-Host -ForegroundColor DarkGray "Microsoft Corporation KEK 2K CA 2023 is not present."
+        }
+    }
+
     #=================================================
     Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] End"
     #=================================================
