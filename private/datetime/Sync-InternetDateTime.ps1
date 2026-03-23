@@ -101,16 +101,16 @@ function Sync-WinpeInternetDateTime {
             $result.DifferenceMinutes = [math]::Round([math]::Abs(($result.InternetDateTime - $result.LocalDateTime).TotalMinutes))
             
             if ($result.DifferenceMinutes -gt $ThresholdMinutes) {
-                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Time difference of $($result.DifferenceMinutes) minutes exceeds threshold of $ThresholdMinutes minutes"
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Time difference of $($result.DifferenceMinutes) minutes exceeds threshold of $ThresholdMinutes minutes"
                 
                 if ($result.IsWinPE) {
                     if ($Force) {
                         if ($PSCmdlet.ShouldProcess("System Clock", "Set to $($result.InternetDateTime)")) {
-                            Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Setting system clock to internet time"
+                            Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Setting system clock to internet time"
                             try {
                                 $null = Set-Date -Date $result.InternetDateTime -ErrorAction Stop
                                 $result.ClockUpdated = $true
-                                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] System clock successfully updated"
+                                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] System clock successfully updated"
                             }
                             catch {
                                 $result.ErrorMessage = "Failed to set system clock: $($_.Exception.Message)"
@@ -129,7 +129,7 @@ function Sync-WinpeInternetDateTime {
                 }
             }
             else {
-                Write-Verbose "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] System clock is synchronized within threshold ($($result.DifferenceMinutes) minutes difference)"
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] System clock is synchronized within threshold ($($result.DifferenceMinutes) minutes difference)"
             }
         }
 
