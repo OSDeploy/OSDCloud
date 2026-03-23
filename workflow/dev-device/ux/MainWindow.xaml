@@ -69,7 +69,7 @@
                     </Grid>
                 </Border>
             </TabItem>
-            <TabItem Header="Identifiers">
+            <TabItem Header="Identity">
                 <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
                     <Grid>
                         <Grid.RowDefinitions>

@@ -18,6 +18,7 @@ $deviceIsAutopilotSpec = $global:OSDCloudDevice.IsAutopilotSpec
 $deviceIsTpmSpec = $global:OSDCloudDevice.IsTpmSpec
 $deviceSerialNumber = $global:OSDCloudDevice.SerialNumber
 $deviceUUID = $global:OSDCloudDevice.UUID
+$deviceHardwareHash = $global:OSDCloudDevice.HardwareHash
 $getOSDCloudModuleVersion = Get-OSDCloudModuleVersion
 #================================================
 # XAML
@@ -87,7 +88,7 @@ if ($RunPwsh) {
 
 $PrivacyMenuItem.Add_Click({
 	$privacyMessage = @"
-OSDCloud collects analytic data during the deployment process to identify issues, enhance performance, and improve the overall user experience.
+OSDCloud collects analytic data during the deployment process to help improve the product and user experience.
 No personally identifiable information (PII) is collected, and all data is anonymized to protect user privacy.
 
 Collected data includes information about the deployment environment and system configuration.
@@ -348,14 +349,57 @@ $deviceOSDProductText = $window.FindName("deviceOSDProductText")
 $deviceOSDProductText.Text = $deviceOSDProduct
 $deviceComputerSystemSKUText = $window.FindName("deviceComputerSystemSKUText")
 $deviceComputerSystemSKUText.Text = $deviceComputerSystemSKU
+function Set-ClipboardText {
+	param([string]$Text)
+	$maxRetries = 5
+	for ($i = 0; $i -lt $maxRetries; $i++) {
+		try {
+			[System.Windows.Clipboard]::SetText($Text)
+			return
+		} catch {
+			if ($i -lt ($maxRetries - 1)) {
+				Start-Sleep -Milliseconds 100
+			} else {
+				Write-Warning "Failed to copy to clipboard: $_"
+			}
+		}
+	}
+}
+
 $deviceSerialNumberText = $window.FindName("deviceSerialNumberText")
 $deviceSerialNumberText.Text = $deviceSerialNumber
+$deviceSerialNumberText.Add_MouseLeftButtonUp({
+	$serialNumberValue = [string]$deviceSerialNumberText.Text
+	if ([string]::IsNullOrWhiteSpace($serialNumberValue)) {
+		return
+	}
+
+	Set-ClipboardText -Text $serialNumberValue
+})
 $deviceIsAutopilotSpecText = $window.FindName("deviceIsAutopilotSpecText")
 $deviceIsAutopilotSpecText.Text = $deviceIsAutopilotSpec
 $deviceIsTpmSpecText = $window.FindName("deviceIsTpmSpecText")
 $deviceIsTpmSpecText.Text = $deviceIsTpmSpec
 $deviceUUIDText = $window.FindName("deviceUUIDText")
 $deviceUUIDText.Text = $deviceUUID
+$deviceUUIDText.Add_MouseLeftButtonUp({
+	$uuidValue = [string]$deviceUUIDText.Text
+	if ([string]::IsNullOrWhiteSpace($uuidValue)) {
+		return
+	}
+
+	Set-ClipboardText -Text $uuidValue
+})
+$deviceHardwareHashLabelText = $window.FindName("deviceHardwareHashLabelText")
+$deviceHardwareHashText = $window.FindName("deviceHardwareHashText")
+if (-not [string]::IsNullOrWhiteSpace([string]$deviceHardwareHash)) {
+	$deviceHardwareHashLabelText.Visibility = [System.Windows.Visibility]::Visible
+	$deviceHardwareHashText.Text = 'Copy to Clipboard'
+	$deviceHardwareHashText.Visibility = [System.Windows.Visibility]::Visible
+	$deviceHardwareHashText.Add_MouseLeftButtonUp({
+		Set-ClipboardText -Text ([string]$deviceHardwareHash)
+	})
+}
 $SelectedOSLanguageText = $window.FindName("SelectedOSLanguageText")
 $SelectedIdText = $window.FindName("SelectedIdText")
 $SelectedFileNameText = $window.FindName("SelectedFileNameText")
