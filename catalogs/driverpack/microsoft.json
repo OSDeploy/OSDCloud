@@ -713,16 +713,13 @@
     "UpdatePage": "https://www.microsoft.com/download/details.aspx?id=104681"
   },
   {
-    "CatalogVersion": "26.02.25",
+    "CatalogVersion": "26.03.23",
     "ReleaseDate": "26.02.23",
     "Name": "Surface Pro 10 [26.02.23]",
     "Manufacturer": "Microsoft",
     "Model": "Surface Pro 10",
     "SystemId": [
-      "Surface_Pro_10_for_Business_2079",
-      "Surface_Pro_10_with_5G_for_Business_2077",
-      "Surface_Pro_10_with_5G_for_Business_2078",
-      "Surface_Pro_10_with_5G_for_Business_2121"
+      "Surface_Pro_10_for_Business_2079"
     ],
     "FileName": "SurfacePro10forBusiness_Win11_22631_26.013.37121.0.msi",
     "Url": "https://download.microsoft.com/download/9185dccf-8be8-4395-8eda-a45cbf93ed91/SurfacePro10forBusiness_Win11_22631_26.013.37121.0.msi",
@@ -730,6 +727,24 @@
     "OSArchitecture": "amd64",
     "HashMD5": null,
     "UpdatePage": "https://www.microsoft.com/download/details.aspx?id=105947"
+  },
+  {
+    "CatalogVersion": "26.03.23",
+    "ReleaseDate": "26.03.19",
+    "Name": "Surface Pro 10 5G [26.03.19]",
+    "Manufacturer": "Microsoft",
+    "Model": "Surface Pro 10 5G",
+    "SystemId": [
+      "Surface_Pro_10_with_5G_for_Business_2077",
+      "Surface_Pro_10_with_5G_for_Business_2078",
+      "Surface_Pro_10_with_5G_for_Business_2121"
+    ],
+    "FileName": "SurfacePro10with5GforBusiness_Win11_22631_26.013.37192.0.msi",
+    "Url": "https://download.microsoft.com/download/356e9788-abcd-471c-8c3c-6e8f68eef9ef/SurfacePro10with5GforBusiness_Win11_22631_26.013.37192.0.msi",
+    "OperatingSystem": "Windows 11",
+    "OSArchitecture": "amd64",
+    "HashMD5": null,
+    "UpdatePage": "https://www.microsoft.com/en-us/download/details.aspx?id=106292"
   },
   {
     "CatalogVersion": "26.02.25",

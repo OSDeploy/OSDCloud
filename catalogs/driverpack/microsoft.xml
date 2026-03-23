@@ -5,7 +5,7 @@
       <T>System.Object</T>
     </TN>
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface 3 [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -22,7 +22,7 @@
   <Obj RefId="1">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface 3 LTE ATT [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -39,7 +39,7 @@
   <Obj RefId="2">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface 3 LTE North America [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -56,7 +56,7 @@
   <Obj RefId="3">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface 3 LTE Rest of World [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -73,7 +73,7 @@
   <Obj RefId="4">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface 3 LTE Verizon [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -90,7 +90,7 @@
   <Obj RefId="5">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">25.08.07</S>
       <S N="Name">Surface Book [25.08.07]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -107,7 +107,7 @@
   <Obj RefId="6">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Book 2 [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -134,7 +134,7 @@
   <Obj RefId="8">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">25.04.03</S>
       <S N="Name">Surface Book 3 [25.04.03]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -157,7 +157,7 @@
   <Obj RefId="10">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Go [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -180,7 +180,7 @@
   <Obj RefId="12">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.12.30</S>
       <S N="Name">Surface Go 2 [24.12.30]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -204,7 +204,7 @@
   <Obj RefId="14">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.16</S>
       <S N="Name">Surface Go 3 [26.01.16]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -228,7 +228,7 @@
   <Obj RefId="16">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.05</S>
       <S N="Name">Surface Go 4 [26.02.05]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -245,7 +245,7 @@
   <Obj RefId="17">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Go LTE [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -262,7 +262,7 @@
   <Obj RefId="18">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.21</S>
       <S N="Name">Surface Hub 2S and 3 [26.01.21]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -287,7 +287,7 @@
   <Obj RefId="20">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Laptop [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -304,7 +304,7 @@
   <Obj RefId="21">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Laptop 2 [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -327,7 +327,7 @@
   <Obj RefId="23">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.08.09</S>
       <S N="Name">Surface Laptop 3 AMD [24.08.09]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -344,7 +344,7 @@
   <Obj RefId="24">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.08.15</S>
       <S N="Name">Surface Laptop 3 Intel [24.08.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -367,7 +367,7 @@
   <Obj RefId="26">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.16</S>
       <S N="Name">Surface Laptop 4 AMD [26.01.16]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -390,7 +390,7 @@
   <Obj RefId="28">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.21</S>
       <S N="Name">Surface Laptop 4 Intel [26.01.21]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -413,7 +413,7 @@
   <Obj RefId="30">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.28</S>
       <S N="Name">Surface Laptop 5 [26.01.28]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -438,7 +438,7 @@
   <Obj RefId="32">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.13</S>
       <S N="Name">Surface Laptop 5G [26.02.13]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -455,7 +455,7 @@
   <Obj RefId="33">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.03</S>
       <S N="Name">Surface Laptop 6 [26.02.03]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -478,7 +478,7 @@
   <Obj RefId="35">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">25.12.03</S>
       <S N="Name">Surface Laptop 7 ARM [25.12.03]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -503,7 +503,7 @@
   <Obj RefId="37">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.13</S>
       <S N="Name">Surface Laptop 7 Intel [26.02.13]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -526,7 +526,7 @@
   <Obj RefId="39">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.10.15</S>
       <S N="Name">Surface Laptop Go [24.10.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -543,7 +543,7 @@
   <Obj RefId="40">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.28</S>
       <S N="Name">Surface Laptop Go 2 [26.01.28]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -560,7 +560,7 @@
   <Obj RefId="41">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.05</S>
       <S N="Name">Surface Laptop Go 3 [26.02.05]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -577,7 +577,7 @@
   <Obj RefId="42">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.24</S>
       <S N="Name">Surface Laptop Snapdragon 13-inch [26.02.24]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -600,7 +600,7 @@
   <Obj RefId="44">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.16</S>
       <S N="Name">Surface Laptop Studio [26.01.16]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -617,7 +617,7 @@
   <Obj RefId="45">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.28</S>
       <S N="Name">Surface Laptop Studio 2 [26.01.28]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -634,7 +634,7 @@
   <Obj RefId="46">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Pro [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -651,7 +651,7 @@
   <Obj RefId="47">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Pro 2 [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -668,7 +668,7 @@
   <Obj RefId="48">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Pro 3 [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -685,7 +685,7 @@
   <Obj RefId="49">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Pro 4 [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -702,7 +702,7 @@
   <Obj RefId="50">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Pro 5 [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -719,7 +719,7 @@
   <Obj RefId="51">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Pro 5 LTE [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -736,7 +736,7 @@
   <Obj RefId="52">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Pro 6 [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -759,7 +759,7 @@
   <Obj RefId="54">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">25.12.03</S>
       <S N="Name">Surface Pro 7 [25.12.03]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -776,7 +776,7 @@
   <Obj RefId="55">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.16</S>
       <S N="Name">Surface Pro 7+ [26.01.16]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -799,7 +799,7 @@
   <Obj RefId="57">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.23</S>
       <S N="Name">Surface Pro 8 [26.02.23]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -823,7 +823,7 @@
   <Obj RefId="59">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.13</S>
       <S N="Name">Surface Pro 9 [26.02.13]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -846,7 +846,7 @@
   <Obj RefId="61">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">25.12.03</S>
       <S N="Name">Surface Pro 9 5G [25.12.03]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -869,7 +869,7 @@
   <Obj RefId="63">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.07.15</S>
       <S N="Name">Surface Studio [24.07.15]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -886,7 +886,7 @@
   <Obj RefId="64">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">24.10.03</S>
       <S N="Name">Surface Studio 2 [24.10.03]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -903,7 +903,7 @@
   <Obj RefId="65">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.23</S>
       <S N="Name">Surface Studio 2+ [26.02.23]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -920,7 +920,7 @@
   <Obj RefId="66">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.23</S>
       <S N="Name">Surface Pro 10 [26.02.23]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -929,9 +929,6 @@
         <TNRef RefId="1" />
         <LST>
           <S>Surface_Pro_10_for_Business_2079</S>
-          <S>Surface_Pro_10_with_5G_for_Business_2077</S>
-          <S>Surface_Pro_10_with_5G_for_Business_2078</S>
-          <S>Surface_Pro_10_with_5G_for_Business_2121</S>
         </LST>
       </Obj>
       <S N="FileName">SurfacePro10forBusiness_Win11_22631_26.013.37121.0.msi</S>
@@ -945,12 +942,36 @@
   <Obj RefId="68">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
+      <S N="ReleaseDate">26.03.19</S>
+      <S N="Name">Surface Pro 10 5G [26.03.19]</S>
+      <S N="Manufacturer">Microsoft</S>
+      <S N="Model">Surface Pro 10 5G</S>
+      <Obj N="SystemId" RefId="69">
+        <TNRef RefId="1" />
+        <LST>
+          <S>Surface_Pro_10_with_5G_for_Business_2077</S>
+          <S>Surface_Pro_10_with_5G_for_Business_2078</S>
+          <S>Surface_Pro_10_with_5G_for_Business_2121</S>
+        </LST>
+      </Obj>
+      <S N="FileName">SurfacePro10with5GforBusiness_Win11_22631_26.013.37192.0.msi</S>
+      <S N="Url">https://download.microsoft.com/download/356e9788-abcd-471c-8c3c-6e8f68eef9ef/SurfacePro10with5GforBusiness_Win11_22631_26.013.37192.0.msi</S>
+      <S N="OperatingSystem">Windows 11</S>
+      <S N="OSArchitecture">amd64</S>
+      <Nil N="HashMD5" />
+      <S N="UpdatePage">https://www.microsoft.com/en-us/download/details.aspx?id=106292</S>
+    </MS>
+  </Obj>
+  <Obj RefId="70">
+    <TNRef RefId="0" />
+    <MS>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.02.23</S>
       <S N="Name">Surface Pro 11 ARM64 [26.02.23]</S>
       <S N="Manufacturer">Microsoft</S>
       <S N="Model">Surface Pro 11 ARM64</S>
-      <Obj N="SystemId" RefId="69">
+      <Obj N="SystemId" RefId="71">
         <TNRef RefId="1" />
         <LST>
           <S>Surface_Pro_11th_Edition_2076</S>
@@ -969,10 +990,10 @@
       <S N="UpdatePage">https://www.microsoft.com/download/details.aspx?id=106119</S>
     </MS>
   </Obj>
-  <Obj RefId="70">
+  <Obj RefId="72">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.16</S>
       <S N="Name">Surface Pro 11 Intel [26.01.16]</S>
       <S N="Manufacturer">Microsoft</S>
@@ -986,15 +1007,15 @@
       <S N="UpdatePage">https://www.microsoft.com/download/details.aspx?id=108013</S>
     </MS>
   </Obj>
-  <Obj RefId="71">
+  <Obj RefId="73">
     <TNRef RefId="0" />
     <MS>
-      <S N="CatalogVersion">26.02.25</S>
+      <S N="CatalogVersion">26.03.23</S>
       <S N="ReleaseDate">26.01.28</S>
       <S N="Name">Surface Pro Snapdragon 12-inch [26.01.28]</S>
       <S N="Manufacturer">Microsoft</S>
       <S N="Model">Surface Pro Snapdragon 12-inch</S>
-      <Obj N="SystemId" RefId="72">
+      <Obj N="SystemId" RefId="74">
         <TNRef RefId="1" />
         <LST>
           <S>Surface_Pro_12in_1st_Ed_with_Snapdragon_2110</S>
