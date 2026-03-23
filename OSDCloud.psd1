@@ -8,7 +8,7 @@
 RootModule = 'OSDCloud.psm1'
 
 # Version number of this module.
-ModuleVersion = '26.3.12.1'
+ModuleVersion = '26.3.23.1'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop'
