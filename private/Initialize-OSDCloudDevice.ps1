@@ -182,22 +182,82 @@ function Initialize-OSDCloudDevice {
         $DeviceTpmManufacturerVersion = $null
         $DeviceTpmSpecVersion = $null
 
-        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TPM is not supported on this device."
-        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Autopilot is not supported on this device."
+        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NO] TPM is not supported on this device."
+        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NO] Autopilot is not supported on this device."
     }
 
     if ($DeviceTpmSpecVersion) {
         $majorVersion = $DeviceTpmSpecVersion.Split(',')[0] -as [int]
         if ($majorVersion -lt 2) {
-            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TPM version is lower than 2.0 on this device."
-            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Autopilot is not supported on this device."
+            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NO] TPM version is lower than 2.0 on this device."
+            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NO] Autopilot is not supported on this device."
         }
         else {
-            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TPM 2.0 is supported on this device."
-            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Autopilot is supported on this device."
+            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] TPM 2.0 is supported on this device."
+            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Autopilot is supported on this device."
             $IsAutopilotSpec = $true
             $IsTpmSpec = $true
         }
+    }
+    #=================================================
+    # Secure Boot Information
+    # https://github.com/richardhicks/uefi/blob/main/Get-UEFICertificate.ps1
+
+    try {
+        $SecureBootStatus = Confirm-SecureBootUEFI
+    }
+    catch {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Unable to access UEFI Secure Boot information."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] This system may not support UEFI or Secure Boot."
+    }
+    if ($SecureBootStatus -eq $true) {
+        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Secure Boot is enabled on this device."
+
+        if (Get-Command -Name Get-SecureBootUEFI -ErrorAction SilentlyContinue) {
+            $dbBytes = (Get-SecureBootUEFI -Name DB).Bytes
+            $kekBytes = (Get-SecureBootUEFI -Name KEK).Bytes
+
+            $utf8Encoding = [System.Text.Encoding]::GetEncoding(
+                'utf-8',
+                [System.Text.EncoderFallback]::ReplacementFallback,
+                [System.Text.DecoderFallback]::ReplacementFallback
+            )
+
+            $dbText = $utf8Encoding.GetString($dbBytes)
+            if ([string]::IsNullOrWhiteSpace($dbText)) {
+                $dbText = [System.Text.Encoding]::ASCII.GetString($dbBytes)
+            }
+
+            $kekText = $utf8Encoding.GetString($kekBytes)
+            if ([string]::IsNullOrWhiteSpace($kekText)) {
+                $kekText = [System.Text.Encoding]::ASCII.GetString($kekBytes)
+            }
+
+            $WinUEFIca2023 = $dbText -match 'Windows UEFI CA 2023'
+            if ($WinUEFIca2023) {
+                Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Windows UEFI CA 2023 is present."
+            }
+            else {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Windows UEFI CA 2023 is not present."
+            }
+            $MsUEFIca2023 = $dbText -match 'Microsoft UEFI CA 2023'
+            if ($MsUEFIca2023) {
+                Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft UEFI CA 2023 is present."
+            }
+            else {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Microsoft UEFI CA 2023 is not present."
+            }
+            $MsKEKca2023 = $kekText -match 'Microsoft Corporation KEK 2K CA 2023'
+            if ($MsKEKca2023) {
+                Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft Corporation KEK 2K CA 2023 is present."
+            }
+            else {
+                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Microsoft Corporation KEK 2K CA 2023 is not present."
+            }
+        }
+    }
+    elseif ($SecureBootStatus -eq $false) {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Secure Boot is not enabled."
     }
     #=================================================
     # Identify Serial Number with multiple fallback methods due to variability in how different manufacturers populate WMI classes
