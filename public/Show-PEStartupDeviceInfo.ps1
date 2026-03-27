@@ -21,12 +21,14 @@ This function is designed for use in Windows PE startup environments and perform
 Information Displayed:
 - OSDCloud PowerShell Module version
 - WinPE version, architecture, and computer name
-- Device manufacturer, model, and serial number
-- UUID and BIOS information
+- Device manufacturer and model
+- BIOS information
 - Processor name and logical core count
 - Total physical memory in GB
 - Disk drive models and device IDs
 - Network adapter names and MAC addresses
+
+Note: Serial number and UUID output are suppressed for privacy reasons.
 
 System Requirements:
 - Minimum 6 GB of physical memory recommended
@@ -71,8 +73,8 @@ function Show-PEStartupDeviceInfo {
     Write-Host -ForegroundColor DarkGray "WinPE" $classWin32OperatingSystem.Version $classWin32OperatingSystem.OSArchitecture $classWin32ComputerSystem.Name
     Write-Host -ForegroundColor DarkGray "Manufacturer:" $global:OSDCloudDevice.OSDManufacturer
     Write-Host -ForegroundColor DarkGray "Model:" $global:OSDCloudDevice.OSDModel
-    Write-Host -ForegroundColor DarkGray "SN:" $global:OSDCloudDevice.SerialNumber
-    Write-Host -ForegroundColor DarkGray "UUID:" $global:OSDCloudDevice.UUID
+    # Write-Host -ForegroundColor DarkGray "SN:" $global:OSDCloudDevice.SerialNumber
+    # Write-Host -ForegroundColor DarkGray "UUID:" $global:OSDCloudDevice.UUID
     # Write-Host -ForegroundColor DarkGray "OSD Product:" $global:OSDCloudDevice.OSDProduct
     Write-Host -ForegroundColor DarkGray "BIOS:" $global:OSDCloudDevice.BiosVersion
     Write-Host -ForegroundColor DarkGray "BIOS Release Date:" $global:OSDCloudDevice.BiosReleaseDate
