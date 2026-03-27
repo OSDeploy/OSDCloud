@@ -91,7 +91,7 @@ if ($RunPwsh) {
 
 $PrivacyMenuItem.Add_Click({
 		$privacyMessage = @"
-OSDCloud collects analytic data during the deployment process to identify issues, enhance performance, and improve the overall user experience.
+OSDCloud collects analytic data during the deployment process to help improve the product and user experience.
 No personally identifiable information (PII) is collected, and all data is anonymized to protect user privacy.
 
 Collected data includes information about the deployment environment and system configuration.

@@ -33,29 +33,29 @@
             </TabControl.Resources>
             <TabItem Header="Device">
                 <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="20" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="110" />
-                    <ColumnDefinition Width="160" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="110" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110" />
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="110" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Manufacturer" FontWeight="Bold" Margin="8,0" />
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="deviceOSDManufacturerText" x:Name="deviceOSDManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="deviceOSDManufacturerText" x:Name="deviceOSDManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
                         <TextBlock Grid.Row="0" Grid.Column="3" Text="Model" FontWeight="Bold" Margin="8,0" />
-                <TextBlock Grid.Row="0" Grid.Column="4" Text="deviceOSDModelText" x:Name="deviceOSDModelText" Foreground="DarkGray" FontWeight="Bold" />
+                        <TextBlock Grid.Row="0" Grid.Column="4" Text="deviceOSDModelText" x:Name="deviceOSDModelText" Foreground="DarkGray" FontWeight="Bold" />
 
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Product" FontWeight="Bold" Margin="8,0" />
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceOSDProductText" x:Name="deviceOSDProductText" Foreground="DarkGray" FontWeight="Bold" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceOSDProductText" x:Name="deviceOSDProductText" Foreground="DarkGray" FontWeight="Bold" />
                         <TextBlock Grid.Row="1" Grid.Column="3" Text="System SKU" FontWeight="Bold" Margin="8,0" />
-                <TextBlock Grid.Row="1" Grid.Column="4" Text="deviceComputerSystemSKUText" x:Name="deviceComputerSystemSKUText" Foreground="DarkGray" FontWeight="Bold" />
+                        <TextBlock Grid.Row="1" Grid.Column="4" Text="deviceComputerSystemSKUText" x:Name="deviceComputerSystemSKUText" Foreground="DarkGray" FontWeight="Bold" />
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Bios Version" FontWeight="Bold" Margin="8,0" />
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="deviceBiosVersionText" x:Name="deviceBiosVersionText" Foreground="DarkGray" FontWeight="Bold" />
@@ -88,8 +88,8 @@
                         <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceUUIDText" x:Name="deviceUUIDText" VerticalAlignment="Center" FontWeight="Bold" Foreground="Blue" Cursor="Hand" ToolTip="Click to copy UUID" />
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Hardware Hash" x:Name="deviceHardwareHashLabelText" VerticalAlignment="Top" FontWeight="Bold" Foreground="#3b455a" Margin="8,0" Visibility="Collapsed" />
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="deviceHardwareHashText" x:Name="deviceHardwareHashText" VerticalAlignment="Top" FontWeight="Bold" Foreground="Blue" Cursor="Hand" ToolTip="Click to copy Hardware Hash" Visibility="Collapsed" />
-            </Grid>
-        </Border>
+                    </Grid>
+                </Border>
             </TabItem>
         </TabControl>
         <TabControl Grid.Row="3" Grid.RowSpan="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
@@ -149,6 +149,11 @@
                             <TextBlock Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="5" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="DarkGray" TextWrapping="Wrap" x:Name="DriverPackUrlText" Text="None" Margin="4" />
                         </Grid>
                     </ScrollViewer>
+                </Border>
+            </TabItem>
+            <TabItem Header="Task Sequence Steps">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
+                    <DataGrid x:Name="TaskSequenceStepsGrid" AutoGenerateColumns="True" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="False" GridLinesVisibility="All" HeadersVisibility="All" AlternatingRowBackground="#F5F5F5" />
                 </Border>
             </TabItem>
         </TabControl>

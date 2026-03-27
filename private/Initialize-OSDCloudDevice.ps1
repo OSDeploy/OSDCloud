@@ -214,45 +214,58 @@ function Initialize-OSDCloudDevice {
         Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Secure Boot is enabled on this device."
 
         if (Get-Command -Name Get-SecureBootUEFI -ErrorAction SilentlyContinue) {
-            $dbBytes = (Get-SecureBootUEFI -Name DB).Bytes
-            $kekBytes = (Get-SecureBootUEFI -Name KEK).Bytes
+            try {
+                $dbVariable = Get-SecureBootUEFI -Name DB -ErrorAction Stop
+                $kekVariable = Get-SecureBootUEFI -Name KEK -ErrorAction Stop
 
-            $utf8Encoding = [System.Text.Encoding]::GetEncoding(
-                'utf-8',
-                [System.Text.EncoderFallback]::ReplacementFallback,
-                [System.Text.DecoderFallback]::ReplacementFallback
-            )
+                $dbBytes = $dbVariable.Bytes
+                $kekBytes = $kekVariable.Bytes
 
-            $dbText = $utf8Encoding.GetString($dbBytes)
-            if ([string]::IsNullOrWhiteSpace($dbText)) {
-                $dbText = [System.Text.Encoding]::ASCII.GetString($dbBytes)
-            }
+                if (-not $dbBytes -or -not $kekBytes) {
+                    Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Secure Boot certificates could not be read (missing DB or KEK bytes). Skipping certificate presence checks."
+                }
+                else {
+                    $utf8Encoding = [System.Text.Encoding]::GetEncoding(
+                        'utf-8',
+                        [System.Text.EncoderFallback]::ReplacementFallback,
+                        [System.Text.DecoderFallback]::ReplacementFallback
+                    )
 
-            $kekText = $utf8Encoding.GetString($kekBytes)
-            if ([string]::IsNullOrWhiteSpace($kekText)) {
-                $kekText = [System.Text.Encoding]::ASCII.GetString($kekBytes)
-            }
+                    $dbText = $utf8Encoding.GetString($dbBytes)
+                    if ([string]::IsNullOrWhiteSpace($dbText)) {
+                        $dbText = [System.Text.Encoding]::ASCII.GetString($dbBytes)
+                    }
 
-            $WinUEFIca2023 = $dbText -match 'Windows UEFI CA 2023'
-            if ($WinUEFIca2023) {
-                Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Windows UEFI CA 2023 is present."
+                    $kekText = $utf8Encoding.GetString($kekBytes)
+                    if ([string]::IsNullOrWhiteSpace($kekText)) {
+                        $kekText = [System.Text.Encoding]::ASCII.GetString($kekBytes)
+                    }
+
+                    $WinUEFIca2023 = $dbText -match 'Windows UEFI CA 2023'
+                    if ($WinUEFIca2023) {
+                        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Windows UEFI CA 2023 is present."
+                    }
+                    else {
+                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Windows UEFI CA 2023 is not present."
+                    }
+                    $MsUEFIca2023 = $dbText -match 'Microsoft UEFI CA 2023'
+                    if ($MsUEFIca2023) {
+                        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft UEFI CA 2023 is present."
+                    }
+                    else {
+                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Microsoft UEFI CA 2023 is not present."
+                    }
+                    $MsKEKca2023 = $kekText -match 'Microsoft Corporation KEK 2K CA 2023'
+                    if ($MsKEKca2023) {
+                        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft Corporation KEK 2K CA 2023 is present."
+                    }
+                    else {
+                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Microsoft Corporation KEK 2K CA 2023 is not present."
+                    }
+                }
             }
-            else {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Windows UEFI CA 2023 is not present."
-            }
-            $MsUEFIca2023 = $dbText -match 'Microsoft UEFI CA 2023'
-            if ($MsUEFIca2023) {
-                Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft UEFI CA 2023 is present."
-            }
-            else {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Microsoft UEFI CA 2023 is not present."
-            }
-            $MsKEKca2023 = $kekText -match 'Microsoft Corporation KEK 2K CA 2023'
-            if ($MsKEKca2023) {
-                Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft Corporation KEK 2K CA 2023 is present."
-            }
-            else {
-                Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [NO] Microsoft Corporation KEK 2K CA 2023 is not present."
+            catch {
+                Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Unable to query Secure Boot certificate variables (DB/KEK): $($_.Exception.Message). Skipping certificate presence checks."
             }
         }
     }

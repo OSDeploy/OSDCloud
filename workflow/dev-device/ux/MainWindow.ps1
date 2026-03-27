@@ -195,16 +195,141 @@ Set-WMIMenuItems
 #================================================
 # TaskSequence
 $TaskSequenceCombo = $window.FindName("TaskSequenceCombo")
-$taskSequenceFlows = $global:OSDCloudDeploy.Flows.Name
-if ($null -eq $taskSequenceFlows) { $taskSequenceFlows = @() }
-$TaskSequenceCombo.ItemsSource = $taskSequenceFlows
+$TaskSequenceCombo.ItemsSource = @($global:OSDCloudDeploy.Flows.Name)
 $TaskSequenceCombo.SelectedIndex = 0
+
+$TaskSequenceStepsGrid = $window.FindName("TaskSequenceStepsGrid")
+
+$script:CurrentTaskSequenceName = [string]$TaskSequenceCombo.SelectedItem
+
+function Save-TaskSequenceSteps {
+	param(
+		[Parameter(Mandatory)]
+		[string]$TaskSequenceName,
+		[Parameter()]
+		$Steps
+	)
+
+	if ([string]::IsNullOrWhiteSpace($TaskSequenceName)) {
+		return
+	}
+
+	$WorkflowTaskObject = $global:OSDCloudDeploy.Flows | Where-Object { $_.Name -eq $TaskSequenceName } | Select-Object -First 1
+	if (-not $WorkflowTaskObject) {
+		return
+	}
+
+	if ($Steps) {
+		$stepsArray = @($Steps)
+		foreach ($step in $stepsArray) {
+			if (-not (Get-Member -InputObject $step -Name 'skip' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'skip' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'debug' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'debug' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'pause' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'pause' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'verbose' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'verbose' -Value $false
+			}
+		}
+		$WorkflowTaskObject.steps = $stepsArray
+	} else {
+		$WorkflowTaskObject.steps = @()
+	}
+}
+
+$TaskSequenceStepsGrid.Add_AutoGeneratingColumn({
+	param($sender, $e)
+
+	if ($e.PropertyName -ieq 'skip' -or $e.PropertyName -ieq 'debug' -or $e.PropertyName -ieq 'pause' -or $e.PropertyName -ieq 'verbose') {
+		$binding = [System.Windows.Data.Binding]::new($e.PropertyName)
+		$binding.Mode = [System.Windows.Data.BindingMode]::TwoWay
+		$binding.UpdateSourceTrigger = [System.Windows.Data.UpdateSourceTrigger]::PropertyChanged
+
+		$checkboxColumn = [System.Windows.Controls.DataGridCheckBoxColumn]::new()
+		$checkboxColumn.Header = $e.PropertyName
+		$checkboxColumn.Binding = $binding
+		$checkboxColumn.IsReadOnly = $false
+		$e.Column = $checkboxColumn
+		return
+	}
+
+	if ($e.PropertyName -ieq 'command') {
+		$binding = [System.Windows.Data.Binding]::new($e.PropertyName)
+		$binding.Mode = [System.Windows.Data.BindingMode]::TwoWay
+		$binding.UpdateSourceTrigger = [System.Windows.Data.UpdateSourceTrigger]::PropertyChanged
+
+		$e.Column.IsReadOnly = $false
+		if ($e.Column -is [System.Windows.Controls.DataGridTextColumn]) {
+			$e.Column.Binding = $binding
+		}
+		return
+	}
+
+	if ($e.PropertyName -ieq 'name') {
+		$binding = [System.Windows.Data.Binding]::new($e.PropertyName)
+		$binding.Mode = [System.Windows.Data.BindingMode]::TwoWay
+		$binding.UpdateSourceTrigger = [System.Windows.Data.UpdateSourceTrigger]::PropertyChanged
+
+		$e.Column.IsReadOnly = $false
+		if ($e.Column -is [System.Windows.Controls.DataGridTextColumn]) {
+			$e.Column.Binding = $binding
+		}
+		return
+	}
+
+	$e.Column.IsReadOnly = $true
+})
+
+function Update-TaskSequenceSteps {
+	$selectedTaskSequence = [string]$TaskSequenceCombo.SelectedItem
+	if ([string]::IsNullOrWhiteSpace($selectedTaskSequence)) {
+		$TaskSequenceStepsGrid.ItemsSource = $null
+		return
+	}
+	
+	$WorkflowTaskObject = $global:OSDCloudDeploy.Flows | Where-Object { $_.Name -eq $selectedTaskSequence } | Select-Object -First 1
+	
+	if ($WorkflowTaskObject -and $WorkflowTaskObject.steps) {
+		$steps = $WorkflowTaskObject.steps
+		
+		# Ensure all steps have checkbox properties, defaulting to false if missing
+		foreach ($step in $steps) {
+			if (-not (Get-Member -InputObject $step -Name 'skip' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'skip' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'debug' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'debug' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'pause' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'pause' -Value $false
+			}
+			if (-not (Get-Member -InputObject $step -Name 'verbose' -ErrorAction SilentlyContinue)) {
+				$step | Add-Member -MemberType NoteProperty -Name 'verbose' -Value $false
+			}
+		}
+		
+		$TaskSequenceStepsGrid.ItemsSource = $steps
+	} else {
+		$TaskSequenceStepsGrid.ItemsSource = $null
+	}
+}
+
 $TaskSequenceCombo.Add_SelectionChanged({
 	if ($SummaryTaskSequenceText) {
 		$value = [string]$TaskSequenceCombo.SelectedItem
 		$SummaryTaskSequenceText.Text = if (-not [string]::IsNullOrWhiteSpace($value)) { $value } else { 'Not selected' }
 	}
+	Save-TaskSequenceSteps -TaskSequenceName $script:CurrentTaskSequenceName -Steps $TaskSequenceStepsGrid.ItemsSource
+	$script:CurrentTaskSequenceName = [string]$TaskSequenceCombo.SelectedItem
+	Update-TaskSequenceSteps
 })
+
+# Initialize the steps grid with the first selected task sequence
+Update-TaskSequenceSteps
 #================================================
 # GlobalVariable Configuration
 # Environment Configuration
@@ -514,6 +639,7 @@ $OSLanguageCodeCombo.Add_SelectionChanged({ Update-OsResults })
 $script:SelectionConfirmed = $false
 
 $StartButton.Add_Click({
+	Save-TaskSequenceSteps -TaskSequenceName $script:CurrentTaskSequenceName -Steps $TaskSequenceStepsGrid.ItemsSource
 	$script:SelectionConfirmed = $true
 	$window.DialogResult = $true
 	$window.Close()
