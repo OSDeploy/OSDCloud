@@ -8,7 +8,7 @@
 RootModule = 'OSDCloud.psm1'
 
 # Version number of this module.
-ModuleVersion = '26.3.12.1'
+ModuleVersion = '26.4.7.1'
 
 # Supported PSEditions
 CompatiblePSEditions = 'Desktop'
@@ -72,7 +72,7 @@ FunctionsToExport =
     'Get-OSDCloudModuleVersion',
     'Invoke-OSDCloudPEStartup',
     'Invoke-OSDCloudWifi',
-    'Show-PEStartupDeviceInfo',
+    'Show-OSDCloudDeviceInfo',
     'Show-PEStartupHardware',
     'Show-PEStartupHardwareErrors',
     'Show-PEStartupIpconfig',
@@ -86,7 +86,7 @@ CmdletsToExport = @()
 # VariablesToExport = @()
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-AliasesToExport = @()
+AliasesToExport = @('Show-PEStartupDeviceInfo')
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()

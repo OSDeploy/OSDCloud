@@ -133,7 +133,7 @@ function Invoke-OSDCloudPEStartup {
             }
         }
         'Info' {
-            Invoke-PEStartupCommand Show-PEStartupDeviceInfo -NoExit -Wait
+            Invoke-PEStartupCommand Show-OSDCloudDeviceInfo -NoExit -Wait
         }
     }
     #=================================================

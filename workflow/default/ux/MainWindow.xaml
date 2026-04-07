@@ -9,7 +9,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="420" />
+            <RowDefinition Height="380" />
             <RowDefinition Height="5" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -25,10 +25,16 @@
                 <MenuItem x:Name="PrivacyMenuItem" Header="Privacy" Padding="4" />
             </Menu>
         </Grid>
-        <Border Grid.Row="1" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
+        <TabControl Grid.Row="1" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="FontWeight" Value="Bold" />
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Device">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="20" />
@@ -36,37 +42,56 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="110" />
-                    <ColumnDefinition Width="230" />
+                    <ColumnDefinition Width="160" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="110" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Manufacturer" Margin="8,0" FontWeight="Bold" />
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Manufacturer" FontWeight="Bold" Margin="8,0" />
                 <TextBlock Grid.Row="0" Grid.Column="1" Text="deviceOSDManufacturerText" x:Name="deviceOSDManufacturerText" Foreground="DarkGray" FontWeight="Bold" />
-                <TextBlock Grid.Row="0" Grid.Column="3" Text="Model" Margin="8,0" FontWeight="Bold" />
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="Model" FontWeight="Bold" Margin="8,0" />
                 <TextBlock Grid.Row="0" Grid.Column="4" Text="deviceOSDModelText" x:Name="deviceOSDModelText" Foreground="DarkGray" FontWeight="Bold" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Product" Margin="8,0" FontWeight="Bold" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Product" FontWeight="Bold" Margin="8,0" />
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceOSDProductText" x:Name="deviceOSDProductText" Foreground="DarkGray" FontWeight="Bold" />
-                <TextBlock Grid.Row="1" Grid.Column="3" Text="System SKU" Margin="8,0" FontWeight="Bold" />
+                        <TextBlock Grid.Row="1" Grid.Column="3" Text="System SKU" FontWeight="Bold" Margin="8,0" />
                 <TextBlock Grid.Row="1" Grid.Column="4" Text="deviceComputerSystemSKUText" x:Name="deviceComputerSystemSKUText" Foreground="DarkGray" FontWeight="Bold" />
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Serial Number" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="deviceSerialNumberText" x:Name="deviceSerialNumberText" Foreground="Blue" FontWeight="Bold"/>
-                <TextBlock Grid.Row="2" Grid.Column="3" Text="UUID" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="2" Grid.Column="4" Text="deviceUUIDText" x:Name="deviceUUIDText" Foreground="DarkGray" FontWeight="Bold"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Bios Version" FontWeight="Bold" Margin="8,0" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="deviceBiosVersionText" x:Name="deviceBiosVersionText" Foreground="DarkGray" FontWeight="Bold" />
+                        <TextBlock Grid.Row="2" Grid.Column="3" Text="Bios Date" FontWeight="Bold" Margin="8,0" />
+                        <TextBlock Grid.Row="2" Grid.Column="4" Text="deviceBiosReleaseDateText" x:Name="deviceBiosReleaseDateText" Foreground="DarkGray" FontWeight="Bold" />
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Bios Version" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="deviceBiosVersionText" x:Name="deviceBiosVersionText" Foreground="DarkGray" FontWeight="Bold" />
-                <TextBlock Grid.Row="3" Grid.Column="3" Text="Bios Date" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="3" Grid.Column="4" Text="deviceBiosReleaseDateText" x:Name="deviceBiosReleaseDateText" Foreground="DarkGray" FontWeight="Bold" />
-
-                <TextBlock Grid.Row="4" Grid.Column="0" Text="TPM 2.0" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="4" Grid.Column="1" Text="deviceIsTpmSpecText" x:Name="deviceIsTpmSpecText" Foreground="DarkGray" FontWeight="Bold" />
-                <TextBlock Grid.Row="4" Grid.Column="3" Text="Autopilot Spec" Margin="8,0" FontWeight="Bold" />
-                <TextBlock Grid.Row="4" Grid.Column="4" Text="deviceIsAutopilotSpecText" x:Name="deviceIsAutopilotSpecText" Foreground="DarkGray" FontWeight="Bold" />
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="TPM 2.0" FontWeight="Bold" Margin="8,0" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="deviceIsTpmSpecText" x:Name="deviceIsTpmSpecText" Foreground="DarkGray" FontWeight="Bold" />
+                        <TextBlock Grid.Row="3" Grid.Column="3" Text="Autopilot Spec" FontWeight="Bold" Margin="8,0" />
+                        <TextBlock Grid.Row="3" Grid.Column="4" Text="deviceIsAutopilotSpecText" x:Name="deviceIsAutopilotSpecText" Foreground="DarkGray" FontWeight="Bold" />
+                    </Grid>
+                </Border>
+            </TabItem>
+            <TabItem Header="Identity">
+                <Border Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Serial Number" VerticalAlignment="Center" FontWeight="Bold" Foreground="#3b455a" Margin="8,0" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="deviceSerialNumberText" x:Name="deviceSerialNumberText" VerticalAlignment="Center" FontWeight="Bold" Foreground="Blue" Cursor="Hand" ToolTip="Click to copy Serial Number" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="UUID" VerticalAlignment="Center" FontWeight="Bold" Foreground="#3b455a" Margin="8,0" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="deviceUUIDText" x:Name="deviceUUIDText" VerticalAlignment="Center" FontWeight="Bold" Foreground="Blue" Cursor="Hand" ToolTip="Click to copy UUID" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Hardware Hash" x:Name="deviceHardwareHashLabelText" VerticalAlignment="Top" FontWeight="Bold" Foreground="#3b455a" Margin="8,0" Visibility="Collapsed" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="deviceHardwareHashText" x:Name="deviceHardwareHashText" VerticalAlignment="Top" FontWeight="Bold" Foreground="Blue" Cursor="Hand" ToolTip="Click to copy Hardware Hash" Visibility="Collapsed" />
             </Grid>
         </Border>
+            </TabItem>
+        </TabControl>
         <TabControl Grid.Row="3" Grid.RowSpan="2" Background="White" BorderBrush="#DDE5F5" BorderThickness="1" Padding="6" Margin="6">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
@@ -87,7 +112,7 @@
                                 <RowDefinition Height="32" />
                                 <RowDefinition Height="20" />
                                 <RowDefinition Height="32" />
-                                <RowDefinition Height="52" />
+                                <RowDefinition Height="42" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120" />

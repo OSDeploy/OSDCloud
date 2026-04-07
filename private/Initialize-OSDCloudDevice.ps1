@@ -182,22 +182,94 @@ function Initialize-OSDCloudDevice {
         $DeviceTpmManufacturerVersion = $null
         $DeviceTpmSpecVersion = $null
 
-        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TPM is not supported on this device."
-        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Autopilot is not supported on this device."
+        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NOT SUPPORTED] TPM is not supported on this device."
+        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NOT SUPPORTED] Intune Autopilot is not supported on this device."
     }
 
     if ($DeviceTpmSpecVersion) {
         $majorVersion = $DeviceTpmSpecVersion.Split(',')[0] -as [int]
         if ($majorVersion -lt 2) {
-            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TPM version is lower than 2.0 on this device."
-            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Autopilot is not supported on this device."
+            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NOT SUPPORTED] TPM version is lower than 2.0 on this device."
+            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NOT SUPPORTED] Intune Autopilot is not supported on this device."
         }
         else {
-            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] TPM 2.0 is supported on this device."
-            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [$($MyInvocation.MyCommand.Name)] Autopilot is supported on this device."
+            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] TPM 2.0 is supported on this device."
+            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Intune Autopilot is supported on this device."
             $IsAutopilotSpec = $true
             $IsTpmSpec = $true
         }
+    }
+    #=================================================
+    # Secure Boot Information
+    # https://github.com/richardhicks/uefi/blob/main/Get-UEFICertificate.ps1
+
+    try {
+        $SecureBootStatus = Confirm-SecureBootUEFI
+    }
+    catch {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [UNAVAILABLE] Unable to access UEFI Secure Boot information."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [UNAVAILABLE] This system may not support UEFI or Secure Boot."
+    }
+    if ($SecureBootStatus -eq $true) {
+        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Secure Boot is enabled on this device."
+
+        if (Get-Command -Name Get-SecureBootUEFI -ErrorAction SilentlyContinue) {
+            try {
+                $dbVariable = Get-SecureBootUEFI -Name DB -ErrorAction Stop
+                $kekVariable = Get-SecureBootUEFI -Name KEK -ErrorAction Stop
+
+                $dbBytes = $dbVariable.Bytes
+                $kekBytes = $kekVariable.Bytes
+
+                if (-not $dbBytes -or -not $kekBytes) {
+                    Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Secure Boot certificates could not be read (missing DB or KEK bytes). Skipping certificate presence checks."
+                }
+                else {
+                    $utf8Encoding = [System.Text.Encoding]::GetEncoding(
+                        'utf-8',
+                        [System.Text.EncoderFallback]::ReplacementFallback,
+                        [System.Text.DecoderFallback]::ReplacementFallback
+                    )
+                    
+                    $dbText = $utf8Encoding.GetString($dbBytes)
+                    if ([string]::IsNullOrWhiteSpace($dbText)) {
+                        $dbText = [System.Text.Encoding]::ASCII.GetString($dbBytes)
+                    }
+                    $WinUEFIca2023 = $dbText -match 'Windows UEFI CA 2023'
+                    if ($WinUEFIca2023) {
+                        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Windows UEFI CA 2023 is present."
+                    }
+                    else {
+                        Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Windows UEFI CA 2023 is not present."
+                    }
+                    $MsUEFIca2023 = $dbText -match 'Microsoft UEFI CA 2023'
+                    if ($MsUEFIca2023) {
+                        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft UEFI CA 2023 is present."
+                    }
+                    else {
+                        Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Microsoft UEFI CA 2023 is not present."
+                    }
+
+                    $kekText = $utf8Encoding.GetString($kekBytes)
+                    if ([string]::IsNullOrWhiteSpace($kekText)) {
+                        $kekText = [System.Text.Encoding]::ASCII.GetString($kekBytes)
+                    }
+                    $MsKEKca2023 = $kekText -match 'Microsoft Corporation KEK 2K CA 2023'
+                    if ($MsKEKca2023) {
+                        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft Corporation KEK 2K CA 2023 is present."
+                    }
+                    else {
+                        Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Microsoft Corporation KEK 2K CA 2023 is not present."
+                    }
+                }
+            }
+            catch {
+                Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Unable to query Secure Boot certificate variables (DB/KEK): $($_.Exception.Message). Skipping certificate presence checks."
+            }
+        }
+    }
+    elseif ($SecureBootStatus -eq $false) {
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [FAIL] Secure Boot is not enabled."
     }
     #=================================================
     # Identify Serial Number with multiple fallback methods due to variability in how different manufacturers populate WMI classes
