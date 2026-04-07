@@ -230,18 +230,6 @@ function Initialize-OSDCloudDevice {
                         [System.Text.EncoderFallback]::ReplacementFallback,
                         [System.Text.DecoderFallback]::ReplacementFallback
                     )
-
-                    $kekText = $utf8Encoding.GetString($kekBytes)
-                    if ([string]::IsNullOrWhiteSpace($kekText)) {
-                        $kekText = [System.Text.Encoding]::ASCII.GetString($kekBytes)
-                    }
-                    $MsKEKca2023 = $kekText -match 'Microsoft Corporation KEK 2K CA 2023'
-                    if ($MsKEKca2023) {
-                        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft Corporation KEK 2K CA 2023 is present."
-                    }
-                    else {
-                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [FAIL] Microsoft Corporation KEK 2K CA 2023 is not present."
-                    }
                     
                     $dbText = $utf8Encoding.GetString($dbBytes)
                     if ([string]::IsNullOrWhiteSpace($dbText)) {
@@ -252,14 +240,26 @@ function Initialize-OSDCloudDevice {
                         Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Windows UEFI CA 2023 is present."
                     }
                     else {
-                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [MISSING] Windows UEFI CA 2023 is not present."
+                        Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Windows UEFI CA 2023 is not present."
                     }
                     $MsUEFIca2023 = $dbText -match 'Microsoft UEFI CA 2023'
                     if ($MsUEFIca2023) {
                         Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft UEFI CA 2023 is present."
                     }
                     else {
-                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [FAIL] Microsoft UEFI CA 2023 is not present."
+                        Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Microsoft UEFI CA 2023 is not present."
+                    }
+
+                    $kekText = $utf8Encoding.GetString($kekBytes)
+                    if ([string]::IsNullOrWhiteSpace($kekText)) {
+                        $kekText = [System.Text.Encoding]::ASCII.GetString($kekBytes)
+                    }
+                    $MsKEKca2023 = $kekText -match 'Microsoft Corporation KEK 2K CA 2023'
+                    if ($MsKEKca2023) {
+                        Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Microsoft Corporation KEK 2K CA 2023 is present."
+                    }
+                    else {
+                        Write-Host -ForegroundColor DarkYellow "[$(Get-Date -format s)] [WARN] Microsoft Corporation KEK 2K CA 2023 is not present."
                     }
                 }
             }

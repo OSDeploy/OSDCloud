@@ -1,0 +1,57 @@
+name: Update Dell Driver Pack Catalog
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Download and extract Dell DriverPackCatalog
+        shell: pwsh
+        run: |
+          $cabPath = "$env:TEMP\DriverPackCatalog.cab"
+          $xmlPath = "$env:TEMP\DriverPackCatalog.xml"
+
+          Write-Host "Downloading Dell DriverPackCatalog.cab..."
+          Invoke-WebRequest -Uri 'https://downloads.dell.com/catalog/DriverPackCatalog.cab' -OutFile $cabPath -UseBasicParsing
+          Write-Host "Downloaded: $((Get-Item $cabPath).Length) bytes"
+
+          Write-Host "Extracting CAB..."
+          & expand.exe $cabPath $xmlPath
+          Write-Host "Extracted: $((Get-Item $xmlPath).Length) bytes"
+
+          Copy-Item $xmlPath 'catalogs\driverpack\dell.xml' -Force
+          Write-Host "Replaced catalogs\driverpack\dell.xml"
+
+          [xml]$xml = Get-Content 'catalogs\driverpack\dell.xml' -Raw
+          $version = $xml.DocumentElement.GetAttribute('version')
+          Write-Host "Dell catalog version: $version"
+
+      - name: Commit if changed
+        shell: pwsh
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+          git add catalogs/driverpack/dell.xml
+
+          if (git diff --cached --quiet) {
+              Write-Host "No changes to commit."
+          } else {
+              [xml]$xml = Get-Content 'catalogs\driverpack\dell.xml' -Raw
+              $version = $xml.DocumentElement.GetAttribute('version')
+              git commit -m "chore(catalog): update Dell driver pack catalog ($version)"
+              git push
+          }
