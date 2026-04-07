@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## 26.4.7.1 - April 7, 2026
+
+### Added
+
+- `Show-OSDCloudDeviceInfo` function for enhanced device information display (#59)
+- GitHub Copilot instructions for catalog updates, workflow tasks, and driver pack updates (#58)
+
+### Changed
+
+- Updated Microsoft Surface device driver pack catalog versions and release dates (#57)
+- Enhanced device info display and updated logging messages across core functions (#59)
+- Refactored `Initialize-OSDCloudDevice` with improved device info collection (#59)
+- Updated Dell driver pack catalog (DriverPackManifest version 2026.03.04)
+- Updated HP driver pack catalog (HPClientDriverPackCatalog DateReleased 2026-04-06)
+- Updated Lenovo driver pack catalog (catalogv2.xml version 1.0, 2026-04-07)
+
 ## 26.3.27.1 - March 27, 2026
 
 ### Changed
