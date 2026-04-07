@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 26.3.27.1 - March 27, 2026
+
+### Changed
+
+- Updated Dell driver pack catalog (DriverPackCatalog v2026.03.02, releaseID F3GCP)
+- Updated HP driver pack catalog (HPClientDriverPackCatalog v2.00 A 1)
+- Updated Lenovo driver pack catalog (catalogv2.xml v1.0)
+
 ## 26.3.23.1 - March 23, 2026
 
 ### Added
