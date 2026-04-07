@@ -182,18 +182,18 @@ function Initialize-OSDCloudDevice {
         $DeviceTpmManufacturerVersion = $null
         $DeviceTpmSpecVersion = $null
 
-        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [FAIL] TPM is not supported on this device."
-        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [FAIL] Intune Autopilot is not supported on this device."
+        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NOT SUPPORTED] TPM is not supported on this device."
+        Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NOT SUPPORTED] Intune Autopilot is not supported on this device."
     }
 
     if ($DeviceTpmSpecVersion) {
         $majorVersion = $DeviceTpmSpecVersion.Split(',')[0] -as [int]
         if ($majorVersion -lt 2) {
-            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [FAIL] TPM version is lower than 2.0 on this device."
-            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [FAIL] Intune Autopilot is not supported on this device."
+            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NOT SUPPORTED] TPM version is lower than 2.0 on this device."
+            Write-Host -ForegroundColor Yellow "[$(Get-Date -format s)] [NOT SUPPORTED] Intune Autopilot is not supported on this device."
         }
         else {
-            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] TPM 2.0 hardware is present in this device."
+            Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] TPM 2.0 is supported on this device."
             Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Intune Autopilot is supported on this device."
             $IsAutopilotSpec = $true
             $IsTpmSpec = $true
@@ -207,8 +207,8 @@ function Initialize-OSDCloudDevice {
         $SecureBootStatus = Confirm-SecureBootUEFI
     }
     catch {
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [FAIL] Unable to access UEFI Secure Boot information."
-        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [FAIL] This system may not support UEFI or Secure Boot."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [UNAVAILABLE] Unable to access UEFI Secure Boot information."
+        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [UNAVAILABLE] This system may not support UEFI or Secure Boot."
     }
     if ($SecureBootStatus -eq $true) {
         Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Secure Boot is enabled on this device."
@@ -252,7 +252,7 @@ function Initialize-OSDCloudDevice {
                         Write-Host -ForegroundColor DarkGreen "[$(Get-Date -format s)] [OK] Windows UEFI CA 2023 is present."
                     }
                     else {
-                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [FAIL] Windows UEFI CA 2023 is not present."
+                        Write-Host -ForegroundColor DarkGray "[$(Get-Date -format s)] [MISSING] Windows UEFI CA 2023 is not present."
                     }
                     $MsUEFIca2023 = $dbText -match 'Microsoft UEFI CA 2023'
                     if ($MsUEFIca2023) {

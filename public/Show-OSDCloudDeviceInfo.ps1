@@ -10,7 +10,7 @@ This function does not accept any parameters.
 
 .EXAMPLE
 Show-OSDCloudDeviceInfo
-Displays comprehensive WinPE and device information including hardware specifications and device identifiers.
+Runs Show-OSDCloudDeviceInfo to display comprehensive WinPE and device information including hardware specifications and device identifiers.
 
 .OUTPUTS
 None. This function displays system information to the console and exports hardware data to log files but does not return objects.
