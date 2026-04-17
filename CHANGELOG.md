@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 26.4.17.1 - April 17, 2026
+
+### Changed
+
+- Updated OSDCloud OS catalog with Windows 11 25H2 build 26200.8246.
+
 ## 26.4.7.1 - April 7, 2026
 
 ### Added
